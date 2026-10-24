@@ -7,32 +7,32 @@ struct WaterSettingsSection: View {
 
     var body: some View {
         Section {
-            Toggle("Remind me to drink water", isOn: $prefs.waterEnabled)
+            Toggle("Remind me to drink water", isOn: $prefs.water.enabled)
             Stepper(
-                "Every \(Fmt.interval(minutes: prefs.waterIntervalMinutes))",
-                value: $prefs.waterIntervalMinutes,
+                "Every \(Fmt.interval(minutes: prefs.water.intervalMinutes))",
+                value: $prefs.water.intervalMinutes,
                 in: Limits.waterIntervalMinutes,
                 step: Limits.waterIntervalStep
             )
-            TimeSlotPicker(title: "From", minutes: $prefs.waterStartMinutes)
-            TimeSlotPicker(title: "Until", minutes: $prefs.waterEndMinutes)
-            Picker("I usually drink from", selection: $prefs.defaultContainer) {
+            TimeSlotPicker(title: "From", minutes: $prefs.water.startMinutes)
+            TimeSlotPicker(title: "Until", minutes: $prefs.water.endMinutes)
+            Picker("I usually drink from", selection: $prefs.water.container) {
                 Text("Glass").tag(Container.glass)
                 Text("Sip bottle").tag(Container.bottle)
             }
             Stepper(
-                "My bottle holds about \(Fmt.count(prefs.bottleSizeGlasses)) glasses",
-                value: $prefs.bottleSizeGlasses,
+                "My bottle holds about \(Fmt.count(prefs.water.bottleSizeGlasses)) glasses",
+                value: $prefs.water.bottleSizeGlasses,
                 in: Limits.bottleSizeGlasses,
                 step: Limits.bottleSizeStep
             )
             Stepper(
-                "Daily goal: \(Int(prefs.dailyGoalGlasses)) glasses",
-                value: $prefs.dailyGoalGlasses,
+                "Daily goal: \(Int(prefs.water.dailyGoalGlasses)) glasses",
+                value: $prefs.water.dailyGoalGlasses,
                 in: Limits.dailyGoalGlasses,
                 step: 1
             )
-            StrictnessPicker(title: "When I ignore Fota", value: $prefs.waterStrictness)
+            StrictnessPicker(title: "When I ignore Fota", value: $prefs.water.strictness)
         } header: {
             Text("Water · Fota")
         }
@@ -44,12 +44,12 @@ struct ReadingSettingsSection: View {
 
     var body: some View {
         Section {
-            Toggle("Remind me to read", isOn: $prefs.readingEnabled)
-            TimeSlotPicker(title: "Remind me at", minutes: $prefs.readingTimeMinutes)
-            Picker("Reading session", selection: $prefs.readingSessionMinutes) {
+            Toggle("Remind me to read", isOn: $prefs.reading.enabled)
+            TimeSlotPicker(title: "Remind me at", minutes: $prefs.reading.timeMinutes)
+            Picker("Reading session", selection: $prefs.reading.sessionMinutes) {
                 ForEach(Limits.sessionLengths, id: \.self) { m in Text("\(m) min").tag(m) }
             }
-            StrictnessPicker(title: "When I ignore Boi", value: $prefs.readingStrictness)
+            StrictnessPicker(title: "When I ignore Boi", value: $prefs.reading.strictness)
         } header: {
             Text("Reading · Boi")
         }
@@ -62,13 +62,13 @@ struct ReminderSettingsSection: View {
 
     var body: some View {
         Section {
-            Stepper("Snooze for \(prefs.snoozeMinutes) min", value: $prefs.snoozeMinutes, in: Limits.snoozeMinutes)
+            Stepper("Snooze for \(prefs.general.snoozeMinutes) min", value: $prefs.general.snoozeMinutes, in: Limits.snoozeMinutes)
             Stepper(
-                "Ignoring counts as a snooze after \(prefs.ignoreMinutes) min",
-                value: $prefs.ignoreMinutes,
+                "Ignoring counts as a snooze after \(prefs.general.ignoreMinutes) min",
+                value: $prefs.general.ignoreMinutes,
                 in: Limits.ignoreMinutes
             )
-            Toggle("Play a sound when a buddy pops up", isOn: $prefs.soundOn)
+            Toggle("Play a sound when a buddy pops up", isOn: $prefs.general.soundOn)
             Toggle("Open Sathi when my Mac starts", isOn: $launchAtLogin)
                 .onChange(of: launchAtLogin) { on in setLaunchAtLogin(on) }
         } header: {

@@ -43,19 +43,20 @@ struct ReadingRulesTests {
     @Test func dailyGoalIsSessionMinutes() {
         #expect(rules.dailyGoal == 15)
         var prefs = Prefs()
-        prefs.readingSessionMinutes = 25
+        prefs.reading.sessionMinutes = 25
         #expect(ReadingRules(prefs: prefs).dailyGoal == 25)
     }
 
     @Test func totalSumsOnlyThatDaysReads() {
         var data = Persisted()
-        data.reads = [
-            ReadEntry(date: day(2026, 3, 3, 23, 50), minutes: 30),
-            ReadEntry(date: day(2026, 3, 4, 7), minutes: 5),
-            ReadEntry(date: day(2026, 3, 4, 22), minutes: 15),
-            ReadEntry(date: day(2026, 3, 5, 22), minutes: 15)
+        data.events = [
+            .done(.reading, 30, at: day(2026, 3, 3, 23, 50)),
+            .done(.reading, 5, at: day(2026, 3, 4, 7)),
+            .done(.reading, 15, at: day(2026, 3, 4, 22)),
+            .done(.reading, 15, at: day(2026, 3, 5, 22)),
+            .done(.water, 3, at: day(2026, 3, 4, 12)),
+            .skip(.reading, at: day(2026, 3, 4, 8))
         ]
-        data.drinks = [DrinkEntry(date: day(2026, 3, 4, 12), glasses: 3)]
         #expect(rules.total(on: day(2026, 3, 4, 12), data: data) == 20)
     }
 }

@@ -1,46 +1,40 @@
 import Foundation
 
 package struct Prefs: Codable, Equatable, Sendable {
-    package var name = "Mridul"
-
-    package var waterEnabled = true
-    package var waterIntervalMinutes = 120
-    package var waterStartMinutes = 9 * 60 + 30
-    package var waterEndMinutes = 18 * 60 + 30
-    package var waterStrictness: Strictness = .strict
-    package var defaultContainer: Container = .glass
-    package var bottleSizeGlasses: Double = 3
-    package var dailyGoalGlasses: Double = 8
-
-    package var readingEnabled = true
-    package var readingTimeMinutes = 22 * 60
-    package var readingSessionMinutes = 15
-    package var readingStrictness: Strictness = .persistent
-
-    package var snoozeMinutes = 5
-    package var ignoreMinutes = 5
-    package var soundOn = true
+    package var general = GeneralPrefs()
+    package var water = WaterPrefs()
+    package var reading = ReadingPrefs()
 
     package init() {}
 
     package var scheduleKey: String {
         [
-            "\(waterEnabled)", "\(waterIntervalMinutes)", "\(waterStartMinutes)", "\(waterEndMinutes)",
-            "\(readingEnabled)", "\(readingTimeMinutes)", "\(readingSessionMinutes)"
+            "\(water.enabled)", "\(water.intervalMinutes)", "\(water.startMinutes)", "\(water.endMinutes)",
+            "\(reading.enabled)", "\(reading.timeMinutes)", "\(reading.sessionMinutes)"
         ].joined(separator: "-")
     }
 
     package func isEnabled(_ id: HabitID) -> Bool {
         switch id {
-        case .water: return waterEnabled
-        case .reading: return readingEnabled
+        case .water: return water.enabled
+        case .reading: return reading.enabled
         }
     }
 
     package func strictness(_ id: HabitID) -> Strictness {
         switch id {
-        case .water: return waterStrictness
-        case .reading: return readingStrictness
+        case .water: return water.strictness
+        case .reading: return reading.strictness
         }
+    }
+}
+
+extension Prefs {
+    package init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        let d = Prefs()
+        general = try c.value(.general, or: d.general)
+        water = try c.value(.water, or: d.water)
+        reading = try c.value(.reading, or: d.reading)
     }
 }

@@ -7,7 +7,8 @@ package final class Engine: ObservableObject {
         didSet {
             streakCache.removeAll()
             if oldValue.prefs.scheduleKey != data.prefs.scheduleKey { reschedule() }
-            store.save(data)
+            if oldValue.prefs != data.prefs { store.savePrefs(data.prefs) }
+            if oldValue.live != data.live { store.saveLive(data.live) }
         }
     }
     @Published package var now: Date
@@ -23,6 +24,7 @@ package final class Engine: ObservableObject {
 
     package let status = StatusModel()
     let store: StateStore
+    let history: HistoryStore
     let clock: Clock
     let sound: SoundPlayer
     let presenter: ReminderPresenter
@@ -37,14 +39,19 @@ package final class Engine: ObservableObject {
 
     package init(
         store: StateStore,
+        history: HistoryStore,
         clock: Clock,
         sound: SoundPlayer,
         presenter: ReminderPresenter,
         calendar: Calendar = .current
     ) {
-        let loaded = store.load()
         let n = clock.now
+        var loaded = Persisted()
+        loaded.prefs = store.loadPrefs()
+        loaded.live = store.loadLive()
+        loaded.events = history.events(from: Self.windowStart(now: n, calendar: calendar), to: n)
         self.store = store
+        self.history = history
         self.clock = clock
         self.sound = sound
         self.presenter = presenter

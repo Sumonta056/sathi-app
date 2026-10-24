@@ -96,8 +96,8 @@ extension Engine {
     }
 
     private func showBubble(_ id: HabitID, _ level: Level) {
-        copy = Copywriter.pick(id, level, name: data.prefs.name)
-        ignoreDeadline = clock.now.addingTimeInterval(TimeInterval(data.prefs.ignoreMinutes) * Timing.minute)
+        copy = Copywriter.pick(id, level, name: data.prefs.general.name)
+        ignoreDeadline = clock.now.addingTimeInterval(TimeInterval(data.prefs.general.ignoreMinutes) * Timing.minute)
         phase = .bubble(id, level)
         presenter.showBubble(id, level)
         play(level == .persist ? .ping : Self.greeting(id))

@@ -21,7 +21,7 @@ struct CelebrateView: View {
                 .font(.system(size: 14))
                 .foregroundStyle(Palette.ink2)
             switch c.id {
-            case .water: GlassGoalRow(total: e.glassesToday, goal: Int(e.data.prefs.dailyGoalGlasses))
+            case .water: GlassGoalRow(total: e.glassesToday, goal: Int(e.data.prefs.water.dailyGoalGlasses))
             case .reading: ReadingWeekRow(streak: e.streak(.reading), today: e.now)
             }
             Button("Back to work") { e.endCelebrate() }
@@ -48,7 +48,7 @@ struct CelebrateView: View {
     private func subtitle(_ c: Celebration) -> String {
         switch c.id {
         case .water:
-            return "\(Fmt.count(e.glassesToday)) of \(Int(e.data.prefs.dailyGoalGlasses)) glasses today · \(e.streak(.water))-day streak"
+            return "\(Fmt.count(e.glassesToday)) of \(Int(e.data.prefs.water.dailyGoalGlasses)) glasses today · \(e.streak(.water))-day streak"
         case .reading:
             return "\(e.streak(.reading))-day reading streak"
         }

@@ -10,6 +10,7 @@ package struct EngineHarness {
     package let engine: Engine
     package let clock: FakeClock
     package let store: InMemoryStateStore
+    package let history: InMemoryHistoryStore
     package let sound: SpySoundPlayer
     package let presenter: SpyPresenter
 
@@ -17,10 +18,11 @@ package struct EngineHarness {
         var state = Persisted()
         configure(&state)
         clock = FakeClock(start)
-        store = InMemoryStateStore(state)
+        store = InMemoryStateStore(prefs: state.prefs, live: state.live)
+        history = InMemoryHistoryStore(events: state.events)
         sound = SpySoundPlayer()
         presenter = SpyPresenter()
-        engine = Engine(store: store, clock: clock, sound: sound, presenter: presenter)
+        engine = Engine(store: store, history: history, clock: clock, sound: sound, presenter: presenter)
         engine.tick()
     }
 

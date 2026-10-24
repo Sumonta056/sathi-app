@@ -12,9 +12,8 @@ extension Engine {
     package func logWater(_ amount: Double) {
         let glasses = max(Limits.minimumLog, Fmt.roundToGlassStep(amount))
         let n = clock.now
-        data.drinks.append(DrinkEntry(date: n, glasses: glasses))
-        data.lastWaterDone = n
-        prune()
+        record(.done(.water, glasses, at: n))
+        data.live.lastWaterDone = n.wholeSecond
         habits[.water] = HabitState(nextDue: freshDue(.water, lastDone: n))
         queue.removeAll { $0 == .water }
         if isActive(.water) {
@@ -28,12 +27,12 @@ extension Engine {
 
     package func logBottle(newLevel: Double) {
         let level = max(0, min(1, newLevel))
-        let amount = (data.bottleLevel - level) * data.prefs.bottleSizeGlasses
-        data.bottleLevel = level
+        let amount = (data.live.bottleLevel - level) * data.prefs.water.bottleSizeGlasses
+        data.live.bottleLevel = level
         logWater(amount)
     }
 
-    package func refillBottle() { data.bottleLevel = 1 }
+    package func refillBottle() { data.live.bottleLevel = 1 }
 
     package func startReading() {
         guard phase == .idle || isActive(.reading) else { sound.beep(); return }
@@ -41,7 +40,7 @@ extension Engine {
         presenter.closeLock()
         queue.removeAll { $0 == .reading }
         sessionStart = clock.now
-        sessionEnd = sessionStart.addingTimeInterval(TimeInterval(data.prefs.readingSessionMinutes) * Timing.minute)
+        sessionEnd = sessionStart.addingTimeInterval(TimeInterval(data.prefs.reading.sessionMinutes) * Timing.minute)
         phase = .session
         presenter.showSession()
         play(.purr)
@@ -49,10 +48,9 @@ extension Engine {
     }
 
     package func finishSession() {
-        let minutes = data.prefs.readingSessionMinutes
+        let minutes = data.prefs.reading.sessionMinutes
         let n = clock.now
-        data.reads.append(ReadEntry(date: n, minutes: minutes))
-        prune()
+        record(.done(.reading, Double(minutes), at: n))
         habits[.reading] = HabitState(nextDue: freshDue(.reading, lastDone: n))
         presenter.closeSession()
         phase = .idle
@@ -75,7 +73,8 @@ extension Engine {
 
     package func emergencySkip(_ id: HabitID) {
         let n = clock.now
-        data.streakReset[id.rawValue] = n
+        record(.skip(id, at: n))
+        data.live.streakReset[id.rawValue] = n.wholeSecond
         habits[id] = HabitState(nextDue: freshDue(id, lastDone: n, skipToday: true))
         presenter.closeLock()
         phase = .idle
@@ -115,7 +114,7 @@ extension Engine {
     package func openSettings() { presenter.showSettings() }
 
     package func play(_ name: SoundName) {
-        guard data.prefs.soundOn else { return }
+        guard data.prefs.general.soundOn else { return }
         sound.play(name)
     }
 
@@ -129,7 +128,9 @@ extension Engine {
     }
 
     private func snoozeHabit(_ id: HabitID) {
-        let until = clock.now.addingTimeInterval(TimeInterval(data.prefs.snoozeMinutes) * Timing.minute)
+        let n = clock.now
+        record(.snooze(id, at: n))
+        let until = n.addingTimeInterval(TimeInterval(data.prefs.general.snoozeMinutes) * Timing.minute)
         update(id) { st in
             st.snoozes += 1
             st.snoozedUntil = until
@@ -148,11 +149,5 @@ extension Engine {
             guard let self, celebrateToken == token else { return }
             endCelebrate()
         }
-    }
-
-    private func prune() {
-        let cutoff = clock.now.addingTimeInterval(-Double(Limits.historyRetentionDays) * Timing.day)
-        if data.drinks.contains(where: { $0.date < cutoff }) { data.drinks.removeAll { $0.date < cutoff } }
-        if data.reads.contains(where: { $0.date < cutoff }) { data.reads.removeAll { $0.date < cutoff } }
     }
 }

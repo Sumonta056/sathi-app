@@ -62,10 +62,11 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 
 1. All data stays on the Mac in `~/Library/Application Support/Sathi/`. Nothing goes to a network.
 2. `prefs.json` holds settings. `state.json` holds live state. `history/YYYY-MM.json` holds events of one month.
-3. History is kept forever. RAM holds only the current month. Older months load on demand and are released after use.
+3. History is kept forever. The Engine keeps the last `Limits.monthsInMemory` (3) months in RAM. Older months load on demand and are released after use.
 4. Every write is atomic. Every file has `schemaVersion`. A file that cannot be read loads defaults and is not deleted.
-5. A new field gets a default value. A breaking change bumps `schemaVersion` and adds a migration with a fixture test.
-6. The UserDefaults key `sathi.state.v1` is read once by `LegacyMigrator`, then kept as a backup for one release.
+5. Every stored time has a precision of 1 second (`Date.wholeSecond`), so memory and disk hold the same value.
+6. A new field gets a default value. A breaking change bumps `schemaVersion` and adds a migration with a fixture test.
+7. The UserDefaults key `sathi.state.v1` is read by `LegacyMigrator` until the `migrated-v1` marker exists. It is kept as a backup for one release.
 
 ## Stats and reports
 

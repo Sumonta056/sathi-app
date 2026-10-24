@@ -21,7 +21,8 @@ The Engine talks to the outside world only through protocols in `Sources/SathiCo
 | Port | Production impl | Test impl |
 |---|---|---|
 | `Clock` | `SystemClock` | `FakeClock` |
-| `StateStore` | `UserDefaultsStateStore` | `InMemoryStateStore` |
+| `StateStore` | `FileStateStore` (`prefs.json`, `state.json`) | `InMemoryStateStore` |
+| `HistoryStore` | `FileHistoryStore` (`history/YYYY-MM.json`) | `InMemoryHistoryStore` |
 | `SoundPlayer` | `SystemSoundPlayer` (SathiUI) | `SpySoundPlayer` |
 | `ReminderPresenter` | `UIController` (SathiUI) | `SpyPresenter` |
 
@@ -46,5 +47,13 @@ To add a new side effect (notifications, analytics, file export), add a port pro
 
 ## Persistence
 
-- `Persisted` is `Codable`. Add new fields with a default value so old data still decodes.
-- A breaking change needs a new key in `StorageKeys` and a migration in `UserDefaultsStateStore.load()`, with a test.
+- Files live in `~/Library/Application Support/Sathi/`. `AppEnvironment` builds the base URL and both stores, and runs `LegacyMigrator` before the Engine. `AppDelegate.applicationWillTerminate` flushes both stores.
+- Code lives in `SathiCore/Storage/`: `JSONFiles` (encoder, `Versioned<T>` wrapper, atomic write, corrupt-file rename), `FileStateStore`, `FileHistoryStore`, `LegacyMigrator`, and `Legacy/` (old v1 shapes).
+- Every file is `{"schemaVersion": N, "value": ...}` with ISO 8601 dates and sorted keys. A file that does not decode is atomically renamed over `<name>.corrupt` and defaults load.
+- Saves are coalesced: a save marks the file dirty and writes after `Timing.saveCoalesce` on the store's private serial queue. `flush()` writes now. No repeating timers.
+- `flush()` returns `Bool`. A failed write stays pending and is retried by the next write or flush. A file that exists but cannot be read (or whose quarantine failed) is never written again in that session; its saves stay in memory.
+- `LegacyMigrator` runs only while `<base>/migrated-v1` is missing. It flushes history first, then state, and writes the marker last, only when both flushes succeed. It skips legacy events the history already holds, and never overwrites an existing `prefs.json` or `state.json`.
+- Stored times have 1-second precision: `HistoryEvent` dates, `lastWaterDone`, and `streakReset` values pass through `Date.wholeSecond` when created or decoded.
+- The Engine saves prefs and live state from `data.didSet` only when that part changed. Events go only through `Engine.record(_:)` → `HistoryStore.append`. The Engine keeps `Limits.monthsInMemory` months of events in RAM.
+- Every prefs struct, `LiveState`, and `HistoryEvent` decode missing keys to defaults (`decodeIfPresent`). Add new fields with a default value.
+- A breaking change bumps `Limits.schemaVersion` and adds a migration with a fixture test.

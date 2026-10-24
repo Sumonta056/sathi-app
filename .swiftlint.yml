@@ -67,10 +67,11 @@ custom_rules:
     message: "Engine and logic code must read time from the injected Clock."
     severity: error
   no_userdefaults_outside_store:
-    name: "Use the StateStore port"
-    regex: 'UserDefaults\.standard'
-    excluded: "Sources/SathiCore/Ports/StateStore.swift"
-    message: "Only UserDefaultsStateStore may touch UserDefaults."
+    name: "Use the file stores"
+    regex: '\bUserDefaults\b|defaults: \.standard'
+    included: "Sources/"
+    excluded: "Sources/(SathiCore/Storage/LegacyMigrator\\.swift|Sathi/AppEnvironment\\.swift)"
+    message: "Data lives in FileStateStore and FileHistoryStore. Only LegacyMigrator reads the old UserDefaults key."
     severity: error
   no_appkit_in_core:
     name: "SathiCore stays platform-free"

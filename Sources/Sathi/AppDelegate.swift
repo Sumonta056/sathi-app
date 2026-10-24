@@ -6,4 +6,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.setActivationPolicy(.accessory)
         AppEnvironment.engine.start()
     }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        AppEnvironment.stateStore.flush()
+        AppEnvironment.historyStore.flush()
+    }
 }

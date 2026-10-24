@@ -7,7 +7,7 @@ struct IgnoreBar: View {
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: UIMetrics.ignoreBarRefresh)) { tl in
-            let total = Double(max(1, e.data.prefs.ignoreMinutes)) * Timing.minute
+            let total = Double(max(1, e.data.prefs.general.ignoreMinutes)) * Timing.minute
             let left = max(0, e.ignoreDeadline.timeIntervalSince(tl.date))
             VStack(alignment: .leading, spacing: 6) {
                 ProgressBar(value: left / total, tint: accent, height: 4, track: Color.black.opacity(0.08))

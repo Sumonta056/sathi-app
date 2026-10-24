@@ -26,7 +26,7 @@ struct BubbleViewTests {
         let h = EngineHarness()
         h.showReminder(.water)
         try waterBubble(h).inspect().find(text: "Half").find(ViewType.Button.self, relation: .parent).tap()
-        #expect(h.engine.data.drinks.last?.glasses == 0.5)
+        #expect(h.engine.data.events.last?.amount == 0.5)
         #expect(h.engine.phase == .celebrate)
     }
 

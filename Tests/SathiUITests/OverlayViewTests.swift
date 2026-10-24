@@ -32,7 +32,7 @@ struct OverlayViewTests {
     }
 
     @Test func sessionMentionsQueuedWater() throws {
-        let h = EngineHarness(at: day(2026, 3, 4, 11, 50)) { $0.lastWaterDone = day(2026, 3, 4, 10) }
+        let h = EngineHarness(at: day(2026, 3, 4, 11, 50)) { $0.live.lastWaterDone = day(2026, 3, 4, 10) }
         h.engine.startReading()
         h.advance(minutes: 11)
         let sut = SessionView().environmentObject(h.engine)

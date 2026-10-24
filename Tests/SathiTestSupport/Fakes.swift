@@ -13,22 +13,6 @@ package final class FakeClock: Clock {
     }
 }
 
-package final class InMemoryStateStore: StateStore {
-    package var state: Persisted
-    package private(set) var saveCount = 0
-
-    package init(_ state: Persisted = Persisted()) {
-        self.state = state
-    }
-
-    package func load() -> Persisted { state }
-
-    package func save(_ state: Persisted) {
-        self.state = state
-        saveCount += 1
-    }
-}
-
 package final class SpySoundPlayer: SoundPlayer {
     package private(set) var played: [SoundName] = []
     package private(set) var beeps = 0

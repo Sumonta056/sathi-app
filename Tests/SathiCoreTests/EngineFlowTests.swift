@@ -41,12 +41,12 @@ struct EngineFlowTests {
     }
 
     @Test func confirmingTheLockLogsAGlass() {
-        let h = EngineHarness { $0.prefs.soundOn = false }
+        let h = EngineHarness { $0.prefs.general.soundOn = false }
         h.showReminder(.water)
         h.engine.snooze(); h.advance(minutes: 5)
         h.engine.snooze(); h.advance(minutes: 5)
         h.engine.lockConfirmed(.water)
-        #expect(h.engine.data.drinks.last?.glasses == 1)
+        #expect(h.engine.data.events.last?.amount == 1)
         #expect(h.engine.phase == .celebrate)
         #expect(h.engine.state(.water).snoozes == 0)
         #expect(h.presenter.calls.contains(.closeLock))
@@ -54,7 +54,7 @@ struct EngineFlowTests {
     }
 
     @Test func emergencySkipResetsTheStreak() {
-        let h = EngineHarness { $0.drinks = [DrinkEntry(date: day(2026, 3, 3, 10), glasses: 8)] }
+        let h = EngineHarness { $0.events = [.done(.water, 8, at: day(2026, 3, 3, 10))] }
         #expect(h.engine.streak(.water) == 1)
         h.engine.emergencySkip(.water)
         #expect(h.engine.streak(.water) == 0)
@@ -66,7 +66,7 @@ struct EngineFlowTests {
         h.engine.startReading()
         #expect(h.engine.phase == .session)
         h.advance(minutes: 15)
-        #expect(h.engine.data.reads.last?.minutes == 15)
+        #expect(h.engine.data.events.last?.amount == 15)
         #expect(h.engine.phase == .celebrate)
         #expect(h.engine.celebration.id == .reading)
     }
@@ -77,11 +77,11 @@ struct EngineFlowTests {
         h.engine.stopSession()
         #expect(h.engine.phase == .idle)
         #expect(h.engine.state(.reading).snoozes == 1)
-        #expect(h.engine.data.reads.isEmpty)
+        #expect(!h.engine.data.events.contains { $0.habit == .reading && $0.kind == .done })
     }
 
     @Test func waterWaitsInTheQueueDuringASession() {
-        let h = EngineHarness(at: day(2026, 3, 4, 11, 50)) { $0.lastWaterDone = day(2026, 3, 4, 10) }
+        let h = EngineHarness(at: day(2026, 3, 4, 11, 50)) { $0.live.lastWaterDone = day(2026, 3, 4, 10) }
         h.engine.startReading()
         h.advance(minutes: 11)
         #expect(h.engine.queue == [.water])
@@ -102,41 +102,36 @@ struct EngineFlowTests {
     }
 
     @Test func disablingAHabitDropsItFromTheQueue() {
-        let h = EngineHarness(at: day(2026, 3, 4, 11, 50)) { $0.lastWaterDone = day(2026, 3, 4, 10) }
+        let h = EngineHarness(at: day(2026, 3, 4, 11, 50)) { $0.live.lastWaterDone = day(2026, 3, 4, 10) }
         h.engine.startReading()
         h.advance(minutes: 11)
         #expect(h.engine.queue == [.water])
-        h.engine.data.prefs.waterEnabled = false
+        h.engine.data.prefs.water.enabled = false
         #expect(h.engine.queue.isEmpty)
     }
 
     @Test func everyDataChangeIsSaved() {
         let h = EngineHarness()
         h.engine.logWater(1)
-        #expect(h.store.state.drinks.count == 1)
+        #expect(h.history.appended.count == 1)
+        #expect(h.store.live.lastWaterDone == day(2026, 3, 4, 10))
     }
 
     @Test func logWaterRoundsToQuarterWithMinimum() {
         let h = EngineHarness()
         h.engine.logWater(0.05)
-        #expect(h.engine.data.drinks.last?.glasses == 0.25)
+        #expect(h.engine.data.events.last?.amount == 0.25)
         h.engine.logWater(1.3)
-        #expect(h.engine.data.drinks.last?.glasses == 1.25)
+        #expect(h.engine.data.events.last?.amount == 1.25)
     }
 
     @Test func logBottleConvertsLevelToGlasses() {
         let h = EngineHarness()
         h.engine.logBottle(newLevel: 0.5)
-        #expect(h.engine.data.bottleLevel == 0.5)
-        #expect(h.engine.data.drinks.last?.glasses == 1.5)
+        #expect(h.engine.data.live.bottleLevel == 0.5)
+        #expect(h.engine.data.events.last?.amount == 1.5)
         h.engine.refillBottle()
-        #expect(h.engine.data.bottleLevel == 1)
-    }
-
-    @Test func oldHistoryIsPruned() {
-        let h = EngineHarness { $0.drinks = [DrinkEntry(date: day(2025, 10, 1, 10), glasses: 1)] }
-        h.engine.logWater(1)
-        #expect(h.engine.data.drinks.count == 1)
+        #expect(h.engine.data.live.bottleLevel == 1)
     }
 
     @Test func startReadingIsRefusedDuringAnotherReminder() {

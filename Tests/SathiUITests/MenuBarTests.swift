@@ -16,7 +16,7 @@ struct MenuBarTests {
     }
 
     @Test func disabledHabitHasNoRow() throws {
-        let h = EngineHarness { $0.prefs.readingEnabled = false }
+        let h = EngineHarness { $0.prefs.reading.enabled = false }
         let sut = MenuPanel().environmentObject(h.engine)
         #expect(try sut.inspect().findAll(HabitRow.self).count == 1)
     }
@@ -41,7 +41,7 @@ struct MenuBarTests {
         let sut = HabitRow(id: .water).environmentObject(h.engine)
         #expect(try sut.inspect().find(text: "in 2h 0m") != nil)
         try sut.inspect().find(button: "+1 glass").tap()
-        #expect(h.engine.data.drinks.last?.glasses == 1)
+        #expect(h.engine.data.events.last?.amount == 1)
     }
 
     @Test func readingRowStartsASession() throws {

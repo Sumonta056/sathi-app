@@ -10,7 +10,7 @@ struct ReadingInfoCard: View {
                 .font(.system(size: 24))
                 .foregroundStyle(Palette.bookDeep)
             VStack(alignment: .leading, spacing: 2) {
-                Text("\(e.data.prefs.readingSessionMinutes)-minute session")
+                Text("\(e.data.prefs.reading.sessionMinutes)-minute session")
                     .font(.system(size: 16, weight: .semibold, design: .rounded))
                 Text("Open your book, then start the timer. Sathi keeps other reminders quiet until you finish.")
                     .font(.system(size: 13))

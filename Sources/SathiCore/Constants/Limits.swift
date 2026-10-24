@@ -1,7 +1,8 @@
 import Foundation
 
 package enum Limits {
-    package static let historyRetentionDays = 90
+    package static let monthsInMemory = 3
+    package static let schemaVersion = 1
     package static let streakLookbackDays = 365
 
     package static let glassStep: Double = 0.25

@@ -12,8 +12,8 @@ struct SettingsViewTests {
         let h = EngineHarness()
         let sut = SettingsView().environmentObject(h.engine)
         try sut.inspect().find(ViewType.Toggle.self) { try $0.labelView().text().string() == "Remind me to drink water" }.tap()
-        #expect(!h.engine.data.prefs.waterEnabled)
-        #expect(h.store.state.prefs.waterEnabled == false)
+        #expect(!h.engine.data.prefs.water.enabled)
+        #expect(h.store.prefs.water.enabled == false)
     }
 
     @Test func tryItButtonsTriggerReminders() throws {

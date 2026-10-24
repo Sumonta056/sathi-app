@@ -7,7 +7,7 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section {
-                TextField("Your name", text: $e.data.prefs.name)
+                TextField("Your name", text: $e.data.prefs.general.name)
             } header: {
                 Text("You")
             }

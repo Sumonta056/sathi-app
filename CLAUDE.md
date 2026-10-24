@@ -19,13 +19,15 @@ Sathi is a macOS menu bar app (macOS 13+, Swift 5.9 tools, SwiftUI + AppKit). Tw
 ```
 Sources/
   SathiCore/     Foundation only. All logic. Fully unit-tested.
-    Models/        HabitID, Strictness, Container, Mood, Prefs, HistoryEntries, Persisted, ReminderState
+    Models/        HabitID, Strictness, Container, Mood, Prefs, GeneralPrefs, LiveState, HistoryEvent, Persisted, ReminderState
+    Habits/        HabitRules, DayClock, one folder per habit: Water/, Reading/ (rules + prefs)
     Constants/     Timing, Limits, StorageKeys, SoundName
-    Scheduling/    Scheduler (due times), EscalationPolicy (bubble/lock), TickPlanner (timer delay)
+    Scheduling/    EscalationPolicy (bubble/lock), TickPlanner (timer delay)
     Stats/         Stats (daily totals, streak)
     Formatting/    Fmt, Copywriter
-    Ports/         Clock, StateStore, SoundPlayer, ReminderPresenter (protocols + system impls)
-    Engine/        Engine (+Loop, +Actions, +Display), StatusModel
+    Ports/         Clock, StateStore, HistoryStore, SoundPlayer, ReminderPresenter (protocols + system impls)
+    Storage/       JSONFiles, FileStateStore, FileHistoryStore, LegacyMigrator, Legacy/ (v1 shapes)
+    Engine/        Engine (+Loop, +Actions, +Display, +History), StatusModel
   SathiUI/       SwiftUI + AppKit. Views and windows only.
     Constants/     UIMetrics, TimeSlots
     Theme/         Palette, ButtonStyles, ProgressBar, Shake, Color+Hex
@@ -36,7 +38,7 @@ Sources/
   Sathi/         Executable. SathiApp, AppDelegate, AppEnvironment (composition root).
 Resources/        Info.plist (version), AppIcon.icns (app icon), AppIcon.png (1024 px preview)
 Tests/
-  SathiTestSupport/  FakeClock, InMemoryStateStore, SpySoundPlayer, SpyPresenter, EngineHarness, day()
+  SathiTestSupport/  FakeClock, InMemoryStateStore, InMemoryHistoryStore, SpySoundPlayer, SpyPresenter, EngineHarness, TestFiles, day()
   SathiCoreTests/    Swift Testing unit tests for every Core module
   SathiUITests/      ViewInspector tests for views + engine interaction
 ```

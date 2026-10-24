@@ -32,7 +32,7 @@ struct EngineDisplayTests {
         h.engine.snooze()
         h.engine.tick()
         #expect(h.engine.pill(.water) == "Snoozed · 5m")
-        h.engine.data.prefs.readingEnabled = false
+        h.engine.data.prefs.reading.enabled = false
         #expect(h.engine.pill(.reading) == "Off")
     }
 

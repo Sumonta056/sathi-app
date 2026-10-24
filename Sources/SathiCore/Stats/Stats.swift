@@ -7,12 +7,10 @@ package struct Stats: Sendable {
         self.calendar = calendar
     }
 
-    package func glasses(on day: Date, in drinks: [DrinkEntry]) -> Double {
-        drinks.reduce(0) { calendar.isDate($1.date, inSameDayAs: day) ? $0 + $1.glasses : $0 }
-    }
-
-    package func readMinutes(on day: Date, in reads: [ReadEntry]) -> Int {
-        reads.reduce(0) { calendar.isDate($1.date, inSameDayAs: day) ? $0 + $1.minutes : $0 }
+    package func total(_ id: HabitID, on day: Date, in events: [HistoryEvent]) -> Double {
+        events.reduce(0) { sum, e in
+            e.habit == id && e.kind == .done && calendar.isDate(e.date, inSameDayAs: day) ? sum + e.amount : sum
+        }
     }
 
     package func streak(_ id: HabitID, data: Persisted, now: Date) -> Int {
@@ -31,17 +29,10 @@ package struct Stats: Sendable {
     }
 
     private func dailyTotals(_ id: HabitID, data: Persisted) -> [Date: Double] {
-        let reset = data.streakReset[id.rawValue] ?? .distantPast
+        let reset = data.live.streakReset[id.rawValue] ?? .distantPast
         var totals: [Date: Double] = [:]
-        switch id {
-        case .water:
-            for entry in data.drinks where entry.date > reset {
-                totals[calendar.startOfDay(for: entry.date), default: 0] += entry.glasses
-            }
-        case .reading:
-            for entry in data.reads where entry.date > reset {
-                totals[calendar.startOfDay(for: entry.date), default: 0] += Double(entry.minutes)
-            }
+        for e in data.events where e.habit == id && e.kind == .done && e.date > reset {
+            totals[calendar.startOfDay(for: e.date), default: 0] += e.amount
         }
         return totals
     }

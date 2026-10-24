@@ -1,8 +1,8 @@
 import Foundation
 
 extension Engine {
-    package var glassesToday: Double { stats.glasses(on: now, in: data.drinks) }
-    package var readToday: Int { stats.readMinutes(on: now, in: data.reads) }
+    package var glassesToday: Double { stats.total(.water, on: now, in: data.events) }
+    package var readToday: Int { Int(stats.total(.reading, on: now, in: data.events)) }
 
     package func streak(_ id: HabitID) -> Int {
         let today = calendar.startOfDay(for: now)
@@ -17,10 +17,10 @@ extension Engine {
     }
 
     package var waterLevel: Double {
-        guard data.prefs.waterEnabled else { return 0 }
+        guard data.prefs.water.enabled else { return 0 }
         let st = state(.water)
         if isDue(.water) || st.snoozedUntil != nil { return 0 }
-        let total = TimeInterval(data.prefs.waterIntervalMinutes) * Timing.minute
+        let total = TimeInterval(data.prefs.water.intervalMinutes) * Timing.minute
         return max(0, min(1, st.nextDue.timeIntervalSince(now) / total))
     }
 
@@ -78,9 +78,9 @@ extension Engine {
     package func subtitle(_ id: HabitID) -> String {
         switch id {
         case .water:
-            return "\(Fmt.count(glassesToday)) of \(Int(data.prefs.dailyGoalGlasses)) glasses · \(streak(.water))-day streak"
+            return "\(Fmt.count(glassesToday)) of \(Int(data.prefs.water.dailyGoalGlasses)) glasses · \(streak(.water))-day streak"
         case .reading:
-            let s = data.prefs.readingSessionMinutes
+            let s = data.prefs.reading.sessionMinutes
             return "\(min(readToday, s)) of \(s) min · \(streak(.reading))-day streak"
         }
     }
@@ -90,7 +90,7 @@ extension Engine {
     }
 
     package func snoozeLabel(_ id: HabitID) -> String {
-        lockIsNext(id) ? "Last snooze" : "Snooze \(data.prefs.snoozeMinutes) min"
+        lockIsNext(id) ? "Last snooze" : "Snooze \(data.prefs.general.snoozeMinutes) min"
     }
 
     package func warnText(_ id: HabitID) -> String {

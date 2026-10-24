@@ -75,7 +75,7 @@ struct BubbleView: View {
             case .water:
                 EmptyView()
             case .reading:
-                Button("Start \(e.data.prefs.readingSessionMinutes)-min timer") { e.startReading() }
+                Button("Start \(e.data.prefs.reading.sessionMinutes)-min timer") { e.startReading() }
                     .buttonStyle(PillButton(kind: .primary))
                     .layoutPriority(1)
             }

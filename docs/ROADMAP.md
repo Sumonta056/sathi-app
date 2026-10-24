@@ -22,12 +22,16 @@ Status: `[ ]` to do, `[~]` in progress, `[x]` done.
 
 ## Phase 2: File storage
 
-- [ ] `Prefs` split into `GeneralPrefs`, `WaterPrefs`, `ReadingPrefs` (needs the migration)
-- [ ] `HistoryEvent` (done, snooze, skip)
-- [ ] `HistoryStore` port and `InMemoryHistoryStore` fake
-- [ ] `FileStateStore`, `FileHistoryStore` (atomic, `schemaVersion`)
-- [ ] `LegacyMigrator` from `sathi.state.v1`, with fixture test
-- [ ] Coalesced saves (`Timing.saveCoalesce`)
+Spec: `docs/specs/phase-2-storage.md`
+
+
+- [x] `Prefs` split into `GeneralPrefs`, `WaterPrefs`, `ReadingPrefs` (needs the migration)
+- [x] `HistoryEvent` (done, snooze, skip)
+- [x] `HistoryStore` port and `InMemoryHistoryStore` fake
+- [x] `FileStateStore`, `FileHistoryStore` (atomic, `schemaVersion`)
+- [x] `LegacyMigrator` from `sathi.state.v1`, with fixture test
+- [x] Coalesced saves (`Timing.saveCoalesce`)
+- [x] Hardening H1–H7 from review (H6: times stored to the whole second; H7: a re-run never overwrites newer state): migration marker, idempotent migration, no overwrite on unreadable files, retry failed writes
 
 ## Phase 3: Meditation (Shanti), core
 
@@ -39,7 +43,7 @@ Status: `[ ]` to do, `[~]` in progress, `[x]` done.
 ## Phase 4: Reports and export, core
 
 - [ ] `ReportBuilder` (day, week, month)
-- [ ] `StreakCalculator` across month files
+- [ ] `StreakCalculator` across month files (removes the 3-month streak cap from Phase 2)
 - [ ] `CSVExporter`, `JSONExporter`, `FileExporter` port
 
 ## Phase 5: UI redesign
@@ -68,6 +72,11 @@ Status: `[ ]` to do, `[~]` in progress, `[x]` done.
 
 ## Later
 
+- Enforce whole-second times in the types: `HistoryEvent.date` setter private, `LiveState` time writes through cutting setters
+- Migration re-run after a failed first history write: merge v1 `streakReset` into an existing `state.json` instead of skipping it
+
+- Timestamped `.corrupt` names, so a second quarantine keeps the first copy
+
 - Morning dew (light) theme and Follow macOS
 - Real Stretch, Eye break, Walk, Posture modules
 
@@ -81,4 +90,6 @@ Status: `[ ]` to do, `[~]` in progress, `[x]` done.
 | 2026-10-24 | "Add a buddy" shows coming-soon cards. |
 | 2026-10-24 | `HabitID` stays an enum. Each habit's logic lives in a `HabitRules` module. |
 | 2026-10-24 | Reading and Meditation never lock the screen. |
+| 2026-10-24 | RAM keeps the last 3 months of events, so streaks and week views work across a month boundary. |
+| 2026-10-24 | Each phase runs through subagents: test-writer, implementer, code-reviewer. |
 | 2026-10-24 | Phase 1 fix: a schedule change just after midnight counts the new day, not yesterday. |

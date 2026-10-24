@@ -7,7 +7,7 @@ struct WaterLogSection: View {
     @State private var container: Container = .glass
     @State private var bottleNow: Double = 1
 
-    private var drunk: Double { (e.data.bottleLevel - bottleNow) * e.data.prefs.bottleSizeGlasses }
+    private var drunk: Double { (e.data.live.bottleLevel - bottleNow) * e.data.prefs.water.bottleSizeGlasses }
     private var canLogBottle: Bool { drunk >= Limits.minimumBottleDrink }
 
     var body: some View {
@@ -32,8 +32,8 @@ struct WaterLogSection: View {
         }
         .frame(height: 196)
         .onAppear {
-            container = e.data.prefs.defaultContainer
-            bottleNow = e.data.bottleLevel
+            container = e.data.prefs.water.container
+            bottleNow = e.data.live.bottleLevel
         }
     }
 
@@ -56,7 +56,7 @@ struct WaterLogSection: View {
 
     private var bottleRow: some View {
         HStack(spacing: 16) {
-            BottleView(was: e.data.bottleLevel, now: $bottleNow)
+            BottleView(was: e.data.live.bottleLevel, now: $bottleNow)
                 .frame(width: 76, height: 150)
             VStack(alignment: .leading, spacing: 8) {
                 Text("Drag the line to where your water is now.")

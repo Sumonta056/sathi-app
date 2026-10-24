@@ -44,7 +44,7 @@ struct WaterRulesTests {
 
     @Test func nextDueFollowsTheInterval() {
         var prefs = Prefs()
-        prefs.waterIntervalMinutes = 30
+        prefs.water.intervalMinutes = 30
         let next = WaterRules(prefs: prefs).nextDue(now: day(2026, 3, 4, 10), lastDone: nil, doneToday: 0, skipToday: false)
         #expect(next == day(2026, 3, 4, 10, 30))
     }
@@ -64,19 +64,20 @@ struct WaterRulesTests {
     @Test func dailyGoalIsGlassGoal() {
         #expect(rules.dailyGoal == 8)
         var prefs = Prefs()
-        prefs.dailyGoalGlasses = 6
+        prefs.water.dailyGoalGlasses = 6
         #expect(WaterRules(prefs: prefs).dailyGoal == 6)
     }
 
     @Test func totalSumsOnlyThatDaysDrinks() {
         var data = Persisted()
-        data.drinks = [
-            DrinkEntry(date: day(2026, 3, 3, 23, 59), glasses: 4),
-            DrinkEntry(date: day(2026, 3, 4, 0, 1), glasses: 1),
-            DrinkEntry(date: day(2026, 3, 4, 14), glasses: 1.5),
-            DrinkEntry(date: day(2026, 3, 5, 9), glasses: 2)
+        data.events = [
+            .done(.water, 4, at: day(2026, 3, 3, 23, 59)),
+            .done(.water, 1, at: day(2026, 3, 4, 0, 1)),
+            .done(.water, 1.5, at: day(2026, 3, 4, 14)),
+            .done(.water, 2, at: day(2026, 3, 5, 9)),
+            .done(.reading, 15, at: day(2026, 3, 4, 22)),
+            .snooze(.water, at: day(2026, 3, 4, 15))
         ]
-        data.reads = [ReadEntry(date: day(2026, 3, 4, 22), minutes: 15)]
         #expect(rules.total(on: day(2026, 3, 4, 12), data: data) == 2.5)
     }
 }

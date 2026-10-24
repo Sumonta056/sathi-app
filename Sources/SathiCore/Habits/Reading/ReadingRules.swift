@@ -10,13 +10,13 @@ package struct ReadingRules: HabitRules {
         clock = DayClock(calendar: calendar)
     }
 
-    package var dailyGoal: Double { Double(prefs.readingSessionMinutes) }
+    package var dailyGoal: Double { Double(prefs.reading.sessionMinutes) }
 
     package func nextDue(now: Date, lastDone _: Date?, doneToday: Double, skipToday: Bool) -> Date {
         if skipToday || doneToday >= dailyGoal {
-            return clock.at(prefs.readingTimeMinutes, on: now.addingTimeInterval(Timing.day))
+            return clock.at(prefs.reading.timeMinutes, on: now.addingTimeInterval(Timing.day))
         }
-        return clock.at(prefs.readingTimeMinutes, on: now)
+        return clock.at(prefs.reading.timeMinutes, on: now)
     }
 
     package func isActiveTime(_: Date) -> Bool { true }
@@ -24,6 +24,6 @@ package struct ReadingRules: HabitRules {
     package func nextActiveStart(after date: Date) -> Date { date }
 
     package func total(on day: Date, data: Persisted) -> Double {
-        Double(Stats(calendar: clock.calendar).readMinutes(on: day, in: data.reads))
+        Stats(calendar: clock.calendar).total(id, on: day, in: data.events)
     }
 }

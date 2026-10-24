@@ -31,7 +31,7 @@ Before the refactor the app used 27–36% CPU and 66 MB. Do not let it go back.
 ## Memory
 
 - Close windows with `orderOut` and drop the reference, so that the hosting view is freed.
-- Keep history pruned (`Limits.historyRetentionDays`).
+- The Engine keeps only `Limits.monthsInMemory` months of events in RAM. Older months load on demand and are not cached.
 
 ## How to check
 
