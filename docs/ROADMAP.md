@@ -59,14 +59,18 @@ Spec: `docs/specs/phase-4-reports.md`
 Spec 5a: `docs/specs/phase-5a-theme.md`
 Spec 5b: `docs/specs/phase-5b-settings.md`
 Spec 5c: `docs/specs/phase-5c-menubar.md`
+Spec 5d: `docs/specs/phase-5d-water-bubble.md`
+Spec 5e: `docs/specs/phase-5e-reading-corner.md`
+Spec 5f: `docs/specs/phase-5f-meditation.md`
+Review fixes 5d/5f: `docs/specs/phase-5df-review-fixes.md`
 Review fixes 5a–5c: `docs/specs/phase-5abc-review-fixes.md` (done)
 
 - [x] Theme: night-sprout `Night` palette, SF Rounded `Typography`, shared components
 - [x] Settings window: sidebar, General, Water, Reading, Meditation, Add a buddy (coming soon)
 - [x] Menu bar popover with rings and pause chips
-- [ ] Water bubble (dark)
-- [ ] Reading corner popup and timer pill
-- [ ] Meditation breathe view
+- [x] Water bubble (dark)
+- [x] Reading corner popup and timer pill
+- [x] Meditation breathe view
 - [ ] Reports window with charts, streak calendar, export menu
 - [ ] `/perf-check` passes
 
@@ -85,6 +89,14 @@ Review fixes 5a–5c: `docs/specs/phase-5abc-review-fixes.md` (done)
 
 ## Later
 
+- 5f: breathing sessions end mid-cycle; the last ~12 s repeat the last round (user: accept for now)
+- 5f: `BreatheView` reads the breathing style live; a style change mid-session jumps the phase (store it at session start)
+- 5d: `goalText(.water)` uses `Int(dailyGoalGlasses)`; a fractional goal reads "of 7" next to 8 drops
+- 5e review: `EngineHarness` takes no calendar, so `Engine.comesBackText` time-zone use is not proven by a test
+- 5e review: a reading style change during the 4.5 s celebration can put the legacy card in a corner panel (store the style in `Celebration`)
+- 5e review: `snooze()` reads `usesCorner` at snooze time, not at show time (style changed while the invite is open → no note)
+- 5e review: `UIController` stored panels are `internal` so its extensions can use them
+- 5h: measure the 5d/5e SwiftUI animations (water bob, spark, 5-min `IgnoreBar` scale) on the installed build; SwiftUI may drive them per frame on the main thread
 - Streak memory/history split assumes the clock never goes back across a month after launch (store the oldest loaded window)
 - `windowStart` uses the system calendar; use the Gregorian calendar to match storage
 - Menu subtitle uses the published `now` while the streak uses `clock.now` (cosmetic, one minute after midnight)

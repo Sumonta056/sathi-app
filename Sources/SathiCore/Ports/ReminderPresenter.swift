@@ -11,4 +11,5 @@ package protocol ReminderPresenter: AnyObject {
     func showCelebration()
     func closeCelebration()
     func showSettings()
+    func showSnoozed(_ id: HabitID, until: Date)
 }

@@ -7,13 +7,20 @@ package enum Copywriter {
         return Copy(title: o.0, body: o.1)
     }
 
-    package static func celebrationTitle(_ id: HabitID) -> String {
+    package static func celebrationTitle(_ id: HabitID, amount: Double = 0) -> String {
         let titles: [String] = switch id {
-        case .water: ["Ahh, that's better.", "Fota is happy again.", "Refilled."]
+        case .water: [amount >= 1 ? "Ahh, refreshing!" : "Every sip counts!"]
         case .reading: ["Chapter done.", "Boi is proud of you.", "Nice reading."]
         case .meditation: ["Calm and clear.", "Shanti feels lighter.", "Nicely breathed."]
         }
         return titles.randomElement() ?? titles[0]
+    }
+
+    package static func seeYou(next: Date, now: Date, calendar: Calendar) -> String {
+        guard next > now else { return "See you soon" }
+        guard calendar.isDate(next, inSameDayAs: now) else { return "See you tomorrow" }
+        let minutes = Int((next.timeIntervalSince(now) / Timing.minute).rounded(.up))
+        return "See you in " + Fmt.interval(minutes: minutes)
     }
 
     package static func displayName(_ name: String) -> String {

@@ -6,14 +6,14 @@ import SwiftUI
 package final class UIController: ReminderPresenter {
     package weak var engine: Engine?
 
-    private var bubble: NSPanel?
-    private var session: NSPanel?
-    private var celebration: NSPanel?
+    var bubble: NSPanel?
+    var session: NSPanel?
+    var celebration: NSPanel?
+    var note: NSPanel?
+    var noteTask: Task<Void, Never>?
     private var locks: [NSWindow] = []
     private var settings: NSWindow?
     private let settingsCloseWatcher = SettingsWindowDelegate()
-
-    private var primary: NSScreen? { NSScreen.screens.first ?? NSScreen.main }
 
     package init() {
         settingsCloseWatcher.onClose = { [weak self] in self?.settingsWillClose() }
@@ -21,15 +21,26 @@ package final class UIController: ReminderPresenter {
 
     package func showBubble(_ id: HabitID, _ level: Level) {
         closeBubble()
-        guard let h = hosting(BubbleView(id: id, level: level)) else { return }
-        let p = makePanel(h, level: .statusBar)
-        if let vf = primary?.visibleFrame {
-            let inset = UIMetrics.bubbleScreenInset
-            p.setFrameOrigin(NSPoint(x: vf.maxX - h.frame.width + inset.x, y: vf.maxY - h.frame.height + inset.y))
+        closeNote()
+        bubble = bubblePanel(id, level)
+    }
+
+    private func bubblePanel(_ id: HabitID, _ level: Level) -> NSPanel? {
+        switch id {
+        case .water:
+            return focusedBubble(id, level)
+        case .reading:
+            return engine?.usesCorner(id) == true ? presentCorner(ReadingInvite(level: level)) : focusedBubble(id, level)
+        case .meditation:
+            return presentCorner(BubbleView(id: id, level: level))
         }
-        fadeIn(p)
+    }
+
+    private func focusedBubble(_ id: HabitID, _ level: Level) -> NSPanel? {
+        guard let h = hosting(BubbleView(id: id, level: level)) else { return nil }
+        let p = presentTopRight(h, level: .statusBar)
         p.makeKey()
-        bubble = p
+        return p
     }
 
     package func closeBubble() {
@@ -39,8 +50,22 @@ package final class UIController: ReminderPresenter {
 
     package func showSession() {
         closeSession()
-        guard let h = hosting(SessionView()) else { return }
+        closeNote()
+        guard let id = engine?.sessionHabit else { return }
+        if engine?.usesCorner(id) == true {
+            session = presentCorner(ReadingTimerPill())
+            return
+        }
+        guard let h = hosting(sessionView(id)) else { return }
         session = presentCentered(h, level: .floating)
+    }
+
+    @ViewBuilder
+    private func sessionView(_ id: HabitID) -> some View {
+        switch id {
+        case .meditation: BreatheView()
+        case .water, .reading: SessionView()
+        }
     }
 
     package func closeSession() {
@@ -50,8 +75,9 @@ package final class UIController: ReminderPresenter {
 
     package func showCelebration() {
         closeCelebration()
-        guard let h = hosting(CelebrateView()) else { return }
-        celebration = presentCentered(h, level: .statusBar)
+        closeNote()
+        guard let engine, let h = hosting(CelebrateView()) else { return }
+        celebration = celebrationPanel(h, engine)
     }
 
     package func closeCelebration() {
@@ -61,6 +87,7 @@ package final class UIController: ReminderPresenter {
 
     package func showLock(_ id: HabitID) {
         closeLock()
+        closeNote()
         guard let engine else { return }
         for (i, screen) in NSScreen.screens.enumerated() {
             let content = i == 0 ? AnyView(LockView(id: id)) : AnyView(LockShade())
@@ -91,47 +118,12 @@ package final class UIController: ReminderPresenter {
         settings = nil
     }
 
-    private func hosting(_ view: some View) -> NSHostingView<AnyView>? {
+    func hosting(_ view: some View) -> FirstClickHostingView<AnyView>? {
         guard let engine else { return nil }
         let root = AnyView(view.environmentObject(engine).environment(\.colorScheme, .light))
-        let h = NSHostingView(rootView: root)
+        let h = FirstClickHostingView(rootView: root)
+        h.sizingOptions = []
         h.setFrameSize(h.fittingSize)
         return h
-    }
-
-    private func makePanel(_ content: NSView, level: NSWindow.Level) -> NSPanel {
-        let p = FloatingPanel(
-            contentRect: NSRect(origin: .zero, size: content.frame.size),
-            styleMask: [.borderless, .nonactivatingPanel],
-            backing: .buffered,
-            defer: false
-        )
-        p.isOpaque = false
-        p.backgroundColor = .clear
-        p.hasShadow = false
-        p.level = level
-        p.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
-        p.hidesOnDeactivate = false
-        p.isReleasedWhenClosed = false
-        p.contentView = content
-        return p
-    }
-
-    private func presentCentered(_ content: NSView, level: NSWindow.Level) -> NSPanel {
-        let p = makePanel(content, level: level)
-        if let f = primary?.visibleFrame {
-            p.setFrameOrigin(NSPoint(x: f.midX - p.frame.width / 2, y: f.midY - p.frame.height / 2))
-        }
-        fadeIn(p)
-        return p
-    }
-
-    private func fadeIn(_ w: NSWindow) {
-        w.alphaValue = 0
-        w.orderFrontRegardless()
-        NSAnimationContext.runAnimationGroup { ctx in
-            ctx.duration = UIMetrics.fadeDuration
-            w.animator().alphaValue = 1
-        }
     }
 }

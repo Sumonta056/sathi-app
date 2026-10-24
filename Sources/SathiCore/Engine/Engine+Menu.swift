@@ -5,6 +5,12 @@ extension Engine {
         Copywriter.greeting(at: now, name: data.prefs.general.name, calendar: calendar)
     }
 
+    package var waterSeeYou: String {
+        if !enabled(.water) { return "Nice one" }
+        if pausedUntil != nil { return "See you after your break" }
+        return Copywriter.seeYou(next: state(.water).nextDue, now: clock.now, calendar: calendar)
+    }
+
     package var bestStreak: Int {
         HabitID.allCases.filter { enabled($0) }.map { streak($0) }.max() ?? 0
     }

@@ -5,8 +5,8 @@ enum UIMetrics {
     static let fadeDuration: Double = 0.25
     static let shakeInterval: TimeInterval = 4
     static let shakeDuration: Double = 0.6
-    static let ignoreBarRefresh: TimeInterval = 0.5
     static let sessionRefresh: TimeInterval = 1
+    static let ignoreBarRefresh: TimeInterval = 0.5
 
     static let menuWidth: CGFloat = 380
     static let bubbleWidth: CGFloat = 380

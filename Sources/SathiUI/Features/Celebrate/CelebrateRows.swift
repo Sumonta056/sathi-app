@@ -1,24 +1,5 @@
 import SwiftUI
 
-struct CelebrateGlassRow: View {
-    let total: Double
-    let goal: Int
-
-    var body: some View {
-        HStack(spacing: 4) {
-            ForEach(0 ..< max(1, goal), id: \.self) { i in
-                let fill = max(0, min(1, total - Double(i)))
-                ZStack(alignment: .bottom) {
-                    RoundedRectangle(cornerRadius: 5).fill(Palette.ink.opacity(0.08))
-                    RoundedRectangle(cornerRadius: 5).fill(Palette.water).frame(height: CGFloat(26 * fill))
-                }
-                .frame(height: 26)
-            }
-        }
-        .padding(.vertical, 6)
-    }
-}
-
 struct ReadingWeekRow: View {
     static let labels = ["M", "T", "W", "T", "F", "S", "S"]
 

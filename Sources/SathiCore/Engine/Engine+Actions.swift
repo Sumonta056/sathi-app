@@ -5,6 +5,7 @@ extension Engine {
         guard case let .bubble(id, _) = phase else { return }
         snoozeHabit(id)
         presenter.closeBubble()
+        if usesCorner(id), let until = state(id).snoozedUntil { presenter.showSnoozed(id, until: until) }
         phase = .idle
         requestTick()
     }
@@ -118,7 +119,7 @@ extension Engine {
     }
 
     func celebrate(_ id: HabitID, _ amount: Double) {
-        celebration = Celebration(id: id, amount: amount, title: Copywriter.celebrationTitle(id))
+        celebration = Celebration(id: id, amount: amount, title: Copywriter.celebrationTitle(id, amount: amount))
         phase = .celebrate
         presenter.showCelebration()
         if let sound = celebrationSound(id) { play(sound) }

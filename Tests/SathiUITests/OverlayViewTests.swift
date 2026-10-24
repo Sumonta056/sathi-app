@@ -23,7 +23,7 @@ struct OverlayViewTests {
     }
 
     @Test func sessionShowsTheTimerAndStopsEarly() throws {
-        let h = EngineHarness()
+        let h = EngineHarness { $0.prefs.reading.reminderStyle = .focus }
         h.engine.startReading()
         let sut = SessionView().environmentObject(h.engine)
         #expect(try sut.inspect().find(text: "READING · DO NOT DISTURB") != nil)
@@ -32,25 +32,29 @@ struct OverlayViewTests {
     }
 
     @Test func sessionMentionsQueuedWater() throws {
-        let h = EngineHarness(at: day(2026, 3, 4, 11, 50)) { $0.live.lastWaterDone = day(2026, 3, 4, 10) }
+        let h = EngineHarness(at: day(2026, 3, 4, 11, 50)) {
+            $0.live.lastWaterDone = day(2026, 3, 4, 10)
+            $0.prefs.reading.reminderStyle = .focus
+        }
         h.engine.startReading()
         h.advance(minutes: 11)
         let sut = SessionView().environmentObject(h.engine)
         #expect(try sut.inspect().find(text: "Fota is waiting for you after this") != nil)
     }
 
-    @Test func celebrationShowsTheAmountAndCloses() throws {
-        let h = EngineHarness()
-        h.engine.logWater(1)
+    @Test func readingCelebrationShowsTheTitleAndCloses() throws {
+        let h = EngineHarness { $0.prefs.reading.reminderStyle = .focus }
+        h.engine.startReading()
+        h.advance(minutes: 15)
         let sut = CelebrateView().environmentObject(h.engine)
-        #expect(try sut.inspect().find(text: "+1 glass") != nil)
         #expect(try sut.inspect().find(text: h.engine.celebration.title) != nil)
+        #expect(throws: (any Error).self) { try sut.inspect().find(WaterThanks.self) }
         try sut.inspect().find(button: "Back to work").tap()
         #expect(h.engine.phase == .idle)
     }
 
     @Test func readingCelebrationShowsTheWeek() throws {
-        let h = EngineHarness()
+        let h = EngineHarness { $0.prefs.reading.reminderStyle = .focus }
         h.engine.startReading()
         h.advance(minutes: 15)
         let sut = CelebrateView().environmentObject(h.engine)

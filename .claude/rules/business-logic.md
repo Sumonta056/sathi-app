@@ -63,8 +63,15 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 
 1. Only Water may use Strict. Reading and Meditation never lock the screen.
 2. Reading shows a corner popup in the top-right by default. It never takes focus from the active app. `ReadingPrefs.reminderStyle` picks `corner` (default) or `focus` (the old centered session).
+   - With `corner`, the reading session shows as a small timer pill in the same corner, and the thank-you shows there too.
+   - The corner popup snoozes for the General snooze length, like every other reminder.
+   - After a snooze of the corner popup (by a tap or by no answer), a note "Boi comes back at {time}" shows for `Timing.cornerNoteDuration` (4 s).
+   - Stopping the timer pill early follows Schedules rule 6: it does not count.
+   - At Nudgy, the corner popup plays one ping when it shows, then wiggles in silence. It never repeats a sound.
 3. The lock always has an emergency skip. A skip resets that habit's streak.
 4. Raw values never change. They are in saved files. Change only the labels.
+5. The Meditation invite follows the same calm rules: it never takes focus from the active app, at Nudgy it wiggles in silence, and its snooze button uses the General snooze length. Its session button "Stop" follows Schedules rule 6: an early stop does not count.
+6. The water thank-you button names the next reminder: "See you in {time}" or "See you tomorrow". While Sathi is paused it says "See you after your break". When water reminders are off it says "Nice one".
 
 ## History and storage
 

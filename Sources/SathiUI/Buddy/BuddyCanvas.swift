@@ -57,7 +57,7 @@ struct BuddyCanvas: View {
     }
 
     private func drawFace(_ ctx: inout GraphicsContext) {
-        let ink = Palette.ink
+        let ink = faceInk
         let round = StrokeStyle(lineWidth: 3.4, lineCap: .round, lineJoin: .round)
 
         if kind == .pebble || mood == .cheer || mood == .reading {
@@ -79,9 +79,9 @@ struct BuddyCanvas: View {
             ctx.stroke(BuddyPaths.quad(CGPoint(x: 70, y: 66), CGPoint(x: 64, y: 68), CGPoint(x: 58, y: 70.5)), with: .color(ink), style: round)
         }
 
-        if mood == .happy || mood == .cheer {
+        if let cheek = cheekFill {
             for x in [CGFloat(27), CGFloat(73)] {
-                ctx.fill(Path(ellipseIn: CGRect(x: x - 5.5, y: 83.5, width: 11, height: 11)), with: .color(Palette.cheek.opacity(0.8)))
+                ctx.fill(Path(ellipseIn: CGRect(x: x - 5.5, y: 83.5, width: 11, height: 11)), with: .color(cheek))
             }
         }
 

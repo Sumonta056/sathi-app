@@ -81,7 +81,7 @@ All rows of the Decisions table in `docs/ROADMAP.md` hold. The ones that shape P
 
 ## Phase 5: UI redesign (in progress)
 
-Status: 5a, 5b, 5c and the shared 5a–5c review fixes are done and green (591 tests: UI 157, Core 434). User checked the installed app visually on 2026-10-25 (OK). Committed as one commit for 5a–5c. Defaults backup: `~/Desktop/sathi-defaults-backup.plist`; real data is now migrated to the JSON files. Specs: `docs/specs/phase-5a-theme.md`, `phase-5b-settings.md`, `phase-5c-menubar.md`, `phase-5abc-review-fixes.md`. Next after the commits: 5d water bubble. User chose: commit approval per group (5a–5c, 5d–5f, 5g–5h); full review only for 5e and 5g, one shared review for the view slices (5a–5d, 5f) before the 5c commit. New theme: `Night` (not `Palette`), `Typography`, `Components/` (SectionLabel, ChipRow, OptionCard, BuddySwitch, HeroCard, SettingsCard, SettingRow).
+Status: 5a, 5b, 5c and the shared 5a–5c review fixes are done and green (591 tests: UI 157, Core 434). User checked the installed app visually on 2026-10-25 (OK). Committed as one commit for 5a–5c. Defaults backup: `~/Desktop/sathi-defaults-backup.plist`; real data is now migrated to the JSON files. Specs: `docs/specs/phase-5a-theme.md`, `phase-5b-settings.md`, `phase-5c-menubar.md`, `phase-5abc-review-fixes.md`. Next after the commits: 5d water bubble. 5d is done and green, not committed (616 tests: UI 171, Core 445; spec `docs/specs/phase-5d-water-bubble.md`; user chose: keep the drag bottle, water thank-you card top-right). 5e is done, reviewed, and green, not committed (646 tests: UI 186, Core 460; spec `docs/specs/phase-5e-reading-corner.md`; user chose: General snooze length, "Stop" keeps rule 6, 4 s "comes back" note, Nudgy wiggles with no repeat sound). 5f is done (spec `docs/specs/phase-5f-meditation.md`; user chose "Stop", invite never takes focus). Shared 5d/5f review fixes done (`docs/specs/phase-5df-review-fixes.md`): loop animations capped at 30 fps with TimelineView, "See you" text for pause and water off. 686 tests: UI 216, Core 470. Next: 5d–5f commit (ask), then 5g. User chose: commit approval per group (5a–5c, 5d–5f, 5g–5h); full review only for 5e and 5g, one shared review for the view slices (5a–5d, 5f) before the 5c commit. New theme: `Night` (not `Palette`), `Typography`, `Components/` (SectionLabel, ChipRow, OptionCard, BuddySwitch, HeroCard, SettingsCard, SettingRow).
 
 Goal: build the canvas design in SwiftUI, slice by slice. Each slice is one `/feature` loop and one commit. UI tests use ViewInspector; logic stays in Core.
 
@@ -108,7 +108,8 @@ Text on an accent button is `#0D1220`. Corner radius: cards 16, buttons 10–12,
 
 ### Animation and performance rules for Phase 5
 
-- No new `TimelineView(.animation)`. Use SwiftUI implicit animations with `.repeatForever` (bob, blink, breathe), which run in the render server.
+- SwiftUI implicit animations (`withAnimation`, `.repeatForever`, long `.linear`) run on the main thread at the full screen rate (60–120 Hz) with no cap. Do not use them for loops or for anything longer than a short transition. (The 5d/5f review found this; the earlier note here was wrong.)
+- For a loop (bob, spark, breathe), use one `TimelineView(.animation(minimumInterval: UIMetrics.animationFrameInterval, paused: hidden || reduceMotion))` and compute the value from the date with a pure, tested function. For a slow bar, use `TimelineView(.periodic(by: 0.5))`.
 - Respect `@Environment(\.accessibilityReduceMotion)`: no motion when it is on.
 - Animations stop when a window closes (windows close with `orderOut` and drop the reference).
 - Budget: idle CPU < 1%, memory < 40 MB, < 10 idle wakeups per minute (`.claude/rules/performance.md`).

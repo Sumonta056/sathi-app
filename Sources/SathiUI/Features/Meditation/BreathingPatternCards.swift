@@ -4,10 +4,6 @@ import SwiftUI
 struct BreathingPatternCards: View {
     @EnvironmentObject var e: Engine
 
-    private static let beats: [BreathingStyle: String] = Dictionary(uniqueKeysWithValues: BreathingStyle.allCases.map { style in
-        (style, BreathingPattern.steps(style).map { "\(Int($0.1))" }.joined(separator: "·"))
-    })
-
     var body: some View {
         let engine = e
         HStack(alignment: .top, spacing: UIMetrics.chipSpacing) {
@@ -19,7 +15,7 @@ struct BreathingPatternCards: View {
                     accent: Night.calm,
                     action: { engine.data.prefs.meditation.style = style },
                     top: {
-                        Text(verbatim: Self.beats[style] ?? "")
+                        Text(verbatim: Copywriter.breathBeats(style))
                             .font(Typography.eyebrow)
                             .foregroundStyle(Night.calm)
                     }

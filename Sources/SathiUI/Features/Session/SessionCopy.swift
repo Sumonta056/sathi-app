@@ -21,16 +21,7 @@ enum SessionCopy {
     static func breath(_ id: HabitID, style: BreathingStyle, elapsed: TimeInterval) -> String? {
         switch id {
         case .water, .reading: return nil
-        case .meditation: return label(BreathingPattern.step(style, at: elapsed).phase)
-        }
-    }
-
-    static func label(_ phase: BreathPhase) -> String {
-        switch phase {
-        case .inhale: return "Breathe in"
-        case .hold: return "Hold"
-        case .exhale: return "Breathe out"
-        case .rest: return "Rest"
+        case .meditation: return Copywriter.breathLabel(BreathingPattern.step(style, at: elapsed).phase)
         }
     }
 }

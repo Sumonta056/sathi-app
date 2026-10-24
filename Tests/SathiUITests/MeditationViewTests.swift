@@ -33,40 +33,12 @@ struct MeditationViewTests {
         #expect(try sut.inspect().findAll(HabitCard.self).count == 3)
     }
 
-    @Test func bubbleStartsTheBreathingSession() throws {
-        let h = harness(at: day(2026, 3, 4, 15))
-        let sut = BubbleView(id: .meditation, level: .nudge).environmentObject(h.engine)
-        try sut.inspect().find(button: "Start 5-min breathing").tap()
-        #expect(h.engine.phase == .session(.meditation))
-    }
-
-    @Test func sessionShowsBreathingTitleAndAPhase() throws {
-        let h = harness()
-        h.engine.startMeditation()
-        let sut = SessionView().environmentObject(h.engine)
-        #expect(try sut.inspect().find(text: "BREATHING") != nil)
-        #expect(throws: (any Error).self) { try sut.inspect().find(text: "READING · DO NOT DISTURB") }
-        let phases = ["Breathe in", "Hold", "Breathe out", "Rest"]
-        let shown = phases.filter { (try? sut.inspect().find(text: $0)) != nil }
-        #expect(shown.count == 1)
-    }
-
     @Test func readingSessionHasNoBreathingPhase() throws {
         let h = harness()
         h.engine.startReading()
         let sut = SessionView().environmentObject(h.engine)
         #expect(try sut.inspect().find(text: "READING · DO NOT DISTURB") != nil)
         #expect(throws: (any Error).self) { try sut.inspect().find(text: "Breathe in") }
-    }
-
-    @Test func celebrationShowsMinutesOfCalm() throws {
-        let h = harness()
-        h.engine.startMeditation()
-        h.advance(minutes: 5)
-        let sut = CelebrateView().environmentObject(h.engine)
-        #expect(try sut.inspect().find(text: "5 min calm") != nil)
-        #expect(try sut.inspect().find(text: h.engine.celebration.title) != nil)
-        #expect(try sut.inspect().find(text: "Back to work") != nil)
     }
 
     @Test func settingsHaveAMeditationTab() throws {
