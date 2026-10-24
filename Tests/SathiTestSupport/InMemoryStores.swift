@@ -38,6 +38,8 @@ package final class InMemoryStateStore: StateStore {
 package final class InMemoryHistoryStore: HistoryStore {
     package private(set) var events: [HistoryEvent]
     package private(set) var appended: [HistoryEvent] = []
+    package private(set) var ranges: [DateInterval] = []
+    package private(set) var allEventsCalls = 0
     package private(set) var flushes = 0
     package var failFlush = false
 
@@ -51,7 +53,17 @@ package final class InMemoryHistoryStore: HistoryStore {
     }
 
     package func events(from start: Date, to end: Date) -> [HistoryEvent] {
-        events.filter { $0.date >= start && $0.date < end }.sorted { $0.date < $1.date }
+        ranges.append(DateInterval(start: start, end: max(start, end)))
+        return events.filter { $0.date >= start && $0.date < end }.sorted { $0.date < $1.date }
+    }
+
+    package func allEvents() -> [HistoryEvent] {
+        allEventsCalls += 1
+        return events.sorted { $0.date < $1.date }
+    }
+
+    package func clearRanges() {
+        ranges.removeAll()
     }
 
     @discardableResult

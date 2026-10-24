@@ -74,7 +74,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 
 ## Stats and reports
 
-1. A day starts at local midnight (`Calendar.startOfDay`).
+1. A day starts at `Calendar.startOfDay` in the user's time zone. Dates for storage, reports, and export use the Gregorian calendar, whatever the system calendar is.
 2. Daily total = sum of `done` event amounts of that habit on that day, after the last streak reset.
 3. Day report: buckets of `Limits.reportDayBucketHours`. Week: Monday to Sunday. Month: each calendar day.
 4. Average per day counts only days up to today, never future days.

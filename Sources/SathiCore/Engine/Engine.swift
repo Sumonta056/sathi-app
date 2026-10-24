@@ -5,7 +5,7 @@ import Foundation
 package final class Engine: ObservableObject {
     @Published package var data: Persisted {
         didSet {
-            streakCache.removeAll()
+            if streakInputsChanged(from: oldValue) { clearStreakCache() }
             if oldValue.prefs.scheduleKey != data.prefs.scheduleKey { reschedule() }
             if oldValue.prefs != data.prefs { store.savePrefs(data.prefs) }
             if oldValue.live != data.live { store.saveLive(data.live) }
@@ -36,6 +36,7 @@ package final class Engine: ObservableObject {
     var celebrateToken = UUID()
     var sessionFromReminder = false
     var streakCache: [HabitID: Int] = [:]
+    var longestCache: [HabitID: Int] = [:]
     var streakCacheDay: Date?
 
     package init(

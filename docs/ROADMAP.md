@@ -46,9 +46,13 @@ Spec: `docs/specs/phase-3-meditation.md`
 
 ## Phase 4: Reports and export, core
 
-- [ ] `ReportBuilder` (day, week, month)
-- [ ] `StreakCalculator` across month files (removes the 3-month streak cap from Phase 2)
-- [ ] `CSVExporter`, `JSONExporter`, `FileExporter` port
+Spec: `docs/specs/phase-4-reports.md`
+
+
+- [x] `ReportBuilder` (day, week, month)
+- [x] `StreakCalculator` across month files (removes the 3-month streak cap from Phase 2)
+- [x] `CSVExporter`, `JSONExporter`, `FileExporter` port
+- [x] Review fixes R1–R5 (midnight-DST days, streak windows, Gregorian dates, streak cache, one clock)
 
 ## Phase 5: UI redesign
 
@@ -75,6 +79,13 @@ Spec: `docs/specs/phase-3-meditation.md`
 - [ ] Definition of done in `CLAUDE.md` passes
 
 ## Later
+
+- Streak memory/history split assumes the clock never goes back across a month after launch (store the oldest loaded window)
+- `windowStart` uses the system calendar; use the Gregorian calendar to match storage
+- Menu subtitle uses the published `now` while the streak uses `clock.now` (cosmetic, one minute after midnight)
+
+- `percentOfGoal` rounds 99.5 up to 100 (product choice)
+- Export errors are silent; export runs on the main thread (handle in Phase 5g)
 
 - A settings change during a pause moves a missed clock slot to the next slot (rule 5). Confirm with the user or add a test
 - A queued habit whose due time moved forward still shows from the queue

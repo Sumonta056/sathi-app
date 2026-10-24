@@ -25,6 +25,7 @@ The Engine talks to the outside world only through protocols in `Sources/SathiCo
 | `HistoryStore` | `FileHistoryStore` (`history/YYYY-MM.json`) | `InMemoryHistoryStore` |
 | `SoundPlayer` | `SystemSoundPlayer` (SathiUI) | `SpySoundPlayer` |
 | `ReminderPresenter` | `UIController` (SathiUI) | `SpyPresenter` |
+| `FileExporter` | save panel adapter (SathiUI, Phase 5) | `SpyFileExporter` |
 
 To add a new side effect (notifications, analytics, file export), add a port protocol in Core, a real impl in UI or Platform, and a fake in `Tests/SathiTestSupport`.
 

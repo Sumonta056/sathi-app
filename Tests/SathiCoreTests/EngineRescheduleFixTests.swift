@@ -79,11 +79,4 @@ struct EngineRescheduleFixTests {
         }
         #expect(h.engine.streak(.meditation) == 0)
     }
-
-    @Test func aGoalOfZeroNeverCountsAsMet() {
-        var data = Persisted()
-        data.prefs.meditation.slots = []
-        data.events = [.done(.meditation, 5, at: day(2026, 3, 3, 8, 5))]
-        #expect(Stats().streak(.meditation, data: data, now: day(2026, 3, 4, 15)) == 0)
-    }
 }

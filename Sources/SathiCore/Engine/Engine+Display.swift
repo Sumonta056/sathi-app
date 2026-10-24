@@ -4,18 +4,6 @@ extension Engine {
     package var glassesToday: Double { stats.total(.water, on: now, in: data.events) }
     package var readToday: Int { Int(stats.total(.reading, on: now, in: data.events)) }
 
-    package func streak(_ id: HabitID) -> Int {
-        let today = calendar.startOfDay(for: now)
-        if streakCacheDay != today {
-            streakCache.removeAll()
-            streakCacheDay = today
-        }
-        if let cached = streakCache[id] { return cached }
-        let value = stats.streak(id, data: data, now: now)
-        streakCache[id] = value
-        return value
-    }
-
     package var waterLevel: Double {
         guard data.prefs.water.enabled else { return 0 }
         let st = state(.water)

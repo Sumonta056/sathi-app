@@ -13,7 +13,7 @@ package final class FileHistoryStore: HistoryStore, @unchecked Sendable {
 
     package init(base: URL, calendar: Calendar, delay: TimeInterval = Timing.saveCoalesce) {
         folder = base.appendingPathComponent(StorageKeys.historyFolder)
-        self.calendar = calendar
+        self.calendar = .gregorian(in: calendar.timeZone)
         self.delay = delay
     }
 
@@ -34,6 +34,14 @@ package final class FileHistoryStore: HistoryStore, @unchecked Sendable {
             months(from: start, to: end)
                 .flatMap { cache[$0] ?? readMonth($0) }
                 .filter { $0.date >= start && $0.date < end }
+                .sorted { $0.date < $1.date }
+        }
+    }
+
+    package func allEvents() -> [HistoryEvent] {
+        queue.sync {
+            Set(monthFiles()).union(cache.keys).sorted()
+                .flatMap { cache[$0] ?? readMonth($0) }
                 .sorted { $0.date < $1.date }
         }
     }
@@ -71,7 +79,16 @@ package final class FileHistoryStore: HistoryStore, @unchecked Sendable {
     }
 
     private func url(_ month: String) -> URL {
-        folder.appendingPathComponent(month + ".json")
+        folder.appendingPathComponent(month + StorageKeys.jsonExtension)
+    }
+
+    private func monthFiles() -> [String] {
+        let names = (try? FileManager.default.contentsOfDirectory(atPath: folder.path)) ?? []
+        return names.compactMap { name in
+            guard name.hasSuffix(StorageKeys.jsonExtension) else { return nil }
+            let month = String(name.dropLast(StorageKeys.jsonExtension.count))
+            return month.range(of: StorageKeys.monthFilePattern, options: .regularExpression) == nil ? nil : month
+        }
     }
 
     private func monthName(_ date: Date) -> String {

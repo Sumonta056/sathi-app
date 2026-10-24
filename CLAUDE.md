@@ -23,11 +23,12 @@ Sources/
     Habits/        HabitRules, DayClock, one folder per habit: Water/, Reading/, Meditation/ (rules, prefs, BreathingPattern)
     Constants/     Timing, Limits, StorageKeys, SoundName
     Scheduling/    EscalationPolicy (bubble/lock), TickPlanner (timer delay)
-    Stats/         Stats (daily totals, streak)
+    Stats/         Stats (daily totals), StreakCalculator (current, longest), ReportBuilder + Report (day/week/month)
+    Export/        CSVExporter, JSONExporter (backup), ExportNames, ExportFormat
     Formatting/    Fmt, Copywriter
-    Ports/         Clock, StateStore, HistoryStore, SoundPlayer, ReminderPresenter (protocols + system impls)
+    Ports/         Clock, StateStore, HistoryStore, SoundPlayer, ReminderPresenter, FileExporter (protocols + system impls)
     Storage/       JSONFiles, FileStateStore, FileHistoryStore, LegacyMigrator, Legacy/ (v1 shapes)
-    Engine/        Engine (+Loop, +Actions, +Session, +Display, +History), StatusModel
+    Engine/        Engine (+Loop, +Actions, +Session, +Display, +History, +Reports), StatusModel
   SathiUI/       SwiftUI + AppKit. Views and windows only.
     Constants/     UIMetrics, TimeSlots
     Theme/         Palette, ButtonStyles, ProgressBar, Shake, Color+Hex
@@ -38,7 +39,7 @@ Sources/
   Sathi/         Executable. SathiApp, AppDelegate, AppEnvironment (composition root).
 Resources/        Info.plist (version), AppIcon.icns (app icon), AppIcon.png (1024 px preview)
 Tests/
-  SathiTestSupport/  FakeClock, InMemoryStateStore, InMemoryHistoryStore, SpySoundPlayer, SpyPresenter, EngineHarness, TestFiles, day()
+  SathiTestSupport/  FakeClock, InMemoryStateStore, InMemoryHistoryStore, SpySoundPlayer, SpyPresenter, SpyFileExporter, FixedZone, EngineHarness, TestFiles, day()
   SathiCoreTests/    Swift Testing unit tests for every Core module
   SathiUITests/      ViewInspector tests for views + engine interaction
 ```

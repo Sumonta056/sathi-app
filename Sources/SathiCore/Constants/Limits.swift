@@ -4,6 +4,12 @@ package enum Limits {
     package static let monthsInMemory = 3
     package static let schemaVersion = 1
     package static let streakLookbackDays = 365
+    package static let longestStreakLookbackDays = 365
+    package static let reportDayBucketHours = 2
+    package static let hoursPerDay = 24
+    package static let daysPerWeek = 7
+    package static let weekStartWeekday = 2
+    package static let fullPercent = 100
 
     package static let glassStep: Double = 0.25
     package static let minimumLog: Double = 0.25
