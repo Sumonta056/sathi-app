@@ -1,5 +1,5 @@
+import SathiUI
 import SwiftUI
-import AppKit
 
 @main
 struct SathiApp: App {
@@ -7,18 +7,10 @@ struct SathiApp: App {
 
     var body: some Scene {
         MenuBarExtra {
-            MenuPanel().environmentObject(Engine.shared)
+            MenuPanel().environmentObject(AppEnvironment.engine)
         } label: {
-            StatusLabel(engine: Engine.shared)
+            StatusLabel(status: AppEnvironment.engine.status)
         }
         .menuBarExtraStyle(.window)
-    }
-}
-
-@MainActor
-final class AppDelegate: NSObject, NSApplicationDelegate {
-    func applicationDidFinishLaunching(_ notification: Notification) {
-        NSApp.setActivationPolicy(.accessory)
-        Engine.shared.start()
     }
 }
