@@ -55,9 +55,11 @@ Detailed rules live in `.claude/rules/`. They load when you touch matching files
 6. **Use `package` access** for anything another target needs. Keep the rest `internal` or `private`.
 7. **Performance budget:** idle CPU < 1%, memory footprint < 40 MB, < 10 idle wakeups per minute. No repeating 1-second timers. Animations cap at 30 fps and pause when hidden.
 8. **Tests first** for every behavior change. Use `EngineHarness` and fakes. No real waits.
+9. **Business rules** live in `.claude/rules/business-logic.md`. Change that file before you change behavior.
 
 ## Workflow
 
+- The plan lives in `docs/ROADMAP.md`. Use the `/roadmap` skill to see the next step and keep the roadmap current.
 - Use the `/feature` skill for every change: plan → approval → failing tests → code → checks → review.
 - Use the `/add-habit` skill to add a new habit (e.g. "stretch", "eyes").
 - Use the `/perf-check` skill after any change to timers, animations, or published state.

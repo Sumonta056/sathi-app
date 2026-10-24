@@ -1,0 +1,83 @@
+# Sathi roadmap
+
+Branch: `feature/redesign-v2`. Design: https://claude.ai/artifact/AgF243uMtC5H8ySBfdXx6e
+
+Use the `/roadmap` skill to see the next step and to update this file. Each phase runs the `/feature` loop and ends with one commit. Tick a box only when its tests pass.
+
+Status: `[ ]` to do, `[~]` in progress, `[x]` done.
+
+## Phase 0: Structure
+
+- [x] `.claude/rules/business-logic.md`
+- [x] `docs/ROADMAP.md`
+- [x] `/roadmap` skill
+
+## Phase 1: Habit-agnostic core (no behavior change)
+
+- [ ] `Engine.habits: [HabitID: HabitState]` replaces `water` and `reading`
+- [ ] Exhaustive `switch` on `HabitID` everywhere
+- [ ] `HabitRules` protocol, `WaterRules`, `ReadingRules` in `SathiCore/Habits/`
+- [ ] `Scheduler` folded into the rules, `SchedulerTests` moved to `WaterRulesTests` and `ReadingRulesTests`
+- [ ] All old tests pass
+
+## Phase 2: File storage
+
+- [ ] `Prefs` split into `GeneralPrefs`, `WaterPrefs`, `ReadingPrefs` (needs the migration)
+- [ ] `HistoryEvent` (done, snooze, skip)
+- [ ] `HistoryStore` port and `InMemoryHistoryStore` fake
+- [ ] `FileStateStore`, `FileHistoryStore` (atomic, `schemaVersion`)
+- [ ] `LegacyMigrator` from `sathi.state.v1`, with fixture test
+- [ ] Coalesced saves (`Timing.saveCoalesce`)
+
+## Phase 3: Meditation (Shanti), core
+
+- [ ] `HabitID.meditation`, `MeditationPrefs`, `MeditationRules`
+- [ ] `BreathingPattern` (box, relax, even)
+- [ ] `Phase.session(HabitID)`
+- [ ] Copy for Shanti
+
+## Phase 4: Reports and export, core
+
+- [ ] `ReportBuilder` (day, week, month)
+- [ ] `StreakCalculator` across month files
+- [ ] `CSVExporter`, `JSONExporter`, `FileExporter` port
+
+## Phase 5: UI redesign
+
+- [ ] Theme: night-sprout `Palette`, SF Rounded `Typography`
+- [ ] Settings window: sidebar, General, Water, Reading, Meditation, Add a buddy (coming soon)
+- [ ] Menu bar popover with rings and pause chips
+- [ ] Water bubble (dark)
+- [ ] Reading corner popup and timer pill
+- [ ] Meditation breathe view
+- [ ] Reports window with charts, streak calendar, export menu
+- [ ] `/perf-check` passes
+
+## Phase 6: Claude setup
+
+- [ ] Rewrite `add-habit` skill for modules
+- [ ] `.claude/rules/storage.md`
+- [ ] `data-migration` skill
+- [ ] `ui-verifier` agent
+- [ ] Update `test-writer`, `write-unit-tests`, `perf-auditor`, `scripts/perf.sh`
+
+## Phase 7: Docs and release check
+
+- [ ] Update `README.md` and `CLAUDE.md`
+- [ ] Definition of done in `CLAUDE.md` passes
+
+## Later
+
+- Morning dew (light) theme and Follow macOS
+- Real Stretch, Eye break, Walk, Posture modules
+
+## Decisions
+
+| Date | Decision |
+|---|---|
+| 2026-10-24 | Storage: monthly JSON files in Application Support. History kept forever. |
+| 2026-10-24 | Font: SF Rounded. No bundled font. |
+| 2026-10-24 | Theme: Night only first. |
+| 2026-10-24 | "Add a buddy" shows coming-soon cards. |
+| 2026-10-24 | `HabitID` stays an enum. Each habit's logic lives in a `HabitRules` module. |
+| 2026-10-24 | Reading and Meditation never lock the screen. |

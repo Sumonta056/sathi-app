@@ -1,0 +1,82 @@
+---
+paths:
+  - "Sources/SathiCore/**/*.swift"
+  - "Sources/SathiUI/**/*.swift"
+  - "Tests/**/*.swift"
+---
+
+# Business logic rules
+
+These rules define what Sathi does. Code and tests must agree with them. If a request conflicts with a rule, stop and ask the user. Change this file first, then the code.
+
+## Words
+
+| Word | Meaning |
+|---|---|
+| Habit | One thing Sathi reminds about. A case of `HabitID`. |
+| Buddy | The character of a habit. Water = Fota, Reading = Boi, Meditation = Shanti. |
+| Module | All the code of one habit: `SathiCore/Habits/<Name>/` and `SathiUI/Features/<Name>/`. |
+| Due | The time a reminder must show. Comes from the habit's `HabitRules.nextDue`. |
+| Reminder | What the user sees when a habit is due: bubble, corner popup, or lock. |
+| Snooze | The user delays a reminder. Not answering for `ignoreMinutes` also counts as a snooze. |
+| Session | A timed activity: reading or meditation. `Phase.session(HabitID)`. |
+| Event | One record in history: done, snooze, or skip. `HistoryEvent`. |
+| Goal | The daily target of a habit. Water: glasses. Reading and meditation: minutes. |
+| Streak | Count of days in a row, up to today, on which the goal was met. |
+
+## Habits
+
+1. Each habit is a module. A module owns its prefs, rules, copy, settings tab, and reminder view.
+2. Shared code (Engine, Scheduler loop, stores, Reports) never names a specific habit. It uses `switch` on `HabitID` or calls `HabitRules`.
+3. Every `switch` on `HabitID` is exhaustive. Never use `default:` and never use `id == .water ? a : b`. A new habit must fail to compile until every place handles it.
+4. A habit that is off has no due time, shows no reminder, and is not in the queue. Its history stays.
+5. Only one reminder shows at a time. Other due habits wait in the queue in due-time order.
+6. Pause stops all reminders until the pause ends. Due habits wait in the queue.
+
+## Schedules
+
+| Habit | Schedule | Done when |
+|---|---|---|
+| Water | Every `intervalMinutes`, only between start and end time | The user logs an amount (minimum `Limits.minimumLog`) |
+| Reading | Once a day at a set time, on the selected weekdays | A session of `sessionMinutes` ends |
+| Meditation | At each selected slot (morning, afternoon, evening) | A breathing session ends |
+
+1. After "done", the next due time starts from the done time, not from the old due time.
+2. A due time outside active hours moves to the next start of active hours.
+3. Reading is skipped for the day when today's minutes already meet the goal.
+
+## Escalation
+
+| Strictness (raw value) | Label | Behavior |
+|---|---|---|
+| `friendly` | Gentle | A bubble each time. It never stays on top. |
+| `persistent` | Nudgy | After 1 snooze: stays on top, wiggles, no close button. |
+| `strict` | Strict | After 1 snooze: Nudgy. After 2 snoozes: full-screen lock. |
+
+1. Only Water may use Strict. Reading and Meditation never lock the screen.
+2. Reading shows a corner popup in the top-right by default. It never takes focus from the active app.
+3. The lock always has an emergency skip. A skip resets that habit's streak.
+4. Raw values never change. They are in saved files. Change only the labels.
+
+## History and storage
+
+1. All data stays on the Mac in `~/Library/Application Support/Sathi/`. Nothing goes to a network.
+2. `prefs.json` holds settings. `state.json` holds live state. `history/YYYY-MM.json` holds events of one month.
+3. History is kept forever. RAM holds only the current month. Older months load on demand and are released after use.
+4. Every write is atomic. Every file has `schemaVersion`. A file that cannot be read loads defaults and is not deleted.
+5. A new field gets a default value. A breaking change bumps `schemaVersion` and adds a migration with a fixture test.
+6. The UserDefaults key `sathi.state.v1` is read once by `LegacyMigrator`, then kept as a backup for one release.
+
+## Stats and reports
+
+1. A day starts at local midnight (`Calendar.startOfDay`).
+2. Daily total = sum of `done` event amounts of that habit on that day, after the last streak reset.
+3. Day report: buckets of `Limits.reportDayBucketHours`. Week: Monday to Sunday. Month: each calendar day.
+4. Average per day counts only days up to today, never future days.
+5. "% of goal" is capped at 100.
+6. Export formats: CSV (one row per event), JSON (full backup), PDF (one-page summary). CSV and JSON are built in Core. PDF is rendered in UI.
+
+## Time
+
+1. Core reads time only from `clock.now`. Never `Date()`.
+2. Tests use `FakeClock` and fixed dates. A test never waits.
