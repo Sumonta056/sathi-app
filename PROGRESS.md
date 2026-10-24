@@ -126,6 +126,38 @@ Text on an accent button is `#0D1220`. Corner radius: cards 16, buttons 10–12,
 
 For each slice, the spec must name every new view, the Engine calls it makes, the strings tests look for, and the constants it adds to `UIMetrics`.
 
+### Time estimate for Phase 5 (told to the user on 2026-10-24)
+
+About 4–5 hours of agent work, plus the user's answers and approvals. Phases 1–4 took 30–60 minutes each, including review fix rounds.
+
+| Slice | Estimate |
+|---|---|
+| 5a Theme | 20–30 min |
+| 5b Settings window | 45–60 min |
+| 5c Menu bar popover | 25–35 min |
+| 5d Water bubble | 25–35 min |
+| 5e Reading corner popup | 30–40 min |
+| 5f Meditation | 25–35 min |
+| 5g Reports window | 45–60 min |
+| 5h Perf check | 15–30 min |
+
+Risks: a visual fix round after the user sees a screen adds 10–20 minutes per slice. A perf problem adds about 30 minutes.
+
+Ways to go faster (offer them to the user at the start; do not apply them without a yes):
+
+- One commit approval per group of slices (for example 5a–5c) instead of one per slice. Saves about 30 minutes.
+- A full review only for slices with logic (5e, 5g). One review pass for the pure view slices. Saves about 45 minutes.
+
+Each slice is its own commit, so the user gets usable screens early (the new Settings window after 5b).
+
+### Phase 5 start checklist
+
+1. `git status` (only `Feature.md` untracked) and `git log --oneline -3` (top is the handover commit after `d387ab0`).
+2. `./scripts/test.sh` → 402 pass; `./scripts/lint.sh` → Lint OK.
+3. Read the design canvas artboards before writing the 5a spec.
+4. Ask the user about the two speed options above.
+5. Write `docs/specs/phase-5a-theme.md`, link it in `docs/ROADMAP.md`, then run the workflow.
+
 ## Phase 6: Claude setup
 
 - Rewrite `.claude/skills/add-habit/SKILL.md` for the module layout: one folder per habit in Core (`Habits/<Name>/`: prefs, rules) and UI (`Features/<Name>/`: settings tab, reminder view), the exhaustive switches the compiler finds, `Prefs`/`scheduleKey`/decoding defaults, Copywriter, Palette, BuddyKind, tests per step.
