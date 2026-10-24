@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(swift build)",
+      "Bash(swift build *)",
+      "Bash(swift test)",
+      "Bash(swift test *)",
+      "Bash(swift package resolve)",
+      "Bash(./scripts/test.sh)",
+      "Bash(./scripts/test.sh *)",
+      "Bash(./scripts/lint.sh)",
+      "Bash(./scripts/lint.sh *)",
+      "Bash(./scripts/perf.sh)",
+      "Bash(swiftlint *)",
+      "Bash(swiftformat *)",
+      "Bash(pgrep -x Sathi)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)"
+    ],
+    "ask": [
+      "Bash(./build.sh --install)",
+      "Bash(git commit *)",
+      "Bash(git push *)"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(git push * --force*)",
+      "Bash(git reset --hard*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/post-edit-lint.sh",
+            "timeout": 60,
+            "statusMessage": "Formatting and linting the edited Swift file"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/require-tests.sh",
+            "timeout": 600,
+            "statusMessage": "Swift files changed: running lint and tests"
+          }
+        ]
+      }
+    ]
+  }
+}
