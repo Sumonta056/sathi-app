@@ -12,6 +12,7 @@ Sathi is a macOS menu bar app (macOS 13+, Swift 5.9 tools, SwiftUI + AppKit). Tw
 | Lint and file-size check | `./scripts/lint.sh` (add `--fix` to auto-format) |
 | Build, install, open | `./build.sh --install` |
 | Performance budget | `./scripts/perf.sh` (needs the app running) |
+| Make a DMG installer | `./scripts/make-dmg.sh` → `build/Sathi-<version>.dmg`. Copy to the project root. `*.dmg` is git-ignored. |
 
 ## Module map
 
@@ -33,6 +34,7 @@ Sources/
     Windows/       UIController (ReminderPresenter impl), LockScreen, PanelWindows
     Platform/      SystemSoundPlayer
   Sathi/         Executable. SathiApp, AppDelegate, AppEnvironment (composition root).
+Resources/        Info.plist (version), AppIcon.icns (app icon), AppIcon.png (1024 px preview)
 Tests/
   SathiTestSupport/  FakeClock, InMemoryStateStore, SpySoundPlayer, SpyPresenter, EngineHarness, day()
   SathiCoreTests/    Swift Testing unit tests for every Core module
@@ -59,6 +61,7 @@ Detailed rules live in `.claude/rules/`. They load when you touch matching files
 - Use the `/feature` skill for every change: plan → approval → failing tests → code → checks → review.
 - Use the `/add-habit` skill to add a new habit (e.g. "stretch", "eyes").
 - Use the `/perf-check` skill after any change to timers, animations, or published state.
+- Use the `/make-dmg` skill to package the app for sharing (version bump, DMG, optional signing and notarization).
 - Ask before every `git commit` and `git push`. `main` is protected by a hook. Work on a branch.
 
 ## Definition of done

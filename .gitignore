@@ -4,3 +4,5 @@ build/
 .swiftpm/
 *.xcodeproj/xcuserdata/
 DerivedData/
+*.dmg
+icon-concepts/

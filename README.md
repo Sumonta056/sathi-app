@@ -40,6 +40,18 @@ Needs Xcode 15 or newer. SwiftLint and SwiftFormat: `brew install swiftlint swif
 | Lint and file-size check | `./scripts/lint.sh` (`--fix` to format) |
 | Install the release app | `./build.sh --install` |
 | CPU, memory, and wakeups budget | `./scripts/perf.sh` |
+| Make a DMG installer | `./scripts/make-dmg.sh` → `build/Sathi-<version>.dmg` |
+
+## Share the app
+
+`./scripts/make-dmg.sh` builds `build/Sathi-<version>.dmg`. The version comes from `CFBundleShortVersionString` in `Resources/Info.plist`.
+
+The default build is ad-hoc signed. On another Mac, right-click Sathi.app and choose **Open** the first time. For a public download, sign and notarize with an Apple Developer ID:
+
+```
+xcrun notarytool store-credentials sathi-notary
+SIGN_IDENTITY="Developer ID Application: Your Name (TEAMID)" NOTARY_PROFILE=sathi-notary ./scripts/make-dmg.sh
+```
 
 ## Structure
 
