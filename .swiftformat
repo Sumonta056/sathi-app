@@ -1,0 +1,11 @@
+--swiftversion 5.9
+--exclude .build,build
+--indent 4
+--maxwidth 150
+--wraparguments before-first
+--wrapcollections before-first
+--commas inline
+--stripunusedargs closure-only
+--self remove
+--importgrouping alpha
+--disable wrapMultilineStatementBraces,redundantReturn,andOperator,wrapSingleLineComments,docComments,redundantType,preferKeyPath,blankLinesBetweenImports,wrapIfStatementBodies,wrapFunctionBodies,wrapPropertyBodies,wrapIfExpressionBodies,extensionAccessControl,blankLinesBetweenScopes

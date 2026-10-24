@@ -1,0 +1,80 @@
+included:
+  - Sources
+  - Tests
+excluded:
+  - .build
+  - build
+
+disabled_rules:
+  - identifier_name
+  - todo
+  - trailing_comma
+  - opening_brace
+
+analyzer_rules:
+  - unused_import
+
+opt_in_rules:
+  - closure_spacing
+  - empty_count
+  - first_where
+  - sorted_imports
+  - weak_delegate
+  - contains_over_filter_count
+  - contains_over_first_not_nil
+  - reduce_into
+
+line_length:
+  warning: 150
+  error: 180
+  ignores_urls: true
+
+file_length:
+  warning: 200
+  error: 250
+  ignore_comment_only_lines: true
+
+type_body_length:
+  warning: 150
+  error: 200
+
+function_body_length:
+  warning: 50
+  error: 80
+
+cyclomatic_complexity:
+  warning: 10
+  error: 15
+
+large_tuple:
+  warning: 3
+
+custom_rules:
+  no_comments:
+    name: "No comments"
+    regex: '^\s*(//|/\*)'
+    message: "Project rule: no code comments unless the user asks for them."
+    severity: error
+  no_magic_sleep:
+    name: "Use Timing constants"
+    regex: 'Task\.sleep\(nanoseconds:\s*[0-9]'
+    message: "Put durations in Constants/Timing.swift or UIMetrics.swift."
+    severity: error
+  no_direct_date_in_core:
+    name: "Use the Clock port"
+    regex: '(?<![A-Za-z.])Date\(\)'
+    included: "Sources/SathiCore/(Engine|Scheduling|Stats)/"
+    message: "Engine and logic code must read time from the injected Clock."
+    severity: error
+  no_userdefaults_outside_store:
+    name: "Use the StateStore port"
+    regex: 'UserDefaults\.standard'
+    excluded: "Sources/SathiCore/Ports/StateStore.swift"
+    message: "Only UserDefaultsStateStore may touch UserDefaults."
+    severity: error
+  no_appkit_in_core:
+    name: "SathiCore stays platform-free"
+    regex: '^import (AppKit|SwiftUI|Cocoa)'
+    included: "Sources/SathiCore/"
+    message: "SathiCore must not import AppKit or SwiftUI. Put UI code in SathiUI."
+    severity: error

@@ -28,12 +28,24 @@ To test right away: Settings → **Show water reminder now**. Snooze twice to se
 
 Everything (times, interval, glass/bottle, bottle size, goal, strictness, snooze length, sound) is in Settings. Data is stored locally in UserDefaults (`com.mridul.sathi`).
 
-## Files
+## Develop
 
-- `Engine.swift`: scheduler, queue and escalation
-- `UIController.swift`: bubble, lock, reading and celebration windows
-- `Views.swift`: all SwiftUI screens
-- `Buddy.swift`: Fota, Boi, glass and bottle drawings
-- `SettingsView.swift`, `Model.swift`, `Theme.swift`, `SathiApp.swift`
+Needs Xcode 15 or newer. SwiftLint and SwiftFormat: `brew install swiftlint swiftformat`.
 
-Adding a habit later means adding a case to `HabitID`, its prefs, a buddy drawing and its popup section.
+| Task | Command |
+|---|---|
+| Build | `swift build` |
+| Run the app from source | `swift run` |
+| All tests (unit + UI) | `./scripts/test.sh` |
+| Lint and file-size check | `./scripts/lint.sh` (`--fix` to format) |
+| Install the release app | `./build.sh --install` |
+| CPU, memory, and wakeups budget | `./scripts/perf.sh` |
+
+## Structure
+
+- `Sources/SathiCore`: models, schedule, escalation, stats, copy, and the `Engine` state machine. No AppKit or SwiftUI.
+- `Sources/SathiUI`: SwiftUI views (one feature per folder), buddy drawings, theme, and window management.
+- `Sources/Sathi`: the app entry point and composition root.
+- `Tests/`: Swift Testing unit tests, ViewInspector UI tests, and shared fakes.
+
+`CLAUDE.md` has the full module map, rules, and definition of done. To add a habit, follow `.claude/skills/add-habit/SKILL.md`.
