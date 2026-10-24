@@ -5,6 +5,7 @@ let package = Package(
     name: "Sathi",
     platforms: [.macOS(.v13)],
     targets: [
-        .executableTarget(name: "Sathi", path: "Sources/Sathi")
+        .executableTarget(name: "Sathi", path: "Sources/Sathi"),
+        .testTarget(name: "SathiTests", dependencies: ["Sathi"], path: "Tests/SathiTests")
     ]
 )
