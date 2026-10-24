@@ -15,7 +15,10 @@ struct BubbleView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             header
-            if id == .water { WaterLogSection() } else { ReadingInfoCard() }
+            switch id {
+            case .water: WaterLogSection()
+            case .reading: ReadingInfoCard()
+            }
             actions
             if level == .persist { warn }
             IgnoreBar(accent: accent)
@@ -68,7 +71,10 @@ struct BubbleView: View {
 
     private var actions: some View {
         HStack(spacing: 8) {
-            if id == .reading {
+            switch id {
+            case .water:
+                EmptyView()
+            case .reading:
                 Button("Start \(e.data.prefs.readingSessionMinutes)-min timer") { e.startReading() }
                     .buttonStyle(PillButton(kind: .primary))
                     .layoutPriority(1)

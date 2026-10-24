@@ -34,6 +34,17 @@ enum Palette {
     static let lockBody = Color(hex: 0xCFE3F2)
     static let lockHint = Color(hex: 0xA9C7DD)
 
-    static func accent(_ id: HabitID) -> Color { id == .water ? water : book }
-    static func deep(_ id: HabitID) -> Color { id == .water ? waterDeep : bookDeep }
+    static func accent(_ id: HabitID) -> Color {
+        switch id {
+        case .water: return water
+        case .reading: return book
+        }
+    }
+
+    static func deep(_ id: HabitID) -> Color {
+        switch id {
+        case .water: return waterDeep
+        case .reading: return bookDeep
+        }
+    }
 }

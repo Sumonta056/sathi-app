@@ -50,11 +50,10 @@ extension Engine {
     }
 
     private func enqueueDueHabits() {
-        let inHours = scheduler.inWaterHours(now)
         for id in HabitID.allCases where enabled(id) && !isDue(id) {
             let st = state(id)
             let due = now >= (st.snoozedUntil ?? st.nextDue)
-            if due && (id != .water || forced.contains(id) || inHours) {
+            if due && (forced.contains(id) || rules(id).isActiveTime(now)) {
                 queue.append(id)
             }
         }
@@ -101,7 +100,14 @@ extension Engine {
         ignoreDeadline = clock.now.addingTimeInterval(TimeInterval(data.prefs.ignoreMinutes) * Timing.minute)
         phase = .bubble(id, level)
         presenter.showBubble(id, level)
-        play(level == .persist ? .ping : (id == .water ? .glass : .purr))
+        play(level == .persist ? .ping : Self.greeting(id))
+    }
+
+    private static func greeting(_ id: HabitID) -> SoundName {
+        switch id {
+        case .water: return .glass
+        case .reading: return .purr
+        }
     }
 
     private func showLock(_ id: HabitID) {

@@ -8,9 +8,10 @@ package enum Copywriter {
     }
 
     package static func celebrationTitle(_ id: HabitID) -> String {
-        let titles = id == .water
-            ? ["Ahh, that's better.", "Fota is happy again.", "Refilled."]
-            : ["Chapter done.", "Boi is proud of you.", "Nice reading."]
+        let titles: [String] = switch id {
+        case .water: ["Ahh, that's better.", "Fota is happy again.", "Refilled."]
+        case .reading: ["Chapter done.", "Boi is proud of you.", "Nice reading."]
+        }
         return titles.randomElement() ?? titles[0]
     }
 

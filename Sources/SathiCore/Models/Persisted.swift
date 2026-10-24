@@ -9,4 +9,11 @@ package struct Persisted: Codable, Equatable, Sendable {
     package var streakReset: [String: Date] = [:]
 
     package init() {}
+
+    package func lastDone(_ id: HabitID) -> Date? {
+        switch id {
+        case .water: return lastWaterDone
+        case .reading: return nil
+        }
+    }
 }

@@ -31,10 +31,16 @@ package struct Prefs: Codable, Equatable, Sendable {
     }
 
     package func isEnabled(_ id: HabitID) -> Bool {
-        id == .water ? waterEnabled : readingEnabled
+        switch id {
+        case .water: return waterEnabled
+        case .reading: return readingEnabled
+        }
     }
 
     package func strictness(_ id: HabitID) -> Strictness {
-        id == .water ? waterStrictness : readingStrictness
+        switch id {
+        case .water: return waterStrictness
+        case .reading: return readingStrictness
+        }
     }
 }

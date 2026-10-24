@@ -35,7 +35,7 @@ struct BubbleViewTests {
         h.showReminder(.water)
         try waterBubble(h).inspect().find(button: "Snooze 5 min").tap()
         #expect(h.engine.phase == .idle)
-        #expect(h.engine.water.snoozes == 1)
+        #expect(h.engine.state(.water).snoozes == 1)
     }
 
     @Test func persistLevelShowsTheLockWarning() throws {

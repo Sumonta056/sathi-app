@@ -9,7 +9,7 @@ struct CelebrateView: View {
         VStack(spacing: 10) {
             BuddyView(kind: c.id.kind, mood: .cheer, level: 1)
                 .frame(width: 110, height: 136)
-            Text(c.id == .water ? "+\(Fmt.glasses(c.amount))" : "\(Int(c.amount)) min read")
+            Text(badge(c))
                 .font(.system(size: 15, weight: .bold, design: .rounded))
                 .foregroundStyle(Color.white)
                 .padding(.horizontal, 12)
@@ -20,10 +20,9 @@ struct CelebrateView: View {
             Text(subtitle(c))
                 .font(.system(size: 14))
                 .foregroundStyle(Palette.ink2)
-            if c.id == .water {
-                GlassGoalRow(total: e.glassesToday, goal: Int(e.data.prefs.dailyGoalGlasses))
-            } else {
-                ReadingWeekRow(streak: e.streak(.reading), today: e.now)
+            switch c.id {
+            case .water: GlassGoalRow(total: e.glassesToday, goal: Int(e.data.prefs.dailyGoalGlasses))
+            case .reading: ReadingWeekRow(streak: e.streak(.reading), today: e.now)
             }
             Button("Back to work") { e.endCelebrate() }
                 .buttonStyle(PillButton(kind: .primary))
@@ -39,10 +38,19 @@ struct CelebrateView: View {
         .foregroundStyle(Palette.ink)
     }
 
-    private func subtitle(_ c: Celebration) -> String {
-        if c.id == .water {
-            return "\(Fmt.count(e.glassesToday)) of \(Int(e.data.prefs.dailyGoalGlasses)) glasses today · \(e.streak(.water))-day streak"
+    private func badge(_ c: Celebration) -> String {
+        switch c.id {
+        case .water: return "+\(Fmt.glasses(c.amount))"
+        case .reading: return "\(Int(c.amount)) min read"
         }
-        return "\(e.streak(.reading))-day reading streak"
+    }
+
+    private func subtitle(_ c: Celebration) -> String {
+        switch c.id {
+        case .water:
+            return "\(Fmt.count(e.glassesToday)) of \(Int(e.data.prefs.dailyGoalGlasses)) glasses today · \(e.streak(.water))-day streak"
+        case .reading:
+            return "\(e.streak(.reading))-day reading streak"
+        }
     }
 }

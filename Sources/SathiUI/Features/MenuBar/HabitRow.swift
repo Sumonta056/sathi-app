@@ -21,9 +21,12 @@ struct HabitRow: View {
                     .foregroundStyle(.secondary)
                     .monospacedDigit()
             }
-            Button(id == .water ? "+1 glass" : "Read now") {
+            Button(actionTitle) {
                 MenuBarWindow.close()
-                if id == .water { e.logWater(1) } else { e.startReading() }
+                switch id {
+                case .water: e.logWater(1)
+                case .reading: e.startReading()
+                }
             }
             .buttonStyle(MiniButton())
         }
@@ -40,5 +43,12 @@ struct HabitRow: View {
             .padding(.vertical, 3)
             .foregroundStyle(due ? Color.white : Color.secondary)
             .background(Capsule().fill(due ? Palette.deep(id) : Color.primary.opacity(0.07)))
+    }
+
+    private var actionTitle: String {
+        switch id {
+        case .water: return "+1 glass"
+        case .reading: return "Read now"
+        }
     }
 }

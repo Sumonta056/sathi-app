@@ -17,7 +17,7 @@ package struct Stats: Sendable {
 
     package func streak(_ id: HabitID, data: Persisted, now: Date) -> Int {
         let totals = dailyTotals(id, data: data)
-        let goal = id == .water ? data.prefs.dailyGoalGlasses : Double(data.prefs.readingSessionMinutes)
+        let goal = id.rules(data.prefs, calendar: calendar).dailyGoal
         func met(_ day: Date) -> Bool { (totals[day] ?? 0) >= goal }
 
         var day = calendar.startOfDay(for: now)

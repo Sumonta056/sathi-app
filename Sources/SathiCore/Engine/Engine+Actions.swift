@@ -15,7 +15,7 @@ extension Engine {
         data.drinks.append(DrinkEntry(date: n, glasses: glasses))
         data.lastWaterDone = n
         prune()
-        water = HabitState(nextDue: scheduler.nextWaterDue(after: n))
+        habits[.water] = HabitState(nextDue: freshDue(.water, lastDone: n))
         queue.removeAll { $0 == .water }
         if isActive(.water) {
             presenter.closeBubble()
@@ -53,7 +53,7 @@ extension Engine {
         let n = clock.now
         data.reads.append(ReadEntry(date: n, minutes: minutes))
         prune()
-        reading = HabitState(nextDue: scheduler.nextReadingDue(now: n, readToday: readToday, skipToday: false))
+        habits[.reading] = HabitState(nextDue: freshDue(.reading, lastDone: n))
         presenter.closeSession()
         phase = .idle
         celebrate(.reading, Double(minutes))
@@ -67,17 +67,16 @@ extension Engine {
     }
 
     package func lockConfirmed(_ id: HabitID) {
-        if id == .water { logWater(1) } else { startReading() }
+        switch id {
+        case .water: logWater(1)
+        case .reading: startReading()
+        }
     }
 
     package func emergencySkip(_ id: HabitID) {
         let n = clock.now
         data.streakReset[id.rawValue] = n
-        if id == .water {
-            water = HabitState(nextDue: scheduler.nextWaterDue(after: n))
-        } else {
-            reading = HabitState(nextDue: scheduler.nextReadingDue(now: n, readToday: readToday, skipToday: true))
-        }
+        habits[id] = HabitState(nextDue: freshDue(id, lastDone: n, skipToday: true))
         presenter.closeLock()
         phase = .idle
         requestTick()
@@ -121,12 +120,9 @@ extension Engine {
     }
 
     func reschedule() {
-        let n = clock.now
-        if !isActive(.water) && water.snoozedUntil == nil {
-            water.nextDue = scheduler.nextWaterDue(after: data.lastWaterDone ?? n)
-        }
-        if !isActive(.reading) && reading.snoozedUntil == nil {
-            reading.nextDue = scheduler.nextReadingDue(now: n, readToday: readToday, skipToday: false)
+        for id in HabitID.allCases where !isActive(id) && state(id).snoozedUntil == nil {
+            let due = freshDue(id, lastDone: data.lastDone(id))
+            update(id) { $0.nextDue = due }
         }
         queue.removeAll { !enabled($0) }
         requestTick()

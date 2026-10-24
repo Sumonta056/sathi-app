@@ -5,5 +5,10 @@ enum BuddyKind {
 }
 
 extension HabitID {
-    var kind: BuddyKind { self == .water ? .drop : .book }
+    var kind: BuddyKind {
+        switch self {
+        case .water: return .drop
+        case .reading: return .book
+        }
+    }
 }

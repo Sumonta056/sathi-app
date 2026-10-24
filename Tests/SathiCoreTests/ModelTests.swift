@@ -48,4 +48,9 @@ struct ModelTests {
         #expect(p.strictness(.water) == .strict)
         #expect(p.strictness(.reading) == .persistent)
     }
+
+    @Test(arguments: HabitID.allCases)
+    func rulesMatchTheirHabit(_ id: HabitID) {
+        #expect(id.rules(Prefs()).id == id)
+    }
 }

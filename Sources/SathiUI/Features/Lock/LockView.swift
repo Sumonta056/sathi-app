@@ -56,12 +56,16 @@ struct LockView: View {
     }
 
     private var headline: String {
-        id == .water ? "Fota is drying up. Go get some water." : "Boi has waited long enough. Get your book."
+        switch id {
+        case .water: return "Fota is drying up. Go get some water."
+        case .reading: return "Boi has waited long enough. Get your book."
+        }
     }
 
     private var instructions: String {
-        id == .water
-            ? "Take a few sips, then press and hold for 3 seconds. Your screen comes back right after."
-            : "Open your book, then press and hold for 3 seconds to start your reading timer."
+        switch id {
+        case .water: return "Take a few sips, then press and hold for 3 seconds. Your screen comes back right after."
+        case .reading: return "Open your book, then press and hold for 3 seconds to start your reading timer."
+        }
     }
 }

@@ -18,17 +18,18 @@ extension Engine {
 
     package var waterLevel: Double {
         guard data.prefs.waterEnabled else { return 0 }
-        if isDue(.water) || water.snoozedUntil != nil { return 0 }
+        let st = state(.water)
+        if isDue(.water) || st.snoozedUntil != nil { return 0 }
         let total = TimeInterval(data.prefs.waterIntervalMinutes) * Timing.minute
-        return max(0, min(1, water.nextDue.timeIntervalSince(now) / total))
+        return max(0, min(1, st.nextDue.timeIntervalSince(now) / total))
     }
 
     package func remaining(_ id: HabitID) -> TimeInterval {
         let st = state(id)
         var r = (st.snoozedUntil ?? st.nextDue).timeIntervalSince(now)
-        let s = scheduler
-        if id == .water && !s.inWaterHours(now) && !forced.contains(.water) {
-            r = max(r, s.nextWaterStart(after: now).timeIntervalSince(now))
+        let rule = rules(id)
+        if !rule.isActiveTime(now) && !forced.contains(id) {
+            r = max(r, rule.nextActiveStart(after: now).timeIntervalSince(now))
         }
         return r
     }
@@ -44,13 +45,15 @@ extension Engine {
     }
 
     package func mood(_ id: HabitID) -> Mood {
-        if id == .water {
+        let waiting = isDue(id) || state(id).snoozedUntil != nil
+        switch id {
+        case .water:
             if case .lock(.water) = phase { return .sad }
-            if isDue(.water) || water.snoozedUntil != nil || waterLevel < Limits.lowWaterLevel { return .thirsty }
-            return .happy
+            if waiting || waterLevel < Limits.lowWaterLevel { return .thirsty }
+        case .reading:
+            if phase == .session { return .reading }
+            if waiting { return .thirsty }
         }
-        if phase == .session { return .reading }
-        if isDue(.reading) || reading.snoozedUntil != nil { return .thirsty }
         return .happy
     }
 
@@ -68,17 +71,18 @@ extension Engine {
     }
 
     package func progress(_ id: HabitID) -> Double {
-        id == .water
-            ? glassesToday / max(1, data.prefs.dailyGoalGlasses)
-            : Double(readToday) / Double(max(1, data.prefs.readingSessionMinutes))
+        let r = rules(id)
+        return r.total(on: now, data: data) / max(1, r.dailyGoal)
     }
 
     package func subtitle(_ id: HabitID) -> String {
-        if id == .water {
+        switch id {
+        case .water:
             return "\(Fmt.count(glassesToday)) of \(Int(data.prefs.dailyGoalGlasses)) glasses · \(streak(.water))-day streak"
+        case .reading:
+            let s = data.prefs.readingSessionMinutes
+            return "\(min(readToday, s)) of \(s) min · \(streak(.reading))-day streak"
         }
-        let s = data.prefs.readingSessionMinutes
-        return "\(min(readToday, s)) of \(s) min · \(streak(.reading))-day streak"
     }
 
     package func lockIsNext(_ id: HabitID) -> Bool {
@@ -98,11 +102,18 @@ extension Engine {
     package var statusText: String {
         if pausedUntil != nil { return "Paused" }
         switch phase {
-        case let .bubble(h, _): return h == .water ? "Drink!" : "Read!"
+        case let .bubble(h, _): return Self.callToAction(h)
         case .lock: return "Locked"
         case .session: return Fmt.clock(sessionEnd.timeIntervalSince(now))
         case .celebrate: return "Done"
         case .idle: return focus.map { Fmt.short(remaining($0)) } ?? "Sathi"
+        }
+    }
+
+    private static func callToAction(_ id: HabitID) -> String {
+        switch id {
+        case .water: return "Drink!"
+        case .reading: return "Read!"
         }
     }
 

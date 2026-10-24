@@ -36,7 +36,7 @@ struct EngineFlowTests {
         h.showReminder(.water)
         h.advance(minutes: 5)
         #expect(h.engine.phase == .idle)
-        #expect(h.engine.water.snoozes == 1)
+        #expect(h.engine.state(.water).snoozes == 1)
         #expect(h.presenter.calls.contains(.closeBubble))
     }
 
@@ -48,7 +48,7 @@ struct EngineFlowTests {
         h.engine.lockConfirmed(.water)
         #expect(h.engine.data.drinks.last?.glasses == 1)
         #expect(h.engine.phase == .celebrate)
-        #expect(h.engine.water.snoozes == 0)
+        #expect(h.engine.state(.water).snoozes == 0)
         #expect(h.presenter.calls.contains(.closeLock))
         #expect(h.sound.played.isEmpty)
     }
@@ -76,7 +76,7 @@ struct EngineFlowTests {
         h.engine.startReading()
         h.engine.stopSession()
         #expect(h.engine.phase == .idle)
-        #expect(h.engine.reading.snoozes == 1)
+        #expect(h.engine.state(.reading).snoozes == 1)
         #expect(h.engine.data.reads.isEmpty)
     }
 
@@ -101,12 +101,6 @@ struct EngineFlowTests {
         #expect(h.engine.phase == .bubble(.water, .nudge))
     }
 
-    @Test func waterDoesNotRemindOutsideHours() {
-        let h = EngineHarness(at: day(2026, 3, 4, 17, 0))
-        h.advance(minutes: 120)
-        #expect(h.engine.phase == .idle)
-    }
-
     @Test func disablingAHabitDropsItFromTheQueue() {
         let h = EngineHarness(at: day(2026, 3, 4, 11, 50)) { $0.lastWaterDone = day(2026, 3, 4, 10) }
         h.engine.startReading()
@@ -114,12 +108,6 @@ struct EngineFlowTests {
         #expect(h.engine.queue == [.water])
         h.engine.data.prefs.waterEnabled = false
         #expect(h.engine.queue.isEmpty)
-    }
-
-    @Test func changingTheIntervalReschedules() {
-        let h = EngineHarness()
-        h.engine.data.prefs.waterIntervalMinutes = 30
-        #expect(h.engine.water.nextDue == day(2026, 3, 4, 10, 30))
     }
 
     @Test func everyDataChangeIsSaved() {

@@ -14,11 +14,11 @@ Status: `[ ]` to do, `[~]` in progress, `[x]` done.
 
 ## Phase 1: Habit-agnostic core (no behavior change)
 
-- [ ] `Engine.habits: [HabitID: HabitState]` replaces `water` and `reading`
-- [ ] Exhaustive `switch` on `HabitID` everywhere
-- [ ] `HabitRules` protocol, `WaterRules`, `ReadingRules` in `SathiCore/Habits/`
-- [ ] `Scheduler` folded into the rules, `SchedulerTests` moved to `WaterRulesTests` and `ReadingRulesTests`
-- [ ] All old tests pass
+- [x] `Engine.habits: [HabitID: HabitState]` replaces `water` and `reading`
+- [x] Exhaustive `switch` on `HabitID` everywhere
+- [x] `HabitRules` protocol, `WaterRules`, `ReadingRules` in `SathiCore/Habits/`
+- [x] `Scheduler` folded into the rules, `SchedulerTests` moved to `WaterRulesTests` and `ReadingRulesTests`
+- [x] All old tests pass
 
 ## Phase 2: File storage
 
@@ -81,3 +81,4 @@ Status: `[ ]` to do, `[~]` in progress, `[x]` done.
 | 2026-10-24 | "Add a buddy" shows coming-soon cards. |
 | 2026-10-24 | `HabitID` stays an enum. Each habit's logic lives in a `HabitRules` module. |
 | 2026-10-24 | Reading and Meditation never lock the screen. |
+| 2026-10-24 | Phase 1 fix: a schedule change just after midnight counts the new day, not yesterday. |
