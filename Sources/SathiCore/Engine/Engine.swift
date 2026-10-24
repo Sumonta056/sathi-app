@@ -34,6 +34,7 @@ package final class Engine: ObservableObject {
     var isRunning = false
     var forced: Set<HabitID> = []
     var celebrateToken = UUID()
+    var sessionFromReminder = false
     var streakCache: [HabitID: Int] = [:]
     var streakCacheDay: Date?
 
@@ -97,12 +98,8 @@ package final class Engine: ObservableObject {
         switch phase {
         case let .bubble(h, _): return h == id
         case let .lock(h): return h == id
-        case .session:
-            switch id {
-            case .water: return false
-            case .reading: return true
-            }
-        default: return false
+        case let .session(h): return h == id
+        case .idle, .celebrate: return false
         }
     }
 

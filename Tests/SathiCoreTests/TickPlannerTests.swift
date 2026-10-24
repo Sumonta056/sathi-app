@@ -8,7 +8,7 @@ struct TickPlannerTests {
     private let now = day(2026, 3, 4, 10)
 
     @Test func sessionTicksEverySecond() {
-        #expect(TickPlanner.delay(now: now, phase: .session, deadlines: [], focusRemaining: nil) == Timing.activeTick)
+        #expect(TickPlanner.delay(now: now, phase: .session(.reading), deadlines: [], focusRemaining: nil) == Timing.activeTick)
     }
 
     @Test func idleWithNothingWaitsTheMaximum() {

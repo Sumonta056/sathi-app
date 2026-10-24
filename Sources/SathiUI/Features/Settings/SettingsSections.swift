@@ -49,10 +49,14 @@ struct ReadingSettingsSection: View {
             Picker("Reading session", selection: $prefs.reading.sessionMinutes) {
                 ForEach(Limits.sessionLengths, id: \.self) { m in Text("\(m) min").tag(m) }
             }
-            StrictnessPicker(title: "When I ignore Boi", value: $prefs.reading.strictness)
+            StrictnessPicker(title: "When I ignore Boi", value: readingStrictness, options: [.friendly, .persistent])
         } header: {
             Text("Reading · Boi")
         }
+    }
+
+    private var readingStrictness: Binding<Strictness> {
+        Binding(get: { prefs.strictness(.reading) }, set: { prefs.reading.strictness = $0 })
     }
 }
 

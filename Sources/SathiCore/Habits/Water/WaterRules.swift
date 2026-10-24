@@ -34,6 +34,8 @@ package struct WaterRules: HabitRules {
         return startToday > date ? startToday : clock.at(prefs.water.startMinutes, on: date.addingTimeInterval(Timing.day))
     }
 
+    package func nextSlot(after _: Date) -> Date? { nil }
+
     package func total(on day: Date, data: Persisted) -> Double {
         Stats(calendar: clock.calendar).total(id, on: day, in: data.events)
     }

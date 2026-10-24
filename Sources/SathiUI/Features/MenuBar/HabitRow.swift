@@ -26,6 +26,7 @@ struct HabitRow: View {
                 switch id {
                 case .water: e.logWater(1)
                 case .reading: e.startReading()
+                case .meditation: e.startMeditation()
                 }
             }
             .buttonStyle(MiniButton())
@@ -49,6 +50,7 @@ struct HabitRow: View {
         switch id {
         case .water: return "+1 glass"
         case .reading: return "Read now"
+        case .meditation: return "Breathe"
         }
     }
 }

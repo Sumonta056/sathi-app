@@ -5,21 +5,30 @@ struct SessionView: View {
     @EnvironmentObject var e: Engine
 
     var body: some View {
+        if let id = e.sessionHabit { content(id) }
+    }
+
+    private func content(_ id: HabitID) -> some View {
         TimelineView(.periodic(from: .now, by: UIMetrics.sessionRefresh)) { tl in
             let total = max(1, e.sessionEnd.timeIntervalSince(e.sessionStart))
             let left = max(0, e.sessionEnd.timeIntervalSince(tl.date))
             VStack(spacing: 10) {
-                BuddyView(kind: .book, mood: .reading)
+                BuddyView(kind: id.kind, mood: .reading)
                     .frame(width: 96, height: 119)
-                Text("READING · DO NOT DISTURB")
+                Text(SessionCopy.title(id))
                     .font(.system(size: 11, weight: .semibold))
                     .tracking(0.8)
-                    .foregroundStyle(Palette.bookDeep)
+                    .foregroundStyle(Palette.deep(id))
+                if let phase = SessionCopy.breath(id, style: e.data.prefs.meditation.style, elapsed: tl.date.timeIntervalSince(e.sessionStart)) {
+                    Text(phase)
+                        .font(.system(size: 18, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Palette.calmDeep)
+                }
                 Text(Fmt.clock(left))
                     .font(.system(size: 54, weight: .medium, design: .rounded))
                     .monospacedDigit()
-                ProgressBar(value: 1 - left / total, tint: Palette.book, height: 8, track: Palette.bookDeep.opacity(0.12))
-                Text("Boi is reading with you. Water reminders wait until the timer ends.")
+                ProgressBar(value: 1 - left / total, tint: Palette.accent(id), height: 8, track: Palette.deep(id).opacity(0.12))
+                Text(SessionCopy.body(id))
                     .font(.system(size: 13))
                     .foregroundStyle(Palette.ink2)
                     .multilineTextAlignment(.center)

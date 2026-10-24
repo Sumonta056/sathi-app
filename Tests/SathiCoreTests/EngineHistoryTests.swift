@@ -34,8 +34,9 @@ struct EngineHistoryTests {
         #expect(h.history.appended == [.snooze(.water, at: day(2026, 3, 4, 10))])
     }
 
-    @Test func stoppingASessionRecordsAReadingSnooze() {
+    @Test func stoppingASessionStartedFromADueReminderRecordsAReadingSnooze() {
         let h = EngineHarness()
+        h.showReminder(.reading)
         h.engine.startReading()
         h.engine.stopSession()
         #expect(h.history.appended == [.snooze(.reading, at: day(2026, 3, 4, 10))])

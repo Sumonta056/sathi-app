@@ -8,7 +8,7 @@ package enum Phase: Equatable, Sendable {
     case idle
     case bubble(HabitID, Level)
     case lock(HabitID)
-    case session
+    case session(HabitID)
     case celebrate
 }
 

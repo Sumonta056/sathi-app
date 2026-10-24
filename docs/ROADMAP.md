@@ -35,10 +35,14 @@ Spec: `docs/specs/phase-2-storage.md`
 
 ## Phase 3: Meditation (Shanti), core
 
-- [ ] `HabitID.meditation`, `MeditationPrefs`, `MeditationRules`
-- [ ] `BreathingPattern` (box, relax, even)
-- [ ] `Phase.session(HabitID)`
-- [ ] Copy for Shanti
+Spec: `docs/specs/phase-3-meditation.md`
+
+
+- [x] `HabitID.meditation`, `MeditationPrefs`, `MeditationRules`
+- [x] `BreathingPattern` (box, relax, even)
+- [x] `Phase.session(HabitID)`
+- [x] Copy for Shanti
+- [x] Review fixes F1–F7 and round 2 (restart keeps the stop rule, a stale snooze is dropped on re-enable)
 
 ## Phase 4: Reports and export, core
 
@@ -72,6 +76,10 @@ Spec: `docs/specs/phase-2-storage.md`
 
 ## Later
 
+- A settings change during a pause moves a missed clock slot to the next slot (rule 5). Confirm with the user or add a test
+- A queued habit whose due time moved forward still shows from the queue
+- `BreathingPattern.step` crashes on an infinite elapsed time (no app path reaches it)
+
 - Enforce whole-second times in the types: `HistoryEvent.date` setter private, `LiveState` time writes through cutting setters
 - Migration re-run after a failed first history write: merge v1 `streakReset` into an existing `state.json` instead of skipping it
 
@@ -92,4 +100,6 @@ Spec: `docs/specs/phase-2-storage.md`
 | 2026-10-24 | Reading and Meditation never lock the screen. |
 | 2026-10-24 | RAM keeps the last 3 months of events, so streaks and week views work across a month boundary. |
 | 2026-10-24 | Each phase runs through subagents: test-writer, implementer, code-reviewer. |
+| 2026-10-24 | Meditation is off by default, so an update never starts a reminder the user did not ask for. |
+| 2026-10-24 | A stored Strict on Reading or Meditation acts as Nudgy. Only Water can lock. |
 | 2026-10-24 | Phase 1 fix: a schedule change just after midnight counts the new day, not yesterday. |

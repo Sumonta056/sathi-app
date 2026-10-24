@@ -12,7 +12,11 @@ struct BuddyCanvas: View {
             let s = min(size.width / 100, size.height / 124)
             ctx.translateBy(x: (size.width - 100 * s) / 2, y: (size.height - 124 * s) / 2)
             ctx.scaleBy(x: s, y: s)
-            if kind == .drop { drawDrop(&ctx) } else { drawBook(&ctx) }
+            switch kind {
+            case .drop: drawDrop(&ctx)
+            case .book: drawBook(&ctx)
+            case .pebble: drawPebble(&ctx)
+            }
             drawFace(&ctx)
         }
     }
@@ -56,7 +60,7 @@ struct BuddyCanvas: View {
         let ink = Palette.ink
         let round = StrokeStyle(lineWidth: 3.4, lineCap: .round, lineJoin: .round)
 
-        if mood == .cheer || mood == .reading {
+        if kind == .pebble || mood == .cheer || mood == .reading {
             ctx.stroke(BuddyPaths.quad(CGPoint(x: 32, y: 79), CGPoint(x: 38, y: 70), CGPoint(x: 44, y: 79)), with: .color(ink), style: round)
             ctx.stroke(BuddyPaths.quad(CGPoint(x: 56, y: 79), CGPoint(x: 62, y: 70), CGPoint(x: 68, y: 79)), with: .color(ink), style: round)
         } else {

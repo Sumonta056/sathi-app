@@ -64,15 +64,16 @@ struct EngineFlowTests {
     @Test func readingSessionCompletes() {
         let h = EngineHarness()
         h.engine.startReading()
-        #expect(h.engine.phase == .session)
+        #expect(h.engine.phase == .session(.reading))
         h.advance(minutes: 15)
         #expect(h.engine.data.events.last?.amount == 15)
         #expect(h.engine.phase == .celebrate)
         #expect(h.engine.celebration.id == .reading)
     }
 
-    @Test func stoppingASessionEarlySnoozesReading() {
+    @Test func stoppingASessionStartedFromADueReminderSnoozesReading() {
         let h = EngineHarness()
+        h.showReminder(.reading)
         h.engine.startReading()
         h.engine.stopSession()
         #expect(h.engine.phase == .idle)

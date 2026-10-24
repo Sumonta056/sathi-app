@@ -8,7 +8,7 @@ package struct DayClock: Sendable {
     }
 
     package func at(_ minutes: Int, on day: Date) -> Date {
-        calendar.date(byAdding: .minute, value: minutes, to: calendar.startOfDay(for: day)) ?? day
+        calendar.date(bySettingHour: minutes / 60, minute: minutes % 60, second: 0, of: day) ?? day
     }
 
     package func minutesOfDay(_ date: Date) -> Int {

@@ -44,6 +44,10 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 1. After "done", the next due time starts from the done time, not from the old due time.
 2. A due time outside active hours moves to the next start of active hours.
 3. Reading is skipped for the day when today's minutes already meet the goal.
+4. Clock times are wall-clock times. On a DST day, 8:00 is 8:00 local time.
+5. A settings change never fires a past slot. At launch, a missed slot is still due now.
+6. A session started when nothing is due and stopped early does nothing: no snooze, no event, the next due time stays.
+7. A goal of 0 never counts as met.
 
 ## Escalation
 

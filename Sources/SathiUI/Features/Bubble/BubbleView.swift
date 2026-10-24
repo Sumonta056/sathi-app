@@ -18,6 +18,7 @@ struct BubbleView: View {
             switch id {
             case .water: WaterLogSection()
             case .reading: ReadingInfoCard()
+            case .meditation: EmptyView()
             }
             actions
             if level == .persist { warn }
@@ -76,6 +77,10 @@ struct BubbleView: View {
                 EmptyView()
             case .reading:
                 Button("Start \(e.data.prefs.reading.sessionMinutes)-min timer") { e.startReading() }
+                    .buttonStyle(PillButton(kind: .primary))
+                    .layoutPriority(1)
+            case .meditation:
+                Button("Start \(e.data.prefs.meditation.sessionMinutes)-min breathing") { e.startMeditation() }
                     .buttonStyle(PillButton(kind: .primary))
                     .layoutPriority(1)
             }

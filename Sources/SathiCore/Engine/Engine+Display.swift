@@ -38,8 +38,8 @@ extension Engine {
         switch phase {
         case let .bubble(h, _): return h
         case let .lock(h): return h
-        case .session: return .reading
-        default: break
+        case let .session(h): return h
+        case .idle, .celebrate: break
         }
         return HabitID.allCases.filter { enabled($0) }.min { remaining($0) < remaining($1) }
     }
@@ -50,8 +50,8 @@ extension Engine {
         case .water:
             if case .lock(.water) = phase { return .sad }
             if waiting || waterLevel < Limits.lowWaterLevel { return .thirsty }
-        case .reading:
-            if phase == .session { return .reading }
+        case .reading, .meditation:
+            if phase == .session(id) { return .reading }
             if waiting { return .thirsty }
         }
         return .happy
@@ -59,7 +59,7 @@ extension Engine {
 
     package func pill(_ id: HabitID) -> String {
         if !enabled(id) { return "Off" }
-        if isActive(id) { return phase == .session ? "Reading…" : "Due now" }
+        if isActive(id) { return sessionHabit == id ? Self.sessionPill(id) : "Due now" }
         if queue.contains(id) { return "Queued" }
         if pausedUntil != nil { return "Paused" }
         let r = remaining(id)
@@ -82,6 +82,11 @@ extension Engine {
         case .reading:
             let s = data.prefs.reading.sessionMinutes
             return "\(min(readToday, s)) of \(s) min · \(streak(.reading))-day streak"
+        case .meditation:
+            let r = rules(.meditation)
+            let goal = Int(r.dailyGoal)
+            let done = Int(r.total(on: now, data: data))
+            return "\(min(done, goal)) of \(goal) min · \(streak(.meditation))-day streak"
         }
     }
 
@@ -114,6 +119,15 @@ extension Engine {
         switch id {
         case .water: return "Drink!"
         case .reading: return "Read!"
+        case .meditation: return "Breathe!"
+        }
+    }
+
+    private static func sessionPill(_ id: HabitID) -> String {
+        switch id {
+        case .water: return "Due now"
+        case .reading: return "Reading…"
+        case .meditation: return "Breathing…"
         }
     }
 

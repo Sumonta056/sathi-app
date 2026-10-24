@@ -26,6 +26,12 @@ enum Palette {
     static let ribbon = Color(hex: 0xE0473C)
     static let paper = Color(hex: 0xFFFAF1)
 
+    static let calm = Color(hex: 0xA99CF5)
+    static let calmDeep = Color(hex: 0x4B3F9E)
+    static let calmPale = Color(hex: 0xE4DFFC)
+    static let leaf = Color(hex: 0x5DBB63)
+    static let leafLine = Color(hex: 0x2F7A36)
+
     static let go = Color(hex: 0x178A4F)
     static let cheek = Color(hex: 0xFF9FB8)
     static let spark = Color(hex: 0xFFC94A)
@@ -38,6 +44,7 @@ enum Palette {
         switch id {
         case .water: return water
         case .reading: return book
+        case .meditation: return calm
         }
     }
 
@@ -45,6 +52,7 @@ enum Palette {
         switch id {
         case .water: return waterDeep
         case .reading: return bookDeep
+        case .meditation: return calmDeep
         }
     }
 }

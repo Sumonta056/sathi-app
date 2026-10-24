@@ -1,7 +1,7 @@
 import Foundation
 
 package enum HabitID: String, Codable, CaseIterable, Identifiable, Sendable {
-    case water, reading
+    case water, reading, meditation
 
     package var id: String { rawValue }
 
@@ -9,6 +9,7 @@ package enum HabitID: String, Codable, CaseIterable, Identifiable, Sendable {
         switch self {
         case .water: return "Water"
         case .reading: return "Reading"
+        case .meditation: return "Meditation"
         }
     }
 
@@ -16,6 +17,7 @@ package enum HabitID: String, Codable, CaseIterable, Identifiable, Sendable {
         switch self {
         case .water: return "Fota"
         case .reading: return "Boi"
+        case .meditation: return "Shanti"
         }
     }
 }

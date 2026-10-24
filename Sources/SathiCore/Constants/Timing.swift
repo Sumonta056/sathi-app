@@ -18,4 +18,10 @@ package enum Timing {
     package static let lockConfirmDelay: TimeInterval = 0.45
     package static let defaultPauseHours: Double = 1
     package static let saveCoalesce: TimeInterval = 0.5
+
+    package static let breathBox: TimeInterval = 4
+    package static let breathRelaxIn: TimeInterval = 4
+    package static let breathRelaxHold: TimeInterval = 7
+    package static let breathRelaxOut: TimeInterval = 8
+    package static let breathEven: TimeInterval = 5
 }

@@ -11,6 +11,7 @@ package struct Persisted: Equatable, Sendable {
         switch id {
         case .water: return live.lastWaterDone
         case .reading: return nil
+        case .meditation: return events.filter { $0.habit == .meditation && $0.kind == .done }.map(\.date).max()
         }
     }
 }

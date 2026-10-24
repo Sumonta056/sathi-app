@@ -13,6 +13,7 @@ struct SettingsView: View {
             }
             WaterSettingsSection(prefs: $e.data.prefs)
             ReadingSettingsSection(prefs: $e.data.prefs)
+            MeditationSettingsSection()
             ReminderSettingsSection(prefs: $e.data.prefs)
             Section {
                 HStack {
@@ -46,10 +47,11 @@ struct TimeSlotPicker: View {
 struct StrictnessPicker: View {
     let title: String
     @Binding var value: Strictness
+    var options: [Strictness] = Strictness.allCases
 
     var body: some View {
         Picker(title, selection: $value) {
-            ForEach(Strictness.allCases) { s in Text(s.title).tag(s) }
+            ForEach(options) { s in Text(s.title).tag(s) }
         }
         Text(value.detail)
             .font(.caption)

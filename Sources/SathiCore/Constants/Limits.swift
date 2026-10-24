@@ -23,4 +23,8 @@ package enum Limits {
     package static let snoozeMinutes = 1 ... 30
     package static let ignoreMinutes = 1 ... 15
     package static let sessionLengths = [10, 15, 20, 30, 45, 60]
+    package static let meditationLengths = [2, 5, 10]
+    package static let morningSlotMinutes = 8 * 60
+    package static let afternoonSlotMinutes = 14 * 60
+    package static let eveningSlotMinutes = 21 * 60 + 30
 }

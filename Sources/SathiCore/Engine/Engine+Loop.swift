@@ -63,7 +63,7 @@ extension Engine {
         var deadlines: [Date] = []
         if let p = pausedUntil { deadlines.append(p) }
         if case .bubble = phase { deadlines.append(ignoreDeadline) }
-        if phase == .session { deadlines.append(sessionEnd) }
+        if case .session = phase { deadlines.append(sessionEnd) }
         if pausedUntil == nil {
             for id in HabitID.allCases where enabled(id) && !isDue(id) {
                 deadlines.append(now.addingTimeInterval(remaining(id)))
@@ -107,6 +107,7 @@ extension Engine {
         switch id {
         case .water: return .glass
         case .reading: return .purr
+        case .meditation: return .tink
         }
     }
 

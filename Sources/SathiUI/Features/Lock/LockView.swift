@@ -59,6 +59,7 @@ struct LockView: View {
         switch id {
         case .water: return "Fota is drying up. Go get some water."
         case .reading: return "Boi has waited long enough. Get your book."
+        case .meditation: return "Shanti is waiting. Take a slow breath."
         }
     }
 
@@ -66,6 +67,7 @@ struct LockView: View {
         switch id {
         case .water: return "Take a few sips, then press and hold for 3 seconds. Your screen comes back right after."
         case .reading: return "Open your book, then press and hold for 3 seconds to start your reading timer."
+        case .meditation: return "Sit back, then press and hold for 3 seconds to start your breathing session."
         }
     }
 }

@@ -11,6 +11,7 @@ package enum Copywriter {
         let titles: [String] = switch id {
         case .water: ["Ahh, that's better.", "Fota is happy again.", "Refilled."]
         case .reading: ["Chapter done.", "Boi is proud of you.", "Nice reading."]
+        case .meditation: ["Calm and clear.", "Shanti feels lighter.", "Nicely breathed."]
         }
         return titles.randomElement() ?? titles[0]
     }
@@ -44,6 +45,16 @@ package enum Copywriter {
                 ("Still here, \(n).", "I'll stay on top until you start the timer."),
                 ("Ek chapter, please.", "Your screen can wait. The story can't."),
                 ("I'm not going away.", "Start the timer and I'll go quiet. Promise.")
+            ]
+        case (.meditation, .nudge):
+            return [
+                ("Breathe with me, \(n).", "A few slow breaths. Your screen will still be here after."),
+                ("Shanti time.", "Sit back, drop your shoulders, and follow my breath.")
+            ]
+        case (.meditation, .persist):
+            return [
+                ("Still here, \(n).", "Just a few minutes of breathing. I'll wait."),
+                ("One calm moment, please.", "Start the session and let everything else go quiet.")
             ]
         }
     }

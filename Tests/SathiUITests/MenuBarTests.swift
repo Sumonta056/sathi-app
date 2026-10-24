@@ -48,7 +48,7 @@ struct MenuBarTests {
         let h = EngineHarness()
         let sut = HabitRow(id: .reading).environmentObject(h.engine)
         try sut.inspect().find(button: "Read now").tap()
-        #expect(h.engine.phase == .session)
+        #expect(h.engine.phase == .session(.reading))
     }
 
     @Test func statusLabelShowsTheStatusText() throws {

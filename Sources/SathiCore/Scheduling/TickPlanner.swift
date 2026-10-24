@@ -7,7 +7,7 @@ package enum TickPlanner {
         deadlines: [Date],
         focusRemaining: TimeInterval?
     ) -> TimeInterval {
-        if phase == .session { return Timing.activeTick }
+        if case .session = phase { return Timing.activeTick }
         var delay = Timing.idleTickMax
         for deadline in deadlines {
             let wait = deadline.timeIntervalSince(now)

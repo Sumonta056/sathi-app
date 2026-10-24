@@ -20,14 +20,14 @@ Sathi is a macOS menu bar app (macOS 13+, Swift 5.9 tools, SwiftUI + AppKit). Tw
 Sources/
   SathiCore/     Foundation only. All logic. Fully unit-tested.
     Models/        HabitID, Strictness, Container, Mood, Prefs, GeneralPrefs, LiveState, HistoryEvent, Persisted, ReminderState
-    Habits/        HabitRules, DayClock, one folder per habit: Water/, Reading/ (rules + prefs)
+    Habits/        HabitRules, DayClock, one folder per habit: Water/, Reading/, Meditation/ (rules, prefs, BreathingPattern)
     Constants/     Timing, Limits, StorageKeys, SoundName
     Scheduling/    EscalationPolicy (bubble/lock), TickPlanner (timer delay)
     Stats/         Stats (daily totals, streak)
     Formatting/    Fmt, Copywriter
     Ports/         Clock, StateStore, HistoryStore, SoundPlayer, ReminderPresenter (protocols + system impls)
     Storage/       JSONFiles, FileStateStore, FileHistoryStore, LegacyMigrator, Legacy/ (v1 shapes)
-    Engine/        Engine (+Loop, +Actions, +Display, +History), StatusModel
+    Engine/        Engine (+Loop, +Actions, +Session, +Display, +History), StatusModel
   SathiUI/       SwiftUI + AppKit. Views and windows only.
     Constants/     UIMetrics, TimeSlots
     Theme/         Palette, ButtonStyles, ProgressBar, Shake, Color+Hex

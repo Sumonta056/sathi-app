@@ -23,6 +23,7 @@ struct CelebrateView: View {
             switch c.id {
             case .water: GlassGoalRow(total: e.glassesToday, goal: Int(e.data.prefs.water.dailyGoalGlasses))
             case .reading: ReadingWeekRow(streak: e.streak(.reading), today: e.now)
+            case .meditation: EmptyView()
             }
             Button("Back to work") { e.endCelebrate() }
                 .buttonStyle(PillButton(kind: .primary))
@@ -42,6 +43,7 @@ struct CelebrateView: View {
         switch c.id {
         case .water: return "+\(Fmt.glasses(c.amount))"
         case .reading: return "\(Int(c.amount)) min read"
+        case .meditation: return "\(Int(c.amount)) min calm"
         }
     }
 
@@ -51,6 +53,8 @@ struct CelebrateView: View {
             return "\(Fmt.count(e.glassesToday)) of \(Int(e.data.prefs.water.dailyGoalGlasses)) glasses today · \(e.streak(.water))-day streak"
         case .reading:
             return "\(e.streak(.reading))-day reading streak"
+        case .meditation:
+            return "\(e.streak(.meditation))-day calm streak"
         }
     }
 }
