@@ -20,6 +20,16 @@ package enum Copywriter {
         name.trimmingCharacters(in: .whitespaces).isEmpty ? "friend" : name
     }
 
+    package static func greeting(at date: Date, name: String, calendar: Calendar) -> String {
+        let hour = calendar.component(.hour, from: date)
+        let part = switch hour {
+        case Limits.morningStartHour ..< Limits.afternoonStartHour: "morning"
+        case Limits.afternoonStartHour ..< Limits.eveningStartHour: "afternoon"
+        default: "evening"
+        }
+        return "Good \(part), \(displayName(name))"
+    }
+
     private static func choices(_ id: HabitID, _ level: Level, name n: String) -> [(String, String)] {
         switch (id, level) {
         case (.water, .nudge):

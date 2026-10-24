@@ -32,6 +32,8 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 4. A habit that is off has no due time, shows no reminder, and is not in the queue. Its history stays.
 5. Only one reminder shows at a time. Other due habits wait in the queue in due-time order.
 6. Pause stops all reminders until the pause ends. Due habits wait in the queue.
+7. "Rest of day" pauses until the next midnight. It moves each enabled habit to its next slot after that midnight and clears the queue and every snooze, so a slot missed during the pause never shows. The 30 min and 1 hour pauses keep missed reminders in the queue.
+8. A settings change that moves a habit's due time into the future removes that habit from the queue and clears its snooze (for example, today's weekday or a meditation slot turned off).
 
 ## Schedules
 
@@ -48,17 +50,19 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 5. A settings change never fires a past slot. At launch, a missed slot is still due now.
 6. A session started when nothing is due and stopped early does nothing: no snooze, no event, the next due time stays.
 7. A goal of 0 never counts as met.
+8. Reading weekdays: a weekday that is off has no reading reminder. The next due time is the set time on the next selected weekday. All 7 days are on by default. An empty set decodes as all 7 days; the Settings window never saves an empty set (the last selected day cannot be turned off).
+9. A stored value that is unknown (a weekday, slot, or style from a newer version) is dropped or replaced by its default. It never resets the other settings.
 
 ## Escalation
 
 | Strictness (raw value) | Label | Behavior |
 |---|---|---|
-| `friendly` | Gentle | A bubble each time. It never stays on top. |
+| `friendly` | Gentle | A reminder each time. It never stays on top. |
 | `persistent` | Nudgy | After 1 snooze: stays on top, wiggles, no close button. |
 | `strict` | Strict | After 1 snooze: Nudgy. After 2 snoozes: full-screen lock. |
 
 1. Only Water may use Strict. Reading and Meditation never lock the screen.
-2. Reading shows a corner popup in the top-right by default. It never takes focus from the active app.
+2. Reading shows a corner popup in the top-right by default. It never takes focus from the active app. `ReadingPrefs.reminderStyle` picks `corner` (default) or `focus` (the old centered session).
 3. The lock always has an emergency skip. A skip resets that habit's streak.
 4. Raw values never change. They are in saved files. Change only the labels.
 

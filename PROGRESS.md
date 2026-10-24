@@ -79,7 +79,9 @@ All rows of the Decisions table in `docs/ROADMAP.md` hold. The ones that shape P
 - A stop with nothing due does nothing. A settings change never fires a past slot.
 - Storage: monthly JSON, history kept forever, 3 months in RAM.
 
-## Phase 5: UI redesign (next)
+## Phase 5: UI redesign (in progress)
+
+Status: 5a, 5b, 5c and the shared 5a–5c review fixes are done and green (591 tests: UI 157, Core 434). User checked the installed app visually on 2026-10-25 (OK). Committed as one commit for 5a–5c. Defaults backup: `~/Desktop/sathi-defaults-backup.plist`; real data is now migrated to the JSON files. Specs: `docs/specs/phase-5a-theme.md`, `phase-5b-settings.md`, `phase-5c-menubar.md`, `phase-5abc-review-fixes.md`. Next after the commits: 5d water bubble. User chose: commit approval per group (5a–5c, 5d–5f, 5g–5h); full review only for 5e and 5g, one shared review for the view slices (5a–5d, 5f) before the 5c commit. New theme: `Night` (not `Palette`), `Typography`, `Components/` (SectionLabel, ChipRow, OptionCard, BuddySwitch, HeroCard, SettingsCard, SettingRow).
 
 Goal: build the canvas design in SwiftUI, slice by slice. Each slice is one `/feature` loop and one commit. UI tests use ViewInspector; logic stays in Core.
 

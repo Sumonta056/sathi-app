@@ -20,17 +20,17 @@ struct MeditationViewTests {
         #expect(HabitID.meditation.kind == .pebble)
     }
 
-    @Test func habitRowBreatheStartsMeditation() throws {
+    @Test func habitCardBreatheStartsMeditation() throws {
         let h = harness()
-        let sut = HabitRow(id: .meditation).environmentObject(h.engine)
-        try sut.inspect().find(button: "Breathe").tap()
+        let sut = HabitCard(id: .meditation).environmentObject(h.engine)
+        try MenuFind.control(sut.inspect(), "Breathe").tap()
         #expect(h.engine.phase == .session(.meditation))
     }
 
-    @Test func panelShowsAMeditationRowWhenEnabled() throws {
+    @Test func panelShowsAMeditationCardWhenEnabled() throws {
         let h = harness()
         let sut = MenuPanel().environmentObject(h.engine)
-        #expect(try sut.inspect().findAll(HabitRow.self).count == 3)
+        #expect(try sut.inspect().findAll(HabitCard.self).count == 3)
     }
 
     @Test func bubbleStartsTheBreathingSession() throws {
@@ -69,17 +69,17 @@ struct MeditationViewTests {
         #expect(try sut.inspect().find(text: "Back to work") != nil)
     }
 
-    @Test func settingsHaveAMeditationSection() throws {
+    @Test func settingsHaveAMeditationTab() throws {
         let h = harness()
-        let sut = SettingsView().environmentObject(h.engine)
-        #expect(try sut.inspect().find(text: "Meditation · Shanti") != nil)
-        #expect(try sut.inspect().find(text: "New") != nil)
+        let sut = MeditationSettingsTab().environmentObject(h.engine)
+        #expect(try sut.inspect().find(text: "SHANTI · MEDITATION") != nil)
+        #expect(try sut.inspect().find(text: "Pause. Breathe. Come back.") != nil)
     }
 
     @Test func settingsShowMeditationReminderNow() throws {
         let h = harness()
-        let sut = SettingsView().environmentObject(h.engine)
-        try sut.inspect().find(button: "Show meditation reminder now").tap()
+        let sut = MeditationSettingsTab().environmentObject(h.engine)
+        try sut.inspect().find(button: "Show a reminder now").tap()
         #expect(h.engine.phase == .bubble(.meditation, .nudge))
     }
 }

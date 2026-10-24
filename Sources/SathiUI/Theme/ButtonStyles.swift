@@ -27,14 +27,3 @@ struct PillButton: ButtonStyle {
         }
     }
 }
-
-struct MiniButton: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.system(size: 12, weight: .semibold))
-            .padding(.horizontal, 10)
-            .frame(height: 30)
-            .background(RoundedRectangle(cornerRadius: 8).fill(Color.primary.opacity(configuration.isPressed ? 0.16 : 0.08)))
-            .contentShape(Rectangle())
-    }
-}

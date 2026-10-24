@@ -8,31 +8,58 @@ import ViewInspector
 @MainActor
 @Suite("Settings")
 struct SettingsViewTests {
-    @Test func waterToggleTurnsRemindersOff() throws {
-        let h = EngineHarness()
-        let sut = SettingsView().environmentObject(h.engine)
-        try sut.inspect().find(ViewType.Toggle.self) { try $0.labelView().text().string() == "Remind me to drink water" }.tap()
-        #expect(!h.engine.data.prefs.water.enabled)
-        #expect(h.store.prefs.water.enabled == false)
+    private func tab(_ id: HabitID, _ h: EngineHarness) throws -> InspectableView<ViewType.ClassifiedView> {
+        switch id {
+        case .water: return try hosted(WaterSettingsTab(), h).inspect()
+        case .reading: return try hosted(ReadingSettingsTab(), h).inspect()
+        case .meditation: return try hosted(MeditationSettingsTab(), h).inspect()
+        }
     }
 
-    @Test func tryItButtonsTriggerReminders() throws {
-        let h = EngineHarness()
-        let sut = SettingsView().environmentObject(h.engine)
-        try sut.inspect().find(button: "Show water reminder now").tap()
-        #expect(h.engine.phase == .bubble(.water, .nudge))
+    private func harness(_ id: HabitID, on: Bool) -> EngineHarness {
+        EngineHarness {
+            $0.prefs.meditation.enabled = false
+            switch id {
+            case .water: $0.prefs.water.enabled = on
+            case .reading: $0.prefs.reading.enabled = on
+            case .meditation: $0.prefs.meditation.enabled = on
+            }
+        }
     }
 
-    @Test func strictnessDetailIsShown() throws {
+    @Test func rootNameFieldEditsTheName() throws {
         let h = EngineHarness()
-        let sut = SettingsView().environmentObject(h.engine)
-        #expect(try sut.inspect().find(text: Strictness.strict.detail) != nil)
+        try hosted(SettingsView(), h).inspect().find(ViewType.TextField.self).setInput("Asha")
+        #expect(h.engine.data.prefs.general.name == "Asha")
     }
 
-    @Test func intervalLabelIsHumanReadable() throws {
-        let h = EngineHarness()
-        let sut = SettingsView().environmentObject(h.engine)
-        #expect(try sut.inspect().find(text: "Every 2 hours") != nil)
+    @Test(arguments: HabitID.allCases)
+    func showReminderNowTriggersThatHabit(_ id: HabitID) throws {
+        let h = harness(id, on: true)
+        try tab(id, h).find(button: "Show a reminder now").tap()
+        guard case let .bubble(shown, _) = h.engine.phase else {
+            Issue.record("expected a bubble, got \(h.engine.phase)")
+            return
+        }
+        #expect(shown == id)
+    }
+
+    @Test(arguments: HabitID.allCases)
+    func showReminderNowIsDisabledWhileTheHabitIsOff(_ id: HabitID) throws {
+        let h = harness(id, on: false)
+        #expect(try tab(id, h).find(button: "Show a reminder now").isDisabled())
+    }
+
+    @Test func timeMenuShowsTheSlotLabel() throws {
+        let label = try #require(TimeSlots.all.first { $0.minutes == 9 * 60 + 30 }?.label)
+        let sut = try TimeMenu(minutes: Box(9 * 60 + 30).binding).inspect()
+        #expect(throws: Never.self) { try sut.find(text: label) }
+    }
+
+    @Test func readingTimeMenuShowsTheSetTime() throws {
+        let label = try #require(TimeSlots.all.first { $0.minutes == 21 * 60 }?.label)
+        let sut = try hosted(ReadingSettingsTab(), EngineHarness { $0.prefs.reading.timeMinutes = 21 * 60 }).inspect()
+        #expect(throws: Never.self) { try sut.find(text: label) }
     }
 
     @Test func timeSlotsCoverTheDayInHalfHours() {

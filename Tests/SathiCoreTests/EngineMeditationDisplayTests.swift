@@ -51,12 +51,12 @@ struct EngineMeditationDisplayTests {
         #expect(h.engine.mood(.meditation) == .reading)
     }
 
-    @Test func subtitleShowsMinutesOfGoalAndStreak() {
+    @Test func goalTextShowsMinutesOfGoal() {
         let h = harness()
-        #expect(h.engine.subtitle(.meditation) == "0 of 10 min · 0-day streak")
+        #expect(h.engine.goalText(.meditation) == GoalText(done: "0", rest: "of 10 min"))
         h.engine.startMeditation()
         h.advance(minutes: 5)
-        #expect(h.engine.subtitle(.meditation) == "5 of 10 min · 0-day streak")
+        #expect(h.engine.goalText(.meditation) == GoalText(done: "5", rest: "of 10 min"))
         #expect(h.engine.progress(.meditation) == 0.5)
     }
 

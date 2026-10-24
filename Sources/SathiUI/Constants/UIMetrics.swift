@@ -8,11 +8,11 @@ enum UIMetrics {
     static let ignoreBarRefresh: TimeInterval = 0.5
     static let sessionRefresh: TimeInterval = 1
 
-    static let menuWidth: CGFloat = 340
+    static let menuWidth: CGFloat = 380
     static let bubbleWidth: CGFloat = 380
     static let bubbleShadowPadding: CGFloat = 24
     static let bubbleScreenInset = CGPoint(x: 12, y: 20)
-    static let settingsSize = CGSize(width: 540, height: 680)
+    static let settingsSize = CGSize(width: 860, height: 620)
     static let lockHoldDistance: CGFloat = 80
 
     static let buddyAspect: CGFloat = 100.0 / 124.0

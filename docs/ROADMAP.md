@@ -56,9 +56,14 @@ Spec: `docs/specs/phase-4-reports.md`
 
 ## Phase 5: UI redesign
 
-- [ ] Theme: night-sprout `Palette`, SF Rounded `Typography`
-- [ ] Settings window: sidebar, General, Water, Reading, Meditation, Add a buddy (coming soon)
-- [ ] Menu bar popover with rings and pause chips
+Spec 5a: `docs/specs/phase-5a-theme.md`
+Spec 5b: `docs/specs/phase-5b-settings.md`
+Spec 5c: `docs/specs/phase-5c-menubar.md`
+Review fixes 5a–5c: `docs/specs/phase-5abc-review-fixes.md` (done)
+
+- [x] Theme: night-sprout `Night` palette, SF Rounded `Typography`, shared components
+- [x] Settings window: sidebar, General, Water, Reading, Meditation, Add a buddy (coming soon)
+- [x] Menu bar popover with rings and pause chips
 - [ ] Water bubble (dark)
 - [ ] Reading corner popup and timer pill
 - [ ] Meditation breathe view
@@ -98,6 +103,8 @@ Spec: `docs/specs/phase-4-reports.md`
 
 - Morning dew (light) theme and Follow macOS
 - Real Stretch, Eye break, Walk, Posture modules
+- `BuddySwitch` reads as a "selected button" in VoiceOver; `accessibilityRepresentation { Toggle }` breaks ViewInspector lookups (needs a test helper change)
+- "Stay quiet in meetings": pause while camera, mic, or a full-screen app is on (needs a new Core port)
 
 ## Decisions
 
@@ -113,4 +120,10 @@ Spec: `docs/specs/phase-4-reports.md`
 | 2026-10-24 | Each phase runs through subagents: test-writer, implementer, code-reviewer. |
 | 2026-10-24 | Meditation is off by default, so an update never starts a reminder the user did not ask for. |
 | 2026-10-24 | A stored Strict on Reading or Meditation acts as Nudgy. Only Water can lock. |
+| 2026-10-24 | Phase 5: new `Night` palette next to the old `Palette`; each slice moves its screen; 5g deletes the old one. |
+| 2026-10-24 | `faint` is #7784A0 (canvas #6F7C97 fails 4.5:1). Never on a card. |
+| 2026-10-24 | Phase 5: commit approval per group (5a–5c, 5d–5f, 5g–5h); full review only for 5e and 5g, one shared review for view slices. |
+| 2026-10-25 | 5b: reading weekdays (all on by default) and `reminderStyle` (corner default) added to Core. Water interval chips 30/60/90/120. "Quiet in meetings" shows a disabled "Soon" switch. |
+| 2026-10-25 | 5c: header streak = best current streak of enabled habits. "Rest of day" pause ends at midnight. |
+| 2026-10-25 | Review 5a–5c: a settings change that moves a due time into the future cancels the queued or snoozed reminder. "Rest of day" skips slots missed during the pause. "Focus screen" can be picked now; 5e wires it (5a–5c are not released before 5e). |
 | 2026-10-24 | Phase 1 fix: a schedule change just after midnight counts the new day, not yesterday. |

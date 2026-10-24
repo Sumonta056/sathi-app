@@ -21,7 +21,7 @@ struct CelebrateView: View {
                 .font(.system(size: 14))
                 .foregroundStyle(Palette.ink2)
             switch c.id {
-            case .water: GlassGoalRow(total: e.glassesToday, goal: Int(e.data.prefs.water.dailyGoalGlasses))
+            case .water: CelebrateGlassRow(total: e.glassesToday, goal: Int(e.data.prefs.water.dailyGoalGlasses))
             case .reading: ReadingWeekRow(streak: e.streak(.reading), today: e.now)
             case .meditation: EmptyView()
             }

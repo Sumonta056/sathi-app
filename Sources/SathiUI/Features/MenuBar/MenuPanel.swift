@@ -1,4 +1,3 @@
-import AppKit
 import SathiCore
 import SwiftUI
 
@@ -8,29 +7,23 @@ package struct MenuPanel: View {
     package init() {}
 
     package var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .firstTextBaseline) {
-                Text("Sathi").font(.system(size: 18, weight: .semibold, design: .rounded))
-                Spacer()
-                Text(e.now.formatted(.dateTime.weekday(.wide).day().month()))
-                    .font(.system(size: 12))
-                    .foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: UIMetrics.menuSpacing) {
+            MenuHeader()
+            if e.pausedUntil != nil { NapBanner() }
+            ForEach(HabitID.allCases.filter { e.enabled($0) }) { id in
+                HabitCard(id: id)
             }
-            ForEach(HabitID.allCases) { id in
-                if e.enabled(id) { HabitRow(id: id) }
+            ForEach(HabitID.allCases.filter { !e.enabled($0) }) { id in
+                SleepingRow(id: id)
             }
-            Divider().padding(.top, 2)
-            MenuItem(title: e.pausedUntil == nil ? "Pause reminders for 1 hour" : "Resume reminders") {
-                if e.pausedUntil == nil { e.pause() } else { e.resume() }
-            }
-            MenuItem(title: "Settings…") {
-                MenuBarWindow.close()
-                e.openSettings()
-            }
-            MenuItem(title: "Quit Sathi") { NSApp.terminate(nil) }
+            Spacer(minLength: 0)
+            PauseChips()
+            MenuFooter()
         }
-        .padding(14)
+        .padding(UIMetrics.menuPadding)
         .frame(width: UIMetrics.menuWidth)
+        .background(Night.bg)
+        .environment(\.colorScheme, .dark)
         .onAppear { e.tick() }
     }
 }

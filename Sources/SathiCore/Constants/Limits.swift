@@ -23,6 +23,7 @@ package enum Limits {
 
     package static let waterIntervalMinutes = 15 ... 240
     package static let waterIntervalStep = 15
+    package static let waterIntervalChips = [30, 60, 90, 120]
     package static let bottleSizeGlasses: ClosedRange<Double> = 1 ... 6
     package static let bottleSizeStep: Double = 0.5
     package static let dailyGoalGlasses: ClosedRange<Double> = 4 ... 16
@@ -33,4 +34,8 @@ package enum Limits {
     package static let morningSlotMinutes = 8 * 60
     package static let afternoonSlotMinutes = 14 * 60
     package static let eveningSlotMinutes = 21 * 60 + 30
+
+    package static let morningStartHour = 5
+    package static let afternoonStartHour = 12
+    package static let eveningStartHour = 17
 }

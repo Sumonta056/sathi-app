@@ -63,21 +63,6 @@ extension Engine {
         return r.total(on: now, data: data) / max(1, r.dailyGoal)
     }
 
-    package func subtitle(_ id: HabitID) -> String {
-        switch id {
-        case .water:
-            return "\(Fmt.count(glassesToday)) of \(Int(data.prefs.water.dailyGoalGlasses)) glasses · \(streak(.water))-day streak"
-        case .reading:
-            let s = data.prefs.reading.sessionMinutes
-            return "\(min(readToday, s)) of \(s) min · \(streak(.reading))-day streak"
-        case .meditation:
-            let r = rules(.meditation)
-            let goal = Int(r.dailyGoal)
-            let done = Int(r.total(on: now, data: data))
-            return "\(min(done, goal)) of \(goal) min · \(streak(.meditation))-day streak"
-        }
-    }
-
     package func lockIsNext(_ id: HabitID) -> Bool {
         EscalationPolicy.lockIsNext(strictness(id), snoozes: state(id).snoozes)
     }

@@ -2,59 +2,46 @@ import SathiCore
 import SwiftUI
 
 struct SettingsView: View {
-    @EnvironmentObject var e: Engine
+    @State private var tab: SettingsTab
+
+    init(tab: SettingsTab = .general) {
+        _tab = State(initialValue: tab)
+    }
 
     var body: some View {
-        Form {
-            Section {
-                TextField("Your name", text: $e.data.prefs.general.name)
-            } header: {
-                Text("You")
+        HStack(spacing: 0) {
+            SettingsSidebar(tab: $tab)
+                .frame(width: UIMetrics.sidebarWidth)
+                .frame(maxHeight: .infinity)
+                .background(Night.sidebar)
+            ScrollView {
+                content
+                    .padding(UIMetrics.contentPadding)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
-            WaterSettingsSection(prefs: $e.data.prefs)
-            ReadingSettingsSection(prefs: $e.data.prefs)
-            MeditationSettingsSection()
-            ReminderSettingsSection(prefs: $e.data.prefs)
-            Section {
-                HStack {
-                    Button("Show water reminder now") { e.trigger(.water) }
-                    Button("Show reading reminder now") { e.trigger(.reading) }
-                }
-            } header: {
-                Text("Try it")
-            } footer: {
-                Text("Snooze twice on the water reminder to see the lock screen.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
+            .background(Night.bg)
         }
-        .formStyle(.grouped)
         .frame(width: UIMetrics.settingsSize.width, height: UIMetrics.settingsSize.height)
+        .ignoresSafeArea()
     }
-}
 
-struct TimeSlotPicker: View {
-    let title: String
-    @Binding var minutes: Int
-
-    var body: some View {
-        Picker(title, selection: $minutes) {
-            ForEach(TimeSlots.all, id: \.minutes) { slot in Text(slot.label).tag(slot.minutes) }
+    @ViewBuilder private var content: some View {
+        switch tab {
+        case .general: GeneralTab()
+        case let .habit(id): HabitTab(id: id)
+        case .addBuddy: AddBuddyTab()
         }
     }
 }
 
-struct StrictnessPicker: View {
-    let title: String
-    @Binding var value: Strictness
-    var options: [Strictness] = Strictness.allCases
+struct HabitTab: View {
+    let id: HabitID
 
     var body: some View {
-        Picker(title, selection: $value) {
-            ForEach(options) { s in Text(s.title).tag(s) }
+        switch id {
+        case .water: WaterSettingsTab()
+        case .reading: ReadingSettingsTab()
+        case .meditation: MeditationSettingsTab()
         }
-        Text(value.detail)
-            .font(.caption)
-            .foregroundStyle(.secondary)
     }
 }

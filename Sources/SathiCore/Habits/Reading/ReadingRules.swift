@@ -13,11 +13,9 @@ package struct ReadingRules: HabitRules {
     package var dailyGoal: Double { Double(prefs.reading.sessionMinutes) }
 
     package func nextDue(now: Date, lastDone _: Date?, doneToday: Double, skipToday: Bool) -> Date {
-        if skipToday || doneToday >= dailyGoal {
-            let tomorrow = clock.calendar.date(byAdding: .day, value: 1, to: now) ?? now.addingTimeInterval(Timing.day)
-            return clock.at(prefs.reading.timeMinutes, on: tomorrow)
-        }
-        return clock.at(prefs.reading.timeMinutes, on: now)
+        let today = clock.calendar.startOfDay(for: now)
+        let start = skipToday || doneToday >= dailyGoal ? day(after: today, by: 1) : today
+        return firstSlot(from: start) { _ in true }
     }
 
     package func isActiveTime(_: Date) -> Bool { true }
@@ -25,13 +23,29 @@ package struct ReadingRules: HabitRules {
     package func nextActiveStart(after date: Date) -> Date { date }
 
     package func nextSlot(after date: Date) -> Date? {
-        let today = clock.at(prefs.reading.timeMinutes, on: date)
-        if today > date { return today }
-        let tomorrow = clock.calendar.date(byAdding: .day, value: 1, to: date) ?? date.addingTimeInterval(Timing.day)
-        return clock.at(prefs.reading.timeMinutes, on: tomorrow)
+        firstSlot(from: clock.calendar.startOfDay(for: date)) { $0 > date }
     }
 
     package func total(on day: Date, data: Persisted) -> Double {
         Stats(calendar: clock.calendar).total(id, on: day, in: data.events)
+    }
+
+    private func firstSlot(from start: Date, where accept: (Date) -> Bool) -> Date {
+        for step in 0 ... Limits.daysPerWeek {
+            let d = day(after: start, by: step)
+            let slot = clock.at(prefs.reading.timeMinutes, on: d)
+            if isSelected(d), accept(slot) { return slot }
+        }
+        return clock.at(prefs.reading.timeMinutes, on: day(after: start, by: Limits.daysPerWeek))
+    }
+
+    private func isSelected(_ date: Date) -> Bool {
+        let days = prefs.reading.weekdays
+        guard !days.isEmpty, let w = Weekday(rawValue: clock.calendar.component(.weekday, from: date)) else { return true }
+        return days.contains(w)
+    }
+
+    private func day(after date: Date, by count: Int) -> Date {
+        clock.calendar.date(byAdding: .day, value: count, to: date) ?? date.addingTimeInterval(Double(count) * Timing.day)
     }
 }

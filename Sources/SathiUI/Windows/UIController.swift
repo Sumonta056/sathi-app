@@ -11,10 +11,13 @@ package final class UIController: ReminderPresenter {
     private var celebration: NSPanel?
     private var locks: [NSWindow] = []
     private var settings: NSWindow?
+    private let settingsCloseWatcher = SettingsWindowDelegate()
 
     private var primary: NSScreen? { NSScreen.screens.first ?? NSScreen.main }
 
-    package init() {}
+    package init() {
+        settingsCloseWatcher.onClose = { [weak self] in self?.settingsWillClose() }
+    }
 
     package func showBubble(_ id: HabitID, _ level: Level) {
         closeBubble()
@@ -77,21 +80,15 @@ package final class UIController: ReminderPresenter {
 
     package func showSettings() {
         if settings == nil, let engine {
-            let size = UIMetrics.settingsSize
-            let w = NSWindow(
-                contentRect: NSRect(origin: .zero, size: size),
-                styleMask: [.titled, .closable, .miniaturizable],
-                backing: .buffered,
-                defer: false
-            )
-            w.title = "Sathi Settings"
-            w.isReleasedWhenClosed = false
-            w.contentView = NSHostingView(rootView: SettingsView().environmentObject(engine))
-            w.center()
-            settings = w
+            settings = SettingsWindow.make(engine: engine, closeWatcher: settingsCloseWatcher)
         }
         NSApp.activate(ignoringOtherApps: true)
         settings?.makeKeyAndOrderFront(nil)
+    }
+
+    private func settingsWillClose() {
+        settings?.contentView = nil
+        settings = nil
     }
 
     private func hosting(_ view: some View) -> NSHostingView<AnyView>? {

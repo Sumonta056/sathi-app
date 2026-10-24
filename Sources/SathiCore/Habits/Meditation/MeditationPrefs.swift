@@ -40,9 +40,9 @@ extension MeditationPrefs {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         let d = MeditationPrefs()
         enabled = try c.value(.enabled, or: d.enabled)
-        slots = try c.value(.slots, or: d.slots)
+        slots = try c.knownSet(.slots, or: d.slots, keepsEmpty: true)
         sessionMinutes = try c.value(.sessionMinutes, or: d.sessionMinutes)
-        style = try c.value(.style, or: d.style)
+        style = try c.known(.style, or: d.style)
         chime = try c.value(.chime, or: d.chime)
         strictness = try c.value(.strictness, or: d.strictness)
     }

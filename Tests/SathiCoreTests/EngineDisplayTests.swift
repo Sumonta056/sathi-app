@@ -60,11 +60,11 @@ struct EngineDisplayTests {
         #expect(h.engine.warnText(.water).contains("pauses your screen"))
     }
 
-    @Test func subtitleShowsProgressAndStreak() {
+    @Test func goalTextShowsProgress() {
         let h = EngineHarness()
         h.engine.logWater(1.5)
-        #expect(h.engine.subtitle(.water) == "1½ of 8 glasses · 0-day streak")
-        #expect(h.engine.subtitle(.reading) == "0 of 15 min · 0-day streak")
+        #expect(h.engine.goalText(.water) == GoalText(done: "1½", rest: "of 8 glasses"))
+        #expect(h.engine.goalText(.reading) == GoalText(done: "0", rest: "of 15 min"))
         #expect(h.engine.progress(.water) == 1.5 / 8)
     }
 

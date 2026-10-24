@@ -12,6 +12,7 @@ package struct Prefs: Codable, Equatable, Sendable {
         [
             "\(water.enabled)", "\(water.intervalMinutes)", "\(water.startMinutes)", "\(water.endMinutes)",
             "\(reading.enabled)", "\(reading.timeMinutes)", "\(reading.sessionMinutes)",
+            reading.sortedWeekdays.map { "\($0.rawValue)" }.joined(separator: "+"),
             "\(meditation.enabled)", meditation.sortedSlots.map(\.rawValue).joined(separator: "+"), "\(meditation.sessionMinutes)"
         ].joined(separator: "-")
     }

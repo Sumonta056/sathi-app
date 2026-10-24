@@ -9,53 +9,45 @@ import ViewInspector
 @MainActor
 @Suite("Meditation settings fixes")
 struct MeditationSettingsFixTests {
-    private func settings(_ h: EngineHarness) -> some View {
-        SettingsView().environmentObject(h.engine)
+    private func reading(_ h: EngineHarness) throws -> InspectableView<ViewType.ClassifiedView> {
+        try hosted(ReadingSettingsTab(), h).inspect()
     }
 
-    private func strictnessPicker(_ view: some View, _ title: String) throws -> InspectableView<ViewType.Picker> {
-        try view.inspect().find(ViewType.Picker.self) { try $0.labelView().text().string() == title }
-    }
-
-    private func optionTitles(_ picker: InspectableView<ViewType.Picker>) -> [String] {
-        picker.findAll(ViewType.Text.self).compactMap { try? $0.string() }
-    }
-
-    @Test func chimeToggleSaysItPlaysAtTheEnd() throws {
+    @Test func chimeSwitchSaysItPlaysAtTheEnd() throws {
         let h = EngineHarness { $0.prefs.meditation.enabled = true }
-        let toggle = try settings(h).inspect().find(ViewType.Toggle.self) { try $0.labelView().text().string() == "Soft chime at the end" }
-        try toggle.tap()
+        let sut = try hosted(MeditationSettingsTab(), h).inspect()
+        #expect(throws: Never.self) { try sut.find(text: "Soft chime at the end") }
+        try Find.button(sut, label: "Chime").tap()
         #expect(!h.engine.data.prefs.meditation.chime)
     }
 
-    @Test func readingPickerOffersNoStrictOption() throws {
-        let h = EngineHarness()
-        let options = try optionTitles(strictnessPicker(settings(h), "When I ignore Boi"))
-        #expect(options.contains(Strictness.friendly.title))
-        #expect(options.contains(Strictness.persistent.title))
-        #expect(!options.contains(Strictness.strict.title))
+    @Test func readingOffersOnlyGentleAndNudgy() throws {
+        let sut = try reading(EngineHarness())
+        #expect(throws: Never.self) { try sut.find(text: Strictness.friendly.title) }
+        #expect(throws: Never.self) { try sut.find(text: Strictness.persistent.title) }
+        #expect(Find.lacks(sut, text: "Strict"))
+        #expect(Find.lacks(sut, text: Strictness.strict.detail))
     }
 
-    @Test func waterPickerStillOffersStrict() throws {
-        let h = EngineHarness()
-        let options = try optionTitles(strictnessPicker(settings(h), "When I ignore Fota"))
-        #expect(options.contains(Strictness.strict.title))
+    @Test func waterStillOffersStrict() throws {
+        let sut = try hosted(WaterSettingsTab(), EngineHarness()).inspect()
+        #expect(throws: Never.self) { try sut.find(text: "Strict") }
     }
 
-    @Test func storedStrictReadingShowsPersistentSelected() throws {
-        let h = EngineHarness { $0.prefs.reading.strictness = .strict }
-        let picker = try strictnessPicker(settings(h), "When I ignore Boi")
-        #expect(try picker.selectedValue(Strictness.self) == .persistent)
+    @Test func storedStrictReadingShowsNudgySelected() throws {
+        let sut = try reading(EngineHarness { $0.prefs.reading.strictness = .strict })
+        #expect(try A11y.isSelected(Find.button(sut, holding: "Nudgy")))
+        #expect(try !A11y.isSelected(Find.button(sut, holding: "Gentle")))
     }
 
     @Test func meditationReminderButtonIsDisabledWhileOff() throws {
-        let h = EngineHarness()
-        #expect(try settings(h).inspect().find(button: "Show meditation reminder now").isDisabled())
+        let sut = try hosted(MeditationSettingsTab(), EngineHarness()).inspect()
+        #expect(try sut.find(button: "Show a reminder now").isDisabled())
     }
 
     @Test func meditationReminderButtonIsEnabledWhileOn() throws {
-        let h = EngineHarness { $0.prefs.meditation.enabled = true }
-        #expect(try !settings(h).inspect().find(button: "Show meditation reminder now").isDisabled())
+        let sut = try hosted(MeditationSettingsTab(), EngineHarness { $0.prefs.meditation.enabled = true }).inspect()
+        #expect(try !sut.find(button: "Show a reminder now").isDisabled())
     }
 
     @Test func sessionViewShowsNothingWithoutASession() throws {

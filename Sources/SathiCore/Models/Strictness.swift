@@ -7,17 +7,25 @@ package enum Strictness: String, Codable, CaseIterable, Identifiable, Sendable {
 
     package var title: String {
         switch self {
-        case .friendly: return "Friendly"
-        case .persistent: return "Persistent"
+        case .friendly: return "Gentle"
+        case .persistent: return "Nudgy"
         case .strict: return "Strict"
         }
     }
 
     package var detail: String {
         switch self {
-        case .friendly: return "Pops up again after each snooze."
-        case .persistent: return "After one snooze it stays on top, shakes, and has no close button."
-        case .strict: return "Stays on top after one snooze. After two snoozes it locks the screen until you hold to confirm."
+        case .friendly: return "A reminder each time. It never stays on top."
+        case .persistent: return "Stays on top, wiggles, and has no close button after a snooze."
+        case .strict: return "Locks the screen after two snoozes."
+        }
+    }
+
+    package var level: Int {
+        switch self {
+        case .friendly: return 1
+        case .persistent: return 2
+        case .strict: return 3
         }
     }
 }

@@ -92,10 +92,11 @@ extension Engine {
     func reschedule() {
         let n = clock.now
         for id in HabitID.allCases where !isActive(id) {
-            var due = freshDue(id, lastDone: data.lastDone(id))
+            let fresh = freshDue(id, lastDone: data.lastDone(id))
+            var due = fresh
             if due < n, let slot = rules(id).nextSlot(after: n) { due = slot }
             let staleSnooze = state(id).snoozedUntil.map { $0 <= n } ?? false
-            if due == .distantFuture || !enabled(id) || staleSnooze {
+            if due == .distantFuture || !enabled(id) || staleSnooze || fresh > n {
                 update(id) { $0 = HabitState(nextDue: due) }
                 queue.removeAll { $0 == id }
             } else if state(id).snoozedUntil == nil {

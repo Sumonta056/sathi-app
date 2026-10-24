@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct GlassGoalRow: View {
+struct CelebrateGlassRow: View {
     let total: Double
     let goal: Int
 
