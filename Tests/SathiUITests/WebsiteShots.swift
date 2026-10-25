@@ -29,10 +29,11 @@ struct WebsiteShots {
         return events
     }
 
-    private func harness() -> EngineHarness {
-        EngineHarness(at: day(2026, 3, 26, 10, 30)) {
+    private func harness(at start: Date = day(2026, 3, 26, 10, 30), others: Bool = true) -> EngineHarness {
+        EngineHarness(at: start) {
+            $0.prefs.water.enabled = others
             $0.prefs.general.name = "Alex"
-            $0.prefs.meditation.enabled = true
+            $0.prefs.meditation.enabled = others
             $0.events = sampleEvents()
         }
     }
@@ -82,5 +83,58 @@ struct WebsiteShots {
     @Test func meditation() throws {
         let h = harness()
         try save(BubbleView(id: .meditation, level: .nudge), "meditation", h)
+    }
+
+    @Test func waterNudgy() throws {
+        let h = harness()
+        h.showReminder(.water)
+        h.engine.snooze()
+        try save(BubbleView(id: .water, level: .persist), "water-nudgy", h)
+    }
+
+    @Test func waterLock() throws {
+        let h = harness()
+        h.showReminder(.water)
+        try save(LockView(id: .water).frame(width: 1280, height: 800), "water-lock", h)
+    }
+
+    @Test func waterThanks() throws {
+        let h = harness()
+        h.showReminder(.water)
+        h.engine.logWater(1)
+        try save(CelebrateView(), "water-thanks", h)
+    }
+
+    @Test func readingTimer() throws {
+        let h = harness(at: Date.now.addingTimeInterval(-360), others: false)
+        h.engine.startReading()
+        h.advance(minutes: 6)
+        try save(ReadingTimerPill(), "reading-timer", h)
+    }
+
+    @Test func readingDone() throws {
+        let h = harness()
+        h.engine.startReading()
+        h.advance(minutes: 16)
+        try save(CelebrateView(), "reading-done", h)
+    }
+
+    @Test func readingSnoozed() throws {
+        let h = harness()
+        try save(SnoozedNote(id: .reading, until: day(2026, 3, 26, 22, 5)), "reading-snoozed", h)
+    }
+
+    @Test func breathe() throws {
+        let h = harness()
+        h.engine.startMeditation()
+        h.advance(minutes: 1)
+        try save(BreatheView(), "meditation-breathe", h)
+    }
+
+    @Test func meditationThanks() throws {
+        let h = harness()
+        h.engine.startMeditation()
+        h.advance(minutes: 6)
+        try save(CelebrateView(), "meditation-thanks", h)
     }
 }

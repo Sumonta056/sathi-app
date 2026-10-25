@@ -58,6 +58,13 @@ If you ignore a reminder, it gets firmer, step by step:
 
 Reading and meditation never lock the screen. The menu bar popover can pause all reminders for 30 minutes, 1 hour, or the rest of the day.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/water-nudgy.png" alt="Nudgy water reminder after 1 snooze, with no close button" width="400" />
+  <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/water-lock.png" alt="Strict full-screen lock with a Hold button and an Emergency skip link" width="420" />
+</p>
+
+See [every reminder on the website](https://sumonta056.github.io/sathi-app/#gallery): the thank-you cards, the reading timer, the breathing session, and more.
+
 ## Reports and settings
 
 - The Reports window shows each habit by day, week, or month, with a chart, a streak calendar, your best day, and your longest streak.

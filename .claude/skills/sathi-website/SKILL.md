@@ -19,23 +19,46 @@ Plan the edits and get approval before you change files. Ask before you commit.
 
 ## 2. Map each change to the places it shows
 
-| Area changed | Website (`site/index.html`) | Screenshot | README.md section |
-|---|---|---|---|
-| Menu bar popover | hero | `menu-bar.png` | top image |
-| Water bubble, sip bottle | feature "A water reminder…", buddy card "Fota" | `water-bubble.png` | The buddies |
-| Reading corner popup, timer pill | feature "A reading popup…", buddy card "Boi" | `reading-corner.png` | The buddies |
-| Meditation invite, breathing | feature "Guided breathing…", buddy card "Shanti" | `meditation.png` | The buddies |
-| Reports window | feature "Reports…" | `reports.png` | Reports and settings |
-| Settings window | feature "Settings…" | `settings.png` | Reports and settings |
-| Strictness, lock, pause | section `#escalation` | — | Reminders that escalate |
-| Saved files | section `#privacy` | — | Privacy |
-| Install steps, Gatekeeper | section `#install`, FAQ | — | Install |
-| A new buddy | new `.buddy` card, new `.feature` block (alternate `flip`), FAQ if needed | new `<name>.png` | The buddies |
-| Version | JSON-LD `softwareVersion`, hero `.dl-meta`, install card `<h3>` | — | Changelog (owned by `sathi-release`) |
+The page has these sections, in order: hero (`.desk` scene), `#gallery` (every reminder, with tabs), `#features`, `#levels` (strictness table, privacy, performance), `#install`, `#faq`.
+
+| Area changed | Gallery tab (`data-shot`) | Other places on the site | Screenshot | README.md section |
+|---|---|---|---|---|
+| Menu bar popover | `menu-bar` | hero `.desk` | `menu-bar.png` | top image |
+| Water bubble (Gentle) | `water-bubble` | feature "Fota" | `water-bubble.png` | The buddies |
+| Water bubble after a snooze (Nudgy) | `water-nudgy` | — | `water-nudgy.png` | Reminders that escalate |
+| Strict lock screen | `water-lock` | `#levels` table, FAQ | `water-lock.png` | Reminders that escalate |
+| Water thank-you | `water-thanks` | — | `water-thanks.png` | — |
+| Reading corner popup | `reading-corner` | feature "Boi" | `reading-corner.png` | The buddies |
+| Reading timer pill | `reading-timer` | feature "Boi" | `reading-timer.png` | — |
+| Reading snoozed note | `reading-snoozed` | — | `reading-snoozed.png` | — |
+| Reading done card | `reading-done` | feature "Boi" | `reading-done.png` | — |
+| Meditation invite | `meditation` | feature "Shanti" | `meditation.png` | — |
+| Breathing session | `meditation-breathe` | feature "Shanti" | `meditation-breathe.png` | — |
+| Meditation thank-you | `meditation-thanks` | — | `meditation-thanks.png` | — |
+| Reports window | `reports` | hero `.desk`, feature "Reports" | `reports.png` | Reports and settings |
+| Settings window | `settings` | feature "Settings" | `settings.png` | Reports and settings |
+| Strictness, pause | — | `#levels` table | — | Reminders that escalate |
+| Saved files, performance budget | — | `#levels` panels, FAQ | — | Privacy |
+| Install steps, Gatekeeper | — | `#install`, FAQ | — | Install |
+| A new buddy | new `.g-set` group with its tabs and panels | new `.feature` block (alternate `flip`) | new `<name>.png` files | The buddies |
+| Version | — | JSON-LD `softwareVersion`, hero `.dl-meta`, install card `<h3>` | — | Changelog (owned by `sathi-release`) |
+
+### Gallery panels
+
+Each tab has a `<button role="tab" data-shot="<name>">` in `.g-bar` and a `<figure class="g-panel pos-…" id="p-<name>">` in `.g-stage`. `site/site.js` switches them. Pick the class from where the real window shows:
+
+| Class | Use for | Placement |
+|---|---|---|
+| `pos-corner` | bubbles, corner popups, pills, thank-you cards | top-right, 1.3 × `--w` |
+| `pos-menu` | the menu bar popover | under the menu bar drop |
+| `pos-center` (+ `narrow-shot` for a tall, narrow view) | windows and the breathing session | right half, centered vertically |
+| `pos-full` | the lock screen | the whole desktop |
+
+Set `--w` to the view's width as a percent of a 1440-point screen: `pixel width / 2 / 1440 × 100`. Raise it for very small views (the timer pill, the snoozed note), so they stay readable. Each `<figcaption>` starts with `<b>Name.</b>` and has 1 or 2 short sentences. A new feature link uses `data-show="<name>"` to open its tab.
 
 ## 3. Render the screenshots
 
-Never screenshot the real app. It shows the user's name and history. `Tests/SathiUITests/WebsiteShots.swift` renders each view with fixed sample data ("Alex", 25 days of history, 26 March 2026) in an off-screen `NSHostingView` at 2x:
+Never screenshot the real app. It shows the user's name and history. `Tests/SathiUITests/WebsiteShots.swift` renders each view with fixed sample data ("Alex", 25 days of history, 26 March 2026) in an off-screen `NSHostingView` at 2x. It has 1 `@Test` per gallery shot:
 
 ```sh
 SATHI_SHOTS="$PWD/site/screenshots" swift test --filter WebsiteShots
@@ -46,6 +69,8 @@ The suite runs only when `SATHI_SHOTS` is set. It skips in normal test runs.
 - A new window or view: add a `@Test` to `WebsiteShots` that calls `save(<View>, "<name>", h)`.
 - A view that needs other sample data: change `sampleEvents()` or `harness()`. Keep the data realistic: a streak, a few missed days.
 - The water bubble headline is random. Render again if the line looks odd.
+- A view that shows a live countdown (`Text(timerInterval:)`, the reading timer) counts against the real clock. Its test starts the harness at `Date.now` and turns the other buddies off, so that no due reminder blocks the session.
+- The lock screen shows the real time. That is expected.
 
 Read each new image. It shows the feature, has no cut text, and has no yellow "not available" boxes (an AppKit control that did not render).
 
@@ -67,7 +92,7 @@ Read the image. The bubble must not cover the headline.
 ## 5. Write the text
 
 - The site and the README use the same words for the same thing. Sentence case, plain verbs, short sentences.
-- Each feature block on the site: 1 `<h3>`, 1 or 2 sentences, at most 3 list items.
+- Each feature block on the site: 1 `<h3>`, 1 or 2 sentences, at most 4 check items, 1 "See … →" link with `data-show`.
 - Every README image and repo link is an absolute URL (`https://raw.githubusercontent.com/Sumonta056/sathi-app/main/...` or `https://github.com/Sumonta056/sathi-app/blob/main/...`).
 - Every image gets a real `alt` text that says what the picture shows.
 - Check every claim against the code and `.claude/rules/business-logic.md`. Never list a removed feature (for example, CSV export has no menu now).
@@ -87,7 +112,8 @@ Read the image. The bubble must not cover the headline.
 2. Serve the site: `python3 -I -m http.server 8812 --bind 127.0.0.1 -d site`.
 3. Use Chrome DevTools MCP. Open your own tab and close it at the end.
    1. At 1440 × 900 and at 390 × 844: no sideways scroll, every image loads, the console has no errors.
-   2. Run `lighthouse_audit` for mobile and desktop. SEO, Accessibility, and Best Practices must be 100.
+   2. Click every gallery tab. The view sits where it shows on a real Mac, and the caption does not cover it.
+   3. Run `lighthouse_audit` for mobile and desktop. SEO, Accessibility, and Best Practices must be 100.
 4. Say which screenshots changed and what you could not check.
 
 Ask before you commit. Use `docs(site): ...` for text and screenshots, `feat(site): ...` for new site behavior, and `docs(readme): ...` for README-only changes.

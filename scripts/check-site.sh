@@ -5,7 +5,7 @@ cd "$(dirname "$0")/.."
 FAIL=0
 fail() { echo "site: $1"; FAIL=1; }
 
-for f in index.html site.css robots.txt sitemap.xml 404.html; do
+for f in index.html site.css site.js robots.txt sitemap.xml 404.html; do
   [[ -f "site/$f" ]] || fail "missing site/$f"
 done
 
