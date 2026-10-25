@@ -14,6 +14,12 @@ struct SettingsWindowTests {
         #expect(w.delegate === watcher)
     }
 
+    @Test func titleTextNeverDrawsOverScrolledContent() {
+        let w = SettingsWindow.make(engine: EngineHarness().engine, closeWatcher: WindowCloseWatcher())
+        #expect(w.titleVisibility == .hidden)
+        #expect(w.title == "Sathi Settings")
+    }
+
     @Test func windowWillCloseRunsOnClose() {
         let watcher = WindowCloseWatcher()
         var closed = 0

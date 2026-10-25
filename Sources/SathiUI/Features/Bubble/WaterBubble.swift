@@ -19,11 +19,11 @@ struct WaterBubble: View {
             HStack {
                 ContainerSegment(selection: container)
                 Spacer(minLength: 0)
-                Button(e.snoozeLabel(.water)) { e.snooze() }
+                Button(e.snoozeLabel(.water)) { e.snooze(.water) }
                     .buttonStyle(GhostButton(accent: Night.chipText, height: UIMetrics.snoozeHeight))
             }
             if level == .persist { warn }
-            IgnoreBar(accent: Night.water, track: Night.border)
+            IgnoreBar(id: .water, accent: Night.water, track: Night.border)
         }
         .padding(UIMetrics.bubblePadding)
         .modifier(WaterCard(alert: level == .persist))

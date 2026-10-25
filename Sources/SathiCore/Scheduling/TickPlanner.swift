@@ -3,11 +3,11 @@ import Foundation
 package enum TickPlanner {
     package static func delay(
         now: Date,
-        phase: Phase,
+        inSession: Bool,
         deadlines: [Date],
         focusRemaining: TimeInterval?
     ) -> TimeInterval {
-        if case .session = phase { return Timing.activeTick }
+        if inSession { return Timing.activeTick }
         var delay = Timing.idleTickMax
         for deadline in deadlines {
             let wait = deadline.timeIntervalSince(now)

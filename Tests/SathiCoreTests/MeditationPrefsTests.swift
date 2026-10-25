@@ -19,8 +19,11 @@ struct MeditationPrefsTests {
     @Test func defaults() {
         let m = MeditationPrefs()
         #expect(!m.enabled)
-        #expect(m.slots == [.morning, .evening])
-        #expect(m.sessionMinutes == 5)
+        #expect(m.dailyGoalMinutes == 10)
+        #expect(m.sessionMinutes == 2)
+        #expect(m.intervalMinutes == 60)
+        #expect(m.startMinutes == 9 * 60)
+        #expect(m.endMinutes == 21 * 60)
         #expect(m.style == .box)
         #expect(m.chime)
         #expect(m.strictness == .friendly)
@@ -29,12 +32,13 @@ struct MeditationPrefsTests {
     }
 
     @Test func rawValuesAreStable() {
-        #expect(MeditationSlot.allCases.map(\.rawValue) == ["morning", "afternoon", "evening"])
         #expect(BreathingStyle.allCases.map(\.rawValue) == ["box", "relax", "even"])
     }
 
-    @Test func slotTimesAndLengths() {
-        #expect(Limits.meditationLengths == [2, 5, 10])
+    @Test func lengthsGoalsAndIntervals() {
+        #expect(Limits.meditationLengths == [1, 2, 5])
+        #expect(Limits.meditationGoals == [5, 10, 20])
+        #expect(Limits.meditationIntervalChips == [30, 60, 90, 120])
     }
 
     @Test func emptyJSONDecodesToDefaults() throws {
@@ -60,8 +64,11 @@ struct MeditationPrefsTests {
     @Test func roundTrip() throws {
         var p = Prefs()
         p.meditation.enabled = true
-        p.meditation.slots = [.afternoon]
-        p.meditation.sessionMinutes = 10
+        p.meditation.dailyGoalMinutes = 20
+        p.meditation.intervalMinutes = 90
+        p.meditation.startMinutes = 7 * 60 + 30
+        p.meditation.endMinutes = 22 * 60
+        p.meditation.sessionMinutes = 5
         p.meditation.style = .relax
         p.meditation.chime = false
         p.meditation.strictness = .persistent
@@ -70,15 +77,19 @@ struct MeditationPrefsTests {
 
     @Test func scheduleKeyTracksMeditationScheduleFields() {
         let base = Prefs()
-        var slots = base
-        slots.meditation.slots = [.morning, .afternoon, .evening]
-        var length = base
-        length.meditation.sessionMinutes = 10
-        var enabled = base
-        enabled.meditation.enabled = true
-        #expect(slots.scheduleKey != base.scheduleKey)
-        #expect(length.scheduleKey != base.scheduleKey)
-        #expect(enabled.scheduleKey != base.scheduleKey)
+        let changes: [(inout MeditationPrefs) -> Void] = [
+            { $0.enabled = true },
+            { $0.dailyGoalMinutes = 20 },
+            { $0.sessionMinutes = 5 },
+            { $0.intervalMinutes = 90 },
+            { $0.startMinutes = 10 * 60 },
+            { $0.endMinutes = 20 * 60 }
+        ]
+        for change in changes {
+            var p = base
+            change(&p.meditation)
+            #expect(p.scheduleKey != base.scheduleKey)
+        }
     }
 
     @Test func scheduleKeyIgnoresStyleAndChime() {
@@ -89,14 +100,14 @@ struct MeditationPrefsTests {
         #expect(p.scheduleKey == key)
     }
 
-    @Test func onlyWaterMayBeStrict() {
+    @Test func waterAndMeditationMayBeStrictButReadingMayNot() {
         var p = Prefs()
         p.water.strictness = .strict
         p.reading.strictness = .strict
         p.meditation.strictness = .strict
         #expect(p.strictness(.water) == .strict)
         #expect(p.strictness(.reading) == .persistent)
-        #expect(p.strictness(.meditation) == .persistent)
+        #expect(p.strictness(.meditation) == .strict)
     }
 
     @Test(arguments: [Strictness.friendly, .persistent])

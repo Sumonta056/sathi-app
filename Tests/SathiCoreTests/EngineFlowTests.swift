@@ -9,9 +9,9 @@ struct EngineFlowTests {
     @Test func waterBecomesDueAfterTheInterval() {
         let h = EngineHarness()
         h.advance(minutes: 119)
-        #expect(h.engine.phase == .idle)
+        #expect(h.engine.activities.isEmpty)
         h.advance(minutes: 1)
-        #expect(h.engine.phase == .bubble(.water, .nudge))
+        #expect(h.engine.phase(.water) == .bubble(.nudge))
         #expect(h.presenter.calls.last == .showBubble(.water, .nudge))
         #expect(h.sound.played.last == .glass)
     }
@@ -19,15 +19,15 @@ struct EngineFlowTests {
     @Test func strictWaterEscalatesToLock() {
         let h = EngineHarness()
         h.showReminder(.water)
-        #expect(h.engine.phase == .bubble(.water, .nudge))
+        #expect(h.engine.phase(.water) == .bubble(.nudge))
 
-        h.engine.snooze()
+        h.engine.snooze(.water)
         h.advance(minutes: 5)
-        #expect(h.engine.phase == .bubble(.water, .persist))
+        #expect(h.engine.phase(.water) == .bubble(.persist))
 
-        h.engine.snooze()
+        h.engine.snooze(.water)
         h.advance(minutes: 5)
-        #expect(h.engine.phase == .lock(.water))
+        #expect(h.engine.phase(.water) == .lock)
         #expect(h.presenter.calls.last == .showLock(.water))
     }
 
@@ -35,19 +35,19 @@ struct EngineFlowTests {
         let h = EngineHarness()
         h.showReminder(.water)
         h.advance(minutes: 5)
-        #expect(h.engine.phase == .idle)
+        #expect(h.engine.activities.isEmpty)
         #expect(h.engine.state(.water).snoozes == 1)
-        #expect(h.presenter.calls.contains(.closeBubble))
+        #expect(h.presenter.calls.contains(.closeBubble(.water)))
     }
 
     @Test func confirmingTheLockLogsAGlass() {
         let h = EngineHarness { $0.prefs.general.soundOn = false }
         h.showReminder(.water)
-        h.engine.snooze(); h.advance(minutes: 5)
-        h.engine.snooze(); h.advance(minutes: 5)
+        h.engine.snooze(.water); h.advance(minutes: 5)
+        h.engine.snooze(.water); h.advance(minutes: 5)
         h.engine.lockConfirmed(.water)
         #expect(h.engine.data.events.last?.amount == 1)
-        #expect(h.engine.phase == .celebrate)
+        #expect(h.engine.isCelebrating)
         #expect(h.engine.state(.water).snoozes == 0)
         #expect(h.presenter.calls.contains(.closeLock))
         #expect(h.sound.played.isEmpty)
@@ -58,16 +58,16 @@ struct EngineFlowTests {
         #expect(h.engine.streak(.water) == 1)
         h.engine.emergencySkip(.water)
         #expect(h.engine.streak(.water) == 0)
-        #expect(h.engine.phase == .idle)
+        #expect(h.engine.activities.isEmpty)
     }
 
     @Test func readingSessionCompletes() {
         let h = EngineHarness()
         h.engine.startReading()
-        #expect(h.engine.phase == .session(.reading))
+        #expect(h.engine.phase(.reading) == .session)
         h.advance(minutes: 15)
         #expect(h.engine.data.events.last?.amount == 15)
-        #expect(h.engine.phase == .celebrate)
+        #expect(h.engine.isCelebrating)
         #expect(h.engine.celebration.id == .reading)
     }
 
@@ -75,40 +75,38 @@ struct EngineFlowTests {
         let h = EngineHarness()
         h.showReminder(.reading)
         h.engine.startReading()
-        h.engine.stopSession()
-        #expect(h.engine.phase == .idle)
+        h.engine.stopSession(.reading)
+        #expect(h.engine.activities.isEmpty)
         #expect(h.engine.state(.reading).snoozes == 1)
         #expect(!h.engine.data.events.contains { $0.habit == .reading && $0.kind == .done })
     }
 
-    @Test func waterWaitsInTheQueueDuringASession() {
+    @Test func waterShowsAtOnceDuringASession() {
         let h = EngineHarness(at: day(2026, 3, 4, 11, 50)) { $0.live.lastWaterDone = day(2026, 3, 4, 10) }
         h.engine.startReading()
         h.advance(minutes: 11)
-        #expect(h.engine.queue == [.water])
-        h.advance(minutes: 4)
-        h.engine.endCelebrate()
-        h.engine.tick()
-        #expect(h.engine.phase == .bubble(.water, .nudge))
+        #expect(h.engine.phase(.water) == .bubble(.nudge))
+        #expect(h.presenter.calls.contains(.showBubble(.water, .nudge)))
+        #expect(h.engine.phase(.reading) == .session)
     }
 
     @Test func pauseHoldsRemindersUntilItEnds() {
         let h = EngineHarness()
         h.engine.pause(hours: 3)
         h.advance(minutes: 150)
-        #expect(h.engine.phase == .idle)
+        #expect(h.engine.activities.isEmpty)
         #expect(h.engine.statusText == "Paused")
         h.advance(minutes: 31)
-        #expect(h.engine.phase == .bubble(.water, .nudge))
+        #expect(h.engine.phase(.water) == .bubble(.nudge))
     }
 
-    @Test func disablingAHabitDropsItFromTheQueue() {
+    @Test func aDisabledHabitNeverShowsDuringASession() {
         let h = EngineHarness(at: day(2026, 3, 4, 11, 50)) { $0.live.lastWaterDone = day(2026, 3, 4, 10) }
         h.engine.startReading()
-        h.advance(minutes: 11)
-        #expect(h.engine.queue == [.water])
         h.engine.data.prefs.water.enabled = false
-        #expect(h.engine.queue.isEmpty)
+        h.advance(minutes: 11)
+        #expect(!h.presenter.calls.contains(.showBubble(.water, .nudge)))
+        #expect(h.engine.phase(.water) == .idle)
     }
 
     @Test func everyDataChangeIsSaved() {
@@ -135,12 +133,14 @@ struct EngineFlowTests {
         #expect(h.engine.data.live.bottleLevel == 1)
     }
 
-    @Test func startReadingIsRefusedDuringAnotherReminder() {
+    @Test func startReadingRunsBesideAnotherReminder() {
         let h = EngineHarness()
         h.showReminder(.water)
         h.engine.startReading()
-        #expect(h.engine.phase == .bubble(.water, .nudge))
-        #expect(h.sound.beeps == 1)
+        #expect(h.engine.phase(.water) == .bubble(.nudge))
+        #expect(h.engine.phase(.reading) == .session)
+        #expect(h.presenter.calls.last == .showSession(.reading))
+        #expect(h.sound.beeps == 0)
     }
 
     @Test func openSettingsAsksThePresenter() {

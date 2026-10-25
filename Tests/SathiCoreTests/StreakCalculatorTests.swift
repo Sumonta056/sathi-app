@@ -55,7 +55,7 @@ struct StreakCalculatorTests {
 
     @Test func aGoalOfZeroNeverCountsAsMet() {
         var prefs = Prefs()
-        prefs.meditation.slots = []
+        prefs.meditation.dailyGoalMinutes = 0
         let goal = HabitID.meditation.rules(prefs, calendar: zone.calendar).dailyGoal
         #expect(current(.meditation, goal: goal, [.done(.meditation, 5, at: zone.date(2026, 3, 3, 8, 5))]) == 0)
     }

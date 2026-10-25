@@ -14,7 +14,7 @@ struct ReportBuilderDaysTests {
 
     @Test func aGoalOfZeroGivesZeroPercentAndNoDaysMet() throws {
         var prefs = Prefs()
-        prefs.meditation.slots = []
+        prefs.meditation.dailyGoalMinutes = 0
         let m = try #require(habit(.meditation, .week, [.done(.meditation, 5, at: zone.date(2026, 3, 3, 8))], prefs: prefs))
         #expect(m.goal == 0)
         #expect(m.total == 5)

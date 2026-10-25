@@ -19,6 +19,7 @@ struct SidebarNavButton<Accessory: View>: View {
                 Text(verbatim: title)
                     .font(Typography.rowLabel)
                     .foregroundStyle(textColor)
+                    .fixedSize()
                 accessory()
                 Spacer(minLength: 0)
             }

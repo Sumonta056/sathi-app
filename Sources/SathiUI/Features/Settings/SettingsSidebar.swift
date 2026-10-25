@@ -76,6 +76,7 @@ struct NewBadge: View {
             .foregroundStyle(Night.onAccent)
             .padding(UIMetrics.badgePadding)
             .background(Capsule().fill(Night.calm))
+            .fixedSize()
     }
 }
 

@@ -9,7 +9,7 @@ struct ReadingWhenCard: View {
         let reading = engine.data.prefs.reading
         SettingsCard {
             SettingRow(label: "Remind me at", showsDivider: false) {
-                TimeMenu(minutes: $e.data.prefs.reading.timeMinutes)
+                TimeMenu(minutes: $e.data.prefs.reading.timeMinutes, accent: Night.reading)
             }
             SettingRow(label: "On these days") {
                 ChipRow(

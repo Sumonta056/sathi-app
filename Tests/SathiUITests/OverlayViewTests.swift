@@ -25,21 +25,23 @@ struct OverlayViewTests {
     @Test func sessionShowsTheTimerAndStopsEarly() throws {
         let h = EngineHarness { $0.prefs.reading.reminderStyle = .focus }
         h.engine.startReading()
-        let sut = SessionView().environmentObject(h.engine)
+        let sut = SessionView(id: .reading).environmentObject(h.engine)
         #expect(try sut.inspect().find(text: "READING · DO NOT DISTURB") != nil)
         try sut.inspect().find(button: "Stop early (won't count)").tap()
-        #expect(h.engine.phase == .idle)
+        #expect(h.engine.activities.isEmpty)
     }
 
-    @Test func sessionMentionsQueuedWater() throws {
+    @Test func sessionShowsNoWaterNoteWhileWaterShows() throws {
         let h = EngineHarness(at: day(2026, 3, 4, 11, 50)) {
             $0.live.lastWaterDone = day(2026, 3, 4, 10)
             $0.prefs.reading.reminderStyle = .focus
         }
         h.engine.startReading()
         h.advance(minutes: 11)
-        let sut = SessionView().environmentObject(h.engine)
-        #expect(try sut.inspect().find(text: "Fota is waiting for you after this") != nil)
+        #expect(h.engine.phase(.water) == .bubble(.nudge))
+        let sut = SessionView(id: .reading).environmentObject(h.engine)
+        #expect(try sut.inspect().find(text: "READING · DO NOT DISTURB") != nil)
+        #expect(try Find.lacks(sut.inspect(), text: "Fota is waiting for you after this"))
     }
 
     @Test func readingCelebrationShowsTheTitleAndCloses() throws {
@@ -50,7 +52,7 @@ struct OverlayViewTests {
         #expect(try sut.inspect().find(text: h.engine.celebration.title) != nil)
         #expect(throws: (any Error).self) { try sut.inspect().find(WaterThanks.self) }
         try sut.inspect().find(button: "Back to work").tap()
-        #expect(h.engine.phase == .idle)
+        #expect(!h.engine.isCelebrating)
     }
 
     @Test func readingCelebrationShowsTheWeek() throws {

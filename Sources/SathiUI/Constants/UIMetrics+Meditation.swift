@@ -9,7 +9,6 @@ extension UIMetrics {
     static let calmInviteBuddySize: CGFloat = 150
     static let calmHaloOpacity: Double = 0.12
     static let calmHintWidth: CGFloat = 280
-    static let calmNoteHeight: CGFloat = 16
     static let calmButtonHeight: CGFloat = 40
     static let calmThanksBuddySize: CGFloat = 120
 

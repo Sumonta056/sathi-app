@@ -19,7 +19,7 @@ struct OptionCard<Top: View>: View {
                     .font(Typography.hint)
                     .foregroundStyle(Night.muted)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .padding(UIMetrics.optionPadding)
             .background(shape.fill(isSelected ? accent.opacity(UIMetrics.optionFillOpacity) : Night.card))
             .overlay(shape.strokeBorder(isSelected ? accent : Night.border, lineWidth: UIMetrics.chipBorder))
@@ -32,5 +32,16 @@ struct OptionCard<Top: View>: View {
 
     private var shape: RoundedRectangle {
         RoundedRectangle(cornerRadius: UIMetrics.optionRadius, style: .continuous)
+    }
+}
+
+struct OptionCardRow<Content: View>: View {
+    @ViewBuilder let content: () -> Content
+
+    var body: some View {
+        HStack(alignment: .top, spacing: UIMetrics.chipSpacing) {
+            content()
+        }
+        .fixedSize(horizontal: false, vertical: true)
     }
 }

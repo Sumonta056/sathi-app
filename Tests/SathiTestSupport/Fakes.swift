@@ -26,9 +26,9 @@ package final class SpySoundPlayer: SoundPlayer {
 @MainActor
 package final class SpyPresenter: ReminderPresenter {
     package enum Call: Equatable {
-        case showBubble(HabitID, Level), closeBubble
+        case showBubble(HabitID, Level), closeBubble(HabitID)
         case showLock(HabitID), closeLock
-        case showSession, closeSession
+        case showSession(HabitID), closeSession(HabitID)
         case showCelebration, closeCelebration
         case showSettings, showReports
         case showSnoozed(HabitID, Date)
@@ -39,11 +39,11 @@ package final class SpyPresenter: ReminderPresenter {
     package init() {}
 
     package func showBubble(_ id: HabitID, _ level: Level) { calls.append(.showBubble(id, level)) }
-    package func closeBubble() { calls.append(.closeBubble) }
+    package func closeBubble(_ id: HabitID) { calls.append(.closeBubble(id)) }
     package func showLock(_ id: HabitID) { calls.append(.showLock(id)) }
     package func closeLock() { calls.append(.closeLock) }
-    package func showSession() { calls.append(.showSession) }
-    package func closeSession() { calls.append(.closeSession) }
+    package func showSession(_ id: HabitID) { calls.append(.showSession(id)) }
+    package func closeSession(_ id: HabitID) { calls.append(.closeSession(id)) }
     package func showCelebration() { calls.append(.showCelebration) }
     package func closeCelebration() { calls.append(.closeCelebration) }
     package func showSettings() { calls.append(.showSettings) }

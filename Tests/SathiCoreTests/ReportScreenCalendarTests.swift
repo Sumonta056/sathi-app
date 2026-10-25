@@ -79,7 +79,7 @@ struct ReportScreenCalendarTests {
     @Test func aZeroGoalShadesNothing() {
         var f = fixture
         f.enabled = [.meditation]
-        f.prefs.meditation.slots = []
+        f.prefs.meditation.dailyGoalMinutes = 0
         f.events = [.done(.meditation, 5, at: ReportScreenFixture.on(2026, 10, 2))]
         let cells = f.screen(.week, selected: .meditation).calendar.cells
         #expect(cells.count == 31)

@@ -9,10 +9,21 @@ struct MeditationSettingsTab: View {
         switchLabel: "Meditation reminders"
     )
 
+    @EnvironmentObject var e: Engine
+
     var body: some View {
+        let engine = e
         HabitSettingsPage(habit: .meditation, copy: Self.copy) {
-            SettingsSection("When") { MeditationWhenCard() }
+            SettingsSection("Goal") { MeditationGoalCard() }
+            SettingsSection("Rhythm") { MeditationRhythmCard() }
             SettingsSection("Breathing pattern") { BreathingPatternCards() }
+            SettingsSection("If I ignore Shanti") {
+                StrictnessCards(
+                    options: Strictness.allCases,
+                    selected: engine.data.prefs.meditation.strictness,
+                    accent: Night.calm
+                ) { engine.data.prefs.meditation.strictness = $0 }
+            }
         }
     }
 }

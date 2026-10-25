@@ -88,7 +88,7 @@ struct WebsiteShots {
     @Test func waterNudgy() throws {
         let h = harness()
         h.showReminder(.water)
-        h.engine.snooze()
+        h.engine.snooze(.water)
         try save(BubbleView(id: .water, level: .persist), "water-nudgy", h)
     }
 

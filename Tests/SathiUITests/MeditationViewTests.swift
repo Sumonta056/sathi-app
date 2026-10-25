@@ -24,7 +24,7 @@ struct MeditationViewTests {
         let h = harness()
         let sut = HabitCard(id: .meditation).environmentObject(h.engine)
         try MenuFind.control(sut.inspect(), "Breathe").tap()
-        #expect(h.engine.phase == .session(.meditation))
+        #expect(h.engine.phase(.meditation) == .session)
     }
 
     @Test func panelShowsAMeditationCardWhenEnabled() throws {
@@ -36,7 +36,7 @@ struct MeditationViewTests {
     @Test func readingSessionHasNoBreathingPhase() throws {
         let h = harness()
         h.engine.startReading()
-        let sut = SessionView().environmentObject(h.engine)
+        let sut = SessionView(id: .reading).environmentObject(h.engine)
         #expect(try sut.inspect().find(text: "READING · DO NOT DISTURB") != nil)
         #expect(throws: (any Error).self) { try sut.inspect().find(text: "Breathe in") }
     }
@@ -52,6 +52,6 @@ struct MeditationViewTests {
         let h = harness()
         let sut = MeditationSettingsTab().environmentObject(h.engine)
         try sut.inspect().find(button: "Show a reminder now").tap()
-        #expect(h.engine.phase == .bubble(.meditation, .nudge))
+        #expect(h.engine.phase(.meditation) == .bubble(.nudge))
     }
 }

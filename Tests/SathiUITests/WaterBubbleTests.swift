@@ -19,7 +19,7 @@ struct WaterBubbleTests {
     private func persisting() -> EngineHarness {
         let h = EngineHarness()
         h.showReminder(.water)
-        h.engine.snooze()
+        h.engine.snooze(.water)
         h.advance(minutes: 5)
         return h
     }
@@ -36,7 +36,7 @@ struct WaterBubbleTests {
         let sut = try water(h)
         let time = h.engine.now.formatted(date: .omitted, time: .shortened)
         #expect(try sut.find(text: "WATER · \(time)") != nil)
-        #expect(try sut.find(text: h.engine.copy.title) != nil)
+        #expect(try sut.find(text: h.engine.copy(.water).title) != nil)
         for label in ["A few sips", "Half", "Full glass"] {
             #expect(try sut.find(text: label) != nil)
         }
@@ -47,14 +47,14 @@ struct WaterBubbleTests {
         h.showReminder(.water)
         try Find.button(water(h), holding: "Half").tap()
         #expect(h.engine.data.events.last?.amount == 0.5)
-        #expect(h.engine.phase == .celebrate)
+        #expect(h.engine.isCelebrating)
     }
 
     @Test func snoozeButtonSnoozes() throws {
         let h = EngineHarness()
         h.showReminder(.water)
         try water(h).find(button: "Snooze 5 min").tap()
-        #expect(h.engine.phase == .idle)
+        #expect(h.engine.activities.isEmpty)
         #expect(h.engine.state(.water).snoozes == 1)
     }
 

@@ -3,15 +3,16 @@ import SwiftUI
 
 struct SessionView: View {
     @EnvironmentObject var e: Engine
+    let id: HabitID
 
     var body: some View {
-        if let id = e.sessionHabit { content(id) }
+        if let s = e.session(id) { content(s) }
     }
 
-    private func content(_ id: HabitID) -> some View {
+    private func content(_ s: Session) -> some View {
         TimelineView(.periodic(from: .now, by: UIMetrics.sessionRefresh)) { tl in
-            let total = max(1, e.sessionEnd.timeIntervalSince(e.sessionStart))
-            let left = max(0, e.sessionEnd.timeIntervalSince(tl.date))
+            let total = max(1, s.end.timeIntervalSince(s.start))
+            let left = max(0, s.end.timeIntervalSince(tl.date))
             VStack(spacing: 10) {
                 BuddyView(kind: id.kind, mood: .reading)
                     .frame(width: 96, height: 119)
@@ -19,7 +20,7 @@ struct SessionView: View {
                     .font(.system(size: 11, weight: .semibold))
                     .tracking(0.8)
                     .foregroundStyle(Night.accent(id))
-                if let phase = SessionCopy.breath(id, style: e.data.prefs.meditation.style, elapsed: tl.date.timeIntervalSince(e.sessionStart)) {
+                if let phase = SessionCopy.breath(id, style: e.data.prefs.meditation.style, elapsed: tl.date.timeIntervalSince(s.start)) {
                     Text(phase)
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
                         .foregroundStyle(Night.accent(id))
@@ -33,15 +34,7 @@ struct SessionView: View {
                     .foregroundStyle(Night.muted)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
-                if e.queue.contains(.water) {
-                    Text("Fota is waiting for you after this")
-                        .font(.system(size: 12.5))
-                        .foregroundStyle(Night.water)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 5)
-                        .background(Capsule().fill(Night.heroFill(.water)))
-                }
-                Button("Stop early (won't count)") { e.stopSession() }
+                Button("Stop early (won't count)") { e.stopSession(id) }
                     .buttonStyle(PillButton(kind: .ghost))
             }
             .padding(24)

@@ -1,11 +1,14 @@
 import AppKit
 
 extension UIController {
-    private var primary: NSScreen? { NSScreen.screens.first ?? NSScreen.main }
+    var activeScreen: NSScreen? {
+        let mouse = NSEvent.mouseLocation
+        return NSScreen.screens.first { NSMouseInRect(mouse, $0.frame, false) } ?? NSScreen.main
+    }
 
     func presentCentered(_ content: NSView, level: NSWindow.Level) -> NSPanel {
         let p = PanelFactory.make(FloatingPanel.self, content: content, level: level)
-        if let f = primary?.visibleFrame {
+        if let f = activeScreen?.visibleFrame {
             p.setFrameOrigin(NSPoint(x: f.midX - p.frame.width / 2, y: f.midY - p.frame.height / 2))
         }
         fadeIn(p)
@@ -17,12 +20,29 @@ extension UIController {
     }
 
     func placeTopRight(_ p: NSPanel) -> NSPanel {
-        if let vf = primary?.visibleFrame {
-            let inset = UIMetrics.bubbleScreenInset
-            p.setFrameOrigin(NSPoint(x: vf.maxX - p.frame.width + inset.x, y: vf.maxY - p.frame.height + inset.y))
-        }
+        if corner.isEmpty { cornerScreen = activeScreen }
+        corner.append(p)
+        restack()
         fadeIn(p)
         return p
+    }
+
+    func dismiss(_ p: NSPanel?) {
+        guard let p else { return }
+        p.orderOut(nil)
+        corner.removeAll { $0 === p }
+        if corner.isEmpty { cornerScreen = nil }
+        restack()
+    }
+
+    private func restack() {
+        guard let vf = (cornerScreen ?? activeScreen)?.visibleFrame else { return }
+        let inset = UIMetrics.bubbleScreenInset
+        var top = vf.maxY + inset.y
+        for p in corner {
+            p.setFrameOrigin(NSPoint(x: vf.maxX - p.frame.width + inset.x, y: top - p.frame.height))
+            top -= p.frame.height - UIMetrics.cornerStackOverlap
+        }
     }
 
     private func fadeIn(_ w: NSWindow) {

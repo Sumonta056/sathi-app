@@ -54,7 +54,7 @@ struct PageTitle: View {
 
 struct ThemeCards: View {
     var body: some View {
-        HStack(alignment: .top, spacing: UIMetrics.chipSpacing) {
+        OptionCardRow {
             OptionCard(title: "Night sprout", detail: "Dark and calm.", isSelected: true, accent: Night.sprout, action: {}, top: {
                 ThemeIcon(name: "moon.stars.fill")
             })

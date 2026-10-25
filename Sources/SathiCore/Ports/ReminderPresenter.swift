@@ -3,11 +3,11 @@ import Foundation
 @MainActor
 package protocol ReminderPresenter: AnyObject {
     func showBubble(_ id: HabitID, _ level: Level)
-    func closeBubble()
+    func closeBubble(_ id: HabitID)
     func showLock(_ id: HabitID)
     func closeLock()
-    func showSession()
-    func closeSession()
+    func showSession(_ id: HabitID)
+    func closeSession(_ id: HabitID)
     func showCelebration()
     func closeCelebration()
     func showSettings()

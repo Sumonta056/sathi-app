@@ -26,6 +26,7 @@ struct GlassGoalRow: View {
                 Text(verbatim: "glasses")
                     .font(Typography.hint)
                     .foregroundStyle(Night.muted)
+                    .fixedSize()
             }
         }
         .padding(UIMetrics.rowPadding)

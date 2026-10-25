@@ -31,15 +31,18 @@ struct DayClockDSTTests {
     }
 
     @Test(arguments: [(3, 8), (11, 1)])
-    func meditationSlotsAreWallClockTimesOnADSTDay(_ month: Int, _ dayOfMonth: Int) {
+    func meditationHoursAreWallClockTimesOnADSTDay(_ month: Int, _ dayOfMonth: Int) throws {
         var prefs = Prefs()
-        prefs.meditation.slots = [.morning, .evening]
+        prefs.meditation.startMinutes = 8 * 60
+        prefs.meditation.endMinutes = 21 * 60 + 30
         let rules = MeditationRules(prefs: prefs, calendar: Self.ny)
-        let morning = rules.nextDue(now: Self.local(2026, month, dayOfMonth, 7), lastDone: nil, doneToday: 0, skipToday: false)
-        #expect(wallClock(morning) == [2026, month, dayOfMonth, 8, 0])
-        let done = Self.local(2026, month, dayOfMonth, 15, 5)
-        let evening = rules.nextDue(now: done, lastDone: done, doneToday: 5, skipToday: false)
-        #expect(wallClock(evening) == [2026, month, dayOfMonth, 21, 30])
+        let start = rules.nextDue(now: Self.local(2026, month, dayOfMonth, 7), lastDone: nil, doneToday: 0, skipToday: false)
+        #expect(wallClock(start) == [2026, month, dayOfMonth, 8, 0])
+        let done = try #require(Self.ny.date(byAdding: .day, value: -1, to: Self.local(2026, month, dayOfMonth, 21)))
+        let next = rules.nextDue(now: done, lastDone: done, doneToday: 2, skipToday: false)
+        #expect(wallClock(next) == [2026, month, dayOfMonth, 8, 0])
+        #expect(rules.isActiveTime(Self.local(2026, month, dayOfMonth, 21, 29)))
+        #expect(!rules.isActiveTime(Self.local(2026, month, dayOfMonth, 21, 30)))
     }
 
     @Test(arguments: [(3, 8), (11, 1)])

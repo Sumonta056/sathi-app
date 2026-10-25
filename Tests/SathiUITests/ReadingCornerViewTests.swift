@@ -35,13 +35,13 @@ struct ReadingCornerViewTests {
         let sut = try ReadingTimerPill().environmentObject(h.engine).inspect()
         #expect(try sut.find(text: "Boi is reading with you") != nil)
         try Find.button(sut, holding: "Stop").tap()
-        #expect(h.engine.phase == .idle)
+        #expect(h.engine.activities.isEmpty)
         #expect(!h.engine.data.events.contains { $0.habit == .reading && $0.kind == .done })
     }
 
     @Test func cornerCelebrationShowsTheDoneCard() throws {
         let h = finishedSession(.corner)
-        #expect(h.engine.phase == .celebrate)
+        #expect(h.engine.isCelebrating)
         let sut = try celebrate(h)
         #expect(try sut.find(ReadingDoneCard.self) != nil)
         #expect(try sut.find(text: "Lovely, 15 minutes read") != nil)
@@ -52,7 +52,7 @@ struct ReadingCornerViewTests {
     @Test func doneCardCloseEndsTheCelebration() throws {
         let h = finishedSession(.corner)
         try Find.button(celebrate(h), label: "Close").tap()
-        #expect(h.engine.phase == .idle)
+        #expect(!h.engine.isCelebrating)
     }
 
     @Test func doneCardHintCountsTheStreak() throws {

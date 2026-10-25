@@ -14,6 +14,7 @@ enum SettingsWindow {
         w.title = "Sathi Settings"
         w.appearance = NSAppearance(named: .darkAqua)
         w.titlebarAppearsTransparent = true
+        w.titleVisibility = .hidden
         w.backgroundColor = NSColor(Night.sidebar)
         w.isReleasedWhenClosed = false
         w.delegate = closeWatcher

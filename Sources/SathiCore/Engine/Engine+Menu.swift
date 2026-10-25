@@ -41,8 +41,8 @@ extension Engine {
         let midnight = calendar.date(byAdding: .day, value: 1, to: today) ?? today.addingTimeInterval(Timing.day)
         let before = midnight.addingTimeInterval(-Timing.second)
         pausedUntil = midnight
-        queue.removeAll()
         for id in HabitID.allCases {
+            if case .bubble = activities[id] { close(id) }
             update(id) { $0.snoozedUntil = nil }
             guard enabled(id) else { continue }
             let r = rules(id)

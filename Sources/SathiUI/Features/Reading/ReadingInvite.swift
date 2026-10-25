@@ -15,7 +15,7 @@ struct ReadingInvite: View {
                     Text("Start reading").frame(maxWidth: .infinity)
                 }
                 .buttonStyle(AccentButton(accent: Night.reading, height: UIMetrics.cornerButtonHeight))
-                Button { e.snooze() } label: { Text(e.snoozeShortLabel) }
+                Button { e.snooze(.reading) } label: { Text(e.snoozeShortLabel) }
                     .buttonStyle(GhostButton(accent: Night.chipText, height: UIMetrics.cornerButtonHeight))
             }
             if level == .persist {
@@ -37,7 +37,7 @@ struct ReadingInvite: View {
                 Text("BOI · READING")
                     .font(Typography.eyebrow)
                     .foregroundStyle(Night.reading)
-                Text(e.copy.title)
+                Text(e.copy(.reading).title)
                     .font(Typography.cornerTitle)
                     .foregroundStyle(Night.text)
                 Text(Copywriter.readingInviteHint(minutes: e.data.prefs.reading.sessionMinutes))
@@ -47,7 +47,7 @@ struct ReadingInvite: View {
             }
             Spacer(minLength: 0)
             if level == .nudge {
-                CornerCloseButton(label: "Dismiss") { e.snooze() }
+                CornerCloseButton(label: "Dismiss") { e.snooze(.reading) }
             }
         }
     }

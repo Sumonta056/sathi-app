@@ -3,29 +3,27 @@ import SwiftUI
 
 struct TimeMenu: View {
     @Binding var minutes: Int
-
-    private var label: String {
-        TimeSlots.all.first { $0.minutes == minutes }?.label ?? Fmt.timeOfDay(minutes)
-    }
+    let accent: Color
+    @State private var isOpen = false
 
     var body: some View {
-        Menu {
-            ForEach(TimeSlots.all, id: \.minutes) { slot in
-                Button(slot.label) { minutes = slot.minutes }
-            }
-        } label: {
-            Text(verbatim: label)
+        Button { isOpen.toggle() } label: {
+            Text(verbatim: Fmt.timeOfDay(minutes))
                 .font(Typography.chip)
                 .foregroundStyle(Night.text)
+                .fixedSize()
+                .padding(UIMetrics.timeButtonPadding)
+                .background(RoundedRectangle(cornerRadius: UIMetrics.buttonRadius, style: .continuous).fill(Night.bg))
+                .overlay(
+                    RoundedRectangle(cornerRadius: UIMetrics.buttonRadius, style: .continuous)
+                        .strokeBorder(isOpen ? accent : Night.fieldBorder, lineWidth: UIMetrics.chipBorder)
+                )
+                .contentShape(Rectangle())
         }
-        .menuStyle(.borderlessButton)
-        .menuIndicator(.hidden)
+        .buttonStyle(.plain)
         .fixedSize()
-        .padding(UIMetrics.timeButtonPadding)
-        .background(RoundedRectangle(cornerRadius: UIMetrics.buttonRadius, style: .continuous).fill(Night.bg))
-        .overlay(
-            RoundedRectangle(cornerRadius: UIMetrics.buttonRadius, style: .continuous)
-                .strokeBorder(Night.fieldBorder, lineWidth: UIMetrics.chipBorder)
-        )
+        .popover(isPresented: $isOpen, arrowEdge: .bottom) {
+            TimePickerGrid(minutes: $minutes, accent: accent)
+        }
     }
 }

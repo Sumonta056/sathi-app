@@ -12,7 +12,7 @@ enum UIMetrics {
     static let bubbleWidth: CGFloat = 380
     static let bubbleShadowPadding: CGFloat = 24
     static let bubbleScreenInset = CGPoint(x: 12, y: 20)
-    static let settingsSize = CGSize(width: 860, height: 620)
+    static let settingsSize = CGSize(width: 890, height: 620)
     static let lockHoldDistance: CGFloat = 80
 
     static let buddyAspect: CGFloat = 100.0 / 124.0

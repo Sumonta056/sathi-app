@@ -35,16 +35,17 @@ struct LenientPrefsDecodingTests {
         #expect(p.general.name == "Asha")
     }
 
-    @Test func unknownSlotIsDroppedAndUnknownStyleBecomesBox() throws {
+    @Test func oldSlotsSetTheGoalFromKnownSlotsAndUnknownStyleBecomesBox() throws {
         let p = try decode(#"{"general":{"name":"Asha"},"meditation":{"enabled":true,"slots":["morning","night"],"style":"square"}}"#)
-        #expect(p.meditation.slots == [.morning])
+        #expect(p.meditation.dailyGoalMinutes == MeditationPrefs().sessionMinutes)
         #expect(p.meditation.style == .box)
         #expect(p.meditation.enabled)
         #expect(p.general.name == "Asha")
     }
 
-    @Test func onlyUnknownSlotsDecodeAsTheDefaultSlots() throws {
-        let p = try decode(#"{"meditation":{"slots":["night"]}}"#)
-        #expect(p.meditation.slots == MeditationPrefs().slots)
+    @Test func oldSlotsNeverResetTheNewMeditationFields() throws {
+        let p = try decode(#"{"meditation":{"slots":["night"],"intervalMinutes":90,"startMinutes":480}}"#)
+        #expect(p.meditation.intervalMinutes == 90)
+        #expect(p.meditation.startMinutes == 480)
     }
 }

@@ -7,7 +7,7 @@ extension Engine {
     package var waterLevel: Double {
         guard data.prefs.water.enabled else { return 0 }
         let st = state(.water)
-        if isDue(.water) || st.snoozedUntil != nil { return 0 }
+        if isActive(.water) || st.snoozedUntil != nil { return 0 }
         let total = TimeInterval(data.prefs.water.intervalMinutes) * Timing.minute
         return max(0, min(1, st.nextDue.timeIntervalSince(now) / total))
     }
@@ -23,23 +23,28 @@ extension Engine {
     }
 
     package var focus: HabitID? {
-        switch phase {
-        case let .bubble(h, _): return h
-        case let .lock(h): return h
-        case let .session(h): return h
-        case .idle, .celebrate: break
-        }
+        if let id = HabitID.allCases.first(where: isActive) { return id }
         return HabitID.allCases.filter { enabled($0) }.min { remaining($0) < remaining($1) }
     }
 
+    package func copy(_ id: HabitID) -> Copy {
+        guard case let .bubble(_, copy, _) = activities[id] else { return Copy() }
+        return copy
+    }
+
+    package func ignoreDeadline(_ id: HabitID) -> Date {
+        guard case let .bubble(_, _, deadline) = activities[id] else { return now }
+        return deadline
+    }
+
     package func mood(_ id: HabitID) -> Mood {
-        let waiting = isDue(id) || state(id).snoozedUntil != nil
+        let waiting = isActive(id) || state(id).snoozedUntil != nil
         switch id {
         case .water:
-            if case .lock(.water) = phase { return .sad }
+            if phase(.water) == .lock { return .sad }
             if waiting || waterLevel < Limits.lowWaterLevel { return .thirsty }
         case .reading, .meditation:
-            if phase == .session(id) { return .reading }
+            if phase(id) == .session { return .reading }
             if waiting { return .thirsty }
         }
         return .happy
@@ -47,8 +52,7 @@ extension Engine {
 
     package func pill(_ id: HabitID) -> String {
         if !enabled(id) { return "Off" }
-        if isActive(id) { return sessionHabit == id ? Self.sessionPill(id) : "Due now" }
-        if queue.contains(id) { return "Queued" }
+        if isActive(id) { return phase(id) == .session ? Self.sessionPill(id) : "Due now" }
         if pausedUntil != nil { return "Paused" }
         let r = remaining(id)
         if state(id).snoozedUntil != nil { return "Snoozed · " + Fmt.short(r) }
@@ -79,13 +83,17 @@ extension Engine {
 
     package var statusText: String {
         if pausedUntil != nil { return "Paused" }
-        switch phase {
-        case let .bubble(h, _): return Self.callToAction(h)
-        case .lock: return "Locked"
-        case .session: return Fmt.clock(sessionEnd.timeIntervalSince(now))
-        case .celebrate: return "Done"
-        case .idle: return focus.map { Fmt.short(remaining($0)) } ?? "Sathi"
-        }
+        let ids = HabitID.allCases
+        if ids.contains(where: { phase($0) == .lock }) { return "Locked" }
+        if let id = ids.first(where: showsBubble) { return Self.callToAction(id) }
+        if let end = ids.compactMap({ session($0)?.end }).min() { return Fmt.clock(end.timeIntervalSince(now)) }
+        if isCelebrating { return "Done" }
+        return focus.map { Fmt.short(remaining($0)) } ?? "Sathi"
+    }
+
+    private func showsBubble(_ id: HabitID) -> Bool {
+        guard case .bubble = activities[id] else { return false }
+        return true
     }
 
     private static func callToAction(_ id: HabitID) -> String {

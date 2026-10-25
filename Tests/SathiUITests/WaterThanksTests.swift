@@ -34,7 +34,7 @@ struct WaterThanksTests {
         h.engine.logWater(1)
         #expect(h.engine.waterSeeYou == "See you in 2 hours")
         try thanks(h).find(button: h.engine.waterSeeYou).tap()
-        #expect(h.engine.phase == .idle)
+        #expect(!h.engine.isCelebrating)
     }
 
     @Test func dropLevelsFollowTheTotal() {
@@ -64,7 +64,7 @@ struct WaterThanksTests {
     func ignoreBarExplainsTheAutoSnooze(_ minutes: Int, _ text: String) throws {
         let h = EngineHarness { $0.prefs.general.ignoreMinutes = minutes }
         h.showReminder(.water)
-        let sut = IgnoreBar(accent: Night.water, track: Night.border).environmentObject(h.engine)
+        let sut = IgnoreBar(id: .water, accent: Night.water, track: Night.border).environmentObject(h.engine)
         #expect(try sut.inspect().find(text: text) != nil)
     }
 }

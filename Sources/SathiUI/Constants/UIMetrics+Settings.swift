@@ -1,7 +1,7 @@
 import SwiftUI
 
 extension UIMetrics {
-    static let sidebarWidth: CGFloat = 230
+    static let sidebarWidth: CGFloat = 260
     static let contentPadding = EdgeInsets(top: 24, leading: 28, bottom: 24, trailing: 28)
     static let disabledOpacity: Double = 0.35
     static let heroBuddySize: CGFloat = 72
@@ -33,4 +33,8 @@ extension UIMetrics {
     static let buddyCardSpacing: CGFloat = 12
     static let buddyBadgeSize: CGFloat = 34
     static let fieldWidth: CGFloat = 200
+    static let timePickerPadding: CGFloat = 16
+    static let timePickerSpacing: CGFloat = 14
+    static let hourChipWidth: CGFloat = 48
+    static let minuteChipWidth: CGFloat = 60
 }

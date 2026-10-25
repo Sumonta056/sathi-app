@@ -34,8 +34,8 @@ struct ReadingCornerTests {
         let h = harness(.corner)
         h.showReminder(.reading)
         let start = h.clock.now
-        h.engine.snooze()
-        let close = h.presenter.calls.lastIndex(of: .closeBubble)
+        h.engine.snooze(.reading)
+        let close = h.presenter.calls.lastIndex(of: .closeBubble(.reading))
         let note = h.presenter.calls.firstIndex(of: .showSnoozed(.reading, start.addingTimeInterval(5 * 60)))
         #expect(close != nil)
         #expect(note != nil)
@@ -46,7 +46,7 @@ struct ReadingCornerTests {
         let h = harness(.corner)
         h.showReminder(.reading)
         h.advance(minutes: 5)
-        #expect(h.engine.phase == .idle)
+        #expect(h.engine.activities.isEmpty)
         #expect(h.engine.state(.reading).snoozes == 1)
         #expect(snoozedCalls(h).count == 1)
     }
@@ -54,7 +54,7 @@ struct ReadingCornerTests {
     @Test func snoozingTheFocusBubbleShowsNoNote() {
         let h = harness(.focus)
         h.showReminder(.reading)
-        h.engine.snooze()
+        h.engine.snooze(.reading)
         #expect(h.engine.state(.reading).snoozes == 1)
         #expect(snoozedCalls(h).isEmpty)
     }
@@ -63,7 +63,7 @@ struct ReadingCornerTests {
     func snoozingWaterShowsNoNote(_ style: ReadingReminderStyle) {
         let h = harness(style)
         h.showReminder(.water)
-        h.engine.snooze()
+        h.engine.snooze(.water)
         #expect(h.engine.state(.water).snoozes == 1)
         #expect(snoozedCalls(h).isEmpty)
     }
@@ -93,10 +93,10 @@ struct ReadingCornerTests {
         }
         h.showReminder(.reading)
         h.engine.startReading()
-        #expect(h.engine.phase == .session(.reading))
+        #expect(h.engine.phase(.reading) == .session)
         h.advance(minutes: 5)
-        h.engine.stopSession()
-        #expect(h.engine.phase == .idle)
+        h.engine.stopSession(.reading)
+        #expect(h.engine.activities.isEmpty)
         #expect(h.engine.state(.reading).snoozes == 1)
         #expect(h.engine.state(.reading).snoozedUntil != nil)
         #expect(!h.engine.data.events.contains { $0.habit == .reading && $0.kind == .done })

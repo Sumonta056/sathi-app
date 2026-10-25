@@ -86,7 +86,7 @@ struct ReportScreenChartTests {
 
     @Test func aZeroGoalHasNoGoalLineAndNothingIsMet() throws {
         var f = fixture
-        f.prefs.meditation.slots = []
+        f.prefs.meditation.dailyGoalMinutes = 0
         let chart = f.screen(.week, selected: .meditation).chart
         try #require(chart.bars.count == 7)
         #expect(chart.goal == nil)

@@ -6,15 +6,15 @@ struct BreatheView: View {
 
     var body: some View {
         let style = e.data.prefs.meditation.style
-        let minutes = Int((e.sessionEnd.timeIntervalSince(e.sessionStart) / Timing.minute).rounded())
-        let elapsed = max(0, e.now.timeIntervalSince(e.sessionStart))
+        let s = e.session(.meditation) ?? Session(start: e.now, end: e.now)
+        let minutes = Int((s.end.timeIntervalSince(s.start) / Timing.minute).rounded())
+        let elapsed = max(0, e.now.timeIntervalSince(s.start))
         let phase = BreathingPattern.step(style, at: elapsed).phase
-        let queued = e.queue.contains(.water)
         VStack(spacing: UIMetrics.calmSpacing) {
             Text(Copywriter.breathHeader(style))
                 .font(Typography.eyebrow)
                 .foregroundStyle(Night.calm)
-            BreathCircle(style: style, start: e.sessionStart)
+            BreathCircle(style: style, start: s.start)
             Text(Copywriter.breathLabel(phase))
                 .font(Typography.breathPhase)
                 .foregroundStyle(Night.text)
@@ -24,9 +24,7 @@ struct BreatheView: View {
             ))
             .font(Typography.hint)
             .foregroundStyle(Night.muted)
-            waterNote(queued)
-                .frame(height: UIMetrics.calmNoteHeight)
-            Button { e.stopSession() } label: { Text("Stop") }
+            Button { e.stopSession(.meditation) } label: { Text("Stop") }
                 .buttonStyle(GhostButton(
                     accent: Night.chipText,
                     height: UIMetrics.calmButtonHeight,
@@ -34,16 +32,5 @@ struct BreatheView: View {
                 ))
         }
         .modifier(CalmCard())
-    }
-
-    @ViewBuilder
-    private func waterNote(_ queued: Bool) -> some View {
-        if queued {
-            Text("Fota is waiting for you after this")
-                .font(Typography.hint)
-                .foregroundStyle(Night.water)
-        } else {
-            Color.clear.accessibilityHidden(true)
-        }
     }
 }

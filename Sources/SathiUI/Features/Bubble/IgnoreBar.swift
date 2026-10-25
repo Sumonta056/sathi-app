@@ -3,6 +3,7 @@ import SwiftUI
 
 struct IgnoreBar: View {
     @EnvironmentObject var e: Engine
+    let id: HabitID
     let accent: Color
     let track: Color
     var label: Color = Night.muted
@@ -21,7 +22,7 @@ struct IgnoreBar: View {
                 ZStack {
                     Capsule().fill(track)
                     Capsule().fill(accent)
-                        .scaleEffect(x: Self.fraction(deadline: e.ignoreDeadline, now: tl.date, total: total), y: 1, anchor: .leading)
+                        .scaleEffect(x: Self.fraction(deadline: e.ignoreDeadline(id), now: tl.date, total: total), y: 1, anchor: .leading)
                 }
             }
             .frame(height: UIMetrics.ignoreBarHeight)

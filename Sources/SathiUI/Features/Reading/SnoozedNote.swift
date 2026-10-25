@@ -12,7 +12,7 @@ struct SnoozedNote: View {
             .foregroundStyle(Night.chipText)
             .padding(UIMetrics.notePadding)
             .background(Capsule().fill(Night.card))
-            .overlay(Capsule().strokeBorder(Night.border, lineWidth: UIMetrics.bubbleBorder))
+            .overlay(Pill().strokeBorder(Night.border, lineWidth: UIMetrics.bubbleBorder))
             .modifier(CornerShadow())
             .padding(UIMetrics.bubbleShadowPadding)
             .environment(\.colorScheme, .dark)

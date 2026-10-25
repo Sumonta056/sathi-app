@@ -7,10 +7,12 @@ import Testing
 struct MeditationRulesTests {
     private let rules = MeditationRules(prefs: Prefs())
 
-    private func rules(_ slots: Set<MeditationSlot>, minutes: Int = 5) -> MeditationRules {
+    private func rules(goal: Int = 10, every interval: Int = 60, from start: Int = 9 * 60, to end: Int = 21 * 60) -> MeditationRules {
         var prefs = Prefs()
-        prefs.meditation.slots = slots
-        prefs.meditation.sessionMinutes = minutes
+        prefs.meditation.dailyGoalMinutes = goal
+        prefs.meditation.intervalMinutes = interval
+        prefs.meditation.startMinutes = start
+        prefs.meditation.endMinutes = end
         return MeditationRules(prefs: prefs)
     }
 
@@ -18,72 +20,79 @@ struct MeditationRulesTests {
         #expect(rules.id == .meditation)
     }
 
-    @Test func launchAfterTheMorningSlotWithNoSessionIsDueAtTheMorningSlot() {
+    @Test func launchInsideHoursWithNoSessionIsDueOneIntervalLater() {
         let next = rules.nextDue(now: day(2026, 3, 4, 15), lastDone: nil, doneToday: 0, skipToday: false)
-        #expect(next == day(2026, 3, 4, 8))
+        #expect(next == day(2026, 3, 4, 16))
     }
 
-    @Test func doneInTheAfternoonIsDueAtTheEveningSlot() {
-        let next = rules.nextDue(now: day(2026, 3, 4, 15, 5), lastDone: day(2026, 3, 4, 15, 5), doneToday: 5, skipToday: false)
-        #expect(next == day(2026, 3, 4, 21, 30))
+    @Test func doneInTheAfternoonIsDueOneIntervalAfterTheDoneTime() {
+        let next = rules.nextDue(now: day(2026, 3, 4, 15, 5), lastDone: day(2026, 3, 4, 15, 5), doneToday: 2, skipToday: false)
+        #expect(next == day(2026, 3, 4, 16, 5))
     }
 
-    @Test func doneAfterTheEveningSlotIsDueTomorrowMorning() {
-        let next = rules.nextDue(now: day(2026, 3, 4, 21, 40), lastDone: day(2026, 3, 4, 21, 40), doneToday: 10, skipToday: false)
-        #expect(next == day(2026, 3, 5, 8))
+    @Test func doneAfterTheEndIsDueTomorrowAtTheStart() {
+        let next = rules.nextDue(now: day(2026, 3, 4, 21, 40), lastDone: day(2026, 3, 4, 21, 40), doneToday: 2, skipToday: false)
+        #expect(next == day(2026, 3, 5, 9))
     }
 
-    @Test func doneExactlyAtASlotMovesToTheNextSlot() {
-        let next = rules.nextDue(now: day(2026, 3, 4, 8), lastDone: day(2026, 3, 4, 8), doneToday: 5, skipToday: false)
-        #expect(next == day(2026, 3, 4, 21, 30))
+    @Test func nextDueAtTheEndMovesToTomorrowsStart() {
+        let next = rules.nextDue(now: day(2026, 3, 4, 20), lastDone: day(2026, 3, 4, 20), doneToday: 2, skipToday: false)
+        #expect(next == day(2026, 3, 5, 9))
     }
 
-    @Test func noSlotsIsNeverDue() {
-        let next = rules([]).nextDue(now: day(2026, 3, 4, 15), lastDone: nil, doneToday: 0, skipToday: false)
-        #expect(next == .distantFuture)
-    }
-
-    @Test func skipTodayMovesToTheFirstSlotTomorrow() {
+    @Test func skipTodayMovesToTomorrowsStart() {
         let next = rules.nextDue(now: day(2026, 3, 4, 7), lastDone: nil, doneToday: 0, skipToday: true)
-        #expect(next == day(2026, 3, 5, 8))
-        let afternoon = rules([.afternoon, .evening]).nextDue(now: day(2026, 3, 4, 7), lastDone: nil, doneToday: 0, skipToday: true)
-        #expect(afternoon == day(2026, 3, 5, 14))
+        #expect(next == day(2026, 3, 5, 9))
+        let later = rules(from: 14 * 60).nextDue(now: day(2026, 3, 4, 7), lastDone: nil, doneToday: 0, skipToday: true)
+        #expect(later == day(2026, 3, 5, 14))
     }
 
-    @Test func lastDoneYesterdayIsIgnored() {
+    @Test func lastDoneYesterdayAfterTheEndIsDueAtTodaysStart() {
         let next = rules.nextDue(now: day(2026, 3, 4, 15), lastDone: day(2026, 3, 3, 22), doneToday: 0, skipToday: false)
-        #expect(next == day(2026, 3, 4, 8))
+        #expect(next == day(2026, 3, 4, 9))
     }
 
     @Test(arguments: [
-        (Set<MeditationSlot>([.morning, .afternoon, .evening]), day(2026, 3, 4, 8, 10), day(2026, 3, 4, 14)),
-        (Set<MeditationSlot>([.morning, .afternoon, .evening]), day(2026, 3, 4, 14, 10), day(2026, 3, 4, 21, 30)),
-        (Set<MeditationSlot>([.afternoon]), day(2026, 3, 4, 14, 10), day(2026, 3, 5, 14)),
-        (Set<MeditationSlot>([.evening]), day(2026, 3, 4, 9), day(2026, 3, 4, 21, 30))
+        (60, day(2026, 3, 4, 10, 10), day(2026, 3, 4, 11, 10)),
+        (90, day(2026, 3, 4, 10), day(2026, 3, 4, 11, 30)),
+        (120, day(2026, 3, 4, 8), day(2026, 3, 4, 10)),
+        (30, day(2026, 3, 4, 20, 40), day(2026, 3, 5, 9))
     ])
-    func nextSelectedSlotAfterLastDone(_ slots: Set<MeditationSlot>, _ done: Date, _ expected: Date) {
-        #expect(rules(slots).nextDue(now: done, lastDone: done, doneToday: 5, skipToday: false) == expected)
+    func nextIntervalAfterLastDone(_ interval: Int, _ done: Date, _ expected: Date) {
+        #expect(rules(every: interval).nextDue(now: done, lastDone: done, doneToday: 2, skipToday: false) == expected)
     }
 
-    @Test func freshDayBeforeAnySlotIsDueAtTheFirstSlot() {
-        let next = rules([.afternoon]).nextDue(now: day(2026, 3, 4, 0, 1), lastDone: nil, doneToday: 0, skipToday: false)
+    @Test func freshDayBeforeTheStartIsDueAtTheStart() {
+        let next = rules(from: 14 * 60).nextDue(now: day(2026, 3, 4, 0, 1), lastDone: nil, doneToday: 0, skipToday: false)
         #expect(next == day(2026, 3, 4, 14))
     }
 
-    @Test(arguments: [day(2026, 3, 4, 3), day(2026, 3, 4, 12), day(2026, 3, 4, 23, 59)])
-    func isAlwaysActive(_ date: Date) {
-        #expect(rules.isActiveTime(date))
-        #expect(rules.nextActiveStart(after: date) == date)
+    @Test(arguments: [
+        (day(2026, 3, 4, 7, 29), false),
+        (day(2026, 3, 4, 7, 30), true),
+        (day(2026, 3, 4, 21, 59), true),
+        (day(2026, 3, 4, 22), false)
+    ])
+    func isActiveOnlyBetweenStartAndEnd(_ date: Date, _ active: Bool) {
+        #expect(rules(from: 7 * 60 + 30, to: 22 * 60).isActiveTime(date) == active)
     }
 
-    @Test(arguments: [
-        (Set<MeditationSlot>([.morning, .evening]), 5, 10.0),
-        (Set<MeditationSlot>([.morning, .afternoon, .evening]), 10, 30.0),
-        (Set<MeditationSlot>([.afternoon]), 2, 2.0),
-        (Set<MeditationSlot>(), 5, 0.0)
-    ])
-    func dailyGoalIsLengthTimesSlots(_ slots: Set<MeditationSlot>, _ minutes: Int, _ goal: Double) {
-        #expect(rules(slots, minutes: minutes).dailyGoal == goal)
+    @Test func nextActiveStartIsTodayBeforeTheStartAndTomorrowAfterIt() {
+        let r = rules(from: 7 * 60 + 30, to: 22 * 60)
+        #expect(r.nextActiveStart(after: day(2026, 3, 4, 6)) == day(2026, 3, 4, 7, 30))
+        #expect(r.nextActiveStart(after: day(2026, 3, 4, 12)) == day(2026, 3, 5, 7, 30))
+    }
+
+    @Test func hasNoSlots() {
+        #expect(rules.nextSlot(after: day(2026, 3, 4, 12)) == nil)
+    }
+
+    @Test(arguments: [5, 10, 20])
+    func dailyGoalIsTheGoalMinutesNotTheSessionLength(_ goal: Int) {
+        var prefs = Prefs()
+        prefs.meditation.dailyGoalMinutes = goal
+        prefs.meditation.sessionMinutes = 1
+        #expect(MeditationRules(prefs: prefs).dailyGoal == Double(goal))
     }
 
     @Test func totalCountsOnlyThatDaysDoneMeditationMinutes() {

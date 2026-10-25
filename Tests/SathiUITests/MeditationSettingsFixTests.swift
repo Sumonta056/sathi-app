@@ -50,9 +50,10 @@ struct MeditationSettingsFixTests {
         #expect(try !sut.find(button: "Show a reminder now").isDisabled())
     }
 
-    @Test func sessionViewShowsNothingWithoutASession() throws {
+    @Test(arguments: [HabitID.reading, .meditation])
+    func sessionViewShowsNothingWithoutASession(_ id: HabitID) throws {
         let h = EngineHarness()
-        let sut = SessionView().environmentObject(h.engine)
+        let sut = SessionView(id: id).environmentObject(h.engine)
         #expect(throws: (any Error).self) { try sut.inspect().find(text: "READING · DO NOT DISTURB") }
         #expect(throws: (any Error).self) { try sut.inspect().find(text: "BREATHING") }
         #expect(throws: (any Error).self) { try sut.inspect().find(button: "Stop early (won't count)") }

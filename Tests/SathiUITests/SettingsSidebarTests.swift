@@ -1,3 +1,4 @@
+import AppKit
 import SathiCore
 import SathiTestSupport
 @testable import SathiUI
@@ -94,5 +95,10 @@ struct SettingsSidebarTests {
         #expect(throws: Never.self) { try sut.find(SettingsSidebar.self) }
         #expect(throws: Never.self) { try sut.find(text: "Hi there") }
         #expect(Find.lacks(sut, text: "Small sips, all day long"))
+    }
+
+    @Test func everyRowFitsTheSidebarOnOneLine() {
+        let host = NSHostingView(rootView: sidebar(EngineHarness { $0.prefs.meditation.enabled = true }))
+        #expect(host.fittingSize.width <= UIMetrics.sidebarWidth)
     }
 }

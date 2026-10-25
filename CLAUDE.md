@@ -1,6 +1,6 @@
 # Sathi
 
-Sathi is a macOS menu bar app (macOS 13+, Swift 5.9 tools, SwiftUI + AppKit). Three buddies remind the user: Fota (water), Boi (reading), and Shanti (meditation, off by default). An ignored reminder escalates: bubble → persistent bubble → full-screen lock (water only). Reading and meditation use a calm corner popup that never takes focus.
+Sathi is a macOS menu bar app (macOS 13+, Swift 5.9 tools, SwiftUI + AppKit). Three buddies remind the user: Fota (water), Boi (reading), and Shanti (meditation, off by default). An ignored reminder escalates: bubble → persistent bubble → full-screen lock (water and meditation, at Strict). Meditation has a daily goal and stops for the day when it is met. Reading and meditation use a calm corner popup that never takes focus.
 
 ## Commands
 

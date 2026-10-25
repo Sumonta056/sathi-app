@@ -21,7 +21,7 @@ struct ReportBuilderTests {
         prefs.water.dailyGoalGlasses = 10
         prefs.reading.sessionMinutes = 20
         prefs.meditation.sessionMinutes = 2
-        prefs.meditation.slots = [.morning, .afternoon, .evening]
+        prefs.meditation.dailyGoalMinutes = 6
         let r = report(.week, [], prefs: prefs)
         #expect(r.range == .week)
         #expect(r.interval == DateInterval(start: zone.date(2026, 3, 2), end: zone.date(2026, 3, 9)))

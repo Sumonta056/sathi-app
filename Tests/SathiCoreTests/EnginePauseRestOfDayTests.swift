@@ -40,7 +40,7 @@ struct EnginePauseRestOfDayTests {
         h.engine.pauseRestOfDay()
         h.advance(minutes: 120)
         h.advance(minutes: 6 * 60 + 59)
-        #expect(h.engine.phase == .idle)
+        #expect(h.engine.activities.isEmpty)
         #expect(bubbles(h) == 0)
         #expect(h.engine.statusText == "Paused")
     }
@@ -55,7 +55,7 @@ struct EnginePauseRestOfDayTests {
         h.clock.now = day(2026, 3, 5, 10)
         h.engine.tick()
         #expect(h.engine.pausedUntil == nil)
-        #expect(h.engine.phase == .bubble(.water, .nudge))
+        #expect(h.engine.phase(.water) == .bubble(.nudge))
     }
 
     @Test func shortPauseIsHalfAnHour() {

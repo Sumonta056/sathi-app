@@ -8,30 +8,30 @@ struct TickPlannerTests {
     private let now = day(2026, 3, 4, 10)
 
     @Test func sessionTicksEverySecond() {
-        #expect(TickPlanner.delay(now: now, phase: .session(.reading), deadlines: [], focusRemaining: nil) == Timing.activeTick)
+        #expect(TickPlanner.delay(now: now, inSession: true, deadlines: [], focusRemaining: nil) == Timing.activeTick)
     }
 
     @Test func idleWithNothingWaitsTheMaximum() {
-        #expect(TickPlanner.delay(now: now, phase: .idle, deadlines: [], focusRemaining: nil) == Timing.idleTickMax)
+        #expect(TickPlanner.delay(now: now, inSession: false, deadlines: [], focusRemaining: nil) == Timing.idleTickMax)
     }
 
     @Test func wakesAtTheSoonestFutureDeadline() {
         let deadlines = [now.addingTimeInterval(40), now.addingTimeInterval(12), now.addingTimeInterval(-5)]
-        #expect(TickPlanner.delay(now: now, phase: .idle, deadlines: deadlines, focusRemaining: nil) == 12)
+        #expect(TickPlanner.delay(now: now, inSession: false, deadlines: deadlines, focusRemaining: nil) == 12)
     }
 
     @Test func pastDeadlinesNeverCauseABusyLoop() {
         let deadlines = [now.addingTimeInterval(-100)]
-        #expect(TickPlanner.delay(now: now, phase: .idle, deadlines: deadlines, focusRemaining: nil) == Timing.idleTickMax)
+        #expect(TickPlanner.delay(now: now, inSession: false, deadlines: deadlines, focusRemaining: nil) == Timing.idleTickMax)
     }
 
     @Test func wakesWhenTheMinuteLabelChanges() {
-        let delay = TickPlanner.delay(now: now, phase: .idle, deadlines: [], focusRemaining: 3625)
+        let delay = TickPlanner.delay(now: now, inSession: false, deadlines: [], focusRemaining: 3625)
         #expect(abs(delay - (25 + Timing.minuteEdgePadding)) < 0.0001)
     }
 
     @Test func neverShorterThanTheMinimum() {
-        let delay = TickPlanner.delay(now: now, phase: .idle, deadlines: [now.addingTimeInterval(0.01)], focusRemaining: nil)
+        let delay = TickPlanner.delay(now: now, inSession: false, deadlines: [now.addingTimeInterval(0.01)], focusRemaining: nil)
         #expect(delay == Timing.minTick)
     }
 

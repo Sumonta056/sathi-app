@@ -26,7 +26,7 @@ struct ReadingInviteTests {
         h.showReminder(.reading)
         let sut = try invite(h, .nudge)
         #expect(try sut.find(text: "BOI · READING") != nil)
-        #expect(try sut.find(text: h.engine.copy.title) != nil)
+        #expect(try sut.find(text: h.engine.copy(.reading).title) != nil)
         #expect(try sut.find(text: "15 calm minutes with your book.") != nil)
         #expect(try sut.find(text: "Start reading") != nil)
         #expect(try sut.find(text: "In 5 min") != nil)
@@ -37,14 +37,14 @@ struct ReadingInviteTests {
         let h = harness()
         h.showReminder(.reading)
         try Find.button(invite(h, .nudge), holding: "Start reading").tap()
-        #expect(h.engine.phase == .session(.reading))
+        #expect(h.engine.phase(.reading) == .session)
     }
 
     @Test func snoozeButtonSnoozes() throws {
         let h = harness()
         h.showReminder(.reading)
         try Find.button(invite(h, .nudge), holding: "In 5 min").tap()
-        #expect(h.engine.phase == .idle)
+        #expect(h.engine.activities.isEmpty)
         #expect(h.engine.state(.reading).snoozes == 1)
     }
 
@@ -52,16 +52,16 @@ struct ReadingInviteTests {
         let h = harness()
         h.showReminder(.reading)
         try Find.button(invite(h, .nudge), label: "Dismiss").tap()
-        #expect(h.engine.phase == .idle)
+        #expect(h.engine.activities.isEmpty)
         #expect(h.engine.state(.reading).snoozes == 1)
     }
 
     @Test func persistHasNoDismissAndShowsTheWarning() throws {
         let h = harness()
         h.showReminder(.reading)
-        h.engine.snooze()
+        h.engine.snooze(.reading)
         h.advance(minutes: 5)
-        #expect(h.engine.phase == .bubble(.reading, .persist))
+        #expect(h.engine.phase(.reading) == .bubble(.persist))
         let sut = try invite(h, .persist)
         #expect((try? sut.find(viewWithAccessibilityLabel: "Dismiss")) == nil)
         #expect(try sut.find(text: h.engine.warnText(.reading)) != nil)

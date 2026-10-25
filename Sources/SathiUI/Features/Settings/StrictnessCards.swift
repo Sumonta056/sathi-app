@@ -8,7 +8,7 @@ struct StrictnessCards: View {
     let onSelect: (Strictness) -> Void
 
     var body: some View {
-        HStack(alignment: .top, spacing: UIMetrics.chipSpacing) {
+        OptionCardRow {
             ForEach(options) { s in
                 OptionCard(title: s.title, detail: s.detail, isSelected: s == selected, accent: accent, action: { onSelect(s) }, top: {
                     LevelDots(level: s.level, total: Strictness.allCases.count, accent: accent)

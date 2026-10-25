@@ -19,11 +19,11 @@ struct WaterRhythmCard: View {
             }
             SettingRow(label: "Between", hint: "Fota sleeps outside these hours.") {
                 HStack(spacing: UIMetrics.chipSpacing) {
-                    TimeMenu(minutes: $e.data.prefs.water.startMinutes)
+                    TimeMenu(minutes: $e.data.prefs.water.startMinutes, accent: Night.water)
                     Text(verbatim: "to")
                         .font(Typography.hint)
                         .foregroundStyle(Night.muted)
-                    TimeMenu(minutes: $e.data.prefs.water.endMinutes)
+                    TimeMenu(minutes: $e.data.prefs.water.endMinutes, accent: Night.water)
                 }
             }
             SettingRow(label: "I drink from") {

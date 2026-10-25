@@ -6,10 +6,35 @@ package enum Level: Equatable, Sendable {
 
 package enum Phase: Equatable, Sendable {
     case idle
-    case bubble(HabitID, Level)
-    case lock(HabitID)
-    case session(HabitID)
-    case celebrate
+    case bubble(Level)
+    case lock
+    case session
+}
+
+package struct Session: Equatable, Sendable {
+    package var start: Date
+    package var end: Date
+    package var fromReminder: Bool
+
+    package init(start: Date, end: Date, fromReminder: Bool = false) {
+        self.start = start
+        self.end = end
+        self.fromReminder = fromReminder
+    }
+}
+
+package enum Activity: Equatable, Sendable {
+    case bubble(Level, copy: Copy, ignoreDeadline: Date)
+    case lock
+    case session(Session)
+
+    package var phase: Phase {
+        switch self {
+        case let .bubble(level, _, _): return .bubble(level)
+        case .lock: return .lock
+        case .session: return .session
+        }
+    }
 }
 
 package struct HabitState: Equatable, Sendable {

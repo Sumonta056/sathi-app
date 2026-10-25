@@ -20,7 +20,7 @@ struct LegacyBubble: View {
             }
             actions
             if level == .persist { warn }
-            IgnoreBar(accent: accent, track: Night.border, label: Night.muted)
+            IgnoreBar(id: id, accent: accent, track: Night.border, label: Night.muted)
         }
         .padding(18)
         .frame(width: UIMetrics.bubbleWidth)
@@ -64,10 +64,10 @@ struct LegacyBubble: View {
                     .font(.system(size: 11, weight: .semibold))
                     .tracking(0.6)
                     .foregroundStyle(accent)
-                Text(e.copy.title)
+                Text(e.copy(id).title)
                     .font(.system(size: 21, weight: .semibold, design: .rounded))
                     .fixedSize(horizontal: false, vertical: true)
-                Text(e.copy.body)
+                Text(e.copy(id).body)
                     .font(.system(size: 13))
                     .foregroundStyle(Night.muted)
                     .fixedSize(horizontal: false, vertical: true)
@@ -89,7 +89,7 @@ struct LegacyBubble: View {
                     .buttonStyle(PillButton(kind: .primary))
                     .layoutPriority(1)
             }
-            Button(e.snoozeLabel(id)) { e.snooze() }
+            Button(e.snoozeLabel(id)) { e.snooze(id) }
                 .buttonStyle(PillButton(kind: .ghost))
         }
     }

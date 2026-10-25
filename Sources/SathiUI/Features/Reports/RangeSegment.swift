@@ -22,7 +22,7 @@ struct RangeSegment: View {
         }
         .padding(UIMetrics.rangeSegmentInset)
         .background(Capsule().fill(Night.card))
-        .overlay(Capsule().strokeBorder(Night.border, lineWidth: UIMetrics.cardBorder))
+        .overlay(Pill().strokeBorder(Night.border, lineWidth: UIMetrics.cardBorder))
     }
 
     static func title(_ range: ReportRange) -> String {

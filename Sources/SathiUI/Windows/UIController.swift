@@ -6,8 +6,10 @@ import SwiftUI
 package final class UIController: ReminderPresenter {
     package weak var engine: Engine?
 
-    var bubble: NSPanel?
-    var session: NSPanel?
+    var bubbles: [HabitID: NSPanel] = [:]
+    var sessions: [HabitID: NSPanel] = [:]
+    var corner: [NSPanel] = []
+    var cornerScreen: NSScreen?
     var celebration: NSPanel?
     var note: NSPanel?
     var noteTask: Task<Void, Never>?
@@ -23,9 +25,8 @@ package final class UIController: ReminderPresenter {
     }
 
     package func showBubble(_ id: HabitID, _ level: Level) {
-        closeBubble()
-        closeNote()
-        bubble = bubblePanel(id, level)
+        closeBubble(id)
+        bubbles[id] = bubblePanel(id, level)
     }
 
     private func bubblePanel(_ id: HabitID, _ level: Level) -> NSPanel? {
@@ -42,55 +43,49 @@ package final class UIController: ReminderPresenter {
     private func focusedBubble(_ id: HabitID, _ level: Level) -> NSPanel? {
         guard let h = hosting(BubbleView(id: id, level: level)) else { return nil }
         let p = presentTopRight(h, level: .statusBar)
-        p.makeKey()
+        if locks.isEmpty { p.makeKey() }
         return p
     }
 
-    package func closeBubble() {
-        bubble?.orderOut(nil)
-        bubble = nil
+    package func closeBubble(_ id: HabitID) {
+        dismiss(bubbles.removeValue(forKey: id))
     }
 
-    package func showSession() {
-        closeSession()
-        closeNote()
-        guard let id = engine?.sessionHabit else { return }
+    package func showSession(_ id: HabitID) {
+        closeSession(id)
         if engine?.usesCorner(id) == true {
-            session = presentCorner(ReadingTimerPill())
+            sessions[id] = presentCorner(ReadingTimerPill())
             return
         }
         guard let h = hosting(sessionView(id)) else { return }
-        session = presentCentered(h, level: .floating)
+        sessions[id] = presentCentered(h, level: .floating)
     }
 
     @ViewBuilder
     private func sessionView(_ id: HabitID) -> some View {
         switch id {
         case .meditation: BreatheView()
-        case .water, .reading: SessionView()
+        case .water, .reading: SessionView(id: id)
         }
     }
 
-    package func closeSession() {
-        session?.orderOut(nil)
-        session = nil
+    package func closeSession(_ id: HabitID) {
+        dismiss(sessions.removeValue(forKey: id))
     }
 
     package func showCelebration() {
         closeCelebration()
-        closeNote()
         guard let engine, let h = hosting(CelebrateView()) else { return }
         celebration = celebrationPanel(h, engine)
     }
 
     package func closeCelebration() {
-        celebration?.orderOut(nil)
+        dismiss(celebration)
         celebration = nil
     }
 
     package func showLock(_ id: HabitID) {
         closeLock()
-        closeNote()
         guard let engine else { return }
         for (i, screen) in NSScreen.screens.enumerated() {
             let content = i == 0 ? AnyView(LockView(id: id)) : AnyView(LockShade())
@@ -138,8 +133,9 @@ package final class UIController: ReminderPresenter {
         guard let engine else { return nil }
         let root = AnyView(view.environmentObject(engine).environment(\.colorScheme, .light))
         let h = FirstClickHostingView(rootView: root)
+        let size = h.fittingSize
         h.sizingOptions = []
-        h.setFrameSize(h.fittingSize)
+        h.setFrameSize(size)
         return h
     }
 }

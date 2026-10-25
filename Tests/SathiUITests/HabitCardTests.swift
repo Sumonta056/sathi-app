@@ -39,13 +39,13 @@ struct HabitCardTests {
     @Test func readNowStartsReading() throws {
         let h = EngineHarness()
         try MenuFind.control(card(.reading, h), "Read now").tap()
-        #expect(h.engine.phase == .session(.reading))
+        #expect(h.engine.phase(.reading) == .session)
     }
 
     @Test func breatheStartsMeditation() throws {
         let h = EngineHarness { $0.prefs.meditation.enabled = true }
         try MenuFind.control(card(.meditation, h), "Breathe").tap()
-        #expect(h.engine.phase == .session(.meditation))
+        #expect(h.engine.phase(.meditation) == .session)
     }
 
     @Test func waterRingShowsAQuarterAfterTwoOfEight() throws {

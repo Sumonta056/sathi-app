@@ -1,9 +1,9 @@
 import Foundation
 
 extension Engine {
-    package var sessionHabit: HabitID? {
-        guard case let .session(id) = phase else { return nil }
-        return id
+    package func session(_ id: HabitID) -> Session? {
+        guard case let .session(s) = activities[id] else { return nil }
+        return s
     }
 
     package func startReading() { startSession(.reading) }
@@ -11,37 +11,32 @@ extension Engine {
     package func startMeditation() { startSession(.meditation) }
 
     package func startSession(_ id: HabitID) {
-        guard let minutes = sessionMinutes(id), phase == .idle || isActive(id) else { sound.beep(); return }
+        guard let minutes = sessionMinutes(id) else { sound.beep(); return }
         let n = clock.now
         let st = state(id)
-        if sessionHabit != id { sessionFromReminder = isDue(id) || n >= (st.snoozedUntil ?? st.nextDue) }
-        presenter.closeBubble()
-        presenter.closeLock()
-        queue.removeAll { $0 == id }
-        sessionStart = n
-        sessionEnd = n.addingTimeInterval(TimeInterval(minutes) * Timing.minute)
-        phase = .session(id)
-        presenter.showSession()
+        let fromReminder = session(id)?.fromReminder ?? (isActive(id) || n >= (st.snoozedUntil ?? st.nextDue))
+        close(id)
+        let end = n.addingTimeInterval(TimeInterval(minutes) * Timing.minute)
+        activities[id] = .session(Session(start: n, end: end, fromReminder: fromReminder))
+        presenter.showSession(id)
         if let sound = startSound(id) { play(sound) }
         requestTick()
     }
 
-    package func finishSession() {
-        guard let id = sessionHabit else { return }
-        let minutes = Double(Int((sessionEnd.timeIntervalSince(sessionStart) / Timing.minute).rounded()))
+    package func finishSession(_ id: HabitID) {
+        guard let s = session(id) else { return }
+        let minutes = Double(Int((s.end.timeIntervalSince(s.start) / Timing.minute).rounded()))
         let n = clock.now
         record(.done(id, minutes, at: n))
         habits[id] = HabitState(nextDue: freshDue(id, lastDone: n))
-        presenter.closeSession()
-        phase = .idle
+        close(id)
         celebrate(id, minutes)
     }
 
-    package func stopSession() {
-        guard let id = sessionHabit else { return }
-        presenter.closeSession()
-        if sessionFromReminder { snoozeHabit(id) }
-        phase = .idle
+    package func stopSession(_ id: HabitID) {
+        guard let s = session(id) else { return }
+        close(id)
+        if s.fromReminder { snoozeHabit(id) }
         requestTick()
     }
 

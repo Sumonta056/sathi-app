@@ -13,7 +13,8 @@ package struct Prefs: Codable, Equatable, Sendable {
             "\(water.enabled)", "\(water.intervalMinutes)", "\(water.startMinutes)", "\(water.endMinutes)",
             "\(reading.enabled)", "\(reading.timeMinutes)", "\(reading.sessionMinutes)",
             reading.sortedWeekdays.map { "\($0.rawValue)" }.joined(separator: "+"),
-            "\(meditation.enabled)", meditation.sortedSlots.map(\.rawValue).joined(separator: "+"), "\(meditation.sessionMinutes)"
+            "\(meditation.enabled)", "\(meditation.dailyGoalMinutes)", "\(meditation.sessionMinutes)",
+            "\(meditation.intervalMinutes)", "\(meditation.startMinutes)", "\(meditation.endMinutes)"
         ].joined(separator: "-")
     }
 
@@ -29,7 +30,7 @@ package struct Prefs: Codable, Equatable, Sendable {
         switch id {
         case .water: return water.strictness
         case .reading: return Self.withoutLock(reading.strictness)
-        case .meditation: return Self.withoutLock(meditation.strictness)
+        case .meditation: return meditation.strictness
         }
     }
 

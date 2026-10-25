@@ -123,7 +123,9 @@ Spec 6b: `docs/specs/phase-6b-tolerant-decoding.md`
 - 5h: check 6-row months (March 2026) plus 3 facts in the 250-pt calendar card, and bar width without the 34-pt cap
 
 - A settings change during a pause moves a missed clock slot to the next slot (rule 5). Confirm with the user or add a test
-- A queued habit whose due time moved forward still shows from the queue
+- Independent buddies: two centered panels (focus reading session, breathing session, centered celebration) sit on top of each other
+- Independent buddies: animations keep running in panels hidden behind the water lock; pause on window occlusion, then run perf with 3 reminders and a session open
+- Independent buddies: the corner stack has no lower bound on short screens (clamp or add a second column)
 - `BreathingPattern.step` crashes on an infinite elapsed time (no app path reaches it)
 
 - Enforce whole-second times in the types: `HistoryEvent.date` setter private, `LiveState` time writes through cutting setters
@@ -158,4 +160,5 @@ Spec 6b: `docs/specs/phase-6b-tolerant-decoding.md`
 | 2026-10-25 | Review 5a–5c: a settings change that moves a due time into the future cancels the queued or snoozed reminder. "Rest of day" skips slots missed during the pause. "Focus screen" can be picked now; 5e wires it (5a–5c are not released before 5e). |
 | 2026-10-25 | 5g: calendar and facts follow the selected tile; off habits show a dimmed "Off" tile; PDF in 5g and names the habit; a cancel keeps the old export note; save panel is a sheet; old `Palette` removal moves to slice 5g2. |
 | 2026-10-25 | 5h: the Reports Export menu is removed (save panel wakeups). Memory budget: < 40 MB fresh idle, < 50 MB after a window. Swift Charts stays. |
+| 2026-10-25 | Fix: on macOS 27 every reminder panel was 0×0 (`NSHostingView.fittingSize` after `sizingOptions = []`), so no reminder was visible. Buddies are now independent: each has its own reminder, snooze, ignore timer, and session; no queue. Corner panels stack top-right on the display with the mouse. |
 | 2026-10-24 | Phase 1 fix: a schedule change just after midnight counts the new day, not yesterday. |

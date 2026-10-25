@@ -28,6 +28,6 @@ struct EngineReadingWeekdaysTests {
         }
         h.advance(minutes: 12 * 60 + 30)
         #expect(!h.presenter.calls.contains(.showBubble(.reading, .nudge)))
-        #expect(h.engine.phase == .idle)
+        #expect(h.engine.activities.isEmpty)
     }
 }

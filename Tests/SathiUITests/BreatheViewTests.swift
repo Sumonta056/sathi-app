@@ -62,16 +62,17 @@ struct BreatheViewTests {
         h.engine.startMeditation()
         h.advance(minutes: 2)
         try Find.button(breathe(h), holding: "Stop").tap()
-        #expect(h.engine.phase == .idle)
+        #expect(h.engine.activities.isEmpty)
         #expect(!h.engine.data.events.contains { $0.habit == .meditation && $0.kind == .done })
     }
 
-    @Test func mentionsQueuedWater() throws {
+    @Test func noWaterNoteWhileWaterShows() throws {
         let h = harness(at: day(2026, 3, 4, 11, 58), lastWater: day(2026, 3, 4, 10))
         h.engine.startMeditation()
         h.advance(minutes: 3)
-        #expect(h.engine.queue.contains(.water))
-        #expect(try breathe(h).find(text: "Fota is waiting for you after this") != nil)
+        #expect(h.engine.phase(.water) == .bubble(.nudge))
+        #expect(h.engine.phase(.meditation) == .session)
+        #expect(try Find.lacks(breathe(h), text: "Fota is waiting for you after this"))
     }
 
     @Test func noWaterNoteWithoutAQueue() throws {
@@ -92,7 +93,7 @@ struct BreatheViewTests {
     @Test func readingFocusSessionKeepsTheSessionView() throws {
         let h = EngineHarness { $0.prefs.reading.reminderStyle = .focus }
         h.engine.startReading()
-        let sut = try SessionView().environmentObject(h.engine).inspect()
+        let sut = try SessionView(id: .reading).environmentObject(h.engine).inspect()
         #expect(try sut.find(text: "READING · DO NOT DISTURB") != nil)
         #expect((try? sut.find(BreathCircle.self)) == nil)
     }

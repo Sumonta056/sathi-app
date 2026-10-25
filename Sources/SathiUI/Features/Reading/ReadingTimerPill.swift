@@ -5,18 +5,19 @@ struct ReadingTimerPill: View {
     @EnvironmentObject var e: Engine
 
     var body: some View {
+        let s = e.session(.reading) ?? Session(start: e.now, end: e.now)
         HStack(spacing: UIMetrics.pillSpacing) {
-            PillRing(start: e.sessionStart, end: e.sessionEnd, now: e.now)
+            PillRing(start: s.start, end: s.end, now: e.now)
             VStack(alignment: .leading, spacing: UIMetrics.pillTextSpacing) {
-                PillCountdown(now: e.now, end: e.sessionEnd)
+                PillCountdown(now: e.now, end: s.end)
                 PillCaption()
             }
-            Button("Stop") { e.stopSession() }
+            Button("Stop") { e.stopSession(.reading) }
                 .buttonStyle(GhostButton(accent: Night.chipText, height: UIMetrics.pillButtonHeight))
         }
         .padding(UIMetrics.timerPillPadding)
         .background(Capsule().fill(Night.card))
-        .overlay(Capsule().strokeBorder(Night.heroBorder(.reading), lineWidth: UIMetrics.bubbleBorder))
+        .overlay(Pill().strokeBorder(Night.heroBorder(.reading), lineWidth: UIMetrics.bubbleBorder))
         .modifier(CornerShadow())
         .padding(UIMetrics.bubbleShadowPadding)
         .environment(\.colorScheme, .dark)

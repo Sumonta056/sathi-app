@@ -37,11 +37,8 @@ struct SettingsViewTests {
     func showReminderNowTriggersThatHabit(_ id: HabitID) throws {
         let h = harness(id, on: true)
         try tab(id, h).find(button: "Show a reminder now").tap()
-        guard case let .bubble(shown, _) = h.engine.phase else {
-            Issue.record("expected a bubble, got \(h.engine.phase)")
-            return
-        }
-        #expect(shown == id)
+        #expect(h.engine.phase(id) == .bubble(.nudge))
+        #expect(h.presenter.calls.contains(.showBubble(id, .nudge)))
     }
 
     @Test(arguments: HabitID.allCases)
@@ -50,21 +47,8 @@ struct SettingsViewTests {
         #expect(try tab(id, h).find(button: "Show a reminder now").isDisabled())
     }
 
-    @Test func timeMenuShowsTheSlotLabel() throws {
-        let label = try #require(TimeSlots.all.first { $0.minutes == 9 * 60 + 30 }?.label)
-        let sut = try TimeMenu(minutes: Box(9 * 60 + 30).binding).inspect()
-        #expect(throws: Never.self) { try sut.find(text: label) }
-    }
-
     @Test func readingTimeMenuShowsTheSetTime() throws {
-        let label = try #require(TimeSlots.all.first { $0.minutes == 21 * 60 }?.label)
         let sut = try hosted(ReadingSettingsTab(), EngineHarness { $0.prefs.reading.timeMinutes = 21 * 60 }).inspect()
-        #expect(throws: Never.self) { try sut.find(text: label) }
-    }
-
-    @Test func timeSlotsCoverTheDayInHalfHours() {
-        #expect(TimeSlots.all.count == 48)
-        #expect(TimeSlots.all.first?.minutes == 0)
-        #expect(TimeSlots.all.last?.minutes == 23 * 60 + 30)
+        #expect(throws: Never.self) { try sut.find(text: Fmt.timeOfDay(21 * 60)) }
     }
 }

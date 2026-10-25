@@ -14,7 +14,7 @@ struct MeditationThanksTests {
         let h = EngineHarness(at: start) {
             $0.prefs.meditation.enabled = true
             $0.prefs.meditation.sessionMinutes = 5
-            $0.prefs.meditation.slots = [.afternoon]
+            $0.prefs.meditation.dailyGoalMinutes = 5
             $0.live.lastWaterDone = start.addingTimeInterval(-Timing.minute)
             $0.events = events
         }
@@ -29,7 +29,7 @@ struct MeditationThanksTests {
 
     @Test func fullSessionShowsTheThanksCard() throws {
         let h = finished()
-        #expect(h.engine.phase == .celebrate)
+        #expect(h.engine.isCelebrating)
         let sut = try celebrate(h)
         #expect(try sut.find(MeditationThanks.self) != nil)
         #expect((try? sut.find(LegacyCelebrate.self)) == nil)
@@ -42,7 +42,7 @@ struct MeditationThanksTests {
         let h = finished()
         let card = try celebrate(h).find(MeditationThanks.self)
         try Find.button(card, holding: "Back to work").tap()
-        #expect(h.engine.phase == .idle)
+        #expect(!h.engine.isCelebrating)
     }
 
     @Test func hintCountsTheStreak() throws {

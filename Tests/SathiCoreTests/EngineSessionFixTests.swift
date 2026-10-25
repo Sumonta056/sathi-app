@@ -15,26 +15,29 @@ struct EngineSessionFixTests {
     }
 
     @Test func stoppingAMenuStartedMeditationDoesNothing() {
-        let h = harness(at: day(2026, 3, 4, 15)) { $0.events = [.done(.meditation, 5, at: day(2026, 3, 4, 8, 5))] }
-        #expect(h.engine.phase == .idle)
+        let h = harness(at: day(2026, 3, 4, 15)) {
+            $0.prefs.meditation.sessionMinutes = 5
+            $0.events = [.done(.meditation, 2, at: day(2026, 3, 4, 14, 30))]
+        }
+        #expect(h.engine.activities.isEmpty)
         h.engine.startMeditation()
         h.advance(minutes: 2)
-        h.engine.stopSession()
-        #expect(h.engine.phase == .idle)
+        h.engine.stopSession(.meditation)
+        #expect(h.engine.activities.isEmpty)
         #expect(h.history.appended.isEmpty)
         #expect(h.engine.state(.meditation).snoozes == 0)
         #expect(h.engine.state(.meditation).snoozedUntil == nil)
         h.advance(minutes: 8)
-        #expect(h.engine.phase == .idle)
+        #expect(h.engine.activities.isEmpty)
         #expect(!h.presenter.calls.contains(.showBubble(.meditation, .nudge)))
-        #expect(h.engine.state(.meditation).nextDue == day(2026, 3, 4, 21, 30))
+        #expect(h.engine.state(.meditation).nextDue == day(2026, 3, 4, 15, 30))
     }
 
     @Test func stoppingAMeditationStartedFromADueBubbleSnoozes() {
-        let h = harness(at: day(2026, 3, 4, 15))
-        #expect(h.engine.phase == .bubble(.meditation, .nudge))
+        let h = harness(at: day(2026, 3, 4, 15)) { $0.events = [.done(.meditation, 2, at: day(2026, 3, 4, 13, 30))] }
+        #expect(h.engine.phase(.meditation) == .bubble(.nudge))
         h.engine.startMeditation()
-        h.engine.stopSession()
+        h.engine.stopSession(.meditation)
         #expect(h.history.appended == [.snooze(.meditation, at: day(2026, 3, 4, 15))])
         #expect(h.engine.state(.meditation).snoozes == 1)
     }
@@ -43,8 +46,8 @@ struct EngineSessionFixTests {
         let h = EngineHarness()
         h.engine.startReading()
         h.advance(minutes: 3)
-        h.engine.stopSession()
-        #expect(h.engine.phase == .idle)
+        h.engine.stopSession(.reading)
+        #expect(h.engine.activities.isEmpty)
         #expect(h.history.appended.isEmpty)
         #expect(h.engine.state(.reading).snoozes == 0)
         #expect(h.engine.state(.reading).snoozedUntil == nil)
@@ -55,7 +58,7 @@ struct EngineSessionFixTests {
         let h = EngineHarness()
         h.showReminder(.reading)
         h.engine.startReading()
-        h.engine.stopSession()
+        h.engine.stopSession(.reading)
         #expect(h.history.appended == [.snooze(.reading, at: day(2026, 3, 4, 10))])
         #expect(h.engine.state(.reading).snoozes == 1)
     }
@@ -70,7 +73,7 @@ struct EngineSessionFixTests {
         let h = harness(at: day(2026, 3, 4, 7))
         h.engine.startMeditation()
         h.advance(minutes: 5)
-        #expect(h.engine.phase == .celebrate)
+        #expect(h.engine.isCelebrating)
         #expect(h.sound.played == [.tink])
     }
 
@@ -78,7 +81,7 @@ struct EngineSessionFixTests {
         let h = harness(at: day(2026, 3, 4, 7)) { $0.prefs.meditation.chime = false }
         h.engine.startMeditation()
         h.advance(minutes: 5)
-        #expect(h.engine.phase == .celebrate)
+        #expect(h.engine.isCelebrating)
         #expect(h.sound.played.isEmpty)
     }
 

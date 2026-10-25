@@ -34,14 +34,15 @@ struct EngineMeditationDisplayTests {
         let h = harness()
         h.engine.startMeditation()
         #expect(h.engine.pill(.meditation) == "Breathing…")
-        h.engine.stopSession()
+        h.engine.stopSession(.meditation)
         h.engine.startReading()
         #expect(h.engine.pill(.reading) == "Reading…")
     }
 
     @Test func statusCallToActionIsBreathe() {
         let h = harness(at: day(2026, 3, 4, 15))
-        #expect(h.engine.phase == .bubble(.meditation, .nudge))
+        h.showReminder(.meditation)
+        #expect(h.engine.phase(.meditation) == .bubble(.nudge))
         #expect(h.engine.statusText == "Breathe!")
     }
 
@@ -54,6 +55,7 @@ struct EngineMeditationDisplayTests {
     @Test func goalTextShowsMinutesOfGoal() {
         let h = harness()
         #expect(h.engine.goalText(.meditation) == GoalText(done: "0", rest: "of 10 min"))
+        h.engine.data.prefs.meditation.sessionMinutes = 5
         h.engine.startMeditation()
         h.advance(minutes: 5)
         #expect(h.engine.goalText(.meditation) == GoalText(done: "5", rest: "of 10 min"))
@@ -61,7 +63,8 @@ struct EngineMeditationDisplayTests {
     }
 
     @Test func sessionTicksEverySecond() {
-        let now = day(2026, 3, 4, 10)
-        #expect(TickPlanner.delay(now: now, phase: .session(.meditation), deadlines: [], focusRemaining: nil) == Timing.activeTick)
+        let h = harness()
+        h.engine.startMeditation()
+        #expect(h.engine.nextTickDelay() == Timing.activeTick)
     }
 }

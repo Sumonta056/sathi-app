@@ -9,7 +9,7 @@ struct EngineScheduleTests {
     @Test func waterDoesNotRemindOutsideHours() {
         let h = EngineHarness(at: day(2026, 3, 4, 17, 0))
         h.advance(minutes: 120)
-        #expect(h.engine.phase == .idle)
+        #expect(h.engine.activities.isEmpty)
     }
 
     @Test func everyHabitHasAStateAfterInit() {

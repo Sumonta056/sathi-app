@@ -14,7 +14,7 @@ struct MeditationInvite: View {
                 .font(Typography.eyebrow)
                 .foregroundStyle(Night.calm)
             BobbingBuddy(habit: .meditation, size: UIMetrics.calmInviteBuddySize)
-            Text(e.copy.title)
+            Text(e.copy(.meditation).title)
                 .font(Typography.bubbleTitle)
                 .foregroundStyle(Night.text)
                 .multilineTextAlignment(.center)
@@ -33,7 +33,7 @@ struct MeditationInvite: View {
                 Text("Breathe with me").frame(maxWidth: .infinity)
             }
             .buttonStyle(AccentButton(accent: Night.calm, height: UIMetrics.calmButtonHeight, text: Night.calmGround))
-            Button { e.snooze() } label: { Text(e.snoozeShortLabel) }
+            Button { e.snooze(.meditation) } label: { Text(e.snoozeShortLabel) }
                 .buttonStyle(GhostButton(
                     accent: Night.chipText,
                     height: UIMetrics.calmButtonHeight,

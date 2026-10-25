@@ -13,15 +13,11 @@ package final class Engine: ObservableObject {
         }
     }
     @Published package var now: Date
-    @Published package var phase: Phase = .idle
     @Published package var pausedUntil: Date?
     @Published package internal(set) var habits: [HabitID: HabitState]
-    @Published package var queue: [HabitID] = []
-    @Published package var copy = Copy()
+    @Published package internal(set) var activities: [HabitID: Activity] = [:]
     @Published package var celebration = Celebration()
-    @Published package var ignoreDeadline: Date
-    @Published package var sessionStart: Date
-    @Published package var sessionEnd: Date
+    @Published package var isCelebrating = false
 
     package let status = StatusModel()
     let store: StateStore
@@ -35,7 +31,6 @@ package final class Engine: ObservableObject {
     var isRunning = false
     var forced: Set<HabitID> = []
     var celebrateToken = UUID()
-    var sessionFromReminder = false
     var streakCache: [HabitID: Int] = [:]
     var longestCache: [HabitID: Int] = [:]
     var streakCacheDay: Date?
@@ -62,16 +57,13 @@ package final class Engine: ObservableObject {
         self.calendar = calendar
         data = loaded
         now = n
-        ignoreDeadline = n
-        sessionStart = n
-        sessionEnd = n
         habits = Dictionary(uniqueKeysWithValues: HabitID.allCases.map { id in
             let r = id.rules(loaded.prefs, calendar: calendar)
             let due = r.nextDue(
                 now: n,
                 lastDone: loaded.lastDone(id),
                 doneToday: r.total(on: n, data: loaded),
-                skipToday: false
+                skipToday: Self.skipped(id, on: n, live: loaded.live, calendar: calendar)
             )
             return (id, HabitState(nextDue: due))
         })
@@ -84,7 +76,12 @@ package final class Engine: ObservableObject {
     func freshDue(_ id: HabitID, lastDone: Date?, skipToday: Bool = false) -> Date {
         let r = rules(id)
         let n = clock.now
-        return r.nextDue(now: n, lastDone: lastDone, doneToday: r.total(on: n, data: data), skipToday: skipToday)
+        let skipped = skipToday || Self.skipped(id, on: n, live: data.live, calendar: calendar)
+        return r.nextDue(now: n, lastDone: lastDone, doneToday: r.total(on: n, data: data), skipToday: skipped)
+    }
+
+    static func skipped(_ id: HabitID, on day: Date, live: LiveState, calendar: Calendar) -> Bool {
+        live.streakReset[id.rawValue].map { calendar.isDate($0, inSameDayAs: day) } ?? false
     }
 
     package func enabled(_ id: HabitID) -> Bool { data.prefs.isEnabled(id) }
@@ -97,14 +94,6 @@ package final class Engine: ObservableObject {
         habits[id] = st
     }
 
-    package func isActive(_ id: HabitID) -> Bool {
-        switch phase {
-        case let .bubble(h, _): return h == id
-        case let .lock(h): return h == id
-        case let .session(h): return h == id
-        case .idle, .celebrate: return false
-        }
-    }
-
-    package func isDue(_ id: HabitID) -> Bool { isActive(id) || queue.contains(id) }
+    package func phase(_ id: HabitID) -> Phase { activities[id]?.phase ?? .idle }
+    package func isActive(_ id: HabitID) -> Bool { activities[id] != nil }
 }

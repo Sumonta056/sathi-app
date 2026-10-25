@@ -22,6 +22,6 @@ struct BubbleViewTests {
         let sut = BubbleView(id: .reading, level: .nudge).environmentObject(h.engine)
         #expect(try sut.inspect().find(text: "15-minute session") != nil)
         try sut.inspect().find(button: "Start 15-min timer").tap()
-        #expect(h.engine.phase == .session(.reading))
+        #expect(h.engine.phase(.reading) == .session)
     }
 }

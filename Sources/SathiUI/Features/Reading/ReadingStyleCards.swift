@@ -6,7 +6,7 @@ struct ReadingStyleCards: View {
 
     var body: some View {
         let engine = e
-        HStack(alignment: .top, spacing: UIMetrics.chipSpacing) {
+        OptionCardRow {
             ForEach(ReadingReminderStyle.allCases, id: \.self) { style in
                 OptionCard(
                     title: Self.title(style),

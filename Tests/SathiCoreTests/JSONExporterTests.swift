@@ -12,7 +12,7 @@ struct JSONExporterTests {
         p.general.name = "Asha"
         p.water.dailyGoalGlasses = 10
         p.meditation.enabled = true
-        p.meditation.slots = [.afternoon]
+        p.meditation.dailyGoalMinutes = 20
         return p
     }
 

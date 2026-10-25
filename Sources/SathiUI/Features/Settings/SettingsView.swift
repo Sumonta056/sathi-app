@@ -21,7 +21,8 @@ struct SettingsView: View {
             }
             .background(Night.bg)
         }
-        .frame(width: UIMetrics.settingsSize.width, height: UIMetrics.settingsSize.height)
+        .frame(width: UIMetrics.settingsSize.width)
+        .frame(minHeight: UIMetrics.settingsSize.height, maxHeight: .infinity)
         .ignoresSafeArea()
     }
 

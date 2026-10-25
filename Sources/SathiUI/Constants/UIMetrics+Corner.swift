@@ -15,6 +15,7 @@ extension UIMetrics {
     static let cornerShadowOpacity: Double = 0.55
     static let cornerShadowRadius: CGFloat = 22
     static let cornerShadowY: CGFloat = 18
+    static let cornerStackOverlap: CGFloat = 36
 
     static let pillRingSize: CGFloat = 36
     static let pillRingLine: CGFloat = 3.5

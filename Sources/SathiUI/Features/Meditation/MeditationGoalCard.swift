@@ -1,25 +1,25 @@
 import SathiCore
 import SwiftUI
 
-struct MeditationWhenCard: View {
+struct MeditationGoalCard: View {
     @EnvironmentObject var e: Engine
 
     var body: some View {
         let engine = e
         let med = engine.data.prefs.meditation
         SettingsCard {
-            SettingRow(label: "Remind me in the", hint: "Pick one or more.", showsDivider: false) {
+            SettingRow(label: "Daily goal", hint: "Shanti stops for the day when you reach it.", showsDivider: false) {
                 ChipRow(
-                    options: MeditationSlot.allCases,
+                    options: Self.options(Limits.meditationGoals, keeping: med.dailyGoalMinutes),
                     accent: Night.calm,
-                    isSelected: { med.slots.contains($0) },
-                    onTap: { engine.data.prefs.meditation.slots = med.slots.togglingKeepingOne($0) },
-                    label: Self.label
+                    isSelected: { $0 == med.dailyGoalMinutes },
+                    onTap: { engine.data.prefs.meditation.dailyGoalMinutes = $0 },
+                    label: { "\($0) min" }
                 )
             }
-            SettingRow(label: "Session length") {
+            SettingRow(label: "Each session") {
                 ChipRow(
-                    options: Limits.meditationLengths,
+                    options: Self.options(Limits.meditationLengths, keeping: med.sessionMinutes),
                     accent: Night.calm,
                     isSelected: { $0 == med.sessionMinutes },
                     onTap: { engine.data.prefs.meditation.sessionMinutes = $0 },
@@ -32,11 +32,7 @@ struct MeditationWhenCard: View {
         }
     }
 
-    static func label(_ slot: MeditationSlot) -> String {
-        switch slot {
-        case .morning: return "Morning"
-        case .afternoon: return "Afternoon"
-        case .evening: return "Evening"
-        }
+    static func options(_ chips: [Int], keeping saved: Int) -> [Int] {
+        chips.contains(saved) ? chips : (chips + [saved]).sorted()
     }
 }

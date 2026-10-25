@@ -19,7 +19,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 | Due | The time a reminder must show. Comes from the habit's `HabitRules.nextDue`. |
 | Reminder | What the user sees when a habit is due: bubble, corner popup, or lock. |
 | Snooze | The user delays a reminder. Not answering for `ignoreMinutes` also counts as a snooze. |
-| Session | A timed activity: reading or meditation. `Phase.session(HabitID)`. |
+| Session | A timed activity: reading or meditation. `Activity.session(Session)` in `Engine.activities[id]`. |
 | Event | One record in history: done, snooze, or skip. `HistoryEvent`. |
 | Goal | The daily target of a habit. Water: glasses. Reading and meditation: minutes. |
 | Streak | Count of days in a row, up to today, on which the goal was met. |
@@ -29,11 +29,14 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 1. Each habit is a module. A module owns its prefs, rules, copy, settings tab, and reminder view.
 2. Shared code (Engine, Scheduler loop, stores, Reports) never names a specific habit. It uses `switch` on `HabitID` or calls `HabitRules`.
 3. Every `switch` on `HabitID` is exhaustive. Never use `default:` and never use `id == .water ? a : b`. A new habit must fail to compile until every place handles it.
-4. A habit that is off has no due time, shows no reminder, and is not in the queue. Its history stays.
-5. Only one reminder shows at a time. Other due habits wait in the queue in due-time order.
-6. Pause stops all reminders until the pause ends. Due habits wait in the queue.
-7. "Rest of day" pauses until the next midnight. It moves each enabled habit to its next slot after that midnight and clears the queue and every snooze, so a slot missed during the pause never shows. The 30 min and 1 hour pauses keep missed reminders in the queue.
-8. A settings change that moves a habit's due time into the future removes that habit from the queue and clears its snooze (for example, today's weekday or a meditation slot turned off).
+4. A habit that is off has no due time and shows no reminder. Its history stays.
+5. Habits are independent. Each habit has its own reminder, snooze, ignore timer, and session. A reminder of one habit never waits for, closes, or changes a reminder or session of another habit. There is no queue.
+6. Reminders that show at the same time stack down from the top-right corner, in the order they open. The first one opens on the display that has the mouse pointer. The others join that stack until it is empty. A new reminder never removes the snoozed note of another habit.
+7. A lock (water or meditation at Strict) covers the screen. Only one lock shows at a time: a second habit that reaches its lock shows a Nudgy bubble instead, and locks on a later snooze if no lock shows then. Other reminders keep their own timers behind the lock.
+8. "Show a reminder now" in Settings always shows that habit's reminder now, unless that habit already shows one or is in a session.
+9. Pause stops new reminders until the pause ends. A reminder that already shows stays.
+10. "Rest of day" pauses until the next midnight. It moves each enabled habit to its next slot after that midnight and clears every snooze and closes every open reminder without a snooze, so a slot missed during the pause never shows. A running session continues. The 30 min and 1 hour pauses keep missed reminders: they show when the pause ends.
+11. A settings change that moves a habit's due time into the future clears its snooze (for example, today's weekday turned off, or a later meditation start time).
 
 ## Schedules
 
@@ -41,13 +44,13 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 |---|---|---|
 | Water | Every `intervalMinutes`, only between start and end time | The user logs an amount (minimum `Limits.minimumLog`) |
 | Reading | Once a day at a set time, on the selected weekdays | A session of `sessionMinutes` ends |
-| Meditation | At each selected slot (morning, afternoon, evening) | A breathing session ends |
+| Meditation | Every `intervalMinutes`, only between start and end time, until today's minutes meet `dailyGoalMinutes`. Then the next reminder is at tomorrow's start time. | A breathing session of `sessionMinutes` ends |
 
 1. After "done", the next due time starts from the done time, not from the old due time.
 2. A due time outside active hours moves to the next start of active hours.
-3. Reading is skipped for the day when today's minutes already meet the goal.
-4. Clock times are wall-clock times. On a DST day, 8:00 is 8:00 local time.
-5. A settings change never fires a past slot. At launch, a missed slot is still due now.
+3. Reading and Meditation are skipped for the rest of the day when today's minutes already meet the goal.
+4. Clock times are wall-clock times. On a DST day, 8:00 is 8:00 local time. Settings picks clock times in 15-minute steps (`Limits.scheduleSlotMinutes`).
+5. A settings change never fires a past slot. At launch, a missed slot is still due now. Water and Meditation have no slots: when a settings change moves their due time into the past, the reminder shows at once.
 6. A session started when nothing is due and stopped early does nothing: no snooze, no event, the next due time stays.
 7. A goal of 0 never counts as met.
 8. Reading weekdays: a weekday that is off has no reading reminder. The next due time is the set time on the next selected weekday. All 7 days are on by default. An empty set decodes as all 7 days; the Settings window never saves an empty set (the last selected day cannot be turned off).
@@ -61,16 +64,16 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 | `persistent` | Nudgy | After 1 snooze: stays on top, wiggles, no close button. |
 | `strict` | Strict | After 1 snooze: Nudgy. After 2 snoozes: full-screen lock. |
 
-1. Only Water may use Strict. Reading and Meditation never lock the screen.
+1. Water and Meditation may use Strict. Reading never locks the screen.
 2. Reading shows a corner popup in the top-right by default. It never takes focus from the active app. `ReadingPrefs.reminderStyle` picks `corner` (default) or `focus` (the old centered session).
    - With `corner`, the reading session shows as a small timer pill in the same corner, and the thank-you shows there too.
    - The corner popup snoozes for the General snooze length, like every other reminder.
    - After a snooze of the corner popup (by a tap or by no answer), a note "Boi comes back at {time}" shows for `Timing.cornerNoteDuration` (4 s).
    - Stopping the timer pill early follows Schedules rule 6: it does not count.
    - At Nudgy, the corner popup plays one ping when it shows, then wiggles in silence. It never repeats a sound.
-3. The lock always has an emergency skip. A skip resets that habit's streak.
+3. The lock always has an emergency skip. A skip resets that habit's streak and skips that habit for the rest of the day, also after a relaunch or a settings change.
 4. Raw values never change. They are in saved files. Change only the labels.
-5. The Meditation invite follows the same calm rules: it never takes focus from the active app, at Nudgy it wiggles in silence, and its snooze button uses the General snooze length. Its session button "Stop" follows Schedules rule 6: an early stop does not count.
+5. The Meditation invite follows the same calm rules at Gentle and Nudgy (at Strict it locks after 2 snoozes, like water): it never takes focus from the active app, at Nudgy it wiggles in silence, and its snooze button uses the General snooze length. Its session button "Stop" follows Schedules rule 6: an early stop does not count.
 6. The water thank-you button names the next reminder: "See you in {time}" or "See you tomorrow". While Sathi is paused it says "See you after your break". When water reminders are off it says "Nice one".
 
 ## History and storage

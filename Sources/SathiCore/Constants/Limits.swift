@@ -23,7 +23,7 @@ package enum Limits {
     package static let absoluteTimeThreshold: TimeInterval = 3 * Timing.hour
 
     package static let minutesPerDay = 24 * 60
-    package static let scheduleSlotMinutes = 30
+    package static let scheduleSlotMinutes = 15
 
     package static let waterIntervalMinutes = 15 ... 240
     package static let waterIntervalStep = 15
@@ -34,10 +34,11 @@ package enum Limits {
     package static let snoozeMinutes = 1 ... 30
     package static let ignoreMinutes = 1 ... 15
     package static let sessionLengths = [10, 15, 20, 30, 45, 60]
-    package static let meditationLengths = [2, 5, 10]
-    package static let morningSlotMinutes = 8 * 60
-    package static let afternoonSlotMinutes = 14 * 60
-    package static let eveningSlotMinutes = 21 * 60 + 30
+    package static let meditationLengths = [1, 2, 5]
+    package static let meditationGoals = [5, 10, 20]
+    package static let meditationIntervalChips = [30, 60, 90, 120]
+    package static let meditationStartMinutes = 9 * 60
+    package static let meditationEndMinutes = 21 * 60
 
     package static let morningStartHour = 5
     package static let afternoonStartHour = 12

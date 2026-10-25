@@ -7,6 +7,7 @@ struct ChipRow<Value: Hashable>: View {
     let onTap: (Value) -> Void
     let label: (Value) -> String
     var spokenLabel: ((Value) -> String)?
+    var chipWidth: CGFloat?
 
     var body: some View {
         HStack(spacing: UIMetrics.chipSpacing) {
@@ -21,12 +22,14 @@ struct ChipRow<Value: Hashable>: View {
                 .font(Typography.chip)
                 .foregroundStyle(on ? accent : Night.chipText)
                 .padding(.horizontal, UIMetrics.chipPadding)
+                .frame(minWidth: chipWidth)
                 .frame(height: UIMetrics.chipHeight)
-                .background(Capsule().fill(on ? accent.opacity(UIMetrics.chipFillOpacity) : .clear))
-                .overlay(Capsule().strokeBorder(on ? accent : Night.fieldBorder, lineWidth: UIMetrics.chipBorder))
-                .contentShape(Capsule())
+                .background(Pill().fill(on ? accent.opacity(UIMetrics.chipFillOpacity) : .clear))
+                .overlay(Pill().strokeBorder(on ? accent : Night.fieldBorder, lineWidth: UIMetrics.chipBorder))
+                .contentShape(Pill())
         }
         .buttonStyle(.plain)
+        .fixedSize()
         .accessibilityLabel(Text(verbatim: spokenLabel?(value) ?? label(value)))
         .accessibilityAddTraits(on ? .isSelected : [])
     }

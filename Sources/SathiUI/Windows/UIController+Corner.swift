@@ -16,7 +16,7 @@ extension UIController {
     func closeNote() {
         noteTask?.cancel()
         noteTask = nil
-        note?.orderOut(nil)
+        dismiss(note)
         note = nil
     }
 

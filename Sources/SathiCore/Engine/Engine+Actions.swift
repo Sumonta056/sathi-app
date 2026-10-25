@@ -1,12 +1,12 @@
 import Foundation
 
 extension Engine {
-    package func snooze() {
-        guard case let .bubble(id, _) = phase else { return }
+    package func snooze(_ id: HabitID) {
+        guard case .bubble = activities[id] else { return }
         snoozeHabit(id)
-        presenter.closeBubble()
+        presenter.closeBubble(id)
         if usesCorner(id), let until = state(id).snoozedUntil { presenter.showSnoozed(id, until: until) }
-        phase = .idle
+        activities[id] = nil
         requestTick()
     }
 
@@ -16,13 +16,8 @@ extension Engine {
         record(.done(.water, glasses, at: n))
         data.live.lastWaterDone = n.wholeSecond
         habits[.water] = HabitState(nextDue: freshDue(.water, lastDone: n))
-        queue.removeAll { $0 == .water }
-        if isActive(.water) {
-            presenter.closeBubble()
-            presenter.closeLock()
-            phase = .idle
-        }
-        if phase == .idle { celebrate(.water, glasses) } else { play(.glass) }
+        close(.water)
+        if activities.isEmpty { celebrate(.water, glasses) } else { play(.glass) }
         requestTick()
     }
 
@@ -48,15 +43,14 @@ extension Engine {
         record(.skip(id, at: n))
         data.live.streakReset[id.rawValue] = n.wholeSecond
         habits[id] = HabitState(nextDue: freshDue(id, lastDone: n, skipToday: true))
-        presenter.closeLock()
-        phase = .idle
+        close(id)
         requestTick()
     }
 
     package func endCelebrate() {
-        guard phase == .celebrate else { return }
+        guard isCelebrating else { return }
         presenter.closeCelebration()
-        phase = .idle
+        isCelebrating = false
         requestTick()
     }
 
@@ -69,7 +63,6 @@ extension Engine {
             st.snoozedUntil = nil
             st.nextDue = n
         }
-        if phase == .celebrate { endCelebrate() }
         tick()
     }
 
@@ -93,6 +86,9 @@ extension Engine {
 
     func reschedule() {
         let n = clock.now
+        for id in HabitID.allCases where !enabled(id) {
+            close(id)
+        }
         for id in HabitID.allCases where !isActive(id) {
             let fresh = freshDue(id, lastDone: data.lastDone(id))
             var due = fresh
@@ -100,13 +96,21 @@ extension Engine {
             let staleSnooze = state(id).snoozedUntil.map { $0 <= n } ?? false
             if due == .distantFuture || !enabled(id) || staleSnooze || fresh > n {
                 update(id) { $0 = HabitState(nextDue: due) }
-                queue.removeAll { $0 == id }
             } else if state(id).snoozedUntil == nil {
                 update(id) { $0.nextDue = due }
             }
         }
-        queue.removeAll { !enabled($0) }
         requestTick()
+    }
+
+    func close(_ id: HabitID) {
+        switch activities[id] {
+        case .bubble: presenter.closeBubble(id)
+        case .lock: presenter.closeLock()
+        case .session: presenter.closeSession(id)
+        case nil: return
+        }
+        activities[id] = nil
     }
 
     func snoozeHabit(_ id: HabitID) {
@@ -121,7 +125,7 @@ extension Engine {
 
     func celebrate(_ id: HabitID, _ amount: Double) {
         celebration = Celebration(id: id, amount: amount, title: Copywriter.celebrationTitle(id, amount: amount))
-        phase = .celebrate
+        isCelebrating = true
         presenter.showCelebration()
         if let sound = celebrationSound(id) { play(sound) }
         let token = UUID()

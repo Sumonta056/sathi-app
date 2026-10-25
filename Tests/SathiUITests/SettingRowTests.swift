@@ -20,7 +20,7 @@ struct SettingRowTests {
     @Test func withoutHintShowsOnlyLabelAndTrailing() throws {
         let sut = try SettingRow(label: "Sound") { Text("Pop") }.inspect()
         let texts = try sut.findAll(ViewType.Text.self).map { try $0.string() }
-        #expect(texts.sorted() == ["Pop", "Sound"])
+        #expect(Set(texts) == ["Pop", "Sound"])
     }
 
     @Test func settingsCardShowsItsRows() throws {

@@ -16,29 +16,19 @@ extension Engine {
     package func tick() {
         now = clock.now
         if let p = pausedUntil, now >= p { pausedUntil = nil }
-        if pausedUntil == nil { enqueueDueHabits() }
-
-        switch phase {
-        case .bubble:
-            if now >= ignoreDeadline { snooze() }
-        case .session:
-            if now >= sessionEnd { finishSession() }
-        default:
-            break
+        for id in HabitID.allCases {
+            endIfExpired(id)
         }
-
-        if phase == .idle, pausedUntil == nil, !queue.isEmpty {
-            present(queue.removeFirst())
-        }
+        if pausedUntil == nil { presentDueHabits() }
         updateStatus()
         scheduleNextTick()
     }
 
     package func nextTickDelay() -> TimeInterval {
-        let showsCountdown = phase == .idle && pausedUntil == nil
+        let showsCountdown = activities.isEmpty && pausedUntil == nil
         return TickPlanner.delay(
             now: now,
-            phase: phase,
+            inSession: HabitID.allCases.contains { session($0) != nil },
             deadlines: upcomingDeadlines(),
             focusRemaining: showsCountdown ? focus.map(remaining) : nil
         )
@@ -49,12 +39,20 @@ extension Engine {
         schedule(after: 0)
     }
 
-    private func enqueueDueHabits() {
-        for id in HabitID.allCases where enabled(id) && !isDue(id) {
+    private func endIfExpired(_ id: HabitID) {
+        switch activities[id] {
+        case let .bubble(_, _, deadline) where now >= deadline: snooze(id)
+        case let .session(s) where now >= s.end: finishSession(id)
+        default: break
+        }
+    }
+
+    private func presentDueHabits() {
+        for id in HabitID.allCases where enabled(id) && !isActive(id) {
             let st = state(id)
             let due = now >= (st.snoozedUntil ?? st.nextDue)
             if due && (forced.contains(id) || rules(id).isActiveTime(now)) {
-                queue.append(id)
+                present(id)
             }
         }
     }
@@ -62,11 +60,13 @@ extension Engine {
     private func upcomingDeadlines() -> [Date] {
         var deadlines: [Date] = []
         if let p = pausedUntil { deadlines.append(p) }
-        if case .bubble = phase { deadlines.append(ignoreDeadline) }
-        if case .session = phase { deadlines.append(sessionEnd) }
-        if pausedUntil == nil {
-            for id in HabitID.allCases where enabled(id) && !isDue(id) {
-                deadlines.append(now.addingTimeInterval(remaining(id)))
+        for id in HabitID.allCases {
+            switch activities[id] {
+            case let .bubble(_, _, deadline): deadlines.append(deadline)
+            case let .session(s): deadlines.append(s.end)
+            case .lock: break
+            case nil:
+                if pausedUntil == nil && enabled(id) { deadlines.append(now.addingTimeInterval(remaining(id))) }
             }
         }
         return deadlines
@@ -91,14 +91,15 @@ extension Engine {
         forced.remove(id)
         switch EscalationPolicy.presentation(for: strictness(id), snoozes: state(id).snoozes) {
         case let .bubble(level): showBubble(id, level)
+        case .lock where HabitID.allCases.contains(where: { phase($0) == .lock }): showBubble(id, .persist)
         case .lock: showLock(id)
         }
     }
 
     private func showBubble(_ id: HabitID, _ level: Level) {
-        copy = Copywriter.pick(id, level, name: data.prefs.general.name)
-        ignoreDeadline = clock.now.addingTimeInterval(TimeInterval(data.prefs.general.ignoreMinutes) * Timing.minute)
-        phase = .bubble(id, level)
+        let copy = Copywriter.pick(id, level, name: data.prefs.general.name)
+        let deadline = clock.now.addingTimeInterval(TimeInterval(data.prefs.general.ignoreMinutes) * Timing.minute)
+        activities[id] = .bubble(level, copy: copy, ignoreDeadline: deadline)
         presenter.showBubble(id, level)
         play(level == .persist ? .ping : Self.greeting(id))
     }
@@ -112,7 +113,7 @@ extension Engine {
     }
 
     private func showLock(_ id: HabitID) {
-        phase = .lock(id)
+        activities[id] = .lock
         presenter.showLock(id)
         play(.sosumi)
     }
