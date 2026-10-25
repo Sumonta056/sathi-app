@@ -25,7 +25,8 @@ The Engine talks to the outside world only through protocols in `Sources/SathiCo
 | `HistoryStore` | `FileHistoryStore` (`history/YYYY-MM.json`) | `InMemoryHistoryStore` |
 | `SoundPlayer` | `SystemSoundPlayer` (SathiUI) | `SpySoundPlayer` |
 | `ReminderPresenter` | `UIController` (SathiUI) | `SpyPresenter` |
-| `FileExporter` | save panel adapter (SathiUI, Phase 5) | `SpyFileExporter` |
+| `FileExporter` | none yet (the Export menu was removed in 5h; see `docs/ROADMAP.md` Later) | `SpyFileExporter` |
+| `SummaryRenderer` | none yet (the PDF renderer was removed in 5h) | `SpySummaryRenderer` |
 
 To add a new side effect (notifications, analytics, file export), add a port protocol in Core, a real impl in UI or Platform, and a fake in `Tests/SathiTestSupport`.
 
@@ -56,5 +57,5 @@ To add a new side effect (notifications, analytics, file export), add a port pro
 - `LegacyMigrator` runs only while `<base>/migrated-v1` is missing. It flushes history first, then state, and writes the marker last, only when both flushes succeed. It skips legacy events the history already holds, and never overwrites an existing `prefs.json` or `state.json`.
 - Stored times have 1-second precision: `HistoryEvent` dates, `lastWaterDone`, and `streakReset` values pass through `Date.wholeSecond` when created or decoded.
 - The Engine saves prefs and live state from `data.didSet` only when that part changed. Events go only through `Engine.record(_:)` → `HistoryStore.append`. The Engine keeps `Limits.monthsInMemory` months of events in RAM.
-- Every prefs struct, `LiveState`, and `HistoryEvent` decode missing keys to defaults (`decodeIfPresent`). Add new fields with a default value.
+- Every prefs struct and `LiveState` decode missing keys and unknown enum values to defaults (`value`, `known`, `knownSet` in `DecodingDefaults.swift`). `HistoryEvent` is strict; `MonthEvents` keeps an event or field it cannot read and writes it back. Add new fields with a default value. Details: `.claude/rules/storage.md`.
 - A breaking change bumps `Limits.schemaVersion` and adds a migration with a fixture test.

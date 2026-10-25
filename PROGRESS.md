@@ -185,6 +185,8 @@ Status (2026-10-25): done, reviewed (1 blocker, 5 major fixed), not committed. S
 
 ## Phase 7: Docs and release check
 
+Status (2026-10-25): README, CLAUDE.md, and architecture.md updated and reviewed. Version 2.0 (build 2) installed; idle perf PASS (0.0% CPU, 18 MB, 0 wakeups). `Sathi-2.0.dmg` built (ad-hoc). Open: the user runs `./scripts/perf.sh --windows` in Terminal; the visual check of 5d–5f, Reports, and Lock (use `ui-verifier`). Next: PR from `feature/redesign-v2` to `main`.
+
 - Update `README.md` and `CLAUDE.md` (module map, storage location, commands, rules).
 - Run the Definition of done in `CLAUDE.md`: tests, lint, release build without warnings, `./build.sh --install` + `./scripts/perf.sh`.
 - Optionally bump the version in `Resources/Info.plist` and use `/make-dmg`.

@@ -94,8 +94,9 @@ Spec 6b: `docs/specs/phase-6b-tolerant-decoding.md`
 
 ## Phase 7: Docs and release check
 
-- [ ] Update `README.md` and `CLAUDE.md`
-- [ ] Definition of done in `CLAUDE.md` passes
+- [x] Update `README.md` and `CLAUDE.md`
+- [x] Definition of done in `CLAUDE.md` passes (tests, lint, release build, install, idle perf 0.0% / 18 MB / 0 wakeups; version 2.0, `Sathi-2.0.dmg`)
+- [ ] `perf.sh --windows` run by the user in Terminal (not run yet)
 
 ## Later
 
