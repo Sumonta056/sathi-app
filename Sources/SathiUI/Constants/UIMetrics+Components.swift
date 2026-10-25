@@ -29,6 +29,12 @@ extension UIMetrics {
     static let heroSpacing: CGFloat = 18
     static let labelTracking: CGFloat = 1
 
+    static let pillStyleHeight: CGFloat = 44
+    static let pillStylePadding: CGFloat = 14
+    static let pillStyleRadius: CGFloat = 12
+    static let pillPressedOpacity: Double = 0.8
+    static let ghostFillOpacity: Double = 0.08
+
     static let fontTitle: CGFloat = 24
     static let fontHeroTitle: CGFloat = 20
     static let fontRowLabel: CGFloat = 14
@@ -36,4 +42,5 @@ extension UIMetrics {
     static let fontChip: CGFloat = 13
     static let fontSectionLabel: CGFloat = 11
     static let fontEyebrow: CGFloat = 12
+    static let fontPillStyle: CGFloat = 14
 }

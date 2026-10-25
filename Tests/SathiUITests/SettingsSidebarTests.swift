@@ -61,12 +61,16 @@ struct SettingsSidebarTests {
         #expect(try !A11y.isSelected(Find.button(sut, holding: "General")))
     }
 
-    @Test func openReportsIsDisabledAndSaysSoon() throws {
+    @Test func openReportsIsEnabledWithoutSoon() throws {
         let sut = try sidebar(EngineHarness()).inspect()
-        #expect(throws: Never.self) { try sut.find(text: "Soon") }
-        let reports = try sut.find(text: "Open reports")
-        let button = try? reports.find(ViewType.Button.self, relation: .parent)
-        #expect(button == nil || button?.isDisabled() == true)
+        #expect(Find.lacks(sut, text: "Soon"))
+        #expect(try !Find.button(sut, holding: "Open reports").isDisabled())
+    }
+
+    @Test func openReportsOpensTheReportsWindow() throws {
+        let h = EngineHarness()
+        try Find.button(sidebar(h).inspect(), holding: "Open reports").tap()
+        #expect(h.presenter.calls.last == .showReports)
     }
 
     @Test func waterTabShowsItsHero() throws {

@@ -11,15 +11,15 @@ struct LegacyCelebrate: View {
                 .frame(width: 110, height: 136)
             Text(badge(c))
                 .font(.system(size: 15, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.white)
+                .foregroundStyle(Night.onAccent)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 4)
-                .background(Capsule().fill(Palette.deep(c.id)))
+                .background(Capsule().fill(Night.accent(c.id)))
             Text(c.title)
                 .font(.system(size: 26, weight: .semibold, design: .rounded))
             Text(subtitle(c))
                 .font(.system(size: 14))
-                .foregroundStyle(Palette.ink2)
+                .foregroundStyle(Night.muted)
             switch c.id {
             case .reading: ReadingWeekRow(streak: e.streak(.reading), today: e.now)
             case .water, .meditation: EmptyView()
@@ -32,10 +32,11 @@ struct LegacyCelebrate: View {
         .padding(.top, 26)
         .padding(.bottom, 20)
         .frame(width: 360)
-        .background(RoundedRectangle(cornerRadius: 28, style: .continuous).fill(Palette.card))
+        .background(RoundedRectangle(cornerRadius: 28, style: .continuous).fill(Night.card))
         .shadow(color: Color.black.opacity(0.3), radius: 24, x: 0, y: 12)
         .padding(30)
-        .foregroundStyle(Palette.ink)
+        .foregroundStyle(Night.text)
+        .environment(\.colorScheme, .dark)
     }
 
     private func badge(_ c: Celebration) -> String {

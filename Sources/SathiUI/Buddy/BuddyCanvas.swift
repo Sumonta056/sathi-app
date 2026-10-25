@@ -23,26 +23,26 @@ struct BuddyCanvas: View {
 
     private func drawDrop(_ ctx: inout GraphicsContext) {
         let drop = BuddyPaths.drop()
-        ctx.fill(drop, with: .color(Palette.waterPale))
+        ctx.fill(drop, with: .color(BuddyInk.waterPale))
         var inner = ctx
         inner.clip(to: drop)
         let top = CGFloat(116 - max(0, min(1, level)) * 110)
-        inner.fill(BuddyPaths.wave(top: top, phase: t * 2.6, amp: 3), with: .color(Palette.waterMid))
-        inner.fill(BuddyPaths.wave(top: top + 3, phase: -t * 1.7, amp: 3), with: .color(Palette.water))
-        ctx.stroke(drop, with: .color(Palette.outline), style: StrokeStyle(lineWidth: 3.2, lineJoin: .round))
+        inner.fill(BuddyPaths.wave(top: top, phase: t * 2.6, amp: 3), with: .color(BuddyInk.waterMid))
+        inner.fill(BuddyPaths.wave(top: top + 3, phase: -t * 1.7, amp: 3), with: .color(BuddyInk.water))
+        ctx.stroke(drop, with: .color(BuddyInk.outline), style: StrokeStyle(lineWidth: 3.2, lineJoin: .round))
         ctx.fill(Path(ellipseIn: CGRect(x: 25.5, y: 52, width: 9, height: 20)), with: .color(Color.white.opacity(0.75)))
     }
 
     private func drawBook(_ ctx: inout GraphicsContext) {
-        let line = Palette.bookLine
+        let line = BuddyInk.bookLine
         let pages = BuddyPaths.rr(22, 30, 66, 88, 8)
-        ctx.fill(pages, with: .color(Palette.pages))
+        ctx.fill(pages, with: .color(BuddyInk.pages))
         ctx.stroke(pages, with: .color(line), lineWidth: 2.6)
         let cover = BuddyPaths.rr(12, 24, 72, 90, 9)
-        ctx.fill(cover, with: .color(Palette.cover))
+        ctx.fill(cover, with: .color(BuddyInk.cover))
         ctx.stroke(cover, with: .color(line), lineWidth: 3.2)
         let spine = BuddyPaths.rr(12, 24, 14, 90, 7)
-        ctx.fill(spine, with: .color(Palette.spine))
+        ctx.fill(spine, with: .color(BuddyInk.spine))
         ctx.stroke(spine, with: .color(line), lineWidth: 3.2)
         ctx.fill(BuddyPaths.rr(36, 36, 34, 6, 3), with: .color(Color.white.opacity(0.55)))
         var rib = Path()
@@ -52,7 +52,7 @@ struct BuddyCanvas: View {
         rib.addLine(to: CGPoint(x: 72, y: 46))
         rib.addLine(to: CGPoint(x: 72, y: 20))
         rib.closeSubpath()
-        ctx.fill(rib, with: .color(Palette.ribbon))
+        ctx.fill(rib, with: .color(BuddyInk.ribbon))
         ctx.stroke(rib, with: .color(line), lineWidth: 1.6)
     }
 
@@ -93,20 +93,20 @@ struct BuddyCanvas: View {
             let k = t.truncatingRemainder(dividingBy: 2) / 2
             var c = ctx
             c.opacity = k < 0.2 ? k / 0.2 : 1 - (k - 0.2) / 0.8
-            c.fill(BuddyPaths.drip(CGPoint(x: 82 + 2 * k, y: 40 + 18 * k)), with: .color(Palette.drip))
+            c.fill(BuddyPaths.drip(CGPoint(x: 82 + 2 * k, y: 40 + 18 * k)), with: .color(BuddyInk.drip))
         }
         if mood == .sad {
             let k = t.truncatingRemainder(dividingBy: 1.5) / 1.5
             var c = ctx
             c.opacity = k < 0.15 ? k / 0.15 : 1 - (k - 0.15) / 0.85
-            c.fill(BuddyPaths.drip(CGPoint(x: 65, y: 82 + 36 * k)), with: .color(Palette.drip))
+            c.fill(BuddyPaths.drip(CGPoint(x: 65, y: 82 + 36 * k)), with: .color(BuddyInk.drip))
         }
         if mood == .cheer {
             var c = ctx
             c.opacity = 0.65 + 0.35 * sin(t * 6)
-            c.fill(BuddyPaths.star(90, 25, 9), with: .color(Palette.spark))
-            c.fill(BuddyPaths.star(9, 36.5, 6.5), with: .color(Palette.spark))
-            c.fill(BuddyPaths.star(84, 56, 4), with: .color(Palette.spark))
+            c.fill(BuddyPaths.star(90, 25, 9), with: .color(BuddyInk.spark))
+            c.fill(BuddyPaths.star(9, 36.5, 6.5), with: .color(BuddyInk.spark))
+            c.fill(BuddyPaths.star(84, 56, 4), with: .color(BuddyInk.spark))
         }
     }
 }

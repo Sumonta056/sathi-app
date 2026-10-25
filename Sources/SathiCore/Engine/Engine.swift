@@ -6,6 +6,7 @@ package final class Engine: ObservableObject {
     @Published package var data: Persisted {
         didSet {
             if streakInputsChanged(from: oldValue) { clearStreakCache() }
+            if enabledHabits(oldValue.prefs) != enabledHabits(data.prefs) { reportCache = nil }
             if oldValue.prefs.scheduleKey != data.prefs.scheduleKey { reschedule() }
             if oldValue.prefs != data.prefs { store.savePrefs(data.prefs) }
             if oldValue.live != data.live { store.saveLive(data.live) }
@@ -38,6 +39,7 @@ package final class Engine: ObservableObject {
     var streakCache: [HabitID: Int] = [:]
     var longestCache: [HabitID: Int] = [:]
     var streakCacheDay: Date?
+    var reportCache: ReportScreenCache?
 
     package init(
         store: StateStore,

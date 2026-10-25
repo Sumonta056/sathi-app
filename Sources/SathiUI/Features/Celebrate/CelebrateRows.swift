@@ -22,8 +22,8 @@ struct ReadingWeekRow: View {
                 Text(Self.labels[i])
                     .font(.system(size: 11, weight: .semibold))
                     .frame(maxWidth: .infinity, minHeight: 30)
-                    .foregroundStyle(on ? Color.white : Palette.muted)
-                    .background(Capsule().fill(on ? Palette.book : Palette.ink.opacity(0.08)))
+                    .foregroundStyle(on ? Night.onAccent : Night.muted)
+                    .background(Capsule().fill(on ? Night.reading : Night.border))
             }
         }
         .padding(.vertical, 6)

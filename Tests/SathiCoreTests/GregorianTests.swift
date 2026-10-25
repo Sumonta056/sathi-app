@@ -10,7 +10,11 @@ struct GregorianTests {
     private let buddhist = FixedZone("Europe/Berlin", calendar: .buddhist).calendar
     private let base = makeTempFolder()
 
-    @Test(arguments: [(ExportFormat.csv, "Sathi-history-2026-03-04.csv"), (.json, "Sathi-backup-2026-03-04.json")])
+    @Test(arguments: [
+        (ExportFormat.csv, "Sathi-history-2026-03-04.csv"),
+        (.json, "Sathi-backup-2026-03-04.json"),
+        (.pdf, "Sathi-summary-2026-03-04.pdf")
+    ])
     func exportNamesUseGregorianYears(_ format: ExportFormat, _ expected: String) {
         #expect(ExportNames.fileName(format, on: zone.date(2026, 3, 4, 10), calendar: buddhist) == expected)
     }
@@ -46,8 +50,10 @@ struct GregorianTests {
         #expect(text.hasSuffix("2026-03-04T10:00:00+01:00,water,done,1\n"))
     }
 
-    @Test func engineExportNameIsGregorianWithABuddhistCalendar() throws {
-        let spy = SpyFileExporter()
+    @Test func engineExportNameIsGregorianWithABuddhistCalendar() async throws {
+        try makeFolder(base)
+        let url = base.appendingPathComponent("history.csv")
+        let spy = SpyFileExporter(url: url)
         let engine = Engine(
             store: InMemoryStateStore(),
             history: InMemoryHistoryStore(events: [.done(.water, 1, at: zone.date(2026, 3, 4, 9))]),
@@ -56,10 +62,10 @@ struct GregorianTests {
             presenter: SpyPresenter(),
             calendar: buddhist
         )
-        #expect(engine.export(.csv, to: spy))
-        let save = try #require(spy.saves.first)
-        #expect(save.suggestedName == "Sathi-history-2026-03-04.csv")
-        #expect(String(data: save.data, encoding: .utf8)?.contains("2026-03-04T09:00:00+01:00,water,done,1") == true)
+        let outcome = await engine.export(.csv, screen: engine.reportScreen(.week, selected: .water), to: spy, renderer: SpySummaryRenderer())
+        #expect(outcome == .saved(url))
+        #expect(spy.requests.first?.suggestedName == "Sathi-history-2026-03-04.csv")
+        #expect(readText(url)?.contains("2026-03-04T09:00:00+01:00,water,done,1") == true)
     }
 
     @Test func streakAcrossAMonthBoundaryWorksWithABuddhistCalendar() {

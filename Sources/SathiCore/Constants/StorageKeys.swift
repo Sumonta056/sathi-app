@@ -10,6 +10,7 @@ package enum StorageKeys {
     package static let monthFilePattern = #"^\d{4}-(0[1-9]|1[0-2])$"#
     package static let exportHistoryPrefix = "Sathi-history-"
     package static let exportBackupPrefix = "Sathi-backup-"
+    package static let exportSummaryPrefix = "Sathi-summary-"
     package static let corruptSuffix = ".corrupt"
     package static let migrationMarker = "migrated-v1"
 }

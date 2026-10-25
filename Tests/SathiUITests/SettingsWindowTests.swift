@@ -8,14 +8,14 @@ import Testing
 @Suite("Settings window")
 struct SettingsWindowTests {
     @Test func windowIsKeptAfterCloseAndUsesTheWatcher() {
-        let watcher = SettingsWindowDelegate()
+        let watcher = WindowCloseWatcher()
         let w = SettingsWindow.make(engine: EngineHarness().engine, closeWatcher: watcher)
         #expect(w.isReleasedWhenClosed == false)
         #expect(w.delegate === watcher)
     }
 
     @Test func windowWillCloseRunsOnClose() {
-        let watcher = SettingsWindowDelegate()
+        let watcher = WindowCloseWatcher()
         var closed = 0
         watcher.onClose = { closed += 1 }
         watcher.windowWillClose(Notification(name: NSWindow.willCloseNotification))

@@ -11,6 +11,7 @@ package enum ExportNames {
         switch format {
         case .csv: return StorageKeys.exportHistoryPrefix
         case .json: return StorageKeys.exportBackupPrefix
+        case .pdf: return StorageKeys.exportSummaryPrefix
         }
     }
 }

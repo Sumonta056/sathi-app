@@ -1,6 +1,6 @@
 import Foundation
 
+@MainActor
 package protocol FileExporter: AnyObject {
-    @discardableResult
-    func save(_ data: Data, suggestedName: String, format: ExportFormat) -> Bool
+    func destination(suggestedName: String, format: ExportFormat) async -> URL?
 }

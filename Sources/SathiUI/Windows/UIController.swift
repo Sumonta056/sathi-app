@@ -13,10 +13,13 @@ package final class UIController: ReminderPresenter {
     var noteTask: Task<Void, Never>?
     private var locks: [NSWindow] = []
     private var settings: NSWindow?
-    private let settingsCloseWatcher = SettingsWindowDelegate()
+    private let settingsCloseWatcher = WindowCloseWatcher()
+    private var reports: NSWindow?
+    private let reportsCloseWatcher = WindowCloseWatcher()
 
     package init() {
         settingsCloseWatcher.onClose = { [weak self] in self?.settingsWillClose() }
+        reportsCloseWatcher.onClose = { [weak self] in self?.reportsWillClose() }
     }
 
     package func showBubble(_ id: HabitID, _ level: Level) {
@@ -116,6 +119,19 @@ package final class UIController: ReminderPresenter {
     private func settingsWillClose() {
         settings?.contentView = nil
         settings = nil
+    }
+
+    package func showReports() {
+        if reports == nil, let engine {
+            reports = ReportsWindow.make(engine: engine, closeWatcher: reportsCloseWatcher)
+        }
+        NSApp.activate(ignoringOtherApps: true)
+        reports?.makeKeyAndOrderFront(nil)
+    }
+
+    private func reportsWillClose() {
+        reports?.contentView = nil
+        reports = nil
     }
 
     func hosting(_ view: some View) -> FirstClickHostingView<AnyView>? {

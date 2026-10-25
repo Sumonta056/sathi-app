@@ -7,11 +7,17 @@ paths:
 
 Budget (checked by `./scripts/perf.sh` on the installed release build):
 
-| Metric | Budget | Measured on 2026-10-24 |
+| Metric | Budget | Measured on 2026-10-25 |
 |---|---|---|
 | Idle CPU | < 1% | 0.0% |
-| Memory footprint | < 40 MB | 19 MB |
-| Idle wakeups | < 10 / min | 0 / min |
+| Memory footprint, fresh idle | < 40 MB | 17 MB |
+| Memory footprint, after any window opened and closed | < 50 MB | 40–42 MB |
+| Idle wakeups (also after windows close) | < 10 / min | 0–6 / min |
+| CPU with the Reports window open | < 10% | 0.3% |
+
+The first SwiftUI window (Settings or Reports) loads the window frameworks, fonts, and symbols once, about 23 MB. A process cannot unload them, so memory stays there after the close. A second window adds only 1–2 MB. Swift Charts is not the cost (Settings alone costs the same). Only a separate helper process could give it back; not worth it for now.
+
+`NSSavePanel` keeps XPC connections to the macOS save service after use: 14–16 idle wakeups per minute until quit. That is why the Reports window has no Export menu for now.
 
 Before the refactor the app used 27–36% CPU and 66 MB. Do not let it go back.
 

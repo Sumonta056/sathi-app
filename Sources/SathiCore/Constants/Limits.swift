@@ -10,6 +10,10 @@ package enum Limits {
     package static let daysPerWeek = 7
     package static let weekStartWeekday = 2
     package static let fullPercent = 100
+    package static let headlineGreatPercent = 100
+    package static let headlineGoodPercent = 50
+    package static let monthLabelEvery = 5
+    package static let streakLevelMid = 0.5
 
     package static let glassStep: Double = 0.25
     package static let minimumLog: Double = 0.25

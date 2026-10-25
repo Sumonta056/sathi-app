@@ -84,6 +84,7 @@ extension Engine {
     }
 
     package func openSettings() { presenter.showSettings() }
+    package func openReports() { presenter.showReports() }
 
     package func play(_ name: SoundName) {
         guard data.prefs.general.soundOn else { return }

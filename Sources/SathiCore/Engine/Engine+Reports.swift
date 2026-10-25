@@ -25,15 +25,27 @@ extension Engine {
         return builder.build(range, now: n, events: events, prefs: data.prefs)
     }
 
-    @discardableResult
-    package func export(_ format: ExportFormat, to exporter: FileExporter) -> Bool {
-        let events = history.allEvents()
-        let n = clock.now.wholeSecond
-        let payload: Data = switch format {
-        case .csv: Data(CSVExporter.csv(events, timeZone: calendar.timeZone).utf8)
-        case .json: JSONExporter.backup(prefs: data.prefs, live: data.live, events: events, exportedAt: n)
-        }
-        return exporter.save(payload, suggestedName: ExportNames.fileName(format, on: n, calendar: calendar), format: format)
+    package func reportScreen(_ range: ReportRange, selected: HabitID) -> ReportScreen {
+        let key = ReportScreenCache.Key(range: range, selected: selected, day: calendar.startOfDay(for: clock.now))
+        if let cache = reportCache, cache.key == key { return cache.screen }
+        let enabled = enabledHabits(data.prefs)
+        let habit = ReportScreenBuilder.resolve(selected, enabled: enabled)
+        let screen = ReportScreenBuilder(calendar: calendar).build(ReportScreenInput(
+            range: range,
+            selected: selected,
+            report: report(range),
+            month: report(.month),
+            enabled: enabled,
+            streak: streak(habit),
+            longest: longestStreak(habit),
+            now: clock.now
+        ))
+        reportCache = ReportScreenCache(key: key, screen: screen)
+        return screen
+    }
+
+    func enabledHabits(_ prefs: Prefs) -> Set<HabitID> {
+        Set(HabitID.allCases.filter { prefs.isEnabled($0) })
     }
 
     func streakInputsChanged(from old: Persisted) -> Bool {
@@ -43,6 +55,7 @@ extension Engine {
     func clearStreakCache() {
         streakCache.removeAll()
         longestCache.removeAll()
+        reportCache = nil
     }
 
     private var streaks: StreakCalculator { StreakCalculator(calendar: calendar) }
@@ -66,4 +79,15 @@ extension Engine {
         }
         return data.events.filter { month.start <= $0.date && $0.date < month.end }
     }
+}
+
+struct ReportScreenCache {
+    struct Key: Equatable {
+        var range: ReportRange
+        var selected: HabitID
+        var day: Date
+    }
+
+    var key: Key
+    var screen: ReportScreen
 }

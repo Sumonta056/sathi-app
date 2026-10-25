@@ -123,8 +123,12 @@ struct MenuBarTests {
         #expect(h.presenter.calls.last == .showSettings)
     }
 
-    @Test func reportsIsDisabled() throws {
-        #expect(try Find.button(panel(EngineHarness()), label: "Reports").isDisabled())
+    @Test func reportsIsEnabledAndOpensReports() throws {
+        let h = EngineHarness()
+        let reports = try Find.button(panel(h), label: "Reports")
+        #expect(!reports.isDisabled())
+        try reports.tap()
+        #expect(h.presenter.calls.last == .showReports)
     }
 
     @Test func quitIsThere() throws {

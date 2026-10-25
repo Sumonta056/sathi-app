@@ -3,27 +3,28 @@ import SwiftUI
 struct PillButton: ButtonStyle {
     enum Kind { case primary, ghost, onDark, danger }
     var kind: Kind = .primary
-    var height: CGFloat = 44
+    var height: CGFloat = UIMetrics.pillStyleHeight
 
-    func makeBody(configuration: Configuration) -> some View {
-        let (fg, bg) = colors
-        return configuration.label
-            .font(.system(size: 14, weight: .semibold))
-            .lineLimit(1)
-            .padding(.horizontal, 14)
-            .frame(maxWidth: .infinity, minHeight: height)
-            .foregroundStyle(fg)
-            .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(bg))
-            .opacity(configuration.isPressed ? 0.8 : 1)
-            .contentShape(Rectangle())
+    static func colors(_ kind: Kind) -> (fg: Color, bg: Color) {
+        let faint = Night.text.opacity(UIMetrics.ghostFillOpacity)
+        switch kind {
+        case .primary: return (Night.onAccent, Night.sprout)
+        case .ghost: return (Night.text, faint)
+        case .onDark: return (Night.onAccent, Night.water)
+        case .danger: return (Night.cheek, faint)
+        }
     }
 
-    private var colors: (Color, Color) {
-        switch kind {
-        case .primary: return (.white, Palette.go)
-        case .ghost: return (Palette.ink, Palette.ink.opacity(0.07))
-        case .onDark: return (Palette.waterDeep, .white)
-        case .danger: return (Palette.danger, Color.white.opacity(0.1))
-        }
+    func makeBody(configuration: Configuration) -> some View {
+        let pair = Self.colors(kind)
+        return configuration.label
+            .font(.system(size: UIMetrics.fontPillStyle, weight: .semibold))
+            .lineLimit(1)
+            .padding(.horizontal, UIMetrics.pillStylePadding)
+            .frame(maxWidth: .infinity, minHeight: height)
+            .foregroundStyle(pair.fg)
+            .background(RoundedRectangle(cornerRadius: UIMetrics.pillStyleRadius, style: .continuous).fill(pair.bg))
+            .opacity(configuration.isPressed ? UIMetrics.pillPressedOpacity : 1)
+            .contentShape(Rectangle())
     }
 }

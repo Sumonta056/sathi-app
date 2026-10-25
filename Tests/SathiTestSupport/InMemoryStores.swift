@@ -35,7 +35,7 @@ package final class InMemoryStateStore: StateStore {
     }
 }
 
-package final class InMemoryHistoryStore: HistoryStore {
+package final class InMemoryHistoryStore: HistoryStore, @unchecked Sendable {
     package private(set) var events: [HistoryEvent]
     package private(set) var appended: [HistoryEvent] = []
     package private(set) var ranges: [DateInterval] = []

@@ -9,17 +9,17 @@ struct LockHoldButton: View {
 
     var body: some View {
         ZStack {
-            Circle().fill(Color.white.opacity(pressStart != nil ? 0.22 : 0.12))
-            Circle().stroke(Color.white.opacity(0.18), lineWidth: 8)
+            Circle().fill(Night.text.opacity(pressStart != nil ? UIMetrics.lockHoldPressedFillOpacity : UIMetrics.lockHoldFillOpacity))
+            Circle().stroke(Night.text.opacity(UIMetrics.lockHoldTrackOpacity), lineWidth: UIMetrics.lockHoldRing)
             Circle()
                 .trim(from: 0, to: CGFloat(progress))
-                .stroke(Palette.waterMid, style: StrokeStyle(lineWidth: 8, lineCap: .round))
+                .stroke(Night.waterLine, style: StrokeStyle(lineWidth: UIMetrics.lockHoldRing, lineCap: .round))
                 .rotationEffect(.degrees(-90))
             Text(label)
-                .font(.system(size: 18, weight: .semibold, design: .rounded))
+                .font(.system(size: UIMetrics.fontLockHold, weight: .semibold, design: .rounded))
         }
-        .frame(width: 136, height: 136)
-        .scaleEffect(pressStart != nil ? 0.95 : 1)
+        .frame(width: UIMetrics.lockHoldSize, height: UIMetrics.lockHoldSize)
+        .scaleEffect(pressStart != nil ? UIMetrics.lockHoldPressedScale : 1)
         .contentShape(Circle())
         .onLongPressGesture(
             minimumDuration: Timing.lockHoldDuration,
@@ -29,7 +29,7 @@ struct LockHoldButton: View {
             },
             perform: confirm
         )
-        .padding(.top, 6)
+        .padding(.top, UIMetrics.lockHoldTop)
     }
 
     private var label: String {

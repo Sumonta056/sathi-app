@@ -6,7 +6,7 @@ Read this file first in a new session. It holds everything needed to continue fr
 
 Paste this as the first message of the new session:
 
-> Read `PROGRESS.md`, `docs/ROADMAP.md`, `CLAUDE.md`, and `.claude/rules/business-logic.md`. Then continue the Sathi 2.0 redesign from Phase 5, slice 5a, on branch `feature/redesign-v2`, with the subagent workflow in `PROGRESS.md`.
+> Read `PROGRESS.md`, `docs/ROADMAP.md`, `CLAUDE.md`, and `.claude/rules/business-logic.md`. Then continue the Sathi 2.0 redesign from Phase 6, on branch `feature/redesign-v2`, with the subagent workflow in `PROGRESS.md`.
 
 ## Where things are
 
@@ -28,10 +28,12 @@ Paste this as the first message of the new session:
 | `e314293` | 2: JSON file storage, migration from UserDefaults, hardening |
 | `e7fb953` | 3: Meditation habit (Shanti), breathing sessions, review fixes |
 | `d387ab0` | 4: reports, streaks across months, CSV and JSON export, review fixes |
+| `1fe3a64` | 5a–5c: Night theme, Settings window, menu bar popover, review fixes |
+| `7a583e4` | 5d–5f: water bubble, reading corner popup, breathe view, review fixes |
 
-### Checks at the end of Phase 4
+### Checks at the end of 5d–5f (2026-10-25)
 
-- `./scripts/test.sh`: 402 tests pass (Core 359 in 53 suites, UI 43 in 6 suites). The script prints two lines; add them.
+- `./scripts/test.sh`: 686 tests pass (UI 216 in 30 suites, Core 470 in 71 suites). The script prints two lines; add them.
 - `./scripts/lint.sh`: Lint OK.
 - `swift build -c release`: no warnings.
 - `/perf-check`: not run since the redesign started (it is planned for slice 5h; see the warning below).
@@ -81,7 +83,15 @@ All rows of the Decisions table in `docs/ROADMAP.md` hold. The ones that shape P
 
 ## Phase 5: UI redesign (in progress)
 
-Status: 5a, 5b, 5c and the shared 5a–5c review fixes are done and green (591 tests: UI 157, Core 434). User checked the installed app visually on 2026-10-25 (OK). Committed as one commit for 5a–5c. Defaults backup: `~/Desktop/sathi-defaults-backup.plist`; real data is now migrated to the JSON files. Specs: `docs/specs/phase-5a-theme.md`, `phase-5b-settings.md`, `phase-5c-menubar.md`, `phase-5abc-review-fixes.md`. Next after the commits: 5d water bubble. 5d is done and green, not committed (616 tests: UI 171, Core 445; spec `docs/specs/phase-5d-water-bubble.md`; user chose: keep the drag bottle, water thank-you card top-right). 5e is done, reviewed, and green, not committed (646 tests: UI 186, Core 460; spec `docs/specs/phase-5e-reading-corner.md`; user chose: General snooze length, "Stop" keeps rule 6, 4 s "comes back" note, Nudgy wiggles with no repeat sound). 5f is done (spec `docs/specs/phase-5f-meditation.md`; user chose "Stop", invite never takes focus). Shared 5d/5f review fixes done (`docs/specs/phase-5df-review-fixes.md`): loop animations capped at 30 fps with TimelineView, "See you" text for pause and water off. 686 tests: UI 216, Core 470. Next: 5d–5f commit (ask), then 5g. User chose: commit approval per group (5a–5c, 5d–5f, 5g–5h); full review only for 5e and 5g, one shared review for the view slices (5a–5d, 5f) before the 5c commit. New theme: `Night` (not `Palette`), `Typography`, `Components/` (SectionLabel, ChipRow, OptionCard, BuddySwitch, HeroCard, SettingsCard, SettingRow).
+Status (2026-10-25): 5a–5f are done, reviewed, and committed (`1fe3a64` for 5a–5c, `7a583e4` for 5d–5f). 5g Reports window is done, reviewed, review fixes G1–G9 done, green (779 tests: UI 240, Core 539), **not committed**. 5g2 done (Lock and legacy views on `Night`, `BuddyInk`, `Palette` deleted; 790 tests: UI 251, Core 539; spec `phase-5g2-palette.md`), not committed. 5h done (2026-10-25): idle 0.0% CPU, 17 MB, 0 wakeups; Reports open 0.3% CPU; memory ~40–42 MB after any first window (one-time, budget now < 50 MB); Export menu removed (save panel wakeups). 780 tests (UI 241, Core 539). Committed as the 5g–5h commit. Still open: visual check of 5d–5f screens, Reports, and the re-themed Lock screen in the running app. Next: Phase 6. Specs: `phase-5g-reports.md`, `phase-5g-review-fixes.md`.
+
+- 5a–5c: the user checked the installed app on 2026-10-25 (OK). Defaults backup: `~/Desktop/sathi-defaults-backup.plist`; real data is migrated to the JSON files.
+- 5d–5f: **never checked in the running app.** Check in 5h: the look of each screen, a single click on corner buttons (non-key panel, `FirstClickHostingView`), panel sizes (`sizingOptions = []`, `UIMetrics.calmNoteHeight` 16 is a guess), and CPU while a bubble or the breathe view is open.
+- User choices in 5d–5f: keep the drag bottle; water thank-you top-right; reading snooze = General length; "Stop" never counts an early stop (reading and meditation); 4 s "Boi comes back" note; Nudgy reading and meditation wiggle in silence; the meditation invite never takes focus; "See you after your break" / "Nice one"; cap loop animations at 30 fps now; accept the last partial breathing round.
+- Specs: `docs/specs/phase-5a-theme.md`, `phase-5b-settings.md`, `phase-5c-menubar.md`, `phase-5abc-review-fixes.md`, `phase-5d-water-bubble.md`, `phase-5e-reading-corner.md`, `phase-5f-meditation.md`, `phase-5df-review-fixes.md`.
+- Commit approval per group (5a–5c done, 5d–5f done, 5g–5h next). Full review for 5g.
+- Theme: `Night` (old `Palette` stays until 5g deletes it), `Typography`, `Components/`. Cards: `WaterCard`, `CornerCard`, `CalmCard`. Loop animations: `BobbingBuddy`, `SparkBurst`, `BreathCircle` (TimelineView, 30 fps, pure tested functions). Windows: `PanelFactory`, `CornerToast`/`CornerPanel`, `UIController+Placement`, `UIController+Corner`.
+- Legacy views still in use: `LegacyBubble` (reading focus style), `SessionView` (reading focus style), `LegacyCelebrate` (reading focus style). 5g must decide what to do with them when it deletes the old `Palette`.
 
 Goal: build the canvas design in SwiftUI, slice by slice. Each slice is one `/feature` loop and one commit. UI tests use ViewInspector; logic stays in Core.
 
@@ -153,13 +163,12 @@ Ways to go faster (offer them to the user at the start; do not apply them withou
 
 Each slice is its own commit, so the user gets usable screens early (the new Settings window after 5b).
 
-### Phase 5 start checklist
+### 5g start checklist
 
-1. `git status` (only `Feature.md` untracked) and `git log --oneline -3` (top is the handover commit after `d387ab0`).
-2. `./scripts/test.sh` → 402 pass; `./scripts/lint.sh` → Lint OK.
-3. Read the design canvas artboards before writing the 5a spec.
-4. Ask the user about the two speed options above.
-5. Write `docs/specs/phase-5a-theme.md`, link it in `docs/ROADMAP.md`, then run the workflow.
+1. `git status` (only `Feature.md` untracked) and `git log --oneline -3` (top is the handover update after `7a583e4`).
+2. `./scripts/test.sh` → 686 pass (UI 216 + Core 470); `./scripts/lint.sh` → Lint OK.
+3. Read the Reports artboard (`project/Stats.dc.html`) on the design canvas before you write the 5g spec.
+4. Write `docs/specs/phase-5g-reports.md` (decide `FileExporter` on `@MainActor`, export off the main actor, error UI), link it in `docs/ROADMAP.md`, ask the user about open product points, then run the workflow.
 
 ## Phase 6: Claude setup
 

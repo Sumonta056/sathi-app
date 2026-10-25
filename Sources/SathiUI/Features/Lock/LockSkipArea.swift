@@ -9,27 +9,27 @@ struct LockSkipArea: View {
 
     var body: some View {
         if confirmSkip {
-            VStack(spacing: 10) {
+            VStack(spacing: UIMetrics.lockSkipSpacing) {
                 Text("Skipping resets your \(e.streak(id))-day streak to zero.")
-                    .font(.system(size: 13.5))
-                HStack(spacing: 8) {
+                    .font(.system(size: UIMetrics.fontLockSkipWarning))
+                HStack(spacing: UIMetrics.lockSkipButtonSpacing) {
                     Button("Keep my streak") { confirmSkip = false }
-                        .buttonStyle(PillButton(kind: .onDark, height: 38))
+                        .buttonStyle(PillButton(kind: .onDark, height: UIMetrics.lockSkipButtonHeight))
                     Button("Skip anyway") { e.emergencySkip(id) }
-                        .buttonStyle(PillButton(kind: .danger, height: 38))
+                        .buttonStyle(PillButton(kind: .danger, height: UIMetrics.lockSkipButtonHeight))
                 }
-                .frame(width: 320)
+                .frame(width: UIMetrics.lockSkipButtonsWidth)
             }
-            .padding(14)
-            .background(RoundedRectangle(cornerRadius: 14).fill(Color.white.opacity(0.08)))
+            .padding(UIMetrics.lockSkipPadding)
+            .background(RoundedRectangle(cornerRadius: UIMetrics.lockSkipRadius).fill(Night.text.opacity(UIMetrics.ghostFillOpacity)))
         } else {
             Button {
                 confirmSkip = true
             } label: {
-                Text("Emergency skip").underline().font(.system(size: 13)).foregroundStyle(Palette.lockHint)
+                Text("Emergency skip").underline().font(.system(size: UIMetrics.fontLockHint)).foregroundStyle(Night.muted)
             }
             .buttonStyle(.plain)
-            .padding(8)
+            .padding(UIMetrics.lockSkipLinkPadding)
         }
     }
 }

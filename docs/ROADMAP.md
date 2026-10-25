@@ -62,6 +62,9 @@ Spec 5c: `docs/specs/phase-5c-menubar.md`
 Spec 5d: `docs/specs/phase-5d-water-bubble.md`
 Spec 5e: `docs/specs/phase-5e-reading-corner.md`
 Spec 5f: `docs/specs/phase-5f-meditation.md`
+Spec 5g: `docs/specs/phase-5g-reports.md`
+Review fixes 5g: `docs/specs/phase-5g-review-fixes.md`
+Spec 5g2: `docs/specs/phase-5g2-palette.md`
 Review fixes 5d/5f: `docs/specs/phase-5df-review-fixes.md`
 Review fixes 5a–5c: `docs/specs/phase-5abc-review-fixes.md` (done)
 
@@ -71,8 +74,9 @@ Review fixes 5a–5c: `docs/specs/phase-5abc-review-fixes.md` (done)
 - [x] Water bubble (dark)
 - [x] Reading corner popup and timer pill
 - [x] Meditation breathe view
-- [ ] Reports window with charts, streak calendar, export menu
-- [ ] `/perf-check` passes
+- [x] Reports window with charts, streak calendar, export menu
+- [x] 5g2: Lock screen and legacy reading-focus views on `Night`; delete the old `Palette`
+- [x] `/perf-check` passes (budget updated: < 50 MB after a window; Export menu removed)
 
 ## Phase 6: Claude setup
 
@@ -102,7 +106,10 @@ Review fixes 5a–5c: `docs/specs/phase-5abc-review-fixes.md` (done)
 - Menu subtitle uses the published `now` while the streak uses `clock.now` (cosmetic, one minute after midnight)
 
 - `percentOfGoal` rounds 99.5 up to 100 (product choice)
-- Export errors are silent; export runs on the main thread (handle in Phase 5g)
+- 5h: bring export back without the `NSSavePanel` wakeup cost (for example, save to ~/Downloads and show the file in Finder); PDF renderer was removed with the menu
+- 5h: memory stays ~23 MB higher after the first SwiftUI window (helper process is the only fix)
+- 5g: a stored selection of an off habit comes back when the habit is turned on again
+- 5h: check 6-row months (March 2026) plus 3 facts in the 250-pt calendar card, and bar width without the 34-pt cap
 
 - A settings change during a pause moves a missed clock slot to the next slot (rule 5). Confirm with the user or add a test
 - A queued habit whose due time moved forward still shows from the queue
@@ -138,4 +145,6 @@ Review fixes 5a–5c: `docs/specs/phase-5abc-review-fixes.md` (done)
 | 2026-10-25 | 5b: reading weekdays (all on by default) and `reminderStyle` (corner default) added to Core. Water interval chips 30/60/90/120. "Quiet in meetings" shows a disabled "Soon" switch. |
 | 2026-10-25 | 5c: header streak = best current streak of enabled habits. "Rest of day" pause ends at midnight. |
 | 2026-10-25 | Review 5a–5c: a settings change that moves a due time into the future cancels the queued or snoozed reminder. "Rest of day" skips slots missed during the pause. "Focus screen" can be picked now; 5e wires it (5a–5c are not released before 5e). |
+| 2026-10-25 | 5g: calendar and facts follow the selected tile; off habits show a dimmed "Off" tile; PDF in 5g and names the habit; a cancel keeps the old export note; save panel is a sheet; old `Palette` removal moves to slice 5g2. |
+| 2026-10-25 | 5h: the Reports Export menu is removed (save panel wakeups). Memory budget: < 40 MB fresh idle, < 50 MB after a window. Swift Charts stays. |
 | 2026-10-24 | Phase 1 fix: a schedule change just after midnight counts the new day, not yesterday. |

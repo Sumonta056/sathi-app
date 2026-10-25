@@ -8,11 +8,11 @@ struct WaterInk {
     var cap: Color
 
     static let day = WaterInk(
-        glass: Palette.waterGlass,
-        water: Palette.water,
-        drained: Palette.waterDrained,
-        outline: Palette.outline,
-        cap: Palette.waterDeep
+        glass: BuddyInk.waterGlass,
+        water: BuddyInk.water,
+        drained: BuddyInk.waterDrained,
+        outline: BuddyInk.outline,
+        cap: BuddyInk.waterDeep
     )
 
     static let night = WaterInk(

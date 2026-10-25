@@ -12,42 +12,43 @@ struct LockView: View {
         TimelineView(.animation(minimumInterval: UIMetrics.animationFrameInterval)) { tl in
             let p = progress(at: tl.date)
             ZStack {
-                Palette.night.opacity(0.9).ignoresSafeArea()
-                VStack(spacing: 14) {
+                Night.sidebar.opacity(UIMetrics.lockBackdropOpacity).ignoresSafeArea()
+                VStack(spacing: UIMetrics.lockSpacing) {
                     Text(tl.date.formatted(date: .omitted, time: .shortened))
-                        .font(.system(size: 80, weight: .medium, design: .rounded))
+                        .font(.system(size: UIMetrics.fontLockClock, weight: .medium, design: .rounded))
                         .monospacedDigit()
                     Text(tl.date.formatted(.dateTime.weekday(.wide).day().month(.wide)))
-                        .font(.system(size: 15))
-                        .opacity(0.75)
+                        .font(.system(size: UIMetrics.fontLockDate))
+                        .opacity(UIMetrics.lockDateOpacity)
                     BuddyView(kind: id.kind, mood: p >= 1 ? .cheer : (p > 0 ? .thirsty : .sad), level: p)
-                        .frame(width: 150, height: 186)
-                        .padding(.top, 8)
+                        .frame(width: UIMetrics.lockBuddySize.width, height: UIMetrics.lockBuddySize.height)
+                        .padding(.top, UIMetrics.lockBuddyTop)
                     Text("SNOOZED TWICE · SCREEN PAUSED")
-                        .font(.system(size: 11, weight: .semibold))
-                        .tracking(0.8)
-                        .foregroundStyle(Palette.waterMid)
+                        .font(.system(size: UIMetrics.fontLockReason, weight: .semibold))
+                        .tracking(UIMetrics.lockReasonTracking)
+                        .foregroundStyle(Night.waterLine)
                     Text(headline)
-                        .font(.system(size: 34, weight: .semibold, design: .rounded))
+                        .font(.system(size: UIMetrics.fontLockHeadline, weight: .semibold, design: .rounded))
                         .multilineTextAlignment(.center)
                     Text(instructions)
-                        .font(.system(size: 16))
-                        .foregroundStyle(Palette.lockBody)
+                        .font(.system(size: UIMetrics.fontLockBody))
+                        .foregroundStyle(Night.chipText)
                         .multilineTextAlignment(.center)
-                        .frame(maxWidth: 460)
+                        .frame(maxWidth: UIMetrics.lockTextMaxWidth)
                     LockHoldButton(progress: p, pressStart: $pressStart, done: $done) {
                         e.lockConfirmed(id)
                     }
                     Text(p >= 1 ? "Thank you." : (p > 0 ? "Keep holding…" : "Press and hold."))
-                        .font(.system(size: 13))
-                        .foregroundStyle(Palette.lockHint)
+                        .font(.system(size: UIMetrics.fontLockHint))
+                        .foregroundStyle(Night.muted)
                     LockSkipArea(id: id)
                 }
-                .foregroundStyle(.white)
-                .frame(maxWidth: 580)
-                .padding(24)
+                .foregroundStyle(Night.text)
+                .frame(maxWidth: UIMetrics.lockMaxWidth)
+                .padding(UIMetrics.lockPadding)
             }
         }
+        .environment(\.colorScheme, .dark)
     }
 
     private func progress(at date: Date) -> Double {

@@ -8,7 +8,7 @@ struct LegacyBubble: View {
 
     @State private var shakes: CGFloat = 0
 
-    private var accent: Color { Palette.accent(id) }
+    private var accent: Color { Night.accent(id) }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -20,19 +20,20 @@ struct LegacyBubble: View {
             }
             actions
             if level == .persist { warn }
-            IgnoreBar(accent: accent, track: Color.black.opacity(0.08), label: Palette.muted)
+            IgnoreBar(accent: accent, track: Night.border, label: Night.muted)
         }
         .padding(18)
         .frame(width: UIMetrics.bubbleWidth)
-        .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Palette.card))
+        .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(Night.card))
         .overlay(
             RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .strokeBorder(level == .persist ? accent : Color.black.opacity(0.08), lineWidth: level == .persist ? 2 : 1)
+                .strokeBorder(level == .persist ? accent : Night.border, lineWidth: level == .persist ? 2 : 1)
         )
         .shadow(color: Color.black.opacity(0.28), radius: 18, x: 0, y: 10)
         .modifier(Shake(amount: shakes))
         .padding(UIMetrics.bubbleShadowPadding)
-        .foregroundStyle(Palette.ink)
+        .foregroundStyle(Night.text)
+        .environment(\.colorScheme, .dark)
         .task(id: level) { await shakeWhilePersisting() }
     }
 
@@ -62,13 +63,13 @@ struct LegacyBubble: View {
                 Text(eyebrow)
                     .font(.system(size: 11, weight: .semibold))
                     .tracking(0.6)
-                    .foregroundStyle(Palette.deep(id))
+                    .foregroundStyle(accent)
                 Text(e.copy.title)
                     .font(.system(size: 21, weight: .semibold, design: .rounded))
                     .fixedSize(horizontal: false, vertical: true)
                 Text(e.copy.body)
                     .font(.system(size: 13))
-                    .foregroundStyle(Palette.ink2)
+                    .foregroundStyle(Night.muted)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
@@ -95,8 +96,8 @@ struct LegacyBubble: View {
 
     private var warn: some View {
         HStack(spacing: 8) {
-            Image(systemName: "lock.fill").foregroundStyle(Palette.deep(id))
-            Text(e.warnText(id)).font(.system(size: 12.5)).foregroundStyle(Palette.ink2)
+            Image(systemName: "lock.fill").foregroundStyle(accent)
+            Text(e.warnText(id)).font(.system(size: 12.5)).foregroundStyle(Night.muted)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(.horizontal, 11)

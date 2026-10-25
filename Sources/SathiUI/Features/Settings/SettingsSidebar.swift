@@ -80,24 +80,21 @@ struct NewBadge: View {
 }
 
 struct OpenReportsRow: View {
+    @EnvironmentObject var e: Engine
+
     var body: some View {
-        Button {} label: {
+        Button { e.openReports() } label: {
             HStack {
                 Image(systemName: "chart.bar.fill")
                     .frame(width: UIMetrics.navIconSize)
                 Text(verbatim: "Open reports")
                     .font(Typography.rowLabel)
                 Spacer()
-                Text(verbatim: "Soon")
-                    .font(Typography.badge)
-                    .foregroundStyle(Night.muted)
-                    .padding(UIMetrics.badgePadding)
-                    .background(Capsule().strokeBorder(Night.fieldBorder, lineWidth: UIMetrics.cardBorder))
             }
-            .foregroundStyle(Night.muted)
+            .foregroundStyle(Night.text)
             .padding(UIMetrics.navPadding)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .disabled(true)
     }
 }

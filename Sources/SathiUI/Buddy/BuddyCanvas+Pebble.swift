@@ -4,14 +4,14 @@ extension BuddyCanvas {
     var faceInk: Color {
         switch kind {
         case .pebble: Night.calmGround
-        case .drop, .book: Palette.ink
+        case .drop, .book: BuddyInk.line
         }
     }
 
     var cheekFill: Color? {
         switch kind {
         case .pebble: Night.cheek.opacity(UIMetrics.pebbleCheekOpacity)
-        case .drop, .book: mood == .happy || mood == .cheer ? Palette.cheek.opacity(0.8) : nil
+        case .drop, .book: mood == .happy || mood == .cheer ? BuddyInk.cheek.opacity(0.8) : nil
         }
     }
 

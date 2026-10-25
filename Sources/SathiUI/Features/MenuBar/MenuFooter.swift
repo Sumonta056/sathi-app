@@ -11,8 +11,10 @@ struct MenuFooter: View {
                 .fill(Night.divider)
                 .frame(height: UIMetrics.dividerHeight)
             HStack {
-                icon("chart.bar.fill", "Reports") {}
-                    .disabled(true)
+                icon("chart.bar.fill", "Reports") {
+                    MenuBarWindow.close()
+                    e.openReports()
+                }
                 icon("gearshape.fill", "Settings") {
                     MenuBarWindow.close()
                     e.openSettings()

@@ -30,7 +30,7 @@ package final class SpyPresenter: ReminderPresenter {
         case showLock(HabitID), closeLock
         case showSession, closeSession
         case showCelebration, closeCelebration
-        case showSettings
+        case showSettings, showReports
         case showSnoozed(HabitID, Date)
     }
 
@@ -47,5 +47,6 @@ package final class SpyPresenter: ReminderPresenter {
     package func showCelebration() { calls.append(.showCelebration) }
     package func closeCelebration() { calls.append(.closeCelebration) }
     package func showSettings() { calls.append(.showSettings) }
+    package func showReports() { calls.append(.showReports) }
     package func showSnoozed(_ id: HabitID, until: Date) { calls.append(.showSnoozed(id, until)) }
 }

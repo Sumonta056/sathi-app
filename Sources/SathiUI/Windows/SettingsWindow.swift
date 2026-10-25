@@ -4,7 +4,7 @@ import SwiftUI
 
 @MainActor
 enum SettingsWindow {
-    static func make(engine: Engine, closeWatcher: SettingsWindowDelegate) -> NSWindow {
+    static func make(engine: Engine, closeWatcher: WindowCloseWatcher) -> NSWindow {
         let w = NSWindow(
             contentRect: NSRect(origin: .zero, size: UIMetrics.settingsSize),
             styleMask: [.titled, .closable, .miniaturizable, .fullSizeContentView],
@@ -23,14 +23,5 @@ enum SettingsWindow {
         w.contentView = NSHostingView(rootView: root)
         w.center()
         return w
-    }
-}
-
-@MainActor
-final class SettingsWindowDelegate: NSObject, NSWindowDelegate {
-    var onClose: () -> Void = {}
-
-    func windowWillClose(_: Notification) {
-        onClose()
     }
 }

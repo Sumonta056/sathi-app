@@ -16,12 +16,20 @@ struct EngineClockDayTests {
         #expect(h.engine.streak(.water) == 0)
     }
 
-    @Test func exportedAtIsAWholeSecondOfTheClock() throws {
+    @Test func exportedAtIsAWholeSecondOfTheClock() async throws {
         let h = EngineHarness(at: day(2026, 3, 4, 10).addingTimeInterval(0.75))
-        let spy = SpyFileExporter()
-        _ = h.engine.export(.json, to: spy)
-        let save = try #require(spy.saves.first)
-        let backup = try #require(DecodedBackup.decode(save.data))
+        let folder = makeTempFolder()
+        try makeFolder(folder)
+        let url = folder.appendingPathComponent("backup.json")
+        let outcome = await h.engine.export(
+            .json,
+            screen: h.engine.reportScreen(.day, selected: .water),
+            to: SpyFileExporter(url: url),
+            renderer: SpySummaryRenderer()
+        )
+        #expect(outcome == .saved(url))
+        let data = try #require(readData(url))
+        let backup = try #require(DecodedBackup.decode(data))
         #expect(backup.exportedAt == day(2026, 3, 4, 10))
     }
 }

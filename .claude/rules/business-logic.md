@@ -90,7 +90,12 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 3. Day report: buckets of `Limits.reportDayBucketHours`. Week: Monday to Sunday. Month: each calendar day.
 4. Average per day counts only days up to today, never future days.
 5. "% of goal" is capped at 100.
-6. Export formats: CSV (one row per event), JSON (full backup), PDF (one-page summary). CSV and JSON are built in Core. PDF is rendered in UI.
+6. Export formats in Core: CSV (one row per event), JSON (full backup). PDF (one-page summary) needs a UI renderer and has none now.
+7. The Reports window has no Export menu for now (2026-10-25: the macOS save panel keeps the app awake, see `performance.md`). Core export stays and is tested. When export comes back: it asks for the file location first. A cancel does nothing and shows nothing. A failed render or write shows an error. CSV and JSON are built and written off the main thread.
+8. The Reports window shows one tile per habit. A habit that is off shows a dimmed tile with "Off" and cannot be selected. Its history stays in the totals.
+9. The chart, the streak calendar, and the facts (best day, snoozes, longest streak) follow the selected tile. If the selected habit is off, the first enabled habit is used. If no habit is enabled, Water is used.
+10. The Day range has no goal line, because the goal is per day and the bars are 2-hour buckets.
+11. The streak calendar shows the current month. A day's shade comes from its total divided by the goal: none, under half, under the goal, goal met.
 
 ## Time
 

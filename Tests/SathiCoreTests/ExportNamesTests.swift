@@ -7,7 +7,11 @@ import Testing
 struct ExportNamesTests {
     private let zone = FixedZone.berlin
 
-    @Test(arguments: [(ExportFormat.csv, "Sathi-history-2026-03-04.csv"), (.json, "Sathi-backup-2026-03-04.json")])
+    @Test(arguments: [
+        (ExportFormat.csv, "Sathi-history-2026-03-04.csv"),
+        (.json, "Sathi-backup-2026-03-04.json"),
+        (.pdf, "Sathi-summary-2026-03-04.pdf")
+    ])
     func fileNameUsesTheLocalDate(_ format: ExportFormat, _ expected: String) {
         #expect(ExportNames.fileName(format, on: zone.date(2026, 3, 4, 0, 30), calendar: zone.calendar) == expected)
     }
@@ -25,5 +29,6 @@ struct ExportNamesTests {
     @Test func prefixesComeFromStorageKeys() {
         #expect(StorageKeys.exportHistoryPrefix == "Sathi-history-")
         #expect(StorageKeys.exportBackupPrefix == "Sathi-backup-")
+        #expect(StorageKeys.exportSummaryPrefix == "Sathi-summary-")
     }
 }
