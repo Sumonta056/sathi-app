@@ -44,7 +44,7 @@ extension MeditationPrefs {
         sessionMinutes = try c.value(.sessionMinutes, or: d.sessionMinutes)
         style = try c.known(.style, or: d.style)
         chime = try c.value(.chime, or: d.chime)
-        strictness = try c.value(.strictness, or: d.strictness)
+        strictness = try c.known(.strictness, or: d.strictness)
     }
 
     package func encode(to encoder: Encoder) throws {

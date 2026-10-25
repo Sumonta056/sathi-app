@@ -21,8 +21,8 @@ extension WaterPrefs {
         intervalMinutes = try c.value(.intervalMinutes, or: d.intervalMinutes)
         startMinutes = try c.value(.startMinutes, or: d.startMinutes)
         endMinutes = try c.value(.endMinutes, or: d.endMinutes)
-        strictness = try c.value(.strictness, or: d.strictness)
-        container = try c.value(.container, or: d.container)
+        strictness = try c.known(.strictness, or: d.strictness)
+        container = try c.known(.container, or: d.container)
         bottleSizeGlasses = try c.value(.bottleSizeGlasses, or: d.bottleSizeGlasses)
         dailyGoalGlasses = try c.value(.dailyGoalGlasses, or: d.dailyGoalGlasses)
     }

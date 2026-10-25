@@ -82,6 +82,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 5. Every stored time has a precision of 1 second (`Date.wholeSecond`), so memory and disk hold the same value.
 6. A new field gets a default value. A breaking change bumps `schemaVersion` and adds a migration with a fixture test.
 7. The UserDefaults key `sathi.state.v1` is read by `LegacyMigrator` until the `migrated-v1` marker exists. It is kept as a backup for one release.
+8. A history event that this version cannot read (for example, a habit or event kind from a newer version) is not shown and does not count. It stays in its month file unchanged, and every later write of that month keeps it. The other events of the month load as usual. A field that this version does not know in a readable event (for example, a note from a newer version) is also kept and written back.
 
 ## Stats and reports
 

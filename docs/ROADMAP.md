@@ -88,6 +88,10 @@ Spec: `docs/specs/phase-6-claude-setup.md`
 - [x] `ui-verifier` agent
 - [x] Update `test-writer`, `write-unit-tests`, `perf-auditor`, `scripts/perf.sh`
 
+Spec 6b: `docs/specs/phase-6b-tolerant-decoding.md`
+
+- [x] 6b: unknown enum values fall back to defaults; unknown history events and unknown event fields are kept and written back
+
 ## Phase 7: Docs and release check
 
 - [ ] Update `README.md` and `CLAUDE.md`
@@ -95,7 +99,9 @@ Spec: `docs/specs/phase-6-claude-setup.md`
 
 ## Later
 
-- Phase 6 review: enum fields decode with `value`, not `known` (`strictness` in all habit prefs, `container` in `WaterPrefs`, `habit` and `kind` in `HistoryEvent`). A file from a newer version moves the whole file to `.corrupt` and resets it. This breaks business rule Schedules 9. See `.claude/rules/storage.md` rule 5
+- 6b: `RawJSON` stores numbers as `Double`; integers above 2^53 and `-0.0` are not written back exactly
+- 6b: a written month file lists known events first, then unknown events (not sorted by date; Sathi sorts on read)
+- 6b: each month file is decoded twice and each event encoded once more (about 3–4 ms for a few hundred events)
 - Phase 6: `schemaVersion` is written but never read. The first schema bump must add a version check in `JSONFiles.load`
 - 5f: breathing sessions end mid-cycle; the last ~12 s repeat the last round (user: accept for now)
 - 5f: `BreatheView` reads the breathing style live; a style change mid-session jumps the phase (store it at session start)

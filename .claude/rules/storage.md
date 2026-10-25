@@ -9,6 +9,8 @@ paths:
   - "Tests/SathiCoreTests/LegacyMigrator*Tests.swift"
   - "Tests/SathiCoreTests/LegacyV1Fixture.swift"
   - "Tests/SathiCoreTests/LenientPrefsDecodingTests.swift"
+  - "Tests/SathiCoreTests/TolerantPrefsDecodingTests.swift"
+  - "Tests/SathiCoreTests/RawJSONTests.swift"
   - "Tests/SathiCoreTests/PrefsCodingTests.swift"
   - "Tests/SathiCoreTests/WholeSecondTests.swift"
   - "Tests/SathiCoreTests/GregorianTests.swift"
@@ -63,17 +65,14 @@ The base folder is `~/Library/Application Support/Sathi/` (`AppEnvironment.base`
 
 ## 5. Decoding defaults
 
-- Every stored model has a custom `init(from:)` that starts from `Self()` and reads each key with a fallback. `HistoryEvent` is the exception: it decodes `date`, `habit`, and `kind` strictly. See the list of strict fields below.
+- Every stored model has a custom `init(from:)` that starts from `Self()` and reads each key with a fallback. `HistoryEvent` is the exception: it decodes `date`, `habit`, and `kind` strictly. `MonthEvents` keeps an event that fails as `RawJSON` and writes it back unchanged (business rule History and storage 8).
 - Use the helpers in `Models/DecodingDefaults.swift`:
   - `value(_:or:)` for a plain field. A missing key gives the default.
   - `known(_:or:)` for an enum. An unknown raw value gives the default.
   - `knownSet(_:or:keepsEmpty:)` for a set of enums. It drops unknown values.
 - Use `known` or `knownSet` for every enum field that a newer version can extend (business rule Schedules 9).
 - A key with the wrong JSON type still throws. The whole file then fails and goes to `.corrupt` (rule 6).
-- These enum fields use `value`, not `known`, today. An unknown raw value fails the whole file:
-  - `strictness` in `WaterPrefs`, `ReadingPrefs`, `MeditationPrefs`.
-  - `container` in `WaterPrefs`.
-  - `habit` and `kind` in `HistoryEvent` (one bad event fails its month).
+- A month file is one JSON array. `MonthEvents` splits it into known events, the extra keys of each known event (`extras`, same order as `events`), and unknown `RawJSON` values. It writes all three back. Never drop extras or unknown values. The order of `extras` holds only because `FileHistoryStore` never changes or removes a stored event; keep it append-only. Tests: `FileHistoryUnknownEventsTests`, `TolerantPrefsDecodingTests`.
 
 ## 6. Corrupt and unreadable files
 

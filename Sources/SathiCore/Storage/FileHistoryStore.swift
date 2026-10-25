@@ -6,6 +6,8 @@ package final class FileHistoryStore: HistoryStore, @unchecked Sendable {
     private let delay: TimeInterval
     private let queue = DispatchQueue(label: "sathi.history-store")
     private var cache: [String: [HistoryEvent]] = [:]
+    private var unknown: [String: [RawJSON]] = [:]
+    private var extras: [String: [[String: RawJSON]]] = [:]
     private var dirty: Set<String> = []
     private var blocked: Set<String> = []
     private var currentMonth: String?
@@ -60,22 +62,33 @@ package final class FileHistoryStore: HistoryStore, @unchecked Sendable {
     @discardableResult
     private func writeDirty() -> Bool {
         isScheduled = false
-        for month in dirty where !blocked.contains(month) && JSONFiles.write(cache[month] ?? [], to: url(month)) {
+        for month in dirty where !blocked.contains(month) && JSONFiles.write(contents(month), to: url(month)) {
             dirty.remove(month)
         }
         cache = cache.filter { $0.key == currentMonth || dirty.contains($0.key) }
+        unknown = unknown.filter { cache[$0.key] != nil }
+        extras = extras.filter { cache[$0.key] != nil }
         return dirty.isEmpty
     }
 
     private func readMonth(_ month: String) -> [HistoryEvent] {
+        unknown[month] = []
+        extras[month] = []
         guard !blocked.contains(month) else { return [] }
-        switch JSONFiles.load([HistoryEvent].self, from: url(month)) {
+        switch JSONFiles.load(MonthEvents.self, from: url(month)) {
         case .missing: return []
-        case let .value(events): return events
+        case let .value(file):
+            unknown[month] = file.unknown
+            extras[month] = file.extras
+            return file.events
         case .unreadable:
             blocked.insert(month)
             return []
         }
+    }
+
+    private func contents(_ month: String) -> MonthEvents {
+        MonthEvents(events: cache[month] ?? [], extras: extras[month] ?? [], unknown: unknown[month] ?? [])
     }
 
     private func url(_ month: String) -> URL {

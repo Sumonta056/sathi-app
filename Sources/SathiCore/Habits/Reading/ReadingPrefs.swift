@@ -26,7 +26,7 @@ extension ReadingPrefs {
         enabled = try c.value(.enabled, or: d.enabled)
         timeMinutes = try c.value(.timeMinutes, or: d.timeMinutes)
         sessionMinutes = try c.value(.sessionMinutes, or: d.sessionMinutes)
-        strictness = try c.value(.strictness, or: d.strictness)
+        strictness = try c.known(.strictness, or: d.strictness)
         weekdays = try c.knownSet(.weekdays, or: d.weekdays, keepsEmpty: false)
         reminderStyle = try c.known(.reminderStyle, or: d.reminderStyle)
     }
