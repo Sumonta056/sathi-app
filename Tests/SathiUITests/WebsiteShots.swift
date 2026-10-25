@@ -61,7 +61,7 @@ struct WebsiteShots {
 
     @Test func settings() throws {
         let h = harness()
-        try save(SettingsView(tab: .habit(.water)), "settings", h)
+        try save(SettingsView(tab: .habit(.water)).frame(height: UIMetrics.settingsSize.height), "settings", h)
     }
 
     @Test func reports() throws {

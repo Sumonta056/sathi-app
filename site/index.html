@@ -88,7 +88,7 @@
           {
             "@type": "Question",
             "name": "Can Sathi lock my screen?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Only for water, and only if you pick Strict. After 2 snoozes a full-screen lock asks you to drink. You unlock it by holding a button for 3 seconds, and there is always an emergency skip. Reading and meditation never lock the screen." }
+            "acceptedAnswer": { "@type": "Answer", "text": "Only for water and meditation, and only if you pick Strict. After 2 snoozes a full-screen lock asks you to drink or to breathe. You unlock it by holding a button for 3 seconds, and there is always an emergency skip. Only one lock shows at a time, and reading never locks the screen." }
           },
           {
             "@type": "Question",
@@ -221,7 +221,7 @@
             </figure>
             <figure class="g-panel pos-full" role="tabpanel" id="p-water-lock" aria-labelledby="t-water-lock" hidden>
               <img src="screenshots/water-lock.png" alt="Strict full-screen lock: Fota is drying up, go get some water, with a Hold button and an Emergency skip link" width="2560" height="1600" loading="lazy" />
-              <figcaption><b>Strict lock.</b> After 2 snoozes, the screen pauses. Drink, then hold the button for 3 seconds. Emergency skip is always there. Water only.</figcaption>
+              <figcaption><b>Strict lock.</b> After 2 snoozes, the screen pauses. Drink, then hold the button for 3 seconds. Emergency skip is always there. Water and meditation.</figcaption>
             </figure>
             <figure class="g-panel pos-corner" role="tabpanel" id="p-water-thanks" aria-labelledby="t-water-thanks" style="--w: 33.9%" hidden>
               <img src="screenshots/water-thanks.png" alt="Water thank-you: Ahh, refreshing, 5 of 8 glasses today, and a See you in 2 hours button" width="976" height="746" loading="lazy" />
@@ -245,7 +245,7 @@
             </figure>
             <figure class="g-panel pos-corner" role="tabpanel" id="p-meditation" aria-labelledby="t-meditation" style="--w: 31.1%" hidden>
               <img src="screenshots/meditation.png" alt="Meditation invite from Shanti: 5 minutes of box breathing, with Breathe with me and In 5 min buttons" width="896" height="802" loading="lazy" />
-              <figcaption><b>Invite.</b> Shanti asks at the time slots you pick: morning, afternoon, or evening. It never takes focus.</figcaption>
+              <figcaption><b>Invite.</b> Shanti asks every hour between your start and end time, until you reach your daily goal. It never takes focus.</figcaption>
             </figure>
             <figure class="g-panel pos-center narrow-shot" role="tabpanel" id="p-meditation-breathe" aria-labelledby="t-meditation-breathe" style="--w: 31.1%" hidden>
               <img src="screenshots/meditation-breathe.png" alt="Box breathing session: a large circle, the word Rest, round 4 of 18, and a Stop button" width="896" height="1080" loading="lazy" />
@@ -264,7 +264,7 @@
               <figcaption><b>Reports.</b> Each habit by day, week, or month, with your best day and longest streak.</figcaption>
             </figure>
             <figure class="g-panel pos-center" role="tabpanel" id="p-settings" aria-labelledby="t-settings" style="--w: 59.7%" hidden>
-              <img src="screenshots/settings.png" alt="Water settings: reminder interval, active hours, glass or sip bottle, a daily goal of 8 glasses, and Gentle, Nudgy, or Strict" width="1720" height="1240" loading="lazy" />
+              <img src="screenshots/settings.png" alt="Water settings: reminder interval, active hours, glass or sip bottle, a daily goal of 8 glasses, and Gentle, Nudgy, or Strict" width="1780" height="1240" loading="lazy" />
               <figcaption><b>Settings.</b> One page per buddy. Times, goals, weekdays, and how firm each buddy is.</figcaption>
             </figure>
           </div>
@@ -317,12 +317,12 @@
         <div class="wrap feature">
           <div class="f-txt">
             <h3><span class="dot calm"></span>Shanti, your meditation buddy</h3>
-            <p>A guided breathing session at the time slots you pick. Off by default. Turn it on in Settings.</p>
+            <p>Short guided breathing sessions until you reach your daily goal. Off by default. Turn it on in Settings.</p>
             <ul class="checks">
               <li>Box, relax, or even breathing patterns</li>
-              <li>Morning, afternoon, and evening slots</li>
-              <li>Pick the session length and an optional chime</li>
-              <li>Never locks the screen</li>
+              <li>A daily goal of 5, 10, or 20 minutes</li>
+              <li>Sessions of 1, 2, or 5 minutes, every 30 to 120 minutes</li>
+              <li>Gentle, Nudgy, or Strict</li>
             </ul>
             <a class="more" href="#gallery" data-show="meditation-breathe">See the breathing session →</a>
           </div>
@@ -354,13 +354,13 @@
             <p>Turn a buddy on or off with one switch, and tune it to your day.</p>
             <ul class="checks">
               <li>Interval, active hours, container, and goal</li>
-              <li>Reading weekdays, meditation time slots</li>
+              <li>Reading weekdays, meditation goal and hours, times in 15-minute steps</li>
               <li>Your name, snooze length, sound, and open at login</li>
             </ul>
             <a class="more" href="#gallery" data-show="settings">See Settings →</a>
           </div>
           <div class="f-shot framed">
-            <img src="screenshots/settings.png" alt="Sathi water settings" width="1720" height="1240" loading="lazy" />
+            <img src="screenshots/settings.png" alt="Sathi water settings" width="1780" height="1240" loading="lazy" />
           </div>
         </div>
       </section>
@@ -377,7 +377,7 @@
             <tbody>
               <tr><td><b>Gentle</b></td><td>A reminder each time. It never stays on top.</td><td>Water, reading, meditation</td></tr>
               <tr><td><b>Nudgy</b></td><td>After 1 snooze: stays on top, wiggles, and has no close button.</td><td>Water, reading, meditation</td></tr>
-              <tr><td><b>Strict</b></td><td>After 1 snooze: Nudgy. After 2 snoozes: a full-screen lock. Hold 3 seconds to unlock. Emergency skip is always there.</td><td>Water only</td></tr>
+              <tr><td><b>Strict</b></td><td>After 1 snooze: Nudgy. After 2 snoozes: a full-screen lock. Hold 3 seconds to unlock. Emergency skip is always there. One lock at a time.</td><td>Water, meditation</td></tr>
               <tr><td><b>Pause</b></td><td>Stop all reminders for 30 minutes, 1 hour, or the rest of the day from the menu bar.</td><td>All</td></tr>
             </tbody>
           </table>
@@ -471,7 +471,7 @@ cd sathi-app
           </details>
           <details>
             <summary>Can Sathi lock my screen?</summary>
-            <p>Only for water, and only if you pick Strict. After 2 snoozes a full-screen lock asks you to drink. You unlock it by holding a button for 3 seconds, and there is always an emergency skip. Reading and meditation never lock the screen.</p>
+            <p>Only for water and meditation, and only if you pick Strict. After 2 snoozes a full-screen lock asks you to drink or to breathe. You unlock it by holding a button for 3 seconds, and there is always an emergency skip. Only one lock shows at a time, and reading never locks the screen.</p>
           </details>
           <details>
             <summary>Does Sathi slow down my Mac?</summary>

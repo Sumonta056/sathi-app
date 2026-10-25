@@ -4,6 +4,21 @@ All user-visible changes to Sathi. Each version has a tag `vX.Y.Z` and a GitHub 
 
 ## [Unreleased]
 
+### Added
+
+- Meditation has a daily goal (5, 10, or 20 minutes), short sessions (1, 2, or 5 minutes), a reminder interval, and active hours. Shanti stops for the day when you reach the goal. The morning, afternoon, and evening slots are gone; your old goal stays.
+- Meditation can use Strict: after 2 snoozes, a full-screen lock starts a breathing session.
+- A new time picker: hours, minutes in 15-minute steps, and AM or PM, in one small popover.
+
+### Changed
+
+- Each buddy reminds you on its own. Two reminders can show at once, stacked in the top-right corner of the display with your mouse pointer. Only one lock shows at a time.
+
+### Fixed
+
+- On macOS 27, no reminder showed, and "Show a reminder now" did nothing.
+- Settings: chips, the sidebar, and the daily goal no longer wrap or clip, option cards have the same height, and the window has no empty strip at the bottom.
+
 ## [2.0.1] - 2026-10-25
 
 ### Added
