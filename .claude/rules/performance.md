@@ -5,14 +5,14 @@ paths:
 
 # Performance rules
 
-Budget (checked by `./scripts/perf.sh` on the installed release build):
+Budget (checked by `./scripts/perf.sh` on the installed release build; the after-window row by `./scripts/perf.sh --windows`):
 
 | Metric | Budget | Measured on 2026-10-25 |
 |---|---|---|
 | Idle CPU | < 1% | 0.0% |
 | Memory footprint, fresh idle | < 40 MB | 17 MB |
 | Memory footprint, after any window opened and closed | < 50 MB | 40–42 MB |
-| Idle wakeups (also after windows close) | < 10 / min | 0–6 / min |
+| Idle wakeups | < 10 / min | 0–6 / min |
 | CPU with the Reports window open | < 10% | 0.3% |
 
 The first SwiftUI window (Settings or Reports) loads the window frameworks, fonts, and symbols once, about 23 MB. A process cannot unload them, so memory stays there after the close. A second window adds only 1–2 MB. Swift Charts is not the cost (Settings alone costs the same). Only a separate helper process could give it back; not worth it for now.
@@ -44,4 +44,5 @@ Before the refactor the app used 27–36% CPU and 66 MB. Do not let it go back.
 1. `./build.sh --install`
 2. Wait 10 s, then `./scripts/perf.sh`.
 3. Open the menu panel, wait, close it. Run `./scripts/perf.sh` again. CPU must go back to ~0%.
-4. To find a hotspot: `sample $(pgrep -x Sathi) 3 | grep "(in Sathi)" | sort | uniq -c | sort -rn | head`.
+4. After a window change: `./scripts/perf.sh --windows`. It asks you two times to open and close Reports and Settings. Each reading must be < 50 MB, and cycle 2 must add < 3 MB to cycle 1.
+5. To find a hotspot: `sample $(pgrep -x Sathi) 3 | grep "(in Sathi)" | sort | uniq -c | sort -rn | head`.

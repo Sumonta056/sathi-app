@@ -22,7 +22,7 @@ Framework: Swift Testing (`import Testing`, `@Suite`, `@Test`, `#expect`). UI: V
 
 - Build an engine with `EngineHarness(at: day(2026, 3, 4, 10)) { $0.prefs.… = … }`. It wires fakes and calls `tick()` once.
 - Move time with `h.advance(minutes:)`. Never sleep. Never use `Date()` in a test.
-- Assert window effects through `h.presenter.calls`, sounds through `h.sound.played`, saves through `h.store.state`.
+- Assert window effects through `h.presenter.calls`, sounds through `h.sound.played`, saves through `h.store.prefs` and `h.store.live`.
 - UI test: `try View().environmentObject(h.engine).inspect().find(text:)` or `.find(button:).tap()`, then assert on `h.engine`.
 - ViewInspector does not run `onAppear` or update `@State` after a tap. Test state-driven branches by building the view in that state, or move the decision into a static function and test it directly (see `ReadingWeekRow.isLit`).
 - Use parameterized tests (`@Test(arguments:)`) for tables of inputs.

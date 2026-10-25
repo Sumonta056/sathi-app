@@ -80,11 +80,13 @@ Review fixes 5a–5c: `docs/specs/phase-5abc-review-fixes.md` (done)
 
 ## Phase 6: Claude setup
 
-- [ ] Rewrite `add-habit` skill for modules
-- [ ] `.claude/rules/storage.md`
-- [ ] `data-migration` skill
-- [ ] `ui-verifier` agent
-- [ ] Update `test-writer`, `write-unit-tests`, `perf-auditor`, `scripts/perf.sh`
+Spec: `docs/specs/phase-6-claude-setup.md`
+
+- [x] Rewrite `add-habit` skill for modules
+- [x] `.claude/rules/storage.md`
+- [x] `data-migration` skill
+- [x] `ui-verifier` agent
+- [x] Update `test-writer`, `write-unit-tests`, `perf-auditor`, `scripts/perf.sh`
 
 ## Phase 7: Docs and release check
 
@@ -93,6 +95,8 @@ Review fixes 5a–5c: `docs/specs/phase-5abc-review-fixes.md` (done)
 
 ## Later
 
+- Phase 6 review: enum fields decode with `value`, not `known` (`strictness` in all habit prefs, `container` in `WaterPrefs`, `habit` and `kind` in `HistoryEvent`). A file from a newer version moves the whole file to `.corrupt` and resets it. This breaks business rule Schedules 9. See `.claude/rules/storage.md` rule 5
+- Phase 6: `schemaVersion` is written but never read. The first schema bump must add a version check in `JSONFiles.load`
 - 5f: breathing sessions end mid-cycle; the last ~12 s repeat the last round (user: accept for now)
 - 5f: `BreatheView` reads the breathing style live; a style change mid-session jumps the phase (store it at session start)
 - 5d: `goalText(.water)` uses `Int(dailyGoalGlasses)`; a fractional goal reads "of 7" next to 8 drops

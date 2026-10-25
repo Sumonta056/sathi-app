@@ -172,6 +172,8 @@ Each slice is its own commit, so the user gets usable screens early (the new Set
 
 ## Phase 6: Claude setup
 
+Status (2026-10-25): done, reviewed (1 blocker, 5 major fixed), not committed. Spec `docs/specs/phase-6-claude-setup.md`. Design PNGs in `docs/design/` (render steps in its README). A dry run of `/add-habit stretch` found 16 gaps in the skill; all fixed. Tests 780 (UI 241, Core 539), lint OK. Next: Phase 7.
+
 - Rewrite `.claude/skills/add-habit/SKILL.md` for the module layout: one folder per habit in Core (`Habits/<Name>/`: prefs, rules) and UI (`Features/<Name>/`: settings tab, reminder view), the exhaustive switches the compiler finds, `Prefs`/`scheduleKey`/decoding defaults, Copywriter, Palette, BuddyKind, tests per step.
 - New `.claude/rules/storage.md` (paths `Sources/SathiCore/Storage/**`, `Models/**`): file layout, `schemaVersion`, whole-second times, decoding defaults, migration marker, never overwrite unreadable files, retry failed writes, fixture tests for every migration.
 - New skill `.claude/skills/data-migration/SKILL.md`: how to add a field or bump the schema, with a fixture test and a re-run test.

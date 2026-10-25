@@ -16,22 +16,36 @@ Then read `.claude/skills/write-unit-tests/SKILL.md` and `.claude/rules/testing.
 Your brief gives you the approved plan and the test paths. Also read:
 
 1. `CLAUDE.md`.
-2. The fakes in `Tests/SathiTestSupport/`, so that you reuse them.
-3. The existing suite you add to.
-4. The current source file, if it exists. Use it only to learn names and structure. Never copy its outputs into expected values.
+2. The fakes and helpers in `Tests/SathiTestSupport/`, so that you reuse them: `EngineHarness`, `FakeClock`, `SpyPresenter`, `SpySoundPlayer`, `InMemoryStateStore`, `InMemoryHistoryStore`, `SpyFileExporter`, `FixedZone`, and the file helpers in `TestFiles.swift`.
+3. `.claude/rules/storage.md` when the change touches saved data or files.
+4. The existing suite you add to.
+5. The current source file, if it exists. Use it only to learn names and structure. Never copy its outputs into expected values.
 
 ## Steps
 
 1. List each behavior to test. Trace each one to a line of the plan.
-2. Write the tests.
-3. Run `./scripts/test.sh "<Suite name>"`.
-4. Check that each test fails for the right reason: the behavior is missing or wrong. A compile error from a typo or a wrong import is your bug. Fix it and run again. A missing API that the plan names is expected; report it.
-5. If a test passes already, the behavior exists (say so) or the test is too weak (fix it).
-6. Run `./scripts/lint.sh` and fix lint errors in your files.
+2. Pick the pattern from `write-unit-tests`:
+   - Engine behavior: `EngineHarness`.
+   - Files: a temp folder from `makeTempFolder()`, `delay: 3600`, and `flush()` before you read the file back.
+   - Write or read failures: `setPermissions` with a `defer` restore. Assert no overwrite and a write on the next `flush()`.
+   - History logic: `InMemoryHistoryStore`. Export: `SpyFileExporter`.
+   - Day starts, DST, month edges, file names: `FixedZone`. Never the system time zone.
+3. Write the tests.
+4. Run `./scripts/test.sh "<Suite name>"`.
+5. Check that each test fails for the right reason: the behavior is missing or wrong. A compile error from a typo or a wrong import is your bug. Fix it and run again.
+6. If the plan names an API that does not exist yet, the suite does not build. A build error does not prove red. Prove red in a scratch copy:
+   1. Copy the repo to your scratchpad. Never stub in the real repo.
+      `rsync -a --exclude .build --exclude .git <repo>/ <scratchpad>/sathi-red/`
+   2. In the copy, add the smallest stub for each missing API. Use the signature from the plan. Return an empty or default value (`[]`, `nil`, `0`, `Prefs()`). Do not use `fatalError`: a crash does not prove red.
+   3. Run the suite in the copy: `swift test --package-path <scratchpad>/sathi-red --filter "<Suite name>"`.
+   4. Confirm that every new test builds and fails on an `#expect` or `#require`. A build error or a crash is not red. Fix the test or the stub and run again.
+   5. Delete the copy. Never move a stub into `Sources/`.
+7. If a test passes already, the behavior exists (say so) or the test is too weak (fix it).
+8. Run `./scripts/lint.sh` and fix lint errors in your files.
 
 ## Rules
 
-- Write only under `Tests/`. Never touch `Sources/`, docs, or config.
+- Write only under `Tests/` in the repo. Never touch `Sources/`, docs, or config. Stubs go only in the scratch copy (Step 6).
 - Never weaken, skip, or delete a test to make it pass.
 - Expected values come from the plan or the requirement, not from running the code.
 - Test behavior a caller or user can see: Engine state, presenter calls, sounds, saved data, visible text.
@@ -40,4 +54,4 @@ Your brief gives you the approved plan and the test paths. Also read:
 
 ## Report
 
-Return: the files you wrote, each test name with the behavior it checks, and the red output (one line per failing test with its reason).
+Return: the files you wrote, each test name with the behavior it checks, and the red output (one line per failing test with its reason). If you used a scratch copy, list each missing API and the stub signature you added there.
