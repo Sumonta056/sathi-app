@@ -71,7 +71,7 @@ A hook blocks Claude's commits on `main`. Work on a branch, open a PR, and let t
 |---|---|---|
 | Tag does not match Info.plist | The version bump was not on `main` before the tag | Do not move the tag. Fix `main` and release the next patch. |
 | CHANGELOG.md has no section | The heading is not `## [X.Y.Z]` | Same as above. |
-| Tests fail on the runner | A toolchain difference on `macos-15` | Read the log. Fix on a branch, then release the next patch. |
+| Tests fail on the runner | A toolchain difference on `macos-26` (Xcode 26) | Read the log. Fix on a branch, then release the next patch. |
 | `gh release create` fails with 403 | The workflow token has no write access | Check repo Settings → Actions → General → Workflow permissions: "Read and write". Then `gh run rerun <id> --failed`. |
 
 Never delete or force-push a published tag without the user's approval of that exact action.
