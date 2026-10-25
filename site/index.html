@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sathi: free water, reading, and meditation reminder for Mac</title>
+    <meta
+      name="description"
+      content="Sathi is a free, open-source menu bar app for macOS. Three buddies remind you to drink water, read, and meditate. Gentle bubbles, a calm corner popup, habit streaks, and weekly reports. All data stays on your Mac."
+    />
+    <meta
+      name="keywords"
+      content="water reminder mac, drink water reminder, hydration reminder macOS, menu bar app, habit tracker mac, reading reminder, meditation reminder, break reminder, wellbeing app, free mac app, Sathi"
+    />
+    <meta name="author" content="Sumonta Saha Mridul" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://sumonta056.github.io/sathi-app/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Sathi" />
+    <meta property="og:title" content="Sathi: a gentle water, reading, and meditation reminder for your Mac" />
+    <meta
+      property="og:description"
+      content="Three friendly buddies in your menu bar remind you to drink water, read, and breathe. Free, open source, and private."
+    />
+    <meta property="og:url" content="https://sumonta056.github.io/sathi-app/" />
+    <meta property="og:image" content="https://sumonta056.github.io/sathi-app/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Sathi menu bar popover with water, reading, and meditation progress, next to the water reminder bubble" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sathi: water, reading, and meditation reminder for Mac" />
+    <meta
+      name="twitter:description"
+      content="Three friendly buddies in your Mac menu bar remind you to drink water, read, and breathe. Free and open source."
+    />
+    <meta name="twitter:image" content="https://sumonta056.github.io/sathi-app/og.png" />
+    <meta name="theme-color" content="#121826" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="icon.png" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Sathi",
+        "alternateName": "Sathi water reminder",
+        "applicationCategory": "HealthApplication",
+        "applicationSubCategory": "Habit tracker",
+        "operatingSystem": "macOS 13 or later",
+        "description": "A free, open-source macOS menu bar app. Three buddies remind you to drink water, read, and meditate, with gentle escalation, streaks, and weekly reports. All data stays on your Mac.",
+        "url": "https://sumonta056.github.io/sathi-app/",
+        "downloadUrl": "https://github.com/Sumonta056/sathi-app/releases/latest/download/Sathi.dmg",
+        "image": "https://sumonta056.github.io/sathi-app/og.png",
+        "screenshot": "https://sumonta056.github.io/sathi-app/screenshots/menu-bar.png",
+        "softwareVersion": "2.0.1",
+        "license": "https://opensource.org/licenses/MIT",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": { "@type": "Person", "name": "Sumonta Saha Mridul", "url": "https://github.com/Sumonta056" },
+        "codeRepository": "https://github.com/Sumonta056/sathi-app"
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is Sathi free?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Sathi is free and open source under the MIT license. There is no account, no subscription, and no ads." }
+          },
+          {
+            "@type": "Question",
+            "name": "Does Sathi send my data anywhere?",
+            "acceptedAnswer": { "@type": "Answer", "text": "No. Sathi makes no network requests. Your settings and history stay in ~/Library/Application Support/Sathi/ on your Mac." }
+          },
+          {
+            "@type": "Question",
+            "name": "Which Macs can run Sathi?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Any Mac with macOS 13 Ventura or newer, on Apple silicon or Intel." }
+          },
+          {
+            "@type": "Question",
+            "name": "Why does macOS say it cannot check Sathi for malware?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Sathi is not notarized by Apple. Open System Settings, then Privacy & Security, and click Open Anyway next to Sathi. You do this once." }
+          },
+          {
+            "@type": "Question",
+            "name": "Can Sathi lock my screen?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Only for water, and only if you pick Strict. After 2 snoozes a full-screen lock asks you to drink. You unlock it by holding a button for 3 seconds, and there is always an emergency skip. Reading and meditation never lock the screen." }
+          },
+          {
+            "@type": "Question",
+            "name": "Does Sathi slow down my Mac?",
+            "acceptedAnswer": { "@type": "Answer", "text": "No. Sathi uses less than 1% CPU when idle, under 40 MB of memory, and has no repeating 1-second timers." }
+          }
+        ]
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" />
+    <link rel="stylesheet" href="site.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="top">
+      <div class="wrap top-in">
+        <a class="brand" href="./">
+          <img src="icon.png" alt="" width="32" height="32" />
+          <span>Sathi</span>
+        </a>
+        <nav class="top-nav" aria-label="Sections">
+          <a href="#buddies">Buddies</a>
+          <a href="#features">Features</a>
+          <a href="#escalation">Reminders</a>
+          <a href="#install">Install</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+        <a class="btn ghost sm" href="https://github.com/Sumonta056/sathi-app" rel="noopener">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"
+            />
+          </svg>
+          GitHub
+        </a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <div class="wrap hero-in">
+          <div class="hero-txt">
+            <p class="eyebrow">Free macOS menu bar app</p>
+            <h1>Drink water, read, and breathe, <span class="grad">with a little help.</span></h1>
+            <p class="lead">
+              <strong>Sathi</strong> lives in your Mac menu bar. Three friendly buddies remind you to
+              <span class="c-water">drink water</span>, <span class="c-read">read</span>, and
+              <span class="c-calm">meditate</span>. They stay gentle, and they get firmer only if you keep saying "later".
+            </p>
+            <div class="cta">
+              <a class="btn primary" href="https://github.com/Sumonta056/sathi-app/releases/latest/download/Sathi.dmg">
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.8 1.2 1.8 2.6 3.1 2.5 1.2 0 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.6-1-2.6-4.2ZM13.9 5c.7-.8 1.1-1.9 1-3-1 0-2.1.6-2.8 1.4-.6.7-1.2 1.8-1 2.9 1 .1 2.1-.5 2.8-1.3Z"/></svg>
+                Download for Mac
+              </a>
+              <a class="btn ghost" href="https://github.com/Sumonta056/sathi-app" rel="noopener">View the source</a>
+            </div>
+            <p class="dl-meta">Version 2.0.1 · macOS 13 Ventura or newer · Apple silicon and Intel</p>
+            <ul class="facts">
+              <li><b>0</b> accounts or ads</li>
+              <li><b>0</b> bytes sent off your Mac</li>
+              <li><b>&lt;1%</b> CPU when idle</li>
+              <li><b>MIT</b> open source</li>
+            </ul>
+          </div>
+          <figure class="hero-shot">
+            <img
+              src="screenshots/menu-bar.png"
+              alt="Sathi menu bar popover: good morning greeting, a 9-day streak, progress rings for water, reading, and meditation, and buttons to pause reminders"
+              width="760"
+              height="978"
+              fetchpriority="high"
+            />
+          </figure>
+        </div>
+      </section>
+
+      <section id="buddies" class="buddies" aria-labelledby="buddies-h">
+        <div class="wrap">
+          <p class="eyebrow">Meet the buddies</p>
+          <h2 id="buddies-h">Three small habits, three small friends</h2>
+          <div class="buddy-grid">
+            <article class="buddy water">
+              <h3>Fota <span>water</span></h3>
+              <p>A reminder every 2 hours between 9:30 and 18:30. Log a few sips, half, or a full glass. The daily goal is 8 glasses.</p>
+            </article>
+            <article class="buddy read">
+              <h3>Boi <span>reading</span></h3>
+              <p>A calm popup in the top-right corner at 22:00. It never takes focus from your work. Start a 15-minute timer, and Boi counts the minutes.</p>
+            </article>
+            <article class="buddy calm">
+              <h3>Shanti <span>meditation</span></h3>
+              <p>A guided breathing session in the morning, afternoon, or evening. Pick box, relax, or even breathing. Off by default.</p>
+            </article>
+          </div>
+          <p class="note">You can change every time, interval, goal, and weekday in Settings.</p>
+        </div>
+      </section>
+
+      <section id="features" class="features" aria-labelledby="feat-h">
+        <div class="wrap">
+          <p class="eyebrow">Features</p>
+          <h2 id="feat-h">Kind reminders that respect your focus</h2>
+
+          <div class="feature">
+            <div class="f-txt">
+              <h3>A water reminder you can answer in one click</h3>
+              <p>Fota asks, you answer. Pick how much you drank, or snooze for 5 minutes.</p>
+              <ul>
+                <li>Log a few sips, half a glass, or a full glass</li>
+                <li>Use a sip bottle and drag its water line instead</li>
+                <li>No answer in 5 minutes counts as a snooze</li>
+              </ul>
+            </div>
+            <figure class="f-shot">
+              <img src="screenshots/water-bubble.png" alt="Water reminder bubble from Fota the water drop: buttons for a few sips, half, and a full glass, a glass or sip bottle switch, and a snooze button" width="976" height="860" loading="lazy" />
+            </figure>
+          </div>
+
+          <div class="feature flip">
+            <div class="f-txt">
+              <h3>A reading popup that never steals focus</h3>
+              <p>Boi waits quietly in the corner while you finish your sentence.</p>
+              <ul>
+                <li>Shows on the weekdays you pick</li>
+                <li>The timer runs in a small pill in the same corner</li>
+                <li>Skips the day when you already met your goal</li>
+              </ul>
+            </div>
+            <figure class="f-shot">
+              <img src="screenshots/reading-corner.png" alt="Reading corner popup from Boi the book: 15 calm minutes with your book, with Start reading and In 5 min buttons" width="756" height="348" loading="lazy" />
+            </figure>
+          </div>
+
+          <div class="feature">
+            <div class="f-txt">
+              <h3>Guided breathing, a few minutes at a time</h3>
+              <p>Shanti breathes with you and counts for you. Pick the time slots that fit your day.</p>
+              <ul>
+                <li>Box, relax, or even breathing patterns</li>
+                <li>Morning, afternoon, and evening slots</li>
+                <li>An optional soft chime</li>
+              </ul>
+            </div>
+            <figure class="f-shot">
+              <img src="screenshots/meditation.png" alt="Meditation invite from Shanti: 5 minutes of box breathing, with Breathe with me and In 5 min buttons" width="896" height="802" loading="lazy" />
+            </figure>
+          </div>
+
+          <div class="feature flip">
+            <div class="f-txt">
+              <h3>Reports that show your week at a glance</h3>
+              <p>See each habit by day, week, or month. Keep your streak green.</p>
+              <ul>
+                <li>Average per day and percent of your goal</li>
+                <li>A bar chart with your daily goal line</li>
+                <li>A streak calendar, your best day, and your longest streak</li>
+              </ul>
+            </div>
+            <figure class="f-shot wide">
+              <img src="screenshots/reports.png" alt="Reports window: weekly averages for water, reading, and meditation, a water bar chart with the daily goal line, and a March streak calendar" width="1720" height="1240" loading="lazy" />
+            </figure>
+          </div>
+
+          <div class="feature">
+            <div class="f-txt">
+              <h3>Settings that fit on one screen</h3>
+              <p>Each buddy has its own page. Turn a buddy on or off with one switch.</p>
+              <ul>
+                <li>Interval, active hours, container, and daily goal</li>
+                <li>Pick how firm each buddy is: Gentle, Nudgy, or Strict</li>
+                <li>Open Sathi when you log in</li>
+              </ul>
+            </div>
+            <figure class="f-shot wide">
+              <img src="screenshots/settings.png" alt="Water settings: reminder interval, active hours from 9:30 AM to 6:30 PM, glass or sip bottle, a daily goal of 8 glasses, and Gentle, Nudgy, or Strict" width="1720" height="1240" loading="lazy" />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section id="escalation" class="escalation" aria-labelledby="esc-h">
+        <div class="wrap">
+          <p class="eyebrow">Reminders</p>
+          <h2 id="esc-h">Gentle first. Firmer only if you ask for it.</h2>
+          <p class="lead">Each buddy has a strictness level. If you ignore a reminder, it escalates step by step.</p>
+          <div class="levels">
+            <div class="level">
+              <h3><i class="dots d1" aria-hidden="true"></i>Gentle</h3>
+              <p>A reminder each time. It never stays on top.</p>
+            </div>
+            <div class="level">
+              <h3><i class="dots d2" aria-hidden="true"></i>Nudgy</h3>
+              <p>After 1 snooze, the reminder stays on top and wiggles.</p>
+            </div>
+            <div class="level strict">
+              <h3><i class="dots d3" aria-hidden="true"></i>Strict <span class="tag">water only</span></h3>
+              <p>After 2 snoozes, a full-screen lock asks you to drink. Hold a button for 3 seconds to unlock. An emergency skip is always there.</p>
+            </div>
+          </div>
+          <p class="note">Need quiet time? Pause all reminders for 30 minutes, 1 hour, or the rest of the day from the menu bar.</p>
+        </div>
+      </section>
+
+      <section id="privacy" class="privacy" aria-labelledby="priv-h">
+        <div class="wrap two">
+          <div>
+            <p class="eyebrow">Privacy</p>
+            <h2 id="priv-h">Your habits stay on your Mac</h2>
+            <p class="lead">Sathi makes no network requests. There is no account, no analytics, and no cloud. Your data is plain JSON that you can read.</p>
+          </div>
+          <div class="panel">
+            <p class="path">~/Library/Application Support/Sathi/</p>
+            <table>
+              <tr><td><code>prefs.json</code></td><td>Your settings</td></tr>
+              <tr><td><code>state.json</code></td><td>Live state, such as the bottle level</td></tr>
+              <tr><td><code>history/YYYY-MM.json</code></td><td>Each done, snooze, and skip, kept forever</td></tr>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="install" class="install" aria-labelledby="inst-h">
+        <div class="wrap">
+          <p class="eyebrow">Install</p>
+          <h2 id="inst-h">Ready in about a minute</h2>
+          <div class="install-grid">
+            <aside class="dl-card">
+              <img src="icon.png" alt="" width="72" height="72" loading="lazy" />
+              <h3>Sathi 2.0.1</h3>
+              <p class="dl-meta">macOS 13 or newer · about 2 MB</p>
+              <a class="btn primary dl-btn" href="https://github.com/Sumonta056/sathi-app/releases/latest/download/Sathi.dmg">Download Sathi.dmg</a>
+              <p class="dl-links">
+                <a href="https://github.com/Sumonta056/sathi-app/releases" rel="noopener">All releases</a> ·
+                <a href="https://github.com/Sumonta056/sathi-app/blob/main/CHANGELOG.md" rel="noopener">What is new</a>
+              </p>
+            </aside>
+            <ol class="steps">
+              <li>
+                <h3>Open the DMG</h3>
+                <p>Drag <b>Sathi</b> to the <b>Applications</b> folder.</p>
+              </li>
+              <li>
+                <h3>Open Sathi the first time</h3>
+                <p>
+                  Sathi is not notarized by Apple, so macOS asks first. Open Sathi once, then go to
+                  <b>System Settings → Privacy &amp; Security</b> and click <b>Open Anyway</b>. On macOS 13 and 14 you can also right-click Sathi and choose <b>Open</b>.
+                </p>
+              </li>
+              <li>
+                <h3>Find the drop in your menu bar</h3>
+                <p>Click it, then the gear icon. On the General tab, turn on <b>Open Sathi when I log in</b>.</p>
+              </li>
+              <li>
+                <h3>Try a reminder now</h3>
+                <p>In Settings, pick a buddy and click <b>Show a reminder now</b>.</p>
+              </li>
+            </ol>
+          </div>
+          <details class="dev">
+            <summary>Build it from source instead</summary>
+            <pre><code>xcode-select --install
+git clone https://github.com/Sumonta056/sathi-app.git
+cd sathi-app
+./build.sh --install</code></pre>
+          </details>
+        </div>
+      </section>
+
+      <section id="faq" class="faq" aria-labelledby="faq-h">
+        <div class="wrap narrow">
+          <p class="eyebrow">FAQ</p>
+          <h2 id="faq-h">Questions</h2>
+          <details>
+            <summary>Is Sathi free?</summary>
+            <p>Yes. Sathi is free and open source under the MIT license. There is no account, no subscription, and no ads.</p>
+          </details>
+          <details>
+            <summary>Does Sathi send my data anywhere?</summary>
+            <p>No. Sathi makes no network requests. Your settings and history stay in <code>~/Library/Application Support/Sathi/</code> on your Mac.</p>
+          </details>
+          <details>
+            <summary>Which Macs can run Sathi?</summary>
+            <p>Any Mac with macOS 13 Ventura or newer, on Apple silicon or Intel.</p>
+          </details>
+          <details>
+            <summary>Why does macOS say it cannot check Sathi for malware?</summary>
+            <p>Sathi is not notarized by Apple. Open System Settings, then Privacy &amp; Security, and click Open Anyway next to Sathi. You do this once.</p>
+          </details>
+          <details>
+            <summary>Can Sathi lock my screen?</summary>
+            <p>Only for water, and only if you pick Strict. After 2 snoozes a full-screen lock asks you to drink. You unlock it by holding a button for 3 seconds, and there is always an emergency skip. Reading and meditation never lock the screen.</p>
+          </details>
+          <details>
+            <summary>Does Sathi slow down my Mac?</summary>
+            <p>No. Sathi uses less than 1% CPU when idle, under 40 MB of memory, and has no repeating 1-second timers.</p>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <div class="wrap foot-in">
+        <p>Sathi means "companion" in Bangla. Made by <a href="https://github.com/Sumonta056" rel="noopener">Sumonta Saha Mridul</a>.</p>
+        <p>
+          <a href="https://github.com/Sumonta056/sathi-app" rel="noopener">GitHub</a> ·
+          <a href="https://github.com/Sumonta056/sathi-app/issues" rel="noopener">Report a bug</a> ·
+          <a href="https://github.com/Sumonta056/sathi-app/blob/main/LICENSE" rel="noopener">MIT license</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

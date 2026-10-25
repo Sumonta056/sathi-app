@@ -13,7 +13,9 @@ Sathi is a macOS menu bar app (macOS 13+, Swift 5.9 tools, SwiftUI + AppKit). Th
 | Build, install, open | `./build.sh --install` |
 | Performance budget | `./scripts/perf.sh` (needs the app running) |
 | Memory leak check over windows | `./scripts/perf.sh --windows` (user runs it in Terminal) |
-| Make a DMG installer | `./scripts/make-dmg.sh` → `build/Sathi-<version>.dmg`. Copy to the project root. `*.dmg` is git-ignored. |
+| Make a DMG installer | `./scripts/make-dmg.sh` → `build/Sathi-<version>.dmg` and `build/Sathi.dmg`. Copy to the project root. `*.dmg` is git-ignored. |
+| Website screenshots | `SATHI_SHOTS="$PWD/site/screenshots" swift test --filter WebsiteShots` |
+| Check the website files | `./scripts/check-site.sh` |
 
 ## Module map
 
@@ -45,6 +47,8 @@ Tests/
   SathiCoreTests/    Swift Testing unit tests for every Core module
   SathiUITests/      ViewInspector tests for views + engine interaction
 docs/             ROADMAP.md, specs/ (one spec per phase), design/ (design reference PNGs)
+site/             GitHub Pages website: index.html, site.css, screenshots/, og.png, robots.txt, sitemap.xml, 404.html
+.github/          workflows/ ci.yml (lint, test, site check), pages.yml (deploy site/), release.yml (tag → DMG on GitHub Release)
 ```
 
 Data lives in `~/Library/Application Support/Sathi/`: `prefs.json`, `state.json`, `history/YYYY-MM.json`.
@@ -74,7 +78,9 @@ Detailed rules live in `.claude/rules/`. They load when you touch matching files
 - Use the `/perf-check` skill after any change to timers, animations, or published state.
 - Use the `/data-migration` skill to add a saved field or bump the schema.
 - Use the `ui-verifier` agent to compare the running app with `docs/design/`.
-- Use the `/make-dmg` skill to package the app for sharing (version bump, DMG, optional signing and notarization).
+- Use the `/make-dmg` skill to build a DMG on this Mac (optional signing and notarization).
+- Use the `/sathi-release` skill to cut a release: version, changelog, tag, and the DMG on the GitHub Release.
+- Use the `/sathi-website` skill after a user-visible change: site text, screenshots, SEO tags, and README.
 - Ask before every `git commit` and `git push`. `main` is protected by a hook. Work on a branch.
 
 ## Definition of done
@@ -84,3 +90,4 @@ Detailed rules live in `.claude/rules/`. They load when you touch matching files
 3. `swift build -c release` passes with no new warnings.
 4. For UI, timer, or animation changes: `./build.sh --install` then `./scripts/perf.sh` passes. For window changes the user also runs `./scripts/perf.sh --windows` in Terminal.
 5. README and this file are updated if commands, modules, or rules changed.
+6. For user-visible changes: the website and its screenshots are updated (`/sathi-website`).

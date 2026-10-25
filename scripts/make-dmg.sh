@@ -37,7 +37,8 @@ if [[ -n "$SIGN_IDENTITY" && -n "$NOTARY_PROFILE" ]]; then
 fi
 
 hdiutil verify "$DMG" >/dev/null
-echo "Done: $DMG ($(du -h "$DMG" | cut -f1))"
+cp "$DMG" build/Sathi.dmg
+echo "Done: $DMG ($(du -h "$DMG" | cut -f1)), copied to build/Sathi.dmg"
 if [[ -z "$SIGN_IDENTITY" ]]; then
   echo "Ad-hoc signed. On another Mac: right-click Sathi.app, then Open."
 fi

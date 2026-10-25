@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sumonta056.github.io/sathi-app/sitemap.xml

@@ -1,6 +1,6 @@
 ---
 name: make-dmg
-description: Build a Sathi DMG installer for sharing, optionally with a version bump, Developer ID signing, and notarization. Use when the user types /make-dmg, or asks to "make a dmg", "package the app", "make an installer", "release a version", or "share the app".
+description: Build a Sathi DMG installer on this Mac, optionally with Developer ID signing and notarization. Use when the user types /make-dmg, or asks to "make a dmg", "package the app", "make an installer", or "share the app". For a GitHub release, use skill sathi-release instead.
 ---
 
 # /make-dmg: package Sathi as a DMG

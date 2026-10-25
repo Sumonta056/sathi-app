@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&display=swap" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: radial-gradient(700px 420px at 80% 30%, rgba(76, 195, 245, 0.18), transparent 70%), #121826;
+        font-family: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, sans-serif;
+        color: #eef2fa;
+      }
+      .txt {
+        position: absolute;
+        left: 72px;
+        top: 150px;
+        width: 560px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-size: 44px;
+        font-weight: 900;
+      }
+      .brand img {
+        width: 72px;
+        height: 72px;
+        border-radius: 16px;
+      }
+      h1 {
+        font-size: 54px;
+        line-height: 1.1;
+        margin: 28px 0 18px;
+        font-weight: 900;
+      }
+      p {
+        color: #9aa6bf;
+        font-size: 26px;
+        margin: 0;
+        font-weight: 800;
+      }
+      .w {
+        color: #4cc3f5;
+      }
+      .r {
+        color: #f2a64a;
+      }
+      .c {
+        color: #a99cf5;
+      }
+      .menu {
+        position: absolute;
+        right: 70px;
+        top: 50px;
+        width: 380px;
+        border-radius: 22px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px #263049;
+        transform: rotate(2deg);
+      }
+      .bubble {
+        position: absolute;
+        left: 640px;
+        top: 372px;
+        width: 290px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="txt">
+      <div class="brand"><img src="../site/icon.png" alt="" />Sathi</div>
+      <h1><span class="w">Water</span>, <span class="r">reading</span>, and <span class="c">meditation</span> reminders for Mac</h1>
+      <p>Free · open source · private</p>
+    </div>
+    <img class="menu" src="../site/screenshots/menu-bar.png" alt="" />
+    <img class="bubble" src="../site/screenshots/water-bubble.png" alt="" />
+  </body>
+</html>
