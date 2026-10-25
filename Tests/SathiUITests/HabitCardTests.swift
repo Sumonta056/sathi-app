@@ -91,4 +91,15 @@ struct HabitCardTests {
     @Test func menuIsWiderForTheCards() {
         #expect(UIMetrics.menuWidth == 380)
     }
+
+    @Test(arguments: HabitID.allCases)
+    func nameAndPillNeverWrap(_ id: HabitID) throws {
+        let h = EngineHarness(at: day(2026, 3, 4, 10)) { $0.prefs.meditation.enabled = true }
+        let sut = try card(id, h)
+        let texts = sut.findAll(ViewType.Text.self) { try [id.name, h.engine.pill(id)].contains($0.string()) }
+        #expect(!texts.isEmpty)
+        for text in texts {
+            #expect(try text.lineLimit() == 1)
+        }
+    }
 }

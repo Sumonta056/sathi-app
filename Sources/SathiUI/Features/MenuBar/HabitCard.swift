@@ -14,16 +14,9 @@ struct HabitCard: View {
                 .accessibilityValue(ProgressRing.percent(progress))
                 .overlay(StaticBuddy(habit: id, size: UIMetrics.ringBuddySize))
             VStack(alignment: .leading, spacing: UIMetrics.textSpacing) {
-                HStack(spacing: UIMetrics.chipSpacing) {
-                    Text(id.name)
-                        .font(Typography.cardTitle)
-                        .foregroundStyle(Night.text)
-                    Text(e.pill(id))
-                        .font(Typography.pill)
-                        .monospacedDigit()
-                        .foregroundStyle(Night.accent(id))
-                        .padding(UIMetrics.pillPadding)
-                        .background(Capsule().fill(Night.heroFill(id)))
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: UIMetrics.chipSpacing) { title; pill }
+                    VStack(alignment: .leading, spacing: UIMetrics.textSpacing) { title; pill }
                 }
                 HStack(spacing: UIMetrics.textSpacing) {
                     Text(goal.done)
@@ -41,6 +34,25 @@ struct HabitCard: View {
         .padding(UIMetrics.cardPadding)
         .background(shape.fill(Night.card))
         .overlay(shape.strokeBorder(Night.border, lineWidth: UIMetrics.cardBorder))
+    }
+
+    private var title: some View {
+        Text(id.name)
+            .font(Typography.cardTitle)
+            .foregroundStyle(Night.text)
+            .lineLimit(1)
+            .fixedSize()
+    }
+
+    private var pill: some View {
+        Text(e.pill(id))
+            .font(Typography.pill)
+            .monospacedDigit()
+            .foregroundStyle(Night.accent(id))
+            .lineLimit(1)
+            .fixedSize()
+            .padding(UIMetrics.pillPadding)
+            .background(Capsule().fill(Night.heroFill(id)))
     }
 
     private var actionTitle: String {
