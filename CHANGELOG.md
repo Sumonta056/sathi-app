@@ -14,6 +14,7 @@ All user-visible changes to Sathi. Each version has a tag `vX.Y.Z` and a GitHub 
 ### Fixed
 
 - Menu bar: a long buddy name or reminder time no longer breaks across lines. The time moves under the name when the row is too narrow.
+- Reports: the streak calendar shows every day of the month. Before, it lost the first days.
 
 ## [2.0] - 2026-10-25
 

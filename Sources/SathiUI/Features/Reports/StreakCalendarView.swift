@@ -22,19 +22,26 @@ struct StreakCalendarView: View {
                 .foregroundStyle(Night.sprout)
             }
             LazyVGrid(columns: columns, spacing: UIMetrics.calendarCellGap) {
-                ForEach(Self.weekdays.indices, id: \.self) { i in
-                    Text(verbatim: Self.weekdays[i])
-                        .font(Typography.badge)
-                        .foregroundStyle(Night.faint)
-                }
-                ForEach(0 ..< month.leadingBlanks, id: \.self) { _ in
-                    Color.clear.aspectRatio(1, contentMode: .fit)
-                }
-                ForEach(month.cells) { cell in
-                    StreakCellView(cell: cell)
+                ForEach(Self.slots(month)) { slot in
+                    switch slot {
+                    case let .weekday(i):
+                        Text(verbatim: Self.weekdays[i])
+                            .font(Typography.badge)
+                            .foregroundStyle(Night.faint)
+                    case .blank:
+                        Color.clear.aspectRatio(1, contentMode: .fit)
+                    case let .day(cell):
+                        StreakCellView(cell: cell)
+                    }
                 }
             }
         }
+    }
+
+    static func slots(_ month: StreakMonth) -> [CalendarSlot] {
+        weekdays.indices.map(CalendarSlot.weekday)
+            + (0 ..< month.leadingBlanks).map(CalendarSlot.blank)
+            + month.cells.map(CalendarSlot.day)
     }
 
     private var columns: [GridItem] {

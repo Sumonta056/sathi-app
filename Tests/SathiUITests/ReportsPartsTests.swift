@@ -23,6 +23,18 @@ struct ReportsPartsTests {
         #expect(headers == ["M", "T", "W", "T", "F", "S", "S"])
     }
 
+    @Test func streakCalendarGridKeepsEveryDayOfTheMonth() {
+        let month = harness().engine.reportScreen(.week, selected: .water).calendar
+        let slots = StreakCalendarView.slots(month)
+        #expect(Set(slots.map(\.id)).count == slots.count)
+        #expect(slots.count == 7 + month.leadingBlanks + 31)
+        let days = slots.compactMap { slot -> Int? in
+            if case let .day(cell) = slot { return cell.day }
+            return nil
+        }
+        #expect(days == Array(1 ... 31))
+    }
+
     @Test func factsShowEachLabelAndValue() throws {
         let facts = harness().engine.reportScreen(.week, selected: .water).facts
         #expect(facts.map(\.label) == ["Best day", "Snoozes this week", "Longest streak"])
