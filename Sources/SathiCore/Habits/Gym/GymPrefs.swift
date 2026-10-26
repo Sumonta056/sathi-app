@@ -21,7 +21,7 @@ package struct GymPrefs: Codable, Equatable, Sendable {
 
     package func workout(at index: Int) -> GymWorkout {
         let count = Limits.gymWorkoutCount
-        return workouts[((index % count) + count) % count]
+        return Self.cleaned(workouts)[((index % count) + count) % count]
     }
 
     package static func cleaned(_ workouts: [GymWorkout]) -> [GymWorkout] {

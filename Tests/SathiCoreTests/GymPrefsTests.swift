@@ -88,6 +88,14 @@ struct GymPrefsTests {
         #expect(p.workout(at: -1) == p.workouts[3])
     }
 
+    @Test func workoutAtReturnsTheCleanedRow() {
+        var p = GymPrefs()
+        p.workouts[0].name = "  "
+        p.workouts[1].name = "  Jumping jacks  "
+        #expect(p.workout(at: 0).name == "Neck and shoulder stretch")
+        #expect(p.workout(at: 1).name == "Jumping jacks")
+    }
+
     @Test func scheduleKeyChangesWithEveryGymTimingField() {
         let base = Prefs().scheduleKey
         var changes: [(inout Prefs) -> Void] = [

@@ -56,7 +56,21 @@ struct GymSettingsTabTests {
     @Test func clearingANameSavesTheDefaultName() {
         let h = harness { $0.prefs.gym.workouts[0].name = "Jumping jacks" }
         h.engine.gymWorkoutName(at: 0).wrappedValue = ""
+        h.engine.commitGymWorkoutNames()
         #expect(h.store.prefs.gym.workouts[0].name == "Neck and shoulder stretch")
+    }
+
+    @Test func typingKeepsSpacesBetweenWords() {
+        let h = harness()
+        h.engine.gymWorkoutName(at: 1).wrappedValue = "Jumping "
+        #expect(h.engine.gymWorkoutName(at: 1).wrappedValue == "Jumping ")
+        h.engine.gymWorkoutName(at: 1).wrappedValue = "Jumping jacks"
+        #expect(h.store.prefs.gym.workouts[1].name == "Jumping jacks")
+    }
+
+    @Test func workoutsCardShowsTheOrderNote() throws {
+        let sut = try tab(harness())
+        #expect(throws: Never.self) { try sut.find(text: "Shokti uses them in order: 1 → 2 → 3 → 4.") }
     }
 
     @Test func minutesChipSavesTheChoice() throws {

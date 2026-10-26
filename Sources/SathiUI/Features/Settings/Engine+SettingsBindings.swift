@@ -18,21 +18,29 @@ extension Engine {
 
 extension Engine {
     func gymWorkoutName(at index: Int) -> Binding<String> {
-        Binding(get: { self.data.prefs.gym.workout(at: index).name }, set: { name in
-            self.editGymWorkout(at: index) { $0.name = name }
+        Binding(get: { self.gymRow(index)?.name ?? "" }, set: { name in
+            self.editGymRow(index) { $0.name = String(name.prefix(Limits.gymNameMaxLength)) }
         })
     }
 
     func gymWorkoutMinutes(at index: Int) -> Binding<Int> {
         Binding(get: { self.data.prefs.gym.workout(at: index).minutes }, set: { minutes in
-            self.editGymWorkout(at: index) { $0.minutes = minutes }
+            self.editGymRow(index) { $0.minutes = minutes }
         })
     }
 
-    private func editGymWorkout(at index: Int, _ change: (inout GymWorkout) -> Void) {
-        var workouts = GymPrefs.cleaned(data.prefs.gym.workouts)
-        guard workouts.indices.contains(index) else { return }
-        change(&workouts[index])
-        data.prefs.gym.workouts = GymPrefs.cleaned(workouts)
+    func commitGymWorkoutNames() {
+        let cleaned = GymPrefs.cleaned(data.prefs.gym.workouts)
+        if cleaned != data.prefs.gym.workouts { data.prefs.gym.workouts = cleaned }
+    }
+
+    private func gymRow(_ index: Int) -> GymWorkout? {
+        let rows = data.prefs.gym.workouts
+        return rows.indices.contains(index) ? rows[index] : nil
+    }
+
+    private func editGymRow(_ index: Int, _ change: (inout GymWorkout) -> Void) {
+        guard data.prefs.gym.workouts.indices.contains(index) else { return }
+        change(&data.prefs.gym.workouts[index])
     }
 }

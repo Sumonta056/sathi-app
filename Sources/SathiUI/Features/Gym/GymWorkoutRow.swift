@@ -4,6 +4,7 @@ import SwiftUI
 struct GymWorkoutRow: View {
     @EnvironmentObject var e: Engine
     let index: Int
+    @FocusState private var editing: Bool
 
     var body: some View {
         let engine = e
@@ -42,6 +43,9 @@ struct GymWorkoutRow: View {
             .padding(UIMetrics.timeButtonPadding)
             .frame(maxWidth: .infinity)
             .background(RoundedRectangle(cornerRadius: UIMetrics.buttonRadius, style: .continuous).fill(Night.bg))
+            .focused($editing)
+            .onSubmit { engine.commitGymWorkoutNames() }
+            .onChange(of: editing) { if !$0 { engine.commitGymWorkoutNames() } }
     }
 
     private func chips(_ minutes: Binding<Int>) -> some View {
