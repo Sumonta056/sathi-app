@@ -48,6 +48,24 @@ struct HabitCardTests {
         #expect(h.engine.phase(.meditation) == .session)
     }
 
+    @Test func moveStartsAGymSession() throws {
+        let h = EngineHarness { $0.prefs.gym.enabled = true }
+        try MenuFind.control(card(.gym, h), "Move").tap()
+        #expect(h.engine.phase(.gym) == .session)
+    }
+
+    @Test func gymCardShowsWorkoutsAgainstTheGoalAndTheNextTime() throws {
+        let h = EngineHarness {
+            $0.prefs.gym.enabled = true
+            $0.events = [.done(.gym, 1, at: day(2026, 3, 4, 9))]
+        }
+        let sut = try card(.gym, h)
+        #expect(throws: Never.self) { try sut.find(text: "Gym") }
+        #expect(throws: Never.self) { try sut.find(text: "of 4 workouts") }
+        #expect(throws: Never.self) { try sut.find(text: h.engine.pill(.gym)) }
+        #expect(h.engine.pill(.gym) != "Off")
+    }
+
     @Test func waterRingShowsAQuarterAfterTwoOfEight() throws {
         let h = EngineHarness()
         h.engine.logWater(1)

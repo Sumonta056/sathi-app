@@ -103,10 +103,12 @@ Spec 6b: `docs/specs/phase-6b-tolerant-decoding.md`
 Spec: `docs/specs/gym-shokti-design.md`
 Plan: `docs/superpowers/plans/2026-10-26-gym-shokti.md`
 
-- [ ] Rules in `.claude/rules/business-logic.md`
-- [ ] Gym core: `HabitID.gym`, `GymPrefs`, `GymRules`
-- [ ] Gym UI: Shokti buddy, invite, session, settings tab
-- [ ] Reports, website, and README
+- [x] Rules in `.claude/rules/business-logic.md`
+- [x] Gym core: `HabitID.gym`, `GymPrefs`, `GymRules`
+- [x] Gym UI: Shokti buddy, invite, session, settings tab, menu card
+- [x] Reports and README
+- [ ] Website text and screenshots (`/sathi-website`)
+- [ ] `perf.sh --windows` run by the user in Terminal, and the visual check with `ui-verifier`
 
 ## Later
 

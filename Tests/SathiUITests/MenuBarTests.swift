@@ -68,6 +68,18 @@ struct MenuBarTests {
         #expect(sut.findAll(SleepingRow.self).isEmpty)
     }
 
+    @Test func gymOnShowsAGymCardAndNoGymSleepingRow() throws {
+        let h = EngineHarness { $0.prefs.gym.enabled = true }
+        let sut = try panel(h)
+        #expect(try sut.findAll(HabitCard.self).map { try $0.actualView().id } == [.water, .reading, .gym])
+        #expect(Find.lacks(sut, text: "Gym is sleeping"))
+    }
+
+    @Test func gymOffShowsNoGymCard() throws {
+        let h = EngineHarness()
+        #expect(try !panel(h).findAll(HabitCard.self).contains { try $0.actualView().id == .gym })
+    }
+
     @Test func turnOnWakesTheSleepingMeditation() throws {
         let h = EngineHarness()
         try MenuFind.control(panel(h), "Turn on").tap()

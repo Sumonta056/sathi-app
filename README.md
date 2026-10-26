@@ -5,7 +5,7 @@
 <h1 align="center">Sathi</h1>
 
 <p align="center">
-  A free macOS menu bar app with three buddies that remind you to <b>drink water</b>, <b>read</b>, and <b>meditate</b>.
+  A free macOS menu bar app with four buddies that remind you to <b>drink water</b>, <b>read</b>, <b>meditate</b>, and <b>move</b>.
 </p>
 
 <p align="center">
@@ -40,6 +40,7 @@ To see a reminder right away, open Settings, pick a buddy, and click **Show a re
 - **Fota** (water): a reminder every 2 hours between 9:30 and 18:30. Log a few sips, half, or a full glass, or drag the line on your sip bottle. The daily goal is 8 glasses.
 - **Boi** (reading): a small popup in the top-right corner at 22:00. It never takes focus from your work. Start a 15-minute timer, and Boi counts the minutes. Pick the days of the week.
 - **Shanti** (meditation, off by default): short guided breathing sessions (box, relax, or even). Pick a daily goal of 5, 10, or 20 minutes. Shanti reminds you every hour between 9:00 and 21:00 and stops for the day when you reach the goal.
+- **Shokti** (gym, off by default): a small popup in the top-right corner every hour between 9:00 and 17:00 on work days. It suggests 1 short workout from your list of 4 (a stretch, a short walk, squats, push-ups), in order. Start a short timer, and "Done" saves the workout. The daily goal is 4 workouts. "Not now" skips one reminder. Shokti never locks the screen.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/water-bubble.png" alt="Water reminder bubble with buttons for a few sips, half, and a full glass" width="440" />
@@ -56,7 +57,7 @@ If you ignore a reminder, it gets firmer, step by step:
 | Nudgy | After 1 snooze, the reminder stays on top and wiggles. |
 | Strict (water and meditation) | After 2 snoozes, a full-screen lock. Hold a button for 3 seconds to unlock. An emergency skip is always there. |
 
-Reading never locks the screen, and only one lock shows at a time. Each buddy reminds you on its own, so two reminders can show at once: they stack in the top-right corner of the display with your mouse pointer. The menu bar popover can pause all reminders for 30 minutes, 1 hour, or the rest of the day.
+Reading and gym never lock the screen, and only one lock shows at a time. Each buddy reminds you on its own, so two reminders can show at once: they stack in the top-right corner of the display with your mouse pointer. The menu bar popover can pause all reminders for 30 minutes, 1 hour, or the rest of the day.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/water-nudgy.png" alt="Nudgy water reminder after 1 snooze, with no close button" width="400" />
@@ -68,7 +69,7 @@ See [every reminder on the website](https://sumonta056.github.io/sathi-app/#gall
 ## Reports and settings
 
 - The Reports window shows each habit by day, week, or month, with a chart, a streak calendar, your best day, and your longest streak.
-- Each buddy has its own Settings page. Water: interval, active hours, container, goal, strictness. Reading: time, weekdays, session length, style, strictness. Meditation: daily goal, session length, interval, active hours, breathing style, chime, strictness. You pick times in 15-minute steps.
+- Each buddy has its own Settings page. Water: interval, active hours, container, goal, strictness. Reading: time, weekdays, session length, style, strictness. Meditation: daily goal, session length, interval, active hours, breathing style, chime, strictness. Gym: interval, work hours, work days, your 4 workouts (name and minutes), strictness. You pick times in 15-minute steps.
 - The General tab holds your name, snooze length, when no answer counts as a snooze, sound, and open at login.
 
 <p align="center">
