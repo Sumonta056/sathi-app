@@ -108,7 +108,7 @@ extension Engine {
         switch id {
         case .water: return .glass
         case .reading: return .purr
-        case .meditation: return .tink
+        case .meditation, .gym: return .tink
         }
     }
 

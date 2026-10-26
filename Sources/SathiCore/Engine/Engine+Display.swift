@@ -43,7 +43,7 @@ extension Engine {
         case .water:
             if phase(.water) == .lock { return .sad }
             if waiting || waterLevel < Limits.lowWaterLevel { return .thirsty }
-        case .reading, .meditation:
+        case .reading, .meditation, .gym:
             if phase(id) == .session { return .reading }
             if waiting { return .thirsty }
         }
@@ -101,6 +101,7 @@ extension Engine {
         case .water: return "Drink!"
         case .reading: return "Read!"
         case .meditation: return "Breathe!"
+        case .gym: return "Move!"
         }
     }
 
@@ -109,6 +110,7 @@ extension Engine {
         case .water: return "Due now"
         case .reading: return "Reading…"
         case .meditation: return "Breathing…"
+        case .gym: return "Moving…"
         }
     }
 

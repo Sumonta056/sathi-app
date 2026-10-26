@@ -43,6 +43,7 @@ struct HabitTab: View {
         case .water: WaterSettingsTab()
         case .reading: ReadingSettingsTab()
         case .meditation: MeditationSettingsTab()
+        case .gym: GymSettingsTab()
         }
     }
 }

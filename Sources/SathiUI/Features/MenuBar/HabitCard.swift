@@ -60,6 +60,7 @@ struct HabitCard: View {
         case .water: return "+1 glass"
         case .reading: return "Read now"
         case .meditation: return "Breathe"
+        case .gym: return "Move"
         }
     }
 
@@ -69,6 +70,7 @@ struct HabitCard: View {
         case .water: e.logWater(1)
         case .reading: e.startReading()
         case .meditation: e.startMeditation()
+        case .gym: e.startSession(.gym)
         }
     }
 

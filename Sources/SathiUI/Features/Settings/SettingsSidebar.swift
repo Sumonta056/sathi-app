@@ -36,13 +36,14 @@ struct SettingsSidebar: View {
         case .water: return "drop.fill"
         case .reading: return "book.fill"
         case .meditation: return "leaf.fill"
+        case .gym: return "figure.strengthtraining.traditional"
         }
     }
 
     static func isNew(_ id: HabitID) -> Bool {
         switch id {
         case .water, .reading: return false
-        case .meditation: return true
+        case .meditation, .gym: return true
         }
     }
 }

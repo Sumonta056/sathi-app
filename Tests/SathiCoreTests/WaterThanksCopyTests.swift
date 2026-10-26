@@ -23,7 +23,7 @@ struct WaterThanksCopyTests {
         #expect(Copywriter.celebrationTitle(.water, amount: amount) == "Every sip counts!")
     }
 
-    @Test(arguments: [HabitID.reading, .meditation])
+    @Test(arguments: [HabitID.reading, .meditation, .gym])
     func otherHabitsKeepTheirTitles(_ id: HabitID) {
         #expect(!Copywriter.celebrationTitle(id).isEmpty)
         #expect(!Copywriter.celebrationTitle(id, amount: 15).isEmpty)

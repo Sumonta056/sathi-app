@@ -8,7 +8,7 @@ struct ShakeSoundTests {
         #expect(ShakeSound.sound(for: .water) == .tink)
     }
 
-    @Test(arguments: [HabitID.reading, .meditation])
+    @Test(arguments: [HabitID.reading, .meditation, .gym])
     func calmHabitsShakeInSilence(_ id: HabitID) {
         #expect(ShakeSound.sound(for: id) == nil)
     }

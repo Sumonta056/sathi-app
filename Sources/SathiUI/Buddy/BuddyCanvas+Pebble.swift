@@ -3,14 +3,14 @@ import SwiftUI
 extension BuddyCanvas {
     var faceInk: Color {
         switch kind {
-        case .pebble: Night.calmGround
+        case .pebble, .kettlebell: Night.calmGround
         case .drop, .book: BuddyInk.line
         }
     }
 
     var cheekFill: Color? {
         switch kind {
-        case .pebble: Night.cheek.opacity(UIMetrics.pebbleCheekOpacity)
+        case .pebble, .kettlebell: Night.cheek.opacity(UIMetrics.pebbleCheekOpacity)
         case .drop, .book: mood == .happy || mood == .cheer ? BuddyInk.cheek.opacity(0.8) : nil
         }
     }

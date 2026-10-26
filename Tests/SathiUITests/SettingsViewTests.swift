@@ -13,6 +13,7 @@ struct SettingsViewTests {
         case .water: return try hosted(WaterSettingsTab(), h).inspect()
         case .reading: return try hosted(ReadingSettingsTab(), h).inspect()
         case .meditation: return try hosted(MeditationSettingsTab(), h).inspect()
+        case .gym: return try hosted(GymSettingsTab(), h).inspect()
         }
     }
 
@@ -23,6 +24,7 @@ struct SettingsViewTests {
             case .water: $0.prefs.water.enabled = on
             case .reading: $0.prefs.reading.enabled = on
             case .meditation: $0.prefs.meditation.enabled = on
+            case .gym: $0.prefs.gym.enabled = on
             }
         }
     }

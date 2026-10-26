@@ -26,6 +26,7 @@ package struct Prefs: Codable, Equatable, Sendable {
         case .water: return water.enabled
         case .reading: return reading.enabled
         case .meditation: return meditation.enabled
+        case .gym: return gym.enabled
         }
     }
 
@@ -34,6 +35,7 @@ package struct Prefs: Codable, Equatable, Sendable {
         case .water: return water.strictness
         case .reading: return Self.withoutLock(reading.strictness)
         case .meditation: return meditation.strictness
+        case .gym: return Self.withoutLock(gym.strictness)
         }
     }
 

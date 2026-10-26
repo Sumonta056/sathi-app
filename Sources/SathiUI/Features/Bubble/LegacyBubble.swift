@@ -16,7 +16,7 @@ struct LegacyBubble: View {
             switch id {
             case .water: EmptyView()
             case .reading: ReadingInfoCard()
-            case .meditation: EmptyView()
+            case .meditation, .gym: EmptyView()
             }
             actions
             if level == .persist { warn }
@@ -86,6 +86,10 @@ struct LegacyBubble: View {
                     .layoutPriority(1)
             case .meditation:
                 Button("Start \(e.data.prefs.meditation.sessionMinutes)-min breathing") { e.startMeditation() }
+                    .buttonStyle(PillButton(kind: .primary))
+                    .layoutPriority(1)
+            case .gym:
+                Button("Start \(e.data.prefs.gym.workouts[0].minutes)-min workout") { e.startSession(.gym) }
                     .buttonStyle(PillButton(kind: .primary))
                     .layoutPriority(1)
             }

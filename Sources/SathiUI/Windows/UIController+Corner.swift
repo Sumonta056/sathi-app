@@ -29,7 +29,7 @@ extension UIController {
         let id = e.celebration.id
         switch id {
         case .water: return presentTopRight(h, level: .statusBar)
-        case .reading, .meditation:
+        case .reading, .meditation, .gym:
             return e.usesCorner(id) ? placeTopRight(CornerToast.make(h)) : presentCentered(h, level: .statusBar)
         }
     }

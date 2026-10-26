@@ -8,7 +8,7 @@ struct BubbleView: View {
     var body: some View {
         switch id {
         case .water: WaterBubble(level: level)
-        case .reading: LegacyBubble(id: id, level: level)
+        case .reading, .gym: LegacyBubble(id: id, level: level)
         case .meditation: MeditationInvite(level: level)
         }
     }

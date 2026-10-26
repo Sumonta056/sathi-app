@@ -11,6 +11,7 @@ extension Engine {
         case .water: data.prefs.water.enabled = on
         case .reading: data.prefs.reading.enabled = on
         case .meditation: data.prefs.meditation.enabled = on
+        case .gym: data.prefs.gym.enabled = on
         }
     }
 }

@@ -35,6 +35,7 @@ extension Engine {
         case .water: logWater(1)
         case .reading: startReading()
         case .meditation: startMeditation()
+        case .gym: startSession(.gym)
         }
     }
 

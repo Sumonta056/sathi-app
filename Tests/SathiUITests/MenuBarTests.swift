@@ -51,16 +51,20 @@ struct MenuBarTests {
         let h = EngineHarness { $0.prefs.reading.enabled = false }
         let sut = try panel(h)
         #expect(sut.findAll(HabitCard.self).count == 1)
-        #expect(sut.findAll(SleepingRow.self).count == 2)
+        #expect(sut.findAll(SleepingRow.self).count == 3)
         #expect(throws: Never.self) { try sut.find(text: "Reading is sleeping") }
         #expect(throws: Never.self) { try sut.find(text: "Meditation is sleeping") }
+        #expect(throws: Never.self) { try sut.find(text: "Gym is sleeping") }
         #expect(Find.lacks(sut, text: "Water is sleeping"))
     }
 
     @Test func allEnabledMeansNoSleepingRow() throws {
-        let h = EngineHarness { $0.prefs.meditation.enabled = true }
+        let h = EngineHarness {
+            $0.prefs.meditation.enabled = true
+            $0.prefs.gym.enabled = true
+        }
         let sut = try panel(h)
-        #expect(sut.findAll(HabitCard.self).count == 3)
+        #expect(sut.findAll(HabitCard.self).count == 4)
         #expect(sut.findAll(SleepingRow.self).isEmpty)
     }
 

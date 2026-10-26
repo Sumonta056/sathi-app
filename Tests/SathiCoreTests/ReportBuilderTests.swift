@@ -26,7 +26,7 @@ struct ReportBuilderTests {
         #expect(r.range == .week)
         #expect(r.interval == DateInterval(start: zone.date(2026, 3, 2), end: zone.date(2026, 3, 9)))
         #expect(r.habits.map(\.habit) == HabitID.allCases)
-        #expect(r.habits.map(\.goal) == [10, 20, 6])
+        #expect(r.habits.map(\.goal) == [10, 20, 6, 4])
     }
 
     @Test(arguments: [
@@ -76,11 +76,12 @@ struct ReportBuilderTests {
             HistoryEvent(date: at, habit: .water, kind: .skip, amount: 3),
             HistoryEvent(date: at, habit: .water, kind: .snooze, amount: 4),
             .done(.reading, 15, at: at),
-            .done(.meditation, 5, at: at)
+            .done(.meditation, 5, at: at),
+            .done(.gym, 1, at: at)
         ]
         let r = report(.week, events)
-        #expect(r.habits.map(\.total) == [2, 15, 5])
-        #expect(r.habits.map { $0.buckets[1].total } == [2, 15, 5])
+        #expect(r.habits.map(\.total) == [2, 15, 5, 1])
+        #expect(r.habits.map { $0.buckets[1].total } == [2, 15, 5, 1])
     }
 
     @Test func eventsOutsideTheIntervalAreIgnored() throws {

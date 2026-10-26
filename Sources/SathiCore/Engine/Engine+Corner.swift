@@ -6,6 +6,7 @@ extension Engine {
         case .water: return false
         case .reading: return data.prefs.reading.reminderStyle == .corner
         case .meditation: return false
+        case .gym: return true
         }
     }
 

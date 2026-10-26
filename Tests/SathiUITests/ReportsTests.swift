@@ -58,8 +58,8 @@ struct ReportsTests {
 
     @Test func showsOneTilePerHabit() throws {
         let sut = try reports(EngineHarness()).inspect()
-        #expect(sut.findAll(HabitTileView.self).count == 3)
-        for label in ["WATER", "READING", "MEDITATION"] {
+        #expect(sut.findAll(HabitTileView.self).count == 4)
+        for label in ["WATER", "READING", "MEDITATION", "GYM"] {
             #expect(throws: Never.self) { try sut.find(text: label) }
         }
     }

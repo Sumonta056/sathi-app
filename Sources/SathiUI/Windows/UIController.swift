@@ -35,7 +35,7 @@ package final class UIController: ReminderPresenter {
             return focusedBubble(id, level)
         case .reading:
             return engine?.usesCorner(id) == true ? presentCorner(ReadingInvite(level: level)) : focusedBubble(id, level)
-        case .meditation:
+        case .meditation, .gym:
             return presentCorner(BubbleView(id: id, level: level))
         }
     }
@@ -65,7 +65,7 @@ package final class UIController: ReminderPresenter {
     private func sessionView(_ id: HabitID) -> some View {
         switch id {
         case .meditation: BreatheView()
-        case .water, .reading: SessionView(id: id)
+        case .water, .reading, .gym: SessionView(id: id)
         }
     }
 

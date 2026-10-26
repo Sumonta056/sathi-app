@@ -27,6 +27,11 @@ extension Engine {
             let goal = Int(r.dailyGoal)
             let done = Int(r.total(on: now, data: data))
             return GoalText(done: "\(min(done, goal))", rest: "of \(goal) min")
+        case .gym:
+            let r = rules(.gym)
+            let goal = Int(r.dailyGoal)
+            let done = Int(r.total(on: now, data: data))
+            return GoalText(done: "\(min(done, goal))", rest: "of \(goal) workouts")
         }
     }
 

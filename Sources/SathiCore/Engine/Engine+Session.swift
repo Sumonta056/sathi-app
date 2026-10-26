@@ -42,7 +42,7 @@ extension Engine {
 
     func celebrationSound(_ id: HabitID) -> SoundName? {
         switch id {
-        case .water, .reading: return .hero
+        case .water, .reading, .gym: return .hero
         case .meditation: return data.prefs.meditation.chime ? .tink : nil
         }
     }
@@ -52,12 +52,13 @@ extension Engine {
         case .water: return nil
         case .reading: return data.prefs.reading.sessionMinutes
         case .meditation: return data.prefs.meditation.sessionMinutes
+        case .gym: return data.prefs.gym.workouts[0].minutes
         }
     }
 
     private func startSound(_ id: HabitID) -> SoundName? {
         switch id {
-        case .water, .meditation: return nil
+        case .water, .meditation, .gym: return nil
         case .reading: return .purr
         }
     }

@@ -17,7 +17,7 @@ extension ReportScreenBuilder {
     private static func value(_ amount: Double, for id: HabitID) -> String {
         switch id {
         case .water: return String(format: "%.1f", amount)
-        case .reading, .meditation: return "\(Int(amount.rounded()))"
+        case .reading, .meditation, .gym: return "\(Int(amount.rounded()))"
         }
     }
 
@@ -25,6 +25,7 @@ extension ReportScreenBuilder {
         switch id {
         case .water: return "glasses"
         case .reading, .meditation: return "min"
+        case .gym: return "workouts"
         }
     }
 }

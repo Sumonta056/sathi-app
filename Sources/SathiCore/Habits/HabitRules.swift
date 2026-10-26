@@ -16,6 +16,7 @@ extension HabitID {
         case .water: return WaterRules(prefs: prefs, calendar: calendar)
         case .reading: return ReadingRules(prefs: prefs, calendar: calendar)
         case .meditation: return MeditationRules(prefs: prefs, calendar: calendar)
+        case .gym: return GymRules(prefs: prefs, calendar: calendar)
         }
     }
 }

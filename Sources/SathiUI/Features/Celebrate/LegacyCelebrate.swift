@@ -22,7 +22,7 @@ struct LegacyCelebrate: View {
                 .foregroundStyle(Night.muted)
             switch c.id {
             case .reading: ReadingWeekRow(streak: e.streak(.reading), today: e.now)
-            case .water, .meditation: EmptyView()
+            case .water, .meditation, .gym: EmptyView()
             }
             Button("Back to work") { e.endCelebrate() }
                 .buttonStyle(PillButton(kind: .primary))
@@ -44,6 +44,7 @@ struct LegacyCelebrate: View {
         case .water: return "+\(Fmt.glasses(c.amount))"
         case .reading: return "\(Int(c.amount)) min read"
         case .meditation: return "\(Int(c.amount)) min calm"
+        case .gym: return "+\(Int(c.amount)) workout"
         }
     }
 
@@ -55,6 +56,8 @@ struct LegacyCelebrate: View {
             return "\(e.streak(.reading))-day reading streak"
         case .meditation:
             return "\(e.streak(.meditation))-day calm streak"
+        case .gym:
+            return "\(e.streak(.gym))-day move streak"
         }
     }
 }

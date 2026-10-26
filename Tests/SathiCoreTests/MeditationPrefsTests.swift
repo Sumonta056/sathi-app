@@ -13,7 +13,7 @@ struct MeditationPrefsTests {
         #expect(HabitID.meditation.rawValue == "meditation")
         #expect(HabitID.meditation.name == "Meditation")
         #expect(HabitID.meditation.buddy == "Shanti")
-        #expect(HabitID.allCases == [.water, .reading, .meditation])
+        #expect(HabitID.allCases == [.water, .reading, .meditation, .gym])
     }
 
     @Test func defaults() {

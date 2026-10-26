@@ -29,7 +29,7 @@ struct NextSlotTests {
         switch id {
         case .water: #expect(slot == nil)
         case .reading: #expect(slot == day(2026, 3, 4, 22))
-        case .meditation: #expect(slot == nil)
+        case .meditation, .gym: #expect(slot == nil)
         }
     }
 }
