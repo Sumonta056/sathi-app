@@ -3,15 +3,15 @@ import SwiftUI
 extension BuddyCanvas {
     var faceInk: Color {
         switch kind {
-        case .pebble, .kettlebell: Night.calmGround
-        case .drop, .book: BuddyInk.line
+        case .pebble: Night.calmGround
+        case .drop, .book, .kettlebell: BuddyInk.line
         }
     }
 
     var cheekFill: Color? {
         switch kind {
-        case .pebble, .kettlebell: Night.cheek.opacity(UIMetrics.pebbleCheekOpacity)
-        case .drop, .book: mood == .happy || mood == .cheer ? BuddyInk.cheek.opacity(0.8) : nil
+        case .pebble: Night.cheek.opacity(UIMetrics.pebbleCheekOpacity)
+        case .drop, .book, .kettlebell: mood == .happy || mood == .cheer ? BuddyInk.cheek.opacity(0.8) : nil
         }
     }
 

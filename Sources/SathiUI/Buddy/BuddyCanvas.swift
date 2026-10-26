@@ -15,7 +15,8 @@ struct BuddyCanvas: View {
             switch kind {
             case .drop: drawDrop(&ctx)
             case .book: drawBook(&ctx)
-            case .pebble, .kettlebell: drawPebble(&ctx)
+            case .pebble: drawPebble(&ctx)
+            case .kettlebell: drawKettlebell(&ctx)
             }
             drawFace(&ctx)
         }
