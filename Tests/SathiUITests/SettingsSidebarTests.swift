@@ -80,14 +80,23 @@ struct SettingsSidebarTests {
         #expect(throws: Never.self) { try sut.find(text: "FOTA · WATER") }
     }
 
-    @Test func addBuddyTabShowsFourComingSoonBuddies() throws {
+    @Test func addBuddyTabShowsTwoComingSoonBuddies() throws {
         let sut = try AddBuddyTab().inspect()
-        for text in ["Add a buddy", "Stretch", "Eye break", "Walk", "Posture", "Loosen up every hour."] {
+        for text in ["Add a buddy", "Eye break", "Posture"] {
             #expect(throws: Never.self) { try sut.find(text: text) }
         }
+        #expect(Find.lacks(sut, text: "Stretch"))
+        #expect(Find.lacks(sut, text: "Walk"))
         let soon = sut.findAll(ViewType.Button.self).filter { (try? $0.labelView().find(text: "Soon")) != nil }
-        #expect(soon.count == 4)
+        #expect(soon.count == 2)
         #expect(soon.allSatisfy { $0.isDisabled() })
+    }
+
+    @Test func sidebarShowsGymWithNewLabel() throws {
+        let sut = try sidebar(EngineHarness()).inspect()
+        let gym = try Find.button(sut, holding: "Gym")
+        #expect(throws: Never.self) { try gym.find(text: "NEW") }
+        #expect(throws: Never.self) { try Find.button(sut, label: "Gym reminders") }
     }
 
     @Test func rootShowsSidebarAndGeneralTabFirst() throws {

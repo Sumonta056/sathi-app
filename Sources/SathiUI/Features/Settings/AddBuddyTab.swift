@@ -7,8 +7,7 @@ struct AddBuddyTab: View {
     }
 
     private static let rows: [[Idea]] = [
-        [Idea(title: "Stretch", detail: "Loosen up every hour."), Idea(title: "Eye break", detail: "20 seconds, 20 feet away.")],
-        [Idea(title: "Walk", detail: "A short walk after lunch."), Idea(title: "Posture", detail: "Sit tall, shoulders down.")]
+        [Idea(title: "Eye break", detail: "20 seconds, 20 feet away."), Idea(title: "Posture", detail: "Sit tall, shoulders down.")]
     ]
 
     var body: some View {
