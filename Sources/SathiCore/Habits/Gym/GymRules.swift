@@ -18,9 +18,9 @@ package struct GymRules: HabitRules {
 
     package func nextDue(now: Date, lastDone: Date?, doneToday _: Double, skipToday: Bool) -> Date {
         if skipToday { return firstReminder(onOrAfter: day(after: now, by: 1)) }
-        let candidate = (lastDone ?? now).addingTimeInterval(interval)
         let cal = clock.calendar
-        if cal.startOfDay(for: candidate) < cal.startOfDay(for: now) { return firstReminder(onOrAfter: now) }
+        let fresh = lastDone.flatMap { cal.startOfDay(for: $0) < cal.startOfDay(for: now) ? nil : $0 }
+        let candidate = (fresh ?? now).addingTimeInterval(interval)
         let due = max(candidate, firstOf(candidate))
         if isWorkDay(candidate), due < end(of: candidate) { return due }
         return firstReminder(onOrAfter: day(after: candidate, by: 1))

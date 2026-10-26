@@ -28,7 +28,7 @@ Sources/
     Scheduling/    EscalationPolicy (bubble/lock), TickPlanner (timer delay)
     Stats/         Stats (daily totals), StreakCalculator, ReportBuilder + Report, ReportScreen + ReportScreenInput, ReportScreenBuilder (+Tiles, +Chart, +Calendar, +Text)
     Export/        CSVExporter, JSONExporter (backup), ExportNames, ExportFormat, ExportJob, ExportOutcome
-    Formatting/    Fmt, Copywriter (+Reading, +Meditation)
+    Formatting/    Fmt, Copywriter (+Reading, +Meditation, +Gym)
     Ports/         Clock, StateStore, HistoryStore, SoundPlayer, ReminderPresenter, FileExporter, SummaryRenderer
     Storage/       JSONFiles, FileSlot, FileStateStore, FileHistoryStore, MonthEvents, RawJSON, LegacyMigrator, Legacy/ (v1 shapes)
     Engine/        Engine (+Loop, +Actions, +Session, +Corner, +Display, +Menu, +History, +Reports, +Export), StatusModel
@@ -36,7 +36,7 @@ Sources/
     Constants/     UIMetrics (+Bubble, +Components, +Corner, +Lock, +Meditation, +Menu, +Reports, +Settings), TimeSlots
     Theme/         NightPalette (Night tokens), Typography, ButtonStyles, GhostButton, ProgressBar, Shake, ShakeSound, Color+Hex
     Components/    HeroCard, SettingsCard, SettingRow, OptionCard, ChipRow, SectionLabel, BuddySwitch
-    Buddy/         BuddyView, BuddyCanvas (+Pebble), BuddyKind, BuddyInk, WaterInk, BuddyPaths, BobbingBuddy, GlassIcon, BottleView
+    Buddy/         BuddyView, BuddyCanvas (+Pebble, +Kettlebell), BuddyKind, BuddyInk, WaterInk, BuddyPaths, BobbingBuddy, GlassIcon, BottleView
     Features/      MenuBar/, Bubble/, Water/, Reading/, Meditation/, Gym/, Session/, Celebrate/, Lock/, Settings/, Reports/
     Windows/       UIController (+Corner, +Placement; ReminderPresenter impl), PanelFactory, CornerToast, SettingsWindow, ReportsWindow, LockScreen, PanelWindows, WindowCloseWatcher
     Platform/      SystemSoundPlayer

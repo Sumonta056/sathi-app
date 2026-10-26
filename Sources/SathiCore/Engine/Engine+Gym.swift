@@ -26,7 +26,7 @@ extension Engine {
         habits[id] = HabitState(nextDue: due)
         update(id) { $0.snoozedUntil = due }
         if resetsIdea(id) { gymIdea = 0 }
-        if usesCorner(id) { presenter.showSnoozed(id, until: due) }
+        if usesCorner(id), hasReminder(id) { presenter.showSnoozed(id, until: due) }
         requestTick()
     }
 

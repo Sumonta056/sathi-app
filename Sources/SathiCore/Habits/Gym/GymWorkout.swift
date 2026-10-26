@@ -16,3 +16,15 @@ package struct GymWorkout: Codable, Equatable, Sendable {
         GymWorkout(name: "Wall push-ups", minutes: 3)
     ]
 }
+
+extension GymWorkout {
+    enum CodingKeys: String, CodingKey {
+        case name, minutes
+    }
+
+    package init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        name = c.lenient(.name, or: "")
+        minutes = c.lenient(.minutes, or: 0)
+    }
+}

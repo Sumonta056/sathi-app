@@ -37,6 +37,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 9. Pause stops new reminders until the pause ends. A reminder that already shows stays.
 10. "Rest of day" pauses until the next midnight. It moves each enabled habit to its next slot after that midnight and clears every snooze and closes every open reminder without a snooze, so a slot missed during the pause never shows. A running session continues. The 30 min and 1 hour pauses keep missed reminders: they show when the pause ends.
 11. A settings change that moves a habit's due time into the future clears its snooze (for example, today's weekday turned off, or a later meditation start time).
+12. A habit that is on but has no next reminder (its rules give no due time, for example Gym work hours shorter than one interval) shows "No reminder" on its card, is left out of the menu bar countdown, and shows no snoozed note.
 
 ## Schedules
 
@@ -45,7 +46,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 | Water | Every `intervalMinutes`, only between start and end time | The user logs an amount (minimum `Limits.minimumLog`) |
 | Reading | Once a day at a set time, on the selected weekdays | A session of `sessionMinutes` ends |
 | Meditation | Every `intervalMinutes`, only between start and end time, until today's minutes meet `dailyGoalMinutes`. Then the next reminder is at tomorrow's start time. | A breathing session of `sessionMinutes` ends |
-| Gym | Every `intervalMinutes` on the selected work days. The first reminder of a work day is at the start of work hours plus 1 interval. No reminder at or after the end. Reminders continue after the goal. | A workout session ends, or the user taps Done during it. |
+| Gym | Every `intervalMinutes` on the selected work days. The first reminder of a work day is at the start of work hours plus 1 interval. No reminder at or after the end. Reminders continue after the goal. A last done from an earlier day does not count: the next reminder is 1 interval from now, inside work hours. | A workout session ends, or the user taps Done during it. |
 
 1. After "done", the next due time starts from the done time, not from the old due time.
 2. A due time outside active hours moves to the next start of active hours.

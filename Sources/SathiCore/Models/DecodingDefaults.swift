@@ -5,6 +5,10 @@ extension KeyedDecodingContainer {
         try decodeIfPresent(T.self, forKey: key) ?? fallback
     }
 
+    func lenient<T: Decodable>(_ key: Key, or fallback: T) -> T {
+        (try? decodeIfPresent(T.self, forKey: key)) ?? fallback
+    }
+
     func known<T: RawRepresentable>(_ key: Key, or fallback: T) throws -> T where T.RawValue: Decodable {
         try decodeIfPresent(T.RawValue.self, forKey: key).flatMap(T.init(rawValue:)) ?? fallback
     }

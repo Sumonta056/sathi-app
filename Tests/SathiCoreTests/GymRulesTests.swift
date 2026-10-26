@@ -86,9 +86,11 @@ struct GymRulesTests {
 
     @Test(arguments: [
         (day(2026, 3, 4, 11), day(2026, 3, 5, 8), day(2026, 3, 5, 10)),
+        (day(2026, 3, 4, 11), day(2026, 3, 5, 10, 30), day(2026, 3, 5, 11, 30)),
+        (day(2026, 3, 4, 11), day(2026, 3, 5, 17, 30), day(2026, 3, 6, 10)),
         (day(2026, 3, 6, 11), day(2026, 3, 9, 8), day(2026, 3, 9, 10))
     ])
-    func staleLastDoneGivesTodaysFirstReminder(_ done: Date, _ now: Date, _ expected: Date) {
+    func staleLastDoneCountsFromNow(_ done: Date, _ now: Date, _ expected: Date) {
         #expect(rules.nextDue(now: now, lastDone: done, doneToday: 0, skipToday: false) == expected)
     }
 

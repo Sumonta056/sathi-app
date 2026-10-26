@@ -40,6 +40,7 @@ extension Engine {
         guard let s = session(id) else { return }
         close(id)
         if s.fromReminder { snoozeHabit(id) }
+        if resetsIdea(id) { gymIdea = 0 }
         requestTick()
     }
 

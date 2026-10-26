@@ -90,4 +90,14 @@ struct EngineGymNotNowTests {
         h.engine.snooze(.gym)
         #expect(h.engine.gymWorkout.name == "Neck and shoulder stretch")
     }
+
+    @Test func stopSessionForgetsTheShownIdea() {
+        let h = gymAtTen()
+        h.engine.nextGymIdea()
+        h.engine.nextGymIdea()
+        h.engine.startSession(.gym)
+        h.engine.stopSession(.gym)
+        #expect(h.engine.gymIdea == 0)
+        #expect(h.engine.gymWorkout == h.engine.data.prefs.gym.workout(at: 0))
+    }
 }
