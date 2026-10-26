@@ -18,6 +18,7 @@ package final class Engine: ObservableObject {
     @Published package internal(set) var activities: [HabitID: Activity] = [:]
     @Published package var celebration = Celebration()
     @Published package var isCelebrating = false
+    @Published package internal(set) var gymIdea = 0
 
     package let status = StatusModel()
     let store: StateStore

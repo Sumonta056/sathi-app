@@ -41,7 +41,8 @@ extension Engine {
 
     private func endIfExpired(_ id: HabitID) {
         switch activities[id] {
-        case let .bubble(_, _, deadline) where now >= deadline: snooze(id)
+        case let .bubble(_, _, deadline) where now >= deadline:
+            if ignoreGoesToNextInterval(id) { notNow(id) } else { snooze(id) }
         case let .session(s) where now >= s.end: finishSession(id)
         default: break
         }
@@ -89,6 +90,7 @@ extension Engine {
 
     private func present(_ id: HabitID) {
         forced.remove(id)
+        if resetsIdea(id) { gymIdea = 0 }
         switch EscalationPolicy.presentation(for: strictness(id), snoozes: state(id).snoozes) {
         case let .bubble(level): showBubble(id, level)
         case .lock where HabitID.allCases.contains(where: { phase($0) == .lock }): showBubble(id, .persist)

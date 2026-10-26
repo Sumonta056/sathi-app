@@ -12,12 +12,13 @@ extension Engine {
 
     package func startSession(_ id: HabitID) {
         guard let minutes = sessionMinutes(id) else { sound.beep(); return }
+        let workout = sessionWorkout(id)
         let n = clock.now
         let st = state(id)
         let fromReminder = session(id)?.fromReminder ?? (isActive(id) || n >= (st.snoozedUntil ?? st.nextDue))
         close(id)
         let end = n.addingTimeInterval(TimeInterval(minutes) * Timing.minute)
-        activities[id] = .session(Session(start: n, end: end, fromReminder: fromReminder))
+        activities[id] = .session(Session(start: n, end: end, fromReminder: fromReminder, workout: workout))
         presenter.showSession(id)
         if let sound = startSound(id) { play(sound) }
         requestTick()
@@ -26,11 +27,13 @@ extension Engine {
     package func finishSession(_ id: HabitID) {
         guard let s = session(id) else { return }
         let minutes = Double(Int((s.end.timeIntervalSince(s.start) / Timing.minute).rounded()))
+        let amount = doneAmount(id, minutes: minutes)
         let n = clock.now
-        record(.done(id, minutes, at: n))
+        record(.done(id, amount, at: n))
         habits[id] = HabitState(nextDue: freshDue(id, lastDone: n))
         close(id)
-        celebrate(id, minutes)
+        if resetsIdea(id) { gymIdea = 0 }
+        celebrate(id, amount)
     }
 
     package func stopSession(_ id: HabitID) {
@@ -52,7 +55,21 @@ extension Engine {
         case .water: return nil
         case .reading: return data.prefs.reading.sessionMinutes
         case .meditation: return data.prefs.meditation.sessionMinutes
-        case .gym: return data.prefs.gym.workouts[0].minutes
+        case .gym: return gymWorkout.minutes
+        }
+    }
+
+    private func sessionWorkout(_ id: HabitID) -> Int? {
+        switch id {
+        case .water, .reading, .meditation: return nil
+        case .gym: return gymWorkoutIndex
+        }
+    }
+
+    private func doneAmount(_ id: HabitID, minutes: Double) -> Double {
+        switch id {
+        case .water, .reading, .meditation: return minutes
+        case .gym: return 1
         }
     }
 

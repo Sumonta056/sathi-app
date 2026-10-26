@@ -15,11 +15,13 @@ package struct Session: Equatable, Sendable {
     package var start: Date
     package var end: Date
     package var fromReminder: Bool
+    package var workout: Int?
 
-    package init(start: Date, end: Date, fromReminder: Bool = false) {
+    package init(start: Date, end: Date, fromReminder: Bool = false, workout: Int? = nil) {
         self.start = start
         self.end = end
         self.fromReminder = fromReminder
+        self.workout = workout
     }
 }
 
