@@ -96,7 +96,7 @@ Same frame as `ReadingInvite` (corner, never takes focus).
 - When the countdown ends, it counts as done.
 - **Done** before the end also counts as done, with the full workout minutes **(call: the user walks away from the Mac and may not come back at the exact second)**.
 - **Stop** does not count (Schedules rule 6).
-- Done writes `HistoryEvent.done(.gym, minutes, at: now)` and shows a small thank-you card in the corner.
+- Done writes `HistoryEvent.done(.gym, 1, at: now)` and shows a small thank-you card in the corner.
 
 ## Goal, stats, and streak
 
@@ -104,7 +104,7 @@ Same frame as `ReadingInvite` (corner, never takes focus).
 - Event `amount` = 1 for each done workout, so the daily total counts workouts **(call: follows the goal unit)**.
 - The goal is fixed at 4. No goal row in the Settings tab **(call: matches the approved layout)**.
 - Reports tile unit: "workouts". The streak and calendar shades use the goal of 4.
-- Reports: one tile for Gym, a chart of minutes, the streak calendar, like the other habits.
+- Reports: one tile for Gym, a chart of workouts, the streak calendar, like the other habits.
 - Menu bar: a `HabitCard` for Gym with the next reminder time.
 
 ## Settings tab

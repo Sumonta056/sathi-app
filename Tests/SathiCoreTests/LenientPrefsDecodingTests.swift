@@ -48,4 +48,17 @@ struct LenientPrefsDecodingTests {
         #expect(p.meditation.intervalMinutes == 90)
         #expect(p.meditation.startMinutes == 480)
     }
+
+    @Test func unknownGymStrictnessAndWeekdayDecodeToDefaultsAndKeepTheRest() throws {
+        let p = try decode(#"{"gym":{"enabled":true,"intervalMinutes":90,"strictness":"fierce","weekdays":[9]}}"#)
+        #expect(p.gym.strictness == .friendly)
+        #expect(p.gym.weekdays == Limits.gymWorkDays)
+        #expect(p.gym.enabled)
+        #expect(p.gym.intervalMinutes == 90)
+    }
+
+    @Test func emptyGymWeekdaysDecodeAsMondayToFriday() throws {
+        let p = try decode(#"{"gym":{"weekdays":[]}}"#)
+        #expect(p.gym.sortedWeekdays == [.monday, .tuesday, .wednesday, .thursday, .friday])
+    }
 }

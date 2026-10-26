@@ -5,6 +5,7 @@ package struct Prefs: Codable, Equatable, Sendable {
     package var water = WaterPrefs()
     package var reading = ReadingPrefs()
     package var meditation = MeditationPrefs()
+    package var gym = GymPrefs()
 
     package init() {}
 
@@ -14,7 +15,9 @@ package struct Prefs: Codable, Equatable, Sendable {
             "\(reading.enabled)", "\(reading.timeMinutes)", "\(reading.sessionMinutes)",
             reading.sortedWeekdays.map { "\($0.rawValue)" }.joined(separator: "+"),
             "\(meditation.enabled)", "\(meditation.dailyGoalMinutes)", "\(meditation.sessionMinutes)",
-            "\(meditation.intervalMinutes)", "\(meditation.startMinutes)", "\(meditation.endMinutes)"
+            "\(meditation.intervalMinutes)", "\(meditation.startMinutes)", "\(meditation.endMinutes)",
+            "\(gym.enabled)", "\(gym.intervalMinutes)", "\(gym.startMinutes)", "\(gym.endMinutes)",
+            gym.sortedWeekdays.map { "\($0.rawValue)" }.joined(separator: "+")
         ].joined(separator: "-")
     }
 
@@ -47,5 +50,6 @@ extension Prefs {
         water = try c.value(.water, or: d.water)
         reading = try c.value(.reading, or: d.reading)
         meditation = try c.value(.meditation, or: d.meditation)
+        gym = try c.value(.gym, or: d.gym)
     }
 }

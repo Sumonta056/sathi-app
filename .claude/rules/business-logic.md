@@ -19,9 +19,9 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 | Due | The time a reminder must show. Comes from the habit's `HabitRules.nextDue`. |
 | Reminder | What the user sees when a habit is due: bubble, corner popup, or lock. |
 | Snooze | The user delays a reminder. Not answering for `ignoreMinutes` also counts as a snooze. Except Gym: no answer means Not now (Escalation rule 7). |
-| Session | A timed activity: reading or meditation. `Activity.session(Session)` in `Engine.activities[id]`. |
+| Session | A timed activity: reading, meditation, or gym. `Activity.session(Session)` in `Engine.activities[id]`. |
 | Event | One record in history: done, snooze, or skip. `HistoryEvent`. |
-| Goal | The daily target of a habit. Water: glasses. Reading and meditation: minutes. Gym: workouts. |
+| Goal | The daily target of a habit. Water: glasses. Reading and meditation: minutes. Gym: workouts (fixed at 4; each done workout counts 1). |
 | Streak | Count of days in a row, up to today, on which the goal was met. |
 
 ## Habits
@@ -76,7 +76,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 4. Raw values never change. They are in saved files. Change only the labels.
 5. The Meditation invite follows the same calm rules at Gentle and Nudgy (at Strict it locks after 2 snoozes, like water): it never takes focus from the active app, at Nudgy it wiggles in silence, and its snooze button uses the General snooze length. Its session button "Stop" follows Schedules rule 6: an early stop does not count.
 6. The water thank-you button names the next reminder: "See you in {time}" or "See you tomorrow". While Sathi is paused it says "See you after your break". When water reminders are off it says "Nice one".
-7. The Gym invite follows Escalation rule 5 (calm, corner, no focus). Its close button, and no answer for `ignoreMinutes`, mean "Not now": a `.snooze` event, the next reminder 1 interval later, the snooze count goes back to 0, the streak stays. Its "In {n} min" button is a normal snooze. "Next idea" shows the next workout in the popup only.
+7. The Gym invite follows Escalation rule 5 (calm, corner, no focus). Its close button, and no answer for `ignoreMinutes`, mean "Not now": a `.snooze` event, the next reminder 1 interval later, the snooze count goes back to 0, the streak stays. Its "In {n} min" button is a normal snooze. "Next idea" shows the next workout in the popup only. A stored Strict acts as Nudgy. At Nudgy the invite plays one ping, then wiggles in silence.
 
 ## History and storage
 
