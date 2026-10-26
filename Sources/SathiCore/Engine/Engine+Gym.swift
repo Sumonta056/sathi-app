@@ -24,6 +24,8 @@ extension Engine {
         activities[id] = nil
         let due = freshDue(id, lastDone: n)
         habits[id] = HabitState(nextDue: due)
+        update(id) { $0.snoozedUntil = due }
+        if resetsIdea(id) { gymIdea = 0 }
         if usesCorner(id) { presenter.showSnoozed(id, until: due) }
         requestTick()
     }

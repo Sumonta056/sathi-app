@@ -7,6 +7,7 @@ extension Engine {
         presenter.closeBubble(id)
         if usesCorner(id), let until = state(id).snoozedUntil { presenter.showSnoozed(id, until: until) }
         activities[id] = nil
+        if resetsIdea(id) { gymIdea = 0 }
         requestTick()
     }
 
