@@ -14,14 +14,14 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 | Word | Meaning |
 |---|---|
 | Habit | One thing Sathi reminds about. A case of `HabitID`. |
-| Buddy | The character of a habit. Water = Fota, Reading = Boi, Meditation = Shanti. |
+| Buddy | The character of a habit. Water = Fota, Reading = Boi, Meditation = Shanti, Gym = Shokti. |
 | Module | All the code of one habit: `SathiCore/Habits/<Name>/` and `SathiUI/Features/<Name>/`. |
 | Due | The time a reminder must show. Comes from the habit's `HabitRules.nextDue`. |
 | Reminder | What the user sees when a habit is due: bubble, corner popup, or lock. |
-| Snooze | The user delays a reminder. Not answering for `ignoreMinutes` also counts as a snooze. |
+| Snooze | The user delays a reminder. Not answering for `ignoreMinutes` also counts as a snooze. Except Gym: no answer means Not now (Escalation rule 7). |
 | Session | A timed activity: reading or meditation. `Activity.session(Session)` in `Engine.activities[id]`. |
 | Event | One record in history: done, snooze, or skip. `HistoryEvent`. |
-| Goal | The daily target of a habit. Water: glasses. Reading and meditation: minutes. |
+| Goal | The daily target of a habit. Water: glasses. Reading and meditation: minutes. Gym: workouts. |
 | Streak | Count of days in a row, up to today, on which the goal was met. |
 
 ## Habits
@@ -45,6 +45,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 | Water | Every `intervalMinutes`, only between start and end time | The user logs an amount (minimum `Limits.minimumLog`) |
 | Reading | Once a day at a set time, on the selected weekdays | A session of `sessionMinutes` ends |
 | Meditation | Every `intervalMinutes`, only between start and end time, until today's minutes meet `dailyGoalMinutes`. Then the next reminder is at tomorrow's start time. | A breathing session of `sessionMinutes` ends |
+| Gym | Every `intervalMinutes` on the selected work days. The first reminder of a work day is at the start of work hours plus 1 interval. No reminder at or after the end. Reminders continue after the goal. | A workout session ends, or the user taps Done during it. |
 
 1. After "done", the next due time starts from the done time, not from the old due time.
 2. A due time outside active hours moves to the next start of active hours.
@@ -64,7 +65,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 | `persistent` | Nudgy | After 1 snooze: stays on top, wiggles, no close button. |
 | `strict` | Strict | After 1 snooze: Nudgy. After 2 snoozes: full-screen lock. |
 
-1. Water and Meditation may use Strict. Reading never locks the screen.
+1. Water and Meditation may use Strict. Reading and Gym never lock the screen.
 2. Reading shows a corner popup in the top-right by default. It never takes focus from the active app. `ReadingPrefs.reminderStyle` picks `corner` (default) or `focus` (the old centered session).
    - With `corner`, the reading session shows as a small timer pill in the same corner, and the thank-you shows there too.
    - The corner popup snoozes for the General snooze length, like every other reminder.
@@ -75,6 +76,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 4. Raw values never change. They are in saved files. Change only the labels.
 5. The Meditation invite follows the same calm rules at Gentle and Nudgy (at Strict it locks after 2 snoozes, like water): it never takes focus from the active app, at Nudgy it wiggles in silence, and its snooze button uses the General snooze length. Its session button "Stop" follows Schedules rule 6: an early stop does not count.
 6. The water thank-you button names the next reminder: "See you in {time}" or "See you tomorrow". While Sathi is paused it says "See you after your break". When water reminders are off it says "Nice one".
+7. The Gym invite follows Escalation rule 5 (calm, corner, no focus). Its close button, and no answer for `ignoreMinutes`, mean "Not now": a `.snooze` event, the next reminder 1 interval later, the snooze count goes back to 0, the streak stays. Its "In {n} min" button is a normal snooze. "Next idea" shows the next workout in the popup only.
 
 ## History and storage
 

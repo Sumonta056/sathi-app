@@ -98,6 +98,16 @@ Spec 6b: `docs/specs/phase-6b-tolerant-decoding.md`
 - [x] Definition of done in `CLAUDE.md` passes (tests, lint, release build, install, idle perf 0.0% / 18 MB / 0 wakeups; version 2.0, `Sathi-2.0.dmg`)
 - [ ] `perf.sh --windows` run by the user in Terminal (not run yet)
 
+## Phase 8: Gym (Shokti)
+
+Spec: `docs/specs/gym-shokti-design.md`
+Plan: `docs/superpowers/plans/2026-10-26-gym-shokti.md`
+
+- [ ] Rules in `.claude/rules/business-logic.md`
+- [ ] Gym core: `HabitID.gym`, `GymPrefs`, `GymRules`
+- [ ] Gym UI: Shokti buddy, invite, session, settings tab
+- [ ] Reports, website, and README
+
 ## Later
 
 - 6b: `RawJSON` stores numbers as `Double`; integers above 2^53 and `-0.0` are not written back exactly
