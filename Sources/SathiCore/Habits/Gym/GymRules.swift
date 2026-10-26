@@ -19,6 +19,8 @@ package struct GymRules: HabitRules {
     package func nextDue(now: Date, lastDone: Date?, doneToday _: Double, skipToday: Bool) -> Date {
         if skipToday { return firstReminder(onOrAfter: day(after: now, by: 1)) }
         let candidate = (lastDone ?? now).addingTimeInterval(interval)
+        let cal = clock.calendar
+        if cal.startOfDay(for: candidate) < cal.startOfDay(for: now) { return firstReminder(onOrAfter: now) }
         let due = max(candidate, firstOf(candidate))
         if isWorkDay(candidate), due < end(of: candidate) { return due }
         return firstReminder(onOrAfter: day(after: candidate, by: 1))
@@ -34,7 +36,7 @@ package struct GymRules: HabitRules {
             let start = clock.at(gym.startMinutes, on: day(after: date, by: step))
             if isWorkDay(start), start > date { return start }
         }
-        return clock.at(gym.startMinutes, on: day(after: date, by: Limits.daysPerWeek))
+        return .distantFuture
     }
 
     package func nextSlot(after _: Date) -> Date? { nil }
@@ -48,7 +50,7 @@ package struct GymRules: HabitRules {
             let d = day(after: date, by: step)
             if isWorkDay(d), firstOf(d) < end(of: d) { return firstOf(d) }
         }
-        return firstOf(day(after: date, by: Limits.daysPerWeek))
+        return .distantFuture
     }
 
     private func firstOf(_ date: Date) -> Date {

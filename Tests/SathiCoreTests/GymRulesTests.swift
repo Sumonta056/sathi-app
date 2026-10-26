@@ -70,15 +70,26 @@ struct GymRulesTests {
         #expect(r.nextDue(now: day(2026, 3, 7, 7), lastDone: nil, doneToday: 0, skipToday: false) == day(2026, 3, 9, 10))
     }
 
-    @Test func startPlusIntervalAtOrAfterEndHasNoReminderThatDay() {
+    @Test func startPlusIntervalAtOrAfterEndEveryDayHasNoReminder() {
         var prefs = Prefs()
         prefs.gym.startMinutes = 15 * 60
         prefs.gym.endMinutes = 16 * 60
         prefs.gym.intervalMinutes = 60
-        prefs.gym.weekdays = [.wednesday, .thursday]
         let r = GymRules(prefs: prefs)
-        let due = r.nextDue(now: day(2026, 3, 4, 7), lastDone: nil, doneToday: 0, skipToday: false)
-        #expect(due > day(2026, 3, 5))
+        #expect(r.nextDue(now: day(2026, 3, 4, 7), lastDone: nil, doneToday: 0, skipToday: false) == .distantFuture)
+        #expect(r.nextDue(now: day(2026, 3, 4, 7), lastDone: nil, doneToday: 0, skipToday: true) == .distantFuture)
+    }
+
+    @Test func candidateAtTheEndSkipsToTheNextWorkDay() {
+        #expect(rules.nextDue(now: day(2026, 3, 4, 16), lastDone: day(2026, 3, 4, 16), doneToday: 3, skipToday: false) == day(2026, 3, 5, 10))
+    }
+
+    @Test(arguments: [
+        (day(2026, 3, 4, 11), day(2026, 3, 5, 8), day(2026, 3, 5, 10)),
+        (day(2026, 3, 6, 11), day(2026, 3, 9, 8), day(2026, 3, 9, 10))
+    ])
+    func staleLastDoneGivesTodaysFirstReminder(_ done: Date, _ now: Date, _ expected: Date) {
+        #expect(rules.nextDue(now: now, lastDone: done, doneToday: 0, skipToday: false) == expected)
     }
 
     @Test(arguments: [(3, 8), (11, 1)])

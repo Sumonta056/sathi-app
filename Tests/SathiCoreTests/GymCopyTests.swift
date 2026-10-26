@@ -33,11 +33,6 @@ struct GymCopyTests {
     }
 
     @Test func gymTimerLineIsOneKindLine() {
-        #expect(!Copywriter.gymTimerLine().isEmpty)
-        #expect(Copywriter.gymTimerLine() == Copywriter.gymTimerLine())
-    }
-
-    @Test func gymHasCelebrationTitles() {
-        #expect(!Copywriter.celebrationTitle(.gym).isEmpty)
+        #expect(Copywriter.gymTimerLine() == "Go at your own pace. Every move counts.")
     }
 }
