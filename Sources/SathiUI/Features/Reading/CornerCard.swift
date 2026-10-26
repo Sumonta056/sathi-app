@@ -1,8 +1,10 @@
+import SathiCore
 import SwiftUI
 
 struct CornerCard: ViewModifier {
     var width = UIMetrics.cornerWidth
     var alert = false
+    var habit: HabitID = .reading
 
     func body(content: Content) -> some View {
         content
@@ -10,7 +12,7 @@ struct CornerCard: ViewModifier {
             .frame(width: width)
             .background(shape.fill(Night.card))
             .overlay(shape.strokeBorder(
-                alert ? Night.reading : Night.heroBorder(.reading),
+                alert ? Night.accent(habit) : Night.heroBorder(habit),
                 lineWidth: alert ? UIMetrics.bubbleAlertBorder : UIMetrics.bubbleBorder
             ))
             .modifier(CornerShadow())

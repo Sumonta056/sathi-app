@@ -35,8 +35,10 @@ package final class UIController: ReminderPresenter {
             return focusedBubble(id, level)
         case .reading:
             return engine?.usesCorner(id) == true ? presentCorner(ReadingInvite(level: level)) : focusedBubble(id, level)
-        case .meditation, .gym:
+        case .meditation:
             return presentCorner(BubbleView(id: id, level: level))
+        case .gym:
+            return presentCorner(GymInvite(level: level))
         }
     }
 
@@ -54,7 +56,7 @@ package final class UIController: ReminderPresenter {
     package func showSession(_ id: HabitID) {
         closeSession(id)
         if engine?.usesCorner(id) == true {
-            sessions[id] = presentCorner(ReadingTimerPill())
+            sessions[id] = presentCorner(cornerSessionView(id))
             return
         }
         guard let h = hosting(sessionView(id)) else { return }

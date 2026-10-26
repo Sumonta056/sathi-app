@@ -10,7 +10,7 @@ struct CelebrateView: View {
         case .reading:
             if e.usesCorner(.reading) { ReadingDoneCard() } else { LegacyCelebrate() }
         case .meditation: MeditationThanks()
-        case .gym: LegacyCelebrate()
+        case .gym: GymThanks()
         }
     }
 }

@@ -25,6 +25,14 @@ extension UIController {
         return placeTopRight(CornerToast.make(h))
     }
 
+    @ViewBuilder
+    func cornerSessionView(_ id: HabitID) -> some View {
+        switch id {
+        case .gym: GymTimerCard()
+        case .water, .reading, .meditation: ReadingTimerPill()
+        }
+    }
+
     func celebrationPanel(_ h: NSView, _ e: Engine) -> NSPanel {
         let id = e.celebration.id
         switch id {
