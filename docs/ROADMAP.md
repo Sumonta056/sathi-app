@@ -116,7 +116,7 @@ Plan and spec: `docs/superpowers/plans/2026-10-27-days-off.md`
 
 - [x] Rules in `.claude/rules/business-logic.md`
 - [x] `DayKey`, `HabitDays`, and weekdays plus days off in every buddy's prefs
-- [ ] Reminders skip days off
+- [x] Reminders skip days off
 - [ ] Engine: today off closes that buddy's reminder; "Day off" pill
 - [ ] Streaks and reports skip days off
 - [ ] Settings: weekday row and days-off card for every buddy

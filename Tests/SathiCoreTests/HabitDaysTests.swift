@@ -69,14 +69,29 @@ struct HabitDaysTests {
         #expect(days.nextOnDay(onOrAfter: zone.date(2026, 11, 3, 10), calendar: cal) == zone.date(2026, 11, 10))
     }
 
-    @Test func nextOnDayFindsADayFourteenDaysAhead() {
-        let days = HabitDays(weekdays: [.tuesday], daysOff: keys("2026-11-03", "2026-11-10"))
-        #expect(days.nextOnDay(onOrAfter: zone.date(2026, 11, 3, 10), calendar: cal) == zone.date(2026, 11, 17))
+    private var window: Int { Limits.daysOffMaxAhead + Limits.daysPerWeek }
+
+    private func daysOff(from start: Date, count: Int) -> Set<DayKey> {
+        Set((0 ..< count).map { DayKey(zone.adding(days: $0, to: start), calendar: cal) })
     }
 
-    @Test func nextOnDayIsNilWhenNothingIsOnForTwoWeeks() {
-        let days = HabitDays(weekdays: [.tuesday], daysOff: keys("2026-11-03", "2026-11-10", "2026-11-17"))
+    @Test func nextOnDayFindsADayAtTheEndOfTheWindow() {
+        let start = zone.date(2026, 11, 3)
+        let days = HabitDays(weekdays: Set(Weekday.allCases), daysOff: daysOff(from: start, count: window))
+        #expect(window == 372)
+        #expect(days.nextOnDay(onOrAfter: zone.date(2026, 11, 3, 10), calendar: cal) == zone.adding(days: window, to: start))
+    }
+
+    @Test func nextOnDayIsNilWhenNothingIsOnInTheWindow() {
+        let start = zone.date(2026, 11, 3)
+        let days = HabitDays(weekdays: Set(Weekday.allCases), daysOff: daysOff(from: start, count: window + 1))
         #expect(days.nextOnDay(onOrAfter: zone.date(2026, 11, 3, 10), calendar: cal) == nil)
+    }
+
+    @Test func aThreeWeekBreakFindsTheDayAfter() {
+        let start = zone.date(2026, 11, 3)
+        let days = HabitDays(weekdays: Set(Weekday.allCases), daysOff: daysOff(from: start, count: 21))
+        #expect(days.nextOnDay(onOrAfter: start, calendar: cal) == zone.adding(days: 21, to: start))
     }
 
     @Test func nextOnDayOverADSTChangeIsLocalMidnight() {

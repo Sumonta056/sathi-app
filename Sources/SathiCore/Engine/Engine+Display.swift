@@ -29,7 +29,9 @@ extension Engine {
 
     func hasReminder(_ id: HabitID) -> Bool {
         let st = state(id)
-        return (st.snoozedUntil ?? st.nextDue) != .distantFuture
+        guard (st.snoozedUntil ?? st.nextDue) != .distantFuture else { return false }
+        let rule = rules(id)
+        return forced.contains(id) || rule.isActiveTime(now) || rule.nextActiveStart(after: now) != .distantFuture
     }
 
     package func copy(_ id: HabitID) -> Copy {

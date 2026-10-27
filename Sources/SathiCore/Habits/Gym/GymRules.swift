@@ -12,6 +12,8 @@ package struct GymRules: HabitRules {
 
     private var gym: GymPrefs { prefs.gym }
 
+    private var days: HabitDays { prefs.days(id) }
+
     private var interval: TimeInterval { TimeInterval(gym.intervalMinutes) * Timing.minute }
 
     package var dailyGoal: Double { Double(Limits.gymDailyGoal) }
@@ -22,21 +24,17 @@ package struct GymRules: HabitRules {
         let fresh = lastDone.flatMap { cal.startOfDay(for: $0) < cal.startOfDay(for: now) ? nil : $0 }
         let candidate = (fresh ?? now).addingTimeInterval(interval)
         let due = max(candidate, firstOf(candidate))
-        if isWorkDay(candidate), due < end(of: candidate) { return due }
+        if days.isOn(candidate, calendar: cal), due < end(of: candidate) { return due }
         return firstReminder(onOrAfter: day(after: candidate, by: 1))
     }
 
     package func isActiveTime(_ date: Date) -> Bool {
         let m = clock.minutesOfDay(date)
-        return isWorkDay(date) && m >= gym.startMinutes && m < gym.endMinutes
+        return days.isOn(date, calendar: clock.calendar) && m >= gym.startMinutes && m < gym.endMinutes
     }
 
     package func nextActiveStart(after date: Date) -> Date {
-        for step in 0 ... Limits.daysPerWeek {
-            let start = clock.at(gym.startMinutes, on: day(after: date, by: step))
-            if isWorkDay(start), start > date { return start }
-        }
-        return .distantFuture
+        days.nextStart(after: date, calendar: clock.calendar) { clock.at(gym.startMinutes, on: $0) }
     }
 
     package func nextSlot(after _: Date) -> Date? { nil }
@@ -46,11 +44,7 @@ package struct GymRules: HabitRules {
     }
 
     private func firstReminder(onOrAfter date: Date) -> Date {
-        for step in 0 ... Limits.daysPerWeek {
-            let d = day(after: date, by: step)
-            if isWorkDay(d), firstOf(d) < end(of: d) { return firstOf(d) }
-        }
-        return .distantFuture
+        days.firstReminder(onOrAfter: date, calendar: clock.calendar) { firstOf($0) < end(of: $0) ? firstOf($0) : .distantFuture }
     }
 
     private func firstOf(_ date: Date) -> Date {
@@ -59,12 +53,6 @@ package struct GymRules: HabitRules {
 
     private func end(of date: Date) -> Date {
         clock.at(gym.endMinutes, on: date)
-    }
-
-    private func isWorkDay(_ date: Date) -> Bool {
-        let days = gym.weekdays.isEmpty ? Set(Weekday.allCases) : gym.weekdays
-        guard let w = Weekday(rawValue: clock.calendar.component(.weekday, from: date)) else { return false }
-        return days.contains(w)
     }
 
     private func day(after date: Date, by count: Int) -> Date {

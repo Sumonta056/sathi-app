@@ -118,7 +118,9 @@ extension Engine {
     func snoozeHabit(_ id: HabitID) {
         let n = clock.now
         record(.snooze(id, at: n))
-        let until = n.addingTimeInterval(TimeInterval(data.prefs.general.snoozeMinutes) * Timing.minute)
+        let end = n.addingTimeInterval(TimeInterval(data.prefs.general.snoozeMinutes) * Timing.minute)
+        let rule = rules(id)
+        let until = rule.isActiveTime(end) ? end : rule.nextActiveStart(after: end)
         update(id) { st in
             st.snoozes += 1
             st.snoozedUntil = until
