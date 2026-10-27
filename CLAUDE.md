@@ -38,7 +38,7 @@ Sources/
     Components/    HeroCard, SettingsCard, SettingRow, OptionCard, ChipRow, SectionLabel, BuddySwitch, WeekdayRow, DaysOffCard, DaysOffRow
     Buddy/         BuddyView, BuddyCanvas (+Pebble, +Kettlebell), BuddyKind, BuddyInk, WaterInk, BuddyPaths, BobbingBuddy, GlassIcon, BottleView
     Features/      MenuBar/, Bubble/, Water/, Reading/, Meditation/, Gym/, Session/, Celebrate/, Lock/, Settings/, Reports/
-    Windows/       UIController (+Corner, +Placement; ReminderPresenter impl), PanelFactory, CornerToast, SettingsWindow, ReportsWindow, LockScreen, PanelWindows, WindowCloseWatcher
+    Windows/       UIController (+Corner, +Placement; ReminderPresenter impl), CornerLayout, PanelFactory, CornerToast, SettingsWindow, ReportsWindow, LockScreen, PanelWindows, WindowCloseWatcher
     Platform/      SystemSoundPlayer
   Sathi/         Executable. SathiApp, AppDelegate, AppEnvironment (composition root).
 Resources/        Info.plist (version), AppIcon.icns (app icon), AppIcon.png (1024 px preview)

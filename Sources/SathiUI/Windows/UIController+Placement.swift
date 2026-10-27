@@ -37,11 +37,15 @@ extension UIController {
 
     private func restack() {
         guard let vf = (cornerScreen ?? activeScreen)?.visibleFrame else { return }
-        let inset = UIMetrics.bubbleScreenInset
-        var top = vf.maxY + inset.y
-        for p in corner {
-            p.setFrameOrigin(NSPoint(x: vf.maxX - p.frame.width + inset.x, y: top - p.frame.height))
-            top -= p.frame.height - UIMetrics.cornerStackOverlap
+        let origins = CornerLayout.origins(
+            sizes: corner.map(\.frame.size),
+            in: vf,
+            inset: UIMetrics.bubbleScreenInset,
+            overlap: UIMetrics.cornerStackOverlap,
+            gap: UIMetrics.cornerColumnGap
+        )
+        for (p, origin) in zip(corner, origins) {
+            p.setFrameOrigin(origin)
         }
     }
 

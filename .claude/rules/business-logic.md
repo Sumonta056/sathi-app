@@ -32,7 +32,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 3. Every `switch` on `HabitID` is exhaustive. Never use `default:` and never use `id == .water ? a : b`. A new habit must fail to compile until every place handles it.
 4. A habit that is off has no due time and shows no reminder. Its history stays.
 5. Habits are independent. Each habit has its own reminder, snooze, ignore timer, and session. A reminder of one habit never waits for, closes, or changes a reminder or session of another habit. There is no queue.
-6. Reminders that show at the same time stack down from the top-right corner, in the order they open. The first one opens on the display that has the mouse pointer. The others join that stack until it is empty. A new reminder never removes the snoozed note of another habit.
+6. Reminders that show at the same time stack down from the top-right corner, in the order they open. A reminder that does not fit above the bottom of the screen starts a new column to the left, from the top. The first one opens on the display that has the mouse pointer. The others join that stack until it is empty. A new reminder never removes the snoozed note of another habit.
 7. A lock (any habit at Strict) covers the screen. Only one lock shows at a time: a second habit that reaches its lock shows a Nudgy bubble instead, and locks on a later snooze if no lock shows then. Other reminders keep their own timers behind the lock.
 8. "Show a reminder now" in Settings always shows that habit's reminder now, unless that habit already shows one or is in a session.
 9. Pause stops new reminders until the pause ends. A reminder that already shows stays.
