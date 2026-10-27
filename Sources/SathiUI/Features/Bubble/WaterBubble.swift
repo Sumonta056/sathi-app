@@ -19,9 +19,12 @@ struct WaterBubble: View {
             HStack {
                 ContainerSegment(selection: container)
                 Spacer(minLength: 0)
-                Button(e.snoozeLabel(.water)) { e.snooze(.water) }
-                    .buttonStyle(GhostButton(accent: Night.chipText, height: UIMetrics.snoozeHeight))
+                if e.canSnooze(.water) {
+                    Button(e.snoozeLabel(.water)) { e.snooze(.water) }
+                        .buttonStyle(GhostButton(accent: Night.chipText, height: UIMetrics.snoozeHeight))
+                }
             }
+            if !e.canSnooze(.water) { SkipTodayButton(id: .water, height: UIMetrics.snoozeHeight) }
             if level == .persist { warn }
             IgnoreBar(id: .water, accent: Night.water, track: Night.border)
         }

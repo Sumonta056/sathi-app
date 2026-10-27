@@ -20,6 +20,7 @@ extension Engine {
             endIfExpired(id)
         }
         if pausedUntil == nil { presentDueHabits() }
+        lockWaitingHabit()
         updateStatus()
         scheduleNextTick()
     }
@@ -100,8 +101,7 @@ extension Engine {
 
     private func showBubble(_ id: HabitID, _ level: Level) {
         let copy = Copywriter.pick(id, level, name: data.prefs.general.name)
-        let deadline = clock.now.addingTimeInterval(TimeInterval(data.prefs.general.ignoreMinutes) * Timing.minute)
-        activities[id] = .bubble(level, copy: copy, ignoreDeadline: deadline)
+        activities[id] = .bubble(level, copy: copy, ignoreDeadline: freshIgnoreDeadline(id))
         presenter.showBubble(id, level)
         play(level == .persist ? .ping : Self.greeting(id))
     }
@@ -114,7 +114,7 @@ extension Engine {
         }
     }
 
-    private func showLock(_ id: HabitID) {
+    func showLock(_ id: HabitID) {
         activities[id] = .lock
         presenter.showLock(id)
         play(.sosumi)

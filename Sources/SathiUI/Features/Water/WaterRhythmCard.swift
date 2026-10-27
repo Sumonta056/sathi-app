@@ -8,15 +8,7 @@ struct WaterRhythmCard: View {
         let engine = e
         let water = engine.data.prefs.water
         SettingsCard {
-            SettingRow(label: "Remind me every", showsDivider: false) {
-                ChipRow(
-                    options: Limits.waterIntervalChips,
-                    accent: Night.water,
-                    isSelected: { $0 == water.intervalMinutes },
-                    onTap: { engine.data.prefs.water.intervalMinutes = $0 },
-                    label: { "\($0) min" }
-                )
-            }
+            IntervalRow(minutes: $e.data.prefs.water.intervalMinutes, accent: Night.water)
             SettingRow(label: "Between", hint: "Fota sleeps outside these hours.") {
                 HStack(spacing: UIMetrics.chipSpacing) {
                     TimeMenu(minutes: $e.data.prefs.water.startMinutes, accent: Night.water)

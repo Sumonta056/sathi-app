@@ -45,7 +45,7 @@ extension GymPrefs {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         let d = GymPrefs()
         enabled = try c.value(.enabled, or: d.enabled)
-        intervalMinutes = try c.value(.intervalMinutes, or: d.intervalMinutes)
+        intervalMinutes = try ReminderInterval.nearest(c.value(.intervalMinutes, or: d.intervalMinutes))
         startMinutes = try c.value(.startMinutes, or: d.startMinutes)
         endMinutes = try c.value(.endMinutes, or: d.endMinutes)
         weekdays = try c.knownSet(.weekdays, or: d.weekdays, keepsEmpty: false)

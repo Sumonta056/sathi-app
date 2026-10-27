@@ -21,6 +21,7 @@ struct MeditationInvite: View {
             hint(Copywriter.meditationInviteHint(minutes: prefs.sessionMinutes, style: prefs.style))
             if level == .persist { hint(e.warnText(.meditation)) }
             buttons
+            if !e.canSnooze(.meditation) { SkipTodayButton(id: .meditation, height: UIMetrics.calmButtonHeight) }
         }
         .frame(maxWidth: .infinity)
         .overlay(alignment: .topTrailing) {
@@ -39,12 +40,14 @@ struct MeditationInvite: View {
                 Text("Breathe with me").frame(maxWidth: .infinity)
             }
             .buttonStyle(AccentButton(accent: Night.calm, height: UIMetrics.calmButtonHeight, text: Night.calmGround))
-            Button { e.snooze(.meditation) } label: { Text(e.snoozeShortLabel) }
-                .buttonStyle(GhostButton(
-                    accent: Night.chipText,
-                    height: UIMetrics.calmButtonHeight,
-                    border: Night.heroBorder(.meditation)
-                ))
+            if e.canSnooze(.meditation) {
+                Button { e.snooze(.meditation) } label: { Text(e.snoozeShortLabel) }
+                    .buttonStyle(GhostButton(
+                        accent: Night.chipText,
+                        height: UIMetrics.calmButtonHeight,
+                        border: Night.heroBorder(.meditation)
+                    ))
+            }
         }
     }
 

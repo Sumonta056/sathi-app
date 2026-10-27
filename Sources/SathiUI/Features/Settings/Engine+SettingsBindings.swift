@@ -10,6 +10,14 @@ extension Engine {
         Binding(get: { self.data.prefs.showsCloseButton(id) }, set: { self.data.prefs.setShowsCloseButton(id, $0) })
     }
 
+    static let noSnoozeLimitStep = Limits.snoozeLimits.upperBound + 1
+
+    var snoozeLimitStep: Binding<Int> {
+        Binding(get: { self.data.prefs.general.snoozeLimit ?? Self.noSnoozeLimitStep }, set: { n in
+            self.data.prefs.general.snoozeLimit = n == Self.noSnoozeLimitStep ? nil : n
+        })
+    }
+
     private func setEnabled(_ id: HabitID, _ on: Bool) {
         switch id {
         case .water: data.prefs.water.enabled = on

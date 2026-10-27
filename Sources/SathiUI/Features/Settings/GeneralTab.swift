@@ -26,6 +26,13 @@ struct GeneralTab: View {
                     SettingRow(label: "Snooze for", showsDivider: false) {
                         MiniStepper(value: $e.data.prefs.general.snoozeMinutes, range: Limits.snoozeMinutes, step: 1) { "\($0) min" }
                     }
+                    SettingRow(label: "Snoozes allowed", hint: "Then only Done or Skip today.") {
+                        MiniStepper(
+                            value: e.snoozeLimitStep,
+                            range: Limits.snoozeLimits.lowerBound ... Engine.noSnoozeLimitStep,
+                            step: 1
+                        ) { $0 == Engine.noSnoozeLimitStep ? "No limit" : "\($0)" }
+                    }
                     SettingRow(label: "Count it as a snooze after") {
                         MiniStepper(value: $e.data.prefs.general.ignoreMinutes, range: Limits.ignoreMinutes, step: 1) { "\($0) min" }
                     }

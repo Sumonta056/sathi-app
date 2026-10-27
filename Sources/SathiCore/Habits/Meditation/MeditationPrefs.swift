@@ -37,7 +37,7 @@ extension MeditationPrefs {
         enabled = try c.value(.enabled, or: d.enabled)
         sessionMinutes = try c.value(.sessionMinutes, or: d.sessionMinutes)
         dailyGoalMinutes = try c.value(.dailyGoalMinutes, or: Self.legacyGoal(decoder, session: sessionMinutes) ?? d.dailyGoalMinutes)
-        intervalMinutes = try c.value(.intervalMinutes, or: d.intervalMinutes)
+        intervalMinutes = try ReminderInterval.nearest(c.value(.intervalMinutes, or: d.intervalMinutes))
         startMinutes = try c.value(.startMinutes, or: d.startMinutes)
         endMinutes = try c.value(.endMinutes, or: d.endMinutes)
         style = try c.known(.style, or: d.style)

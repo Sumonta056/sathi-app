@@ -38,7 +38,7 @@ struct MeditationPrefsTests {
     @Test func lengthsGoalsAndIntervals() {
         #expect(Limits.meditationLengths == [1, 2, 5])
         #expect(Limits.meditationGoals == [5, 10, 20])
-        #expect(Limits.meditationIntervalChips == [30, 60, 90, 120])
+        #expect(Limits.intervalChips == [15, 30, 45, 60, 75, 90, 105, 120])
     }
 
     @Test func emptyJSONDecodesToDefaults() throws {

@@ -5,18 +5,8 @@ struct GymRhythmCard: View {
     @EnvironmentObject var e: Engine
 
     var body: some View {
-        let engine = e
-        let gym = engine.data.prefs.gym
         SettingsCard {
-            SettingRow(label: "Remind me every", showsDivider: false) {
-                ChipRow(
-                    options: Limits.gymIntervalChips,
-                    accent: Night.gym,
-                    isSelected: { $0 == gym.intervalMinutes },
-                    onTap: { engine.data.prefs.gym.intervalMinutes = $0 },
-                    label: { "\($0) min" }
-                )
-            }
+            IntervalRow(minutes: $e.data.prefs.gym.intervalMinutes, accent: Night.gym)
             SettingRow(label: "Work hours", hint: "Shokti sleeps outside these hours.") {
                 HStack(spacing: UIMetrics.chipSpacing) {
                     TimeMenu(minutes: $e.data.prefs.gym.startMinutes, accent: Night.gym)

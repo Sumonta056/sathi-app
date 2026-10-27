@@ -25,25 +25,22 @@ package enum Limits {
     package static let minutesPerDay = 24 * 60
     package static let scheduleSlotMinutes = 15
 
-    package static let waterIntervalMinutes = 15 ... 240
-    package static let waterIntervalStep = 15
-    package static let waterIntervalChips = [30, 60, 90, 120]
+    package static let intervalChips = [15, 30, 45, 60, 75, 90, 105, 120]
     package static let bottleSizeGlasses: ClosedRange<Double> = 1 ... 6
     package static let bottleSizeStep: Double = 0.5
     package static let dailyGoalGlasses: ClosedRange<Double> = 4 ... 16
     package static let snoozeMinutes = 1 ... 30
     package static let ignoreMinutes = 1 ... 15
+    package static let snoozeLimits = 1 ... 15
     package static let sessionLengths = [10, 15, 20, 30, 45, 60]
     package static let meditationLengths = [1, 2, 5]
     package static let meditationGoals = [5, 10, 20]
-    package static let meditationIntervalChips = [30, 60, 90, 120]
     package static let meditationStartMinutes = 9 * 60
     package static let meditationEndMinutes = 21 * 60
     package static let gymWorkoutCount = 4
     package static let gymDailyGoal = 4
     package static let gymNameMaxLength = 40
     package static let gymWorkoutLengths = [1, 2, 3, 5, 10]
-    package static let gymIntervalChips = [45, 60, 90]
     package static let gymStartMinutes = 9 * 60
     package static let gymEndMinutes = 17 * 60
     package static let daysOffMaxAhead = 365

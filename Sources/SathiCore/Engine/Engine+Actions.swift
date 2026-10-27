@@ -2,7 +2,7 @@ import Foundation
 
 extension Engine {
     package func snooze(_ id: HabitID) {
-        guard case .bubble = activities[id] else { return }
+        guard case .bubble = activities[id], canSnooze(id) else { return }
         snoozeHabit(id)
         presenter.closeBubble(id)
         if freshDue(id, lastDone: clock.now) == .distantFuture {

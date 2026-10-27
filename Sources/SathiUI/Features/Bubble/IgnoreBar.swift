@@ -16,6 +16,10 @@ struct IgnoreBar: View {
     }
 
     var body: some View {
+        if e.canSnooze(id) { bar }
+    }
+
+    private var bar: some View {
         VStack(alignment: .leading, spacing: UIMetrics.ignoreBarSpacing) {
             TimelineView(.periodic(from: .now, by: UIMetrics.ignoreBarRefresh)) { tl in
                 let total = Double(minutes) * Timing.minute

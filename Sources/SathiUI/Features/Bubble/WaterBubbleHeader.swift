@@ -6,6 +6,7 @@ struct WaterBubbleHeader: View {
     let level: Level
 
     private var eyebrow: String {
+        if !e.canSnooze(.water) { return e.noSnoozeEyebrow(.water) }
         let time = e.now.formatted(date: .omitted, time: .shortened)
         if level == .persist { return "STILL WAITING · SNOOZED \(e.state(.water).snoozes)× · \(time)" }
         return "WATER · \(time)"

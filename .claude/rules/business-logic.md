@@ -60,6 +60,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 9. A stored value that is unknown (a weekday, slot, or style from a newer version) is dropped or replaced by its default. It never resets the other settings.
 10. Single days off, for every habit: each habit has its own list of dates off. A date is a day key `YYYY-MM-DD` in the Gregorian calendar of the user's time zone. Settings adds a date from today to `Limits.daysOffMaxAhead` (365) days ahead, never twice, and at most `Limits.daysOffMax` (100) future dates. Dates are kept forever. Settings lists only today and later. A key that cannot be read is dropped; the other keys and settings stay.
 11. No due time falls on a day off. A due day that is off moves to the first reminder of the next day that is on: Water and Meditation start time, Reading set time, Gym start plus 1 interval. The rules look ahead `Limits.daysOffMaxAhead` + 7 days (372). Settings adds dates off only up to 365 days ahead, so a day that is on is always found and a long break never leaves a habit without its next reminder. Only when no day is on in that window (a hand-edited file), the habit has no next reminder (Habits rule 12). A snooze that ends on a day off waits for the first reminder of the next day that is on, never midnight. When today becomes a day off, that habit's open reminder (bubble, corner popup, or lock) closes at once with no event. A running session continues. Other habits do not change. "Show a reminder now" still works on a day off (Habits rule 8).
+12. Water, Meditation, and Gym pick `intervalMinutes` from the same list, `Limits.intervalChips`: 15, 30, 45, 60, 75, 90, 105, 120. A saved value that is not on the list loads as the nearest value on the list (below 15 loads as 15, above 120 loads as 120). Reading has no interval: it keeps its one set time a day.
 
 ## Escalation
 
@@ -82,6 +83,15 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 6. The water thank-you button names the next reminder: "See you in {time}" or "See you tomorrow". While Sathi is paused it says "See you after your break". When water reminders are off it says "Nice one".
 7. The Gym invite follows Escalation rule 5 (calm, corner, no focus). Its close button, its "In {n} min" button, and no answer for `ignoreMinutes` are normal snoozes. "Next idea" shows the next workout in the popup only. At Nudgy the invite plays one ping, then wiggles in silence. At Strict it locks after 2 snoozes, like water.
 8. Each habit has a "Show a close button" switch (`showsCloseButton`, default on for every habit). When it is on, the reminder (bubble or corner popup) shows a close button at the first level (`Level.nudge`). At `Level.persist` (Nudgy or Strict after a snooze) there is no close button. When it is off, the reminder never shows a close button. A tap on close is a normal snooze of that habit only: it adds 1 to that habit's snooze count and never changes another habit.
+
+9. Snooze limit, for every habit: `GeneralPrefs.snoozeLimit` is `nil` (no limit, the default) or a number from `Limits.snoozeLimits` (1 to 15). It counts the snoozes of one reminder: the habit's snooze count, which goes back to 0 when the habit is done or skipped. When the count equals the limit, the reminder has no snooze left:
+   - It shows no Snooze button and no close button.
+   - No answer for `ignoreMinutes` does not count as a snooze. The reminder has no ignore timer and stays until the user acts.
+   - It shows "Skip today". A tap asks to confirm first, because a skip resets the streak. A confirmed skip acts as the lock's emergency skip (rule 3).
+   - The level does not change. At Strict, the lock still comes after 2 snoozes when the limit is 2 or more. With a limit of 1 at Strict, the reminder stays as a Nudgy bubble with no snooze and never locks.
+   - A Strict habit that reaches its lock while another lock shows gets a Nudgy bubble (Habits rule 7). If that bubble has no snooze left, it becomes the lock as soon as the other lock ends.
+   - A change of the limit while a bubble shows takes effect at once: a bubble that gets snoozes back gets a fresh ignore timer, and a bubble that loses its last snooze loses its ignore timer.
+   - When 1 snooze is left, the bubble's Snooze button says "Last snooze".
 
 ## History and storage
 

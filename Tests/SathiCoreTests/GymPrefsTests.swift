@@ -26,7 +26,7 @@ struct GymPrefsTests {
         #expect(Limits.gymDailyGoal == 4)
         #expect(Limits.gymNameMaxLength == 40)
         #expect(Limits.gymWorkoutLengths == [1, 2, 3, 5, 10])
-        #expect(Limits.gymIntervalChips == [45, 60, 90])
+        #expect(Limits.intervalChips == [15, 30, 45, 60, 75, 90, 105, 120])
     }
 
     @Test func oldPrefsWithoutGymDecodeToDefaults() throws {

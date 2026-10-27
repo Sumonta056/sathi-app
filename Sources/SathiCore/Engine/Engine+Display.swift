@@ -81,11 +81,17 @@ extension Engine {
     }
 
     package func snoozeLabel(_ id: HabitID) -> String {
-        lockIsNext(id) ? "Last snooze" : "Snooze \(data.prefs.general.snoozeMinutes) min"
+        lockIsNext(id) || snoozesLeft(id) == 1 ? "Last snooze" : "Snooze \(data.prefs.general.snoozeMinutes) min"
+    }
+
+    package func noSnoozeEyebrow(_ id: HabitID) -> String {
+        let limit = data.prefs.general.snoozeLimit ?? 0
+        return "NO SNOOZES LEFT · \(min(state(id).snoozes, limit)) OF \(limit) USED"
     }
 
     package func warnText(_ id: HabitID) -> String {
-        lockIsNext(id)
+        if !canSnooze(id) { return "No snoozes left. \(id.buddy) stays until you're done." }
+        return lockIsNext(id)
             ? "No close button. Snooze again and \(id.buddy) pauses your screen."
             : "No close button. \(id.buddy) stays on top until you're done."
     }

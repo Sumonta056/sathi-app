@@ -17,9 +17,12 @@ struct GymInvite: View {
                 .buttonStyle(AccentButton(accent: Night.gym, height: UIMetrics.cornerButtonHeight))
                 Button { e.nextGymIdea() } label: { Text("Next idea") }
                     .buttonStyle(ghost)
-                Button { e.snooze(.gym) } label: { Text(e.snoozeShortLabel) }
-                    .buttonStyle(ghost)
+                if e.canSnooze(.gym) {
+                    Button { e.snooze(.gym) } label: { Text(e.snoozeShortLabel) }
+                        .buttonStyle(ghost)
+                }
             }
+            if !e.canSnooze(.gym) { SkipTodayButton(id: .gym) }
             if level == .persist {
                 Text(e.warnText(.gym))
                     .font(Typography.hint)

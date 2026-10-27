@@ -15,9 +15,12 @@ struct ReadingInvite: View {
                     Text("Start reading").frame(maxWidth: .infinity)
                 }
                 .buttonStyle(AccentButton(accent: Night.reading, height: UIMetrics.cornerButtonHeight))
-                Button { e.snooze(.reading) } label: { Text(e.snoozeShortLabel) }
-                    .buttonStyle(GhostButton(accent: Night.chipText, height: UIMetrics.cornerButtonHeight))
+                if e.canSnooze(.reading) {
+                    Button { e.snooze(.reading) } label: { Text(e.snoozeShortLabel) }
+                        .buttonStyle(GhostButton(accent: Night.chipText, height: UIMetrics.cornerButtonHeight))
+                }
             }
+            if !e.canSnooze(.reading) { SkipTodayButton(id: .reading) }
             if level == .persist {
                 Text(e.warnText(.reading))
                     .font(Typography.hint)

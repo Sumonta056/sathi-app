@@ -10,6 +10,7 @@ package final class Engine: ObservableObject {
             if oldValue.prefs.scheduleKey != data.prefs.scheduleKey {
                 reschedule(turnedOff: turnedOffToday(from: oldValue.prefs))
             }
+            if oldValue.prefs.general.snoozeLimit != data.prefs.general.snoozeLimit { refreshIgnoreDeadlines() }
             if oldValue.prefs != data.prefs { store.savePrefs(data.prefs) }
             if oldValue.live != data.live { store.saveLive(data.live) }
         }

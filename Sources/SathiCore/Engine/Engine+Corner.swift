@@ -11,7 +11,7 @@ extension Engine {
     }
 
     package func showsClose(_ id: HabitID, level: Level) -> Bool {
-        data.prefs.showsCloseButton(id) && level == .nudge
+        data.prefs.showsCloseButton(id) && level == .nudge && canSnooze(id)
     }
 
     package var snoozeShortLabel: String { "In \(data.prefs.general.snoozeMinutes) min" }

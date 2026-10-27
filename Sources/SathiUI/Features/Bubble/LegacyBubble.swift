@@ -19,6 +19,7 @@ struct LegacyBubble: View {
             case .meditation, .gym: EmptyView()
             }
             actions
+            if !e.canSnooze(id) { SkipTodayButton(id: id) }
             if level == .persist { warn }
             IgnoreBar(id: id, accent: accent, track: Night.border, label: Night.muted)
         }
@@ -47,6 +48,7 @@ struct LegacyBubble: View {
     }
 
     private var eyebrow: String {
+        if !e.canSnooze(id) { return e.noSnoozeEyebrow(id) }
         let time = e.now.formatted(date: .omitted, time: .shortened)
         if level == .persist {
             return "STILL WAITING · SNOOZED \(e.state(id).snoozes)× · \(time)"
@@ -96,9 +98,11 @@ struct LegacyBubble: View {
                     .buttonStyle(PillButton(kind: .primary))
                     .layoutPriority(1)
             }
-            Button(e.snoozeLabel(id)) { e.snooze(id) }
-                .buttonStyle(PillButton(kind: .ghost))
-                .fixedSize()
+            if e.canSnooze(id) {
+                Button(e.snoozeLabel(id)) { e.snooze(id) }
+                    .buttonStyle(PillButton(kind: .ghost))
+                    .fixedSize()
+            }
         }
     }
 
