@@ -48,6 +48,7 @@ package struct StreakCell: Equatable, Sendable, Identifiable {
     package var level: Int
     package var isToday: Bool
     package var isFuture: Bool
+    package var isOff: Bool
 }
 
 package struct ReportFact: Equatable, Sendable, Identifiable {

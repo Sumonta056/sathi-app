@@ -12,6 +12,7 @@ package struct StreakCalculator: Sendable {
         goal: Double,
         reset: Date?,
         now: Date,
+        isOn: (Date) -> Bool = { _ in true },
         load: (DateInterval) -> [HistoryEvent]
     ) -> Int {
         guard goal > 0 else { return 0 }
@@ -20,8 +21,11 @@ package struct StreakCalculator: Sendable {
         var count = totals.total(on: day, load: load) >= goal ? 1 : 0
         for _ in 1 ..< Limits.streakLookbackDays {
             day = calendar.previousDay(before: day)
-            guard totals.total(on: day, load: load) >= goal else { break }
-            count += 1
+            if totals.total(on: day, load: load) >= goal {
+                count += 1
+            } else if isOn(day) {
+                break
+            }
         }
         return count
     }
@@ -31,6 +35,7 @@ package struct StreakCalculator: Sendable {
         goal: Double,
         reset: Date?,
         now: Date,
+        isOn: (Date) -> Bool = { _ in true },
         load: (DateInterval) -> [HistoryEvent]
     ) -> Int {
         guard goal > 0 else { return 0 }
@@ -40,7 +45,11 @@ package struct StreakCalculator: Sendable {
         var day = calendar.stepDays(1 - Limits.longestStreakLookbackDays, from: now)
         for _ in 0 ..< Limits.longestStreakLookbackDays {
             defer { day = calendar.nextDay(after: day) }
-            run = totals.total(on: day, load: load) >= goal ? run + 1 : 0
+            if totals.total(on: day, load: load) >= goal {
+                run += 1
+            } else if isOn(day) {
+                run = 0
+            }
             best = max(best, run)
         }
         return best
