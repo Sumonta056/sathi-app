@@ -99,6 +99,7 @@ struct LegacyBubble: View {
             }
             Button(e.snoozeLabel(id)) { e.snooze(id) }
                 .buttonStyle(PillButton(kind: .ghost))
+                .fixedSize()
         }
     }
 
