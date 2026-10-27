@@ -16,12 +16,13 @@ package struct MeditationPrefs: Codable, Equatable, Sendable {
     package var strictness: Strictness = .friendly
     package var weekdays: Set<Weekday> = Set(Weekday.allCases)
     package var daysOff: Set<DayKey> = []
+    package var showsCloseButton = true
 
     package init() {}
 
     enum CodingKeys: String, CodingKey {
         case enabled, dailyGoalMinutes, sessionMinutes, intervalMinutes, startMinutes, endMinutes, style, chime, strictness
-        case weekdays, daysOff
+        case weekdays, daysOff, showsCloseButton
     }
 
     package var sortedWeekdays: [Weekday] {
@@ -42,6 +43,7 @@ extension MeditationPrefs {
         style = try c.known(.style, or: d.style)
         chime = try c.value(.chime, or: d.chime)
         strictness = try c.known(.strictness, or: d.strictness)
+        showsCloseButton = try c.value(.showsCloseButton, or: d.showsCloseButton)
         weekdays = try c.knownSet(.weekdays, or: d.weekdays, keepsEmpty: false)
         daysOff = c.lenientSet(.daysOff, or: d.daysOff)
     }
@@ -57,6 +59,7 @@ extension MeditationPrefs {
         try c.encode(style, forKey: .style)
         try c.encode(chime, forKey: .chime)
         try c.encode(strictness, forKey: .strictness)
+        try c.encode(showsCloseButton, forKey: .showsCloseButton)
         try c.encode(sortedWeekdays, forKey: .weekdays)
         try c.encode(daysOff.sorted(), forKey: .daysOff)
     }

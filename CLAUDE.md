@@ -1,6 +1,6 @@
 # Sathi
 
-Sathi is a macOS menu bar app (macOS 13+, Swift 5.9 tools, SwiftUI + AppKit). Four buddies remind the user: Fota (water), Boi (reading), Shanti (meditation, off by default), and Shokti (gym, off by default). An ignored reminder escalates: bubble → persistent bubble → full-screen lock (water and meditation, at Strict). Meditation has a daily goal and stops for the day when it is met. Shokti suggests 1 short workout every hour during work hours, on the days you pick, keeps a list of 4 workouts, and never locks. Reading, meditation, and gym use a calm corner popup that never takes focus. Each buddy has its own weekdays and single days off; a day off keeps that buddy quiet and never breaks its streak.
+Sathi is a macOS menu bar app (macOS 13+, Swift 5.9 tools, SwiftUI + AppKit). Four buddies remind the user: Fota (water), Boi (reading), Shanti (meditation, off by default), and Shokti (gym, off by default). An ignored reminder escalates: bubble → persistent bubble → full-screen lock (any buddy, at Strict). Each buddy has its own level (Gentle, Nudgy, Strict) and its own close-button switch. Meditation has a daily goal and stops for the day when it is met. Shokti suggests 1 short workout every hour during work hours, on the days you pick, and keeps a list of 4 workouts. Reading, meditation, and gym use a calm corner popup that never takes focus. Each buddy has its own weekdays and single days off; a day off keeps that buddy quiet and never breaks its streak.
 
 ## Commands
 

@@ -18,7 +18,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 | Module | All the code of one habit: `SathiCore/Habits/<Name>/` and `SathiUI/Features/<Name>/`. |
 | Due | The time a reminder must show. Comes from the habit's `HabitRules.nextDue`. |
 | Reminder | What the user sees when a habit is due: bubble, corner popup, or lock. |
-| Snooze | The user delays a reminder. Not answering for `ignoreMinutes` also counts as a snooze. Except Gym: no answer means Not now (Escalation rule 7). |
+| Snooze | The user delays a reminder. Not answering for `ignoreMinutes` also counts as a snooze, for every habit. A tap on the close button also counts as a snooze (Escalation rule 8). |
 | Session | A timed activity: reading, meditation, or gym. `Activity.session(Session)` in `Engine.activities[id]`. |
 | Event | One record in history: done, snooze, or skip. `HistoryEvent`. |
 | Goal | The daily target of a habit. Water: glasses. Reading and meditation: minutes. Gym: workouts (fixed at 4; each done workout counts 1). |
@@ -33,7 +33,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 4. A habit that is off has no due time and shows no reminder. Its history stays.
 5. Habits are independent. Each habit has its own reminder, snooze, ignore timer, and session. A reminder of one habit never waits for, closes, or changes a reminder or session of another habit. There is no queue.
 6. Reminders that show at the same time stack down from the top-right corner, in the order they open. The first one opens on the display that has the mouse pointer. The others join that stack until it is empty. A new reminder never removes the snoozed note of another habit.
-7. A lock (water or meditation at Strict) covers the screen. Only one lock shows at a time: a second habit that reaches its lock shows a Nudgy bubble instead, and locks on a later snooze if no lock shows then. Other reminders keep their own timers behind the lock.
+7. A lock (any habit at Strict) covers the screen. Only one lock shows at a time: a second habit that reaches its lock shows a Nudgy bubble instead, and locks on a later snooze if no lock shows then. Other reminders keep their own timers behind the lock.
 8. "Show a reminder now" in Settings always shows that habit's reminder now, unless that habit already shows one or is in a session.
 9. Pause stops new reminders until the pause ends. A reminder that already shows stays.
 10. "Rest of day" pauses until the next midnight. It moves each enabled habit to its next slot after that midnight and clears every snooze and closes every open reminder without a snooze, so a slot missed during the pause never shows. A running session continues. The 30 min and 1 hour pauses keep missed reminders: they show when the pause ends.
@@ -69,7 +69,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 | `persistent` | Nudgy | After 1 snooze: stays on top, wiggles, no close button. |
 | `strict` | Strict | After 1 snooze: Nudgy. After 2 snoozes: full-screen lock. |
 
-1. Water and Meditation may use Strict. Reading and Gym never lock the screen.
+1. Every habit may use Gentle, Nudgy, or Strict. Each habit keeps its own level. At Strict, every habit locks the screen after 2 snoozes. The lock's press-and-hold logs 1 glass for Water and starts the session for Reading, Meditation, and Gym. Before this rule, a saved Strict on Reading or Gym acted as Nudgy. So a Reading or Gym section without the `showsCloseButton` key (written by an older version) loads a saved Strict as Nudgy. After the first save the key is there, and a Strict the user picks stays Strict.
 2. Reading shows a corner popup in the top-right by default. It never takes focus from the active app. `ReadingPrefs.reminderStyle` picks `corner` (default) or `focus` (the old centered session).
    - With `corner`, the reading session shows as a small timer pill in the same corner, and the thank-you shows there too.
    - The corner popup snoozes for the General snooze length, like every other reminder.
@@ -80,7 +80,8 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 4. Raw values never change. They are in saved files. Change only the labels.
 5. The Meditation invite follows the same calm rules at Gentle and Nudgy (at Strict it locks after 2 snoozes, like water): it never takes focus from the active app, at Nudgy it wiggles in silence, and its snooze button uses the General snooze length. Its session button "Stop" follows Schedules rule 6: an early stop does not count.
 6. The water thank-you button names the next reminder: "See you in {time}" or "See you tomorrow". While Sathi is paused it says "See you after your break". When water reminders are off it says "Nice one".
-7. The Gym invite follows Escalation rule 5 (calm, corner, no focus). Its close button, and no answer for `ignoreMinutes`, mean "Not now": a `.snooze` event, the next reminder 1 interval later, the snooze count goes back to 0, the streak stays. Its "In {n} min" button is a normal snooze. "Next idea" shows the next workout in the popup only. A stored Strict acts as Nudgy. At Nudgy the invite plays one ping, then wiggles in silence.
+7. The Gym invite follows Escalation rule 5 (calm, corner, no focus). Its close button, its "In {n} min" button, and no answer for `ignoreMinutes` are normal snoozes. "Next idea" shows the next workout in the popup only. At Nudgy the invite plays one ping, then wiggles in silence. At Strict it locks after 2 snoozes, like water.
+8. Each habit has a "Show a close button" switch (`showsCloseButton`, default on for every habit). When it is on, the reminder (bubble or corner popup) shows a close button at the first level (`Level.nudge`). At `Level.persist` (Nudgy or Strict after a snooze) there is no close button. When it is off, the reminder never shows a close button. A tap on close is a normal snooze of that habit only: it adds 1 to that habit's snooze count and never changes another habit.
 
 ## History and storage
 

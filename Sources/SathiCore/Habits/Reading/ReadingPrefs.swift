@@ -8,11 +8,12 @@ package struct ReadingPrefs: Codable, Equatable, Sendable {
     package var weekdays: Set<Weekday> = Set(Weekday.allCases)
     package var reminderStyle: ReadingReminderStyle = .corner
     package var daysOff: Set<DayKey> = []
+    package var showsCloseButton = true
 
     package init() {}
 
     enum CodingKeys: String, CodingKey {
-        case enabled, timeMinutes, sessionMinutes, strictness, weekdays, reminderStyle, daysOff
+        case enabled, timeMinutes, sessionMinutes, strictness, weekdays, reminderStyle, daysOff, showsCloseButton
     }
 
     package var sortedWeekdays: [Weekday] {
@@ -27,7 +28,8 @@ extension ReadingPrefs {
         enabled = try c.value(.enabled, or: d.enabled)
         timeMinutes = try c.value(.timeMinutes, or: d.timeMinutes)
         sessionMinutes = try c.value(.sessionMinutes, or: d.sessionMinutes)
-        strictness = try c.known(.strictness, or: d.strictness)
+        strictness = try Strictness.upgraded(c.known(.strictness, or: d.strictness), oldFile: !c.contains(.showsCloseButton))
+        showsCloseButton = try c.value(.showsCloseButton, or: d.showsCloseButton)
         weekdays = try c.knownSet(.weekdays, or: d.weekdays, keepsEmpty: false)
         reminderStyle = try c.known(.reminderStyle, or: d.reminderStyle)
         daysOff = c.lenientSet(.daysOff, or: d.daysOff)
@@ -39,6 +41,7 @@ extension ReadingPrefs {
         try c.encode(timeMinutes, forKey: .timeMinutes)
         try c.encode(sessionMinutes, forKey: .sessionMinutes)
         try c.encode(strictness, forKey: .strictness)
+        try c.encode(showsCloseButton, forKey: .showsCloseButton)
         try c.encode(sortedWeekdays, forKey: .weekdays)
         try c.encode(reminderStyle, forKey: .reminderStyle)
         try c.encode(daysOff.sorted(), forKey: .daysOff)

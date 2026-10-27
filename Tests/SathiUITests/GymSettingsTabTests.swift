@@ -19,19 +19,18 @@ struct GymSettingsTabTests {
         try hosted(GymSettingsTab(), h).inspect()
     }
 
-    @Test func tabShowsHeroRhythmWorkoutsAndTwoStrictnessCards() throws {
+    @Test func tabShowsHeroRhythmWorkoutsAndThreeStrictnessCards() throws {
         let sut = try tab(harness())
         let texts = [
             "SHOKTI · GYM", "Get up, little and often", "Shokti suggests a short move while you work.",
             "RHYTHM", "Remind me every", "Work hours", "Shokti sleeps outside these hours.", "Work days",
             "MY 4 WORKOUTS", "1", "2", "3", "4",
-            "IF I IGNORE SHOKTI", "Gentle", "Nudgy"
+            "IF I IGNORE SHOKTI", "Gentle", "Nudgy", "Strict", Strictness.strict.detail
         ]
         for text in texts {
             #expect(throws: Never.self) { try sut.find(text: text) }
         }
         #expect(throws: Never.self) { try Find.button(sut, label: "Gym reminders") }
-        #expect(Find.lacks(sut, text: "Strict"))
         #expect(sut.findAll(ViewType.TextField.self).count == Limits.gymWorkoutCount)
     }
 
@@ -88,6 +87,18 @@ struct GymSettingsTabTests {
         #expect(h.engine.data.prefs.gym.weekdays == [.wednesday])
         try Find.button(tab(h), label: "Friday").tap()
         #expect(h.store.prefs.gym.weekdays == [.wednesday, .friday])
+    }
+
+    @Test func strictCardSetsStrict() throws {
+        let h = harness()
+        try Find.button(tab(h), holding: "Strict").tap()
+        #expect(h.store.prefs.gym.strictness == .strict)
+    }
+
+    @Test func storedStrictGymShowsStrictSelected() throws {
+        let sut = try tab(harness { $0.prefs.gym.strictness = .strict })
+        #expect(try A11y.isSelected(Find.button(sut, holding: "Strict")))
+        #expect(try !A11y.isSelected(Find.button(sut, holding: "Nudgy")))
     }
 
     @Test func nudgyCardSetsPersistent() throws {

@@ -24,6 +24,7 @@ struct MeditationSettingsTab: View {
                     selected: engine.data.prefs.meditation.strictness,
                     accent: Night.calm
                 ) { engine.data.prefs.meditation.strictness = $0 }
+                CloseButtonCard(habit: .meditation)
             }
         }
     }

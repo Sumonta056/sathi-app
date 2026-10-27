@@ -9,11 +9,12 @@ package struct GymPrefs: Codable, Equatable, Sendable {
     package var daysOff: Set<DayKey> = []
     package var workouts = GymWorkout.defaults
     package var strictness: Strictness = .friendly
+    package var showsCloseButton = true
 
     package init() {}
 
     enum CodingKeys: String, CodingKey {
-        case enabled, intervalMinutes, startMinutes, endMinutes, weekdays, daysOff, workouts, strictness
+        case enabled, intervalMinutes, startMinutes, endMinutes, weekdays, daysOff, workouts, strictness, showsCloseButton
     }
 
     package var sortedWeekdays: [Weekday] {
@@ -50,7 +51,8 @@ extension GymPrefs {
         weekdays = try c.knownSet(.weekdays, or: d.weekdays, keepsEmpty: false)
         daysOff = c.lenientSet(.daysOff, or: d.daysOff)
         workouts = try Self.cleaned(c.value(.workouts, or: d.workouts))
-        strictness = try c.known(.strictness, or: d.strictness)
+        strictness = try Strictness.upgraded(c.known(.strictness, or: d.strictness), oldFile: !c.contains(.showsCloseButton))
+        showsCloseButton = try c.value(.showsCloseButton, or: d.showsCloseButton)
     }
 
     package func encode(to encoder: Encoder) throws {
@@ -63,5 +65,6 @@ extension GymPrefs {
         try c.encode(daysOff.sorted(), forKey: .daysOff)
         try c.encode(workouts, forKey: .workouts)
         try c.encode(strictness, forKey: .strictness)
+        try c.encode(showsCloseButton, forKey: .showsCloseButton)
     }
 }

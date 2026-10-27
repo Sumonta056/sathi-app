@@ -25,6 +25,7 @@ struct WaterSettingsTab: View {
                     selected: engine.data.prefs.water.strictness,
                     accent: Night.water
                 ) { engine.data.prefs.water.strictness = $0 }
+                CloseButtonCard(habit: .water)
             }
         }
     }

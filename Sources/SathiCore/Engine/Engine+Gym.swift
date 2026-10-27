@@ -16,27 +16,6 @@ extension Engine {
         gymIdea += 1
     }
 
-    package func notNow(_ id: HabitID) {
-        guard case .bubble = activities[id] else { return }
-        let n = clock.now
-        record(.snooze(id, at: n))
-        presenter.closeBubble(id)
-        activities[id] = nil
-        let due = freshDue(id, lastDone: n)
-        habits[id] = HabitState(nextDue: due)
-        update(id) { $0.snoozedUntil = due }
-        if resetsIdea(id) { gymIdea = 0 }
-        if usesCorner(id), hasReminder(id) { presenter.showSnoozed(id, until: due) }
-        requestTick()
-    }
-
-    func ignoreGoesToNextInterval(_ id: HabitID) -> Bool {
-        switch id {
-        case .water, .reading, .meditation: return false
-        case .gym: return true
-        }
-    }
-
     func resetsIdea(_ id: HabitID) -> Bool {
         switch id {
         case .water, .reading, .meditation: return false

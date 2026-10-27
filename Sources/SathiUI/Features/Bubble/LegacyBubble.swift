@@ -72,6 +72,10 @@ struct LegacyBubble: View {
                     .foregroundStyle(Night.muted)
                     .fixedSize(horizontal: false, vertical: true)
             }
+            Spacer(minLength: 0)
+            if e.showsClose(id, level: level) {
+                CornerCloseButton(label: "Dismiss") { e.snooze(id) }
+            }
         }
     }
 

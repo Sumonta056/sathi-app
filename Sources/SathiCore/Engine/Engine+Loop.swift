@@ -42,7 +42,7 @@ extension Engine {
     private func endIfExpired(_ id: HabitID) {
         switch activities[id] {
         case let .bubble(_, _, deadline) where now >= deadline:
-            if ignoreGoesToNextInterval(id) { notNow(id) } else { snooze(id) }
+            snooze(id)
         case let .session(s) where now >= s.end: finishSession(id)
         default: break
         }

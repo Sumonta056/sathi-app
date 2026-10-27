@@ -46,7 +46,7 @@ struct ReadingInvite: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 0)
-            if level == .nudge {
+            if e.showsClose(.reading, level: level) {
                 CornerCloseButton(label: "Dismiss") { e.snooze(.reading) }
             }
         }

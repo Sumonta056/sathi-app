@@ -37,7 +37,7 @@ Edit `.claude/rules/business-logic.md` before any code.
 
 1. "Words" table: add the buddy name.
 2. "Schedules" table: add the schedule and "Done when".
-3. Escalation rule 1 names the habits that never lock. Add the new habit, or change the rule if it may lock.
+3. Escalation rule 1 says every habit may use Gentle, Nudgy, or Strict. Change the rule first if the new habit must never lock.
 4. A calm habit gets a rule like Escalation rule 5: the invite never takes focus, Nudgy wiggles in silence, snooze uses the General length.
 5. Goal: Schedules rule 7 says a goal of 0 never counts as met. Then the streak stays 0. "Stats and reports" rule 5 caps "% of goal" at 100.
 
@@ -55,7 +55,7 @@ Edit `.claude/rules/business-logic.md` before any code.
 1. Default the habit to off. An update never starts a reminder the user did not ask for.
 2. Decode each field with the helpers in `Models/DecodingDefaults.swift`: `value(_:or:)`, `known(_:or:)`, `knownSet(_:or:keepsEmpty:)`.
 3. Put each field that moves the due time in `scheduleKey`. Own active hours are such fields.
-4. Use `withoutLock` in `strictness` if the habit never locks.
+4. Add the habit to `Prefs.strictness` and `Prefs.showsCloseButton` / `setShowsCloseButton`, and add `showsCloseButton` (default true) to its prefs.
 5. Never change a raw value once it ships (Escalation rule 4).
 
 Tests: copy `Tests/SathiCoreTests/MeditationPrefsTests.swift` (suite "Meditation prefs") to `<Name>PrefsTests.swift`. Test defaults, old JSON without the field, round trip, and `scheduleKey`. Add unknown raw values to `LenientPrefsDecodingTests.swift`.
@@ -127,7 +127,7 @@ What to return in the session and lock switches:
 | `UIController.sessionView(_:)` | join the `.water, .reading` case (never shown) | `SessionView()` (join `.water, .reading`), or an own view like `BreatheView()` |
 | `LockView` `headline`, `instructions` | a real line | a real line |
 
-`LockView` lines are `String`, not optional. Reading and Meditation never lock, but they have lines.
+`LockView` lines are `String`, not optional. Every habit can lock at Strict, so every habit needs lines.
 
 Checks that are not a switch. The compiler never flags them. Find them with this command:
 

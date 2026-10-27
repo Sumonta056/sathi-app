@@ -6,6 +6,10 @@ extension Engine {
         Binding(get: { self.data.prefs.isEnabled(id) }, set: { self.setEnabled(id, $0) })
     }
 
+    func closeButtonBinding(_ id: HabitID) -> Binding<Bool> {
+        Binding(get: { self.data.prefs.showsCloseButton(id) }, set: { self.data.prefs.setShowsCloseButton(id, $0) })
+    }
+
     private func setEnabled(_ id: HabitID, _ on: Bool) {
         switch id {
         case .water: data.prefs.water.enabled = on

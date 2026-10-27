@@ -52,8 +52,8 @@ struct GymInvite: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 0)
-            if level == .nudge {
-                CornerCloseButton(label: "Dismiss") { e.notNow(.gym) }
+            if e.showsClose(.gym, level: level) {
+                CornerCloseButton(label: "Dismiss") { e.snooze(.gym) }
             }
         }
     }

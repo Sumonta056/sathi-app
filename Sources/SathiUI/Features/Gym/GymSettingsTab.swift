@@ -19,10 +19,11 @@ struct GymSettingsTab: View {
             SettingsSection("My 4 workouts") { GymWorkoutsCard() }
             SettingsSection("If I ignore Shokti") {
                 StrictnessCards(
-                    options: [.friendly, .persistent],
+                    options: Strictness.allCases,
                     selected: engine.data.prefs.strictness(.gym),
                     accent: Night.gym
                 ) { engine.data.prefs.gym.strictness = $0 }
+                CloseButtonCard(habit: .gym)
             }
         }
     }

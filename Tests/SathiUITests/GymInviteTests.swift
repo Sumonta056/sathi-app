@@ -53,12 +53,13 @@ struct GymInviteTests {
         #expect(h.engine.state(.gym).snoozes == 1)
     }
 
-    @Test func closeButtonIsNotNowAtNudgeOnly() throws {
+    @Test func closeButtonIsASnoozeAtNudgeOnly() throws {
         let h = gymReminder()
         let now = h.engine.now
         try Find.button(invite(h, .nudge), label: "Dismiss").tap()
-        #expect(h.engine.state(.gym).nextDue == now.addingTimeInterval(60 * Timing.minute))
-        #expect(h.engine.state(.gym).snoozes == 0)
+        #expect(h.engine.state(.gym).snoozes == 1)
+        #expect(h.engine.state(.gym).snoozedUntil == now.addingTimeInterval(5 * Timing.minute))
+        #expect(h.history.appended.last == .snooze(.gym, at: now))
 
         let p = gymReminder(strictness: .persistent)
         p.engine.snooze(.gym)

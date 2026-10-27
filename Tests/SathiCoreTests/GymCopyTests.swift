@@ -11,10 +11,10 @@ struct GymCopyTests {
         #expect(HabitID.gym.rawValue == "gym")
     }
 
-    @Test func storedStrictGymActsAsNudgy() {
+    @Test func storedStrictGymStaysStrict() {
         var p = Prefs()
         p.gym.strictness = .strict
-        #expect(p.strictness(.gym) == .persistent)
+        #expect(p.strictness(.gym) == .strict)
     }
 
     @Test func inviteHintNamesWorkoutAndMinutes() {

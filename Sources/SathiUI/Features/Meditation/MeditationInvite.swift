@@ -22,6 +22,12 @@ struct MeditationInvite: View {
             if level == .persist { hint(e.warnText(.meditation)) }
             buttons
         }
+        .frame(maxWidth: .infinity)
+        .overlay(alignment: .topTrailing) {
+            if e.showsClose(.meditation, level: level) {
+                CornerCloseButton(label: "Dismiss") { e.snooze(.meditation) }
+            }
+        }
         .modifier(CalmCard(alert: level == .persist))
         .modifier(Shake(amount: shakes))
         .task(id: level) { await shakeWhilePersisting() }

@@ -100,13 +100,13 @@ struct MeditationPrefsTests {
         #expect(p.scheduleKey == key)
     }
 
-    @Test func waterAndMeditationMayBeStrictButReadingMayNot() {
+    @Test func waterMeditationAndReadingMayBeStrict() {
         var p = Prefs()
         p.water.strictness = .strict
         p.reading.strictness = .strict
         p.meditation.strictness = .strict
         #expect(p.strictness(.water) == .strict)
-        #expect(p.strictness(.reading) == .persistent)
+        #expect(p.strictness(.reading) == .strict)
         #expect(p.strictness(.meditation) == .strict)
     }
 

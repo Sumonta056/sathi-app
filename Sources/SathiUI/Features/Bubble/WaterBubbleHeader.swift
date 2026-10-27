@@ -28,6 +28,10 @@ struct WaterBubbleHeader: View {
                     .foregroundStyle(Night.muted)
                     .fixedSize(horizontal: false, vertical: true)
             }
+            Spacer(minLength: 0)
+            if e.showsClose(.water, level: level) {
+                CornerCloseButton(label: "Dismiss") { e.snooze(.water) }
+            }
         }
     }
 }

@@ -180,6 +180,7 @@ Plan and spec: `docs/superpowers/plans/2026-10-27-days-off.md`
 | 2026-10-24 | A stored Strict on Reading or Meditation acts as Nudgy. Only Water can lock. |
 | 2026-10-24 | Phase 5: new `Night` palette next to the old `Palette`; each slice moves its screen; 5g deletes the old one. |
 | 2026-10-24 | `faint` is #7784A0 (canvas #6F7C97 fails 4.5:1). Never on a card. |
+| 2026-10-27 | Every buddy may use Gentle, Nudgy, or Strict, and each keeps its own level. At Strict any buddy locks after 2 snoozes. This replaces "Reading and Meditation never lock" and "A stored Strict … acts as Nudgy". Each buddy has a "Show a close button" switch, on by default; a close is a normal snooze. |
 | 2026-10-24 | Phase 5: commit approval per group (5a–5c, 5d–5f, 5g–5h); full review only for 5e and 5g, one shared review for view slices. |
 | 2026-10-25 | 5b: reading weekdays (all on by default) and `reminderStyle` (corner default) added to Core. Water interval chips 30/60/90/120. "Quiet in meetings" shows a disabled "Soon" switch. |
 | 2026-10-25 | 5c: header streak = best current streak of enabled habits. "Rest of day" pause ends at midnight. |

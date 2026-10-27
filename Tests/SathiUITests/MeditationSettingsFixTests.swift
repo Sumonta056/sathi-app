@@ -21,12 +21,18 @@ struct MeditationSettingsFixTests {
         #expect(!h.engine.data.prefs.meditation.chime)
     }
 
-    @Test func readingOffersOnlyGentleAndNudgy() throws {
+    @Test func readingOffersGentleNudgyAndStrict() throws {
         let sut = try reading(EngineHarness())
         #expect(throws: Never.self) { try sut.find(text: Strictness.friendly.title) }
         #expect(throws: Never.self) { try sut.find(text: Strictness.persistent.title) }
-        #expect(Find.lacks(sut, text: "Strict"))
-        #expect(Find.lacks(sut, text: Strictness.strict.detail))
+        #expect(throws: Never.self) { try sut.find(text: Strictness.strict.title) }
+        #expect(throws: Never.self) { try sut.find(text: Strictness.strict.detail) }
+    }
+
+    @Test func readingStrictCardSetsStrict() throws {
+        let h = EngineHarness()
+        try Find.button(reading(h), holding: "Strict").tap()
+        #expect(h.store.prefs.reading.strictness == .strict)
     }
 
     @Test func waterStillOffersStrict() throws {
@@ -34,10 +40,10 @@ struct MeditationSettingsFixTests {
         #expect(throws: Never.self) { try sut.find(text: "Strict") }
     }
 
-    @Test func storedStrictReadingShowsNudgySelected() throws {
+    @Test func storedStrictReadingShowsStrictSelected() throws {
         let sut = try reading(EngineHarness { $0.prefs.reading.strictness = .strict })
-        #expect(try A11y.isSelected(Find.button(sut, holding: "Nudgy")))
-        #expect(try !A11y.isSelected(Find.button(sut, holding: "Gentle")))
+        #expect(try A11y.isSelected(Find.button(sut, holding: "Strict")))
+        #expect(try !A11y.isSelected(Find.button(sut, holding: "Nudgy")))
     }
 
     @Test func meditationReminderButtonIsDisabledWhileOff() throws {

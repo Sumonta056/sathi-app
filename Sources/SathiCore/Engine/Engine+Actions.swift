@@ -5,7 +5,11 @@ extension Engine {
         guard case .bubble = activities[id] else { return }
         snoozeHabit(id)
         presenter.closeBubble(id)
-        if usesCorner(id), let until = state(id).snoozedUntil { presenter.showSnoozed(id, until: until) }
+        if freshDue(id, lastDone: clock.now) == .distantFuture {
+            habits[id] = HabitState(nextDue: .distantFuture)
+        } else if usesCorner(id), let until = state(id).snoozedUntil {
+            presenter.showSnoozed(id, until: until)
+        }
         activities[id] = nil
         if resetsIdea(id) { gymIdea = 0 }
         requestTick()

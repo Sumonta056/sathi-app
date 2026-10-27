@@ -33,11 +33,13 @@ struct EngineNoReminderTests {
         #expect(h.engine.statusText == Fmt.short(h.engine.remaining(.water)))
     }
 
-    @Test func notNowWithNoNextReminderShowsNoSnoozedNote() {
+    @Test func closingAForcedReminderWithNoNextReminderShowsNoSnoozedNote() {
         let h = neverDue()
         h.engine.trigger(.gym)
         #expect(h.engine.phase(.gym) == .bubble(.nudge))
-        h.engine.notNow(.gym)
+        h.engine.snooze(.gym)
+        #expect(h.engine.activities[.gym] == nil)
+        #expect(h.history.appended.last == .snooze(.gym, at: day(2026, 3, 4, 9)))
         #expect(!h.presenter.calls.contains { if case .showSnoozed = $0 { return true }; return false })
         #expect(h.engine.pill(.gym) == "No reminder")
         #expect(h.engine.focus == nil)

@@ -54,14 +54,28 @@ package struct Prefs: Codable, Equatable, Sendable {
     package func strictness(_ id: HabitID) -> Strictness {
         switch id {
         case .water: return water.strictness
-        case .reading: return Self.withoutLock(reading.strictness)
+        case .reading: return reading.strictness
         case .meditation: return meditation.strictness
-        case .gym: return Self.withoutLock(gym.strictness)
+        case .gym: return gym.strictness
         }
     }
 
-    private static func withoutLock(_ s: Strictness) -> Strictness {
-        s == .strict ? .persistent : s
+    package func showsCloseButton(_ id: HabitID) -> Bool {
+        switch id {
+        case .water: return water.showsCloseButton
+        case .reading: return reading.showsCloseButton
+        case .meditation: return meditation.showsCloseButton
+        case .gym: return gym.showsCloseButton
+        }
+    }
+
+    package mutating func setShowsCloseButton(_ id: HabitID, _ on: Bool) {
+        switch id {
+        case .water: water.showsCloseButton = on
+        case .reading: reading.showsCloseButton = on
+        case .meditation: meditation.showsCloseButton = on
+        case .gym: gym.showsCloseButton = on
+        }
     }
 }
 
