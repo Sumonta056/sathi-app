@@ -120,4 +120,18 @@ struct HabitCardTests {
             #expect(try text.lineLimit() == 1)
         }
     }
+
+    @Test(arguments: HabitID.allCases)
+    func cardSaysDayOffWhenTodayIsOff(_ id: HabitID) throws {
+        let today = DayKey(day(2026, 3, 4), calendar: .current)
+        let h = EngineHarness {
+            $0.prefs.water.enabled = true
+            $0.prefs.reading.enabled = true
+            $0.prefs.meditation.enabled = true
+            $0.prefs.gym.enabled = true
+            $0.prefs.setDays(id, HabitDays(weekdays: Set(Weekday.allCases), daysOff: [today]))
+        }
+        let sut = try card(id, h)
+        #expect(throws: Never.self) { try sut.find(text: "Day off") }
+    }
 }
