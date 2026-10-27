@@ -117,7 +117,7 @@ Plan and spec: `docs/superpowers/plans/2026-10-27-days-off.md`
 - [x] Rules in `.claude/rules/business-logic.md`
 - [x] `DayKey`, `HabitDays`, and weekdays plus days off in every buddy's prefs
 - [x] Reminders skip days off
-- [ ] Engine: today off closes that buddy's reminder; "Day off" pill
+- [x] Engine: today off closes that buddy's reminder; "Day off" pill
 - [ ] Streaks and reports skip days off
 - [ ] Settings: weekday row and days-off card for every buddy
 - [ ] Menu pill and report calendar style
@@ -125,6 +125,7 @@ Plan and spec: `docs/superpowers/plans/2026-10-27-days-off.md`
 
 ## Later
 
+- Days off: a lock or Nudgy bubble that shows at 23:58 stays after midnight into a day off (only a settings change closes it, rule 11). Close it at the first tick of a new day if users notice
 - 6b: `RawJSON` stores numbers as `Double`; integers above 2^53 and `-0.0` are not written back exactly
 - 6b: a written month file lists known events first, then unknown events (not sorted by date; Sathi sorts on read)
 - 6b: each month file is decoded twice and each event encoded once more (about 3–4 ms for a few hundred events)

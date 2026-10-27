@@ -86,11 +86,12 @@ extension Engine {
         sound.play(name)
     }
 
-    func reschedule() {
+    func reschedule(turnedOff: [HabitID]) {
         let n = clock.now
         for id in HabitID.allCases where !enabled(id) {
             close(id)
         }
+        closeReminders(turnedOff)
         for id in HabitID.allCases where !isActive(id) {
             let fresh = freshDue(id, lastDone: data.lastDone(id))
             var due = fresh

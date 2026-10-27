@@ -24,7 +24,7 @@ extension Engine {
 
     package var focus: HabitID? {
         if let id = HabitID.allCases.first(where: isActive) { return id }
-        return HabitID.allCases.filter { enabled($0) && hasReminder($0) }.min { remaining($0) < remaining($1) }
+        return HabitID.allCases.filter { enabled($0) && !isOffToday($0) && hasReminder($0) }.min { remaining($0) < remaining($1) }
     }
 
     func hasReminder(_ id: HabitID) -> Bool {
@@ -61,6 +61,7 @@ extension Engine {
         if !enabled(id) { return "Off" }
         if isActive(id) { return phase(id) == .session ? Self.sessionPill(id) : "Due now" }
         if pausedUntil != nil { return "Paused" }
+        if isOffToday(id) { return "Day off" }
         if !hasReminder(id) { return "No reminder" }
         let r = remaining(id)
         if state(id).snoozedUntil != nil { return "Snoozed · " + Fmt.short(r) }

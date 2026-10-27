@@ -7,7 +7,9 @@ package final class Engine: ObservableObject {
         didSet {
             if streakInputsChanged(from: oldValue) { clearStreakCache() }
             if enabledHabits(oldValue.prefs) != enabledHabits(data.prefs) { reportCache = nil }
-            if oldValue.prefs.scheduleKey != data.prefs.scheduleKey { reschedule() }
+            if oldValue.prefs.scheduleKey != data.prefs.scheduleKey {
+                reschedule(turnedOff: turnedOffToday(from: oldValue.prefs))
+            }
             if oldValue.prefs != data.prefs { store.savePrefs(data.prefs) }
             if oldValue.live != data.live { store.saveLive(data.live) }
         }
