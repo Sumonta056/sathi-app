@@ -44,7 +44,7 @@ extension Engine {
         switch activities[id] {
         case let .bubble(_, _, deadline) where now >= deadline:
             snooze(id)
-        case let .session(s) where now >= s.end: finishSession(id)
+        case let .session(s) where now >= s.end: finishSession(id, timedOut: true)
         default: break
         }
     }

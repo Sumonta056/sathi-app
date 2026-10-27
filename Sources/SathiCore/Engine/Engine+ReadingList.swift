@@ -3,6 +3,13 @@ import Foundation
 extension Engine {
     package var readingPick: ReadingItem? { data.prefs.reading.list.pick }
 
+    package var readingSessionItem: ReadingItem? { session(.reading).flatMap(unreadItem) }
+
+    func unreadItem(_ s: Session) -> ReadingItem? {
+        guard let id = s.readingItem else { return nil }
+        return data.prefs.reading.list.first { $0.id == id && $0.doneOn == nil }
+    }
+
     @discardableResult
     package func addReading(url: String, title: String) -> ReadingAddResult {
         let outcome = data.prefs.reading.list.adding(url: url, title: title, on: today)
@@ -29,9 +36,9 @@ extension Engine {
     }
 
     package func finishReading(markDone: Bool) {
-        let pick = readingPick
+        let target = session(.reading) == nil ? readingPick : readingSessionItem
         if session(.reading) != nil { finishSession(.reading) }
-        if markDone, let pick { markReadingDone(id: pick.id) }
+        if markDone, let target { markReadingDone(id: target.id) }
     }
 
     private var today: DayKey { DayKey(clock.now, calendar: calendar) }

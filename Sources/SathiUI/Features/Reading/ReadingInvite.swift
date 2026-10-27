@@ -47,6 +47,13 @@ struct ReadingInvite: View {
                     .font(Typography.hint)
                     .foregroundStyle(Night.muted)
                     .fixedSize(horizontal: false, vertical: true)
+                if let pick = e.readingPick {
+                    Text(verbatim: Copywriter.readingUpNextLine(pick.displayTitle))
+                        .font(Typography.hint)
+                        .foregroundStyle(Night.reading)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+                }
             }
             Spacer(minLength: 0)
             if e.showsClose(.reading, level: level) {

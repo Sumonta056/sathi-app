@@ -7,13 +7,17 @@ extension Engine {
     }
 
     package func startReading() {
-        if let url = readingPick?.url, ReadingLink.problem(with: url) == nil { links.open(url) }
-        startSession(.reading)
+        var opened: UUID?
+        if let pick = readingPick, ReadingLink.problem(with: pick.url) == nil {
+            links.open(pick.url)
+            opened = pick.id
+        }
+        startSession(.reading, readingItem: opened)
     }
 
     package func startMeditation() { startSession(.meditation) }
 
-    package func startSession(_ id: HabitID) {
+    package func startSession(_ id: HabitID, readingItem: UUID? = nil) {
         guard let minutes = sessionMinutes(id) else { sound.beep(); return }
         let workout = sessionWorkout(id)
         let n = clock.now
@@ -21,13 +25,13 @@ extension Engine {
         let fromReminder = session(id)?.fromReminder ?? (isActive(id) || n >= (st.snoozedUntil ?? st.nextDue))
         close(id)
         let end = n.addingTimeInterval(TimeInterval(minutes) * Timing.minute)
-        activities[id] = .session(Session(start: n, end: end, fromReminder: fromReminder, workout: workout))
+        activities[id] = .session(Session(start: n, end: end, fromReminder: fromReminder, workout: workout, readingItem: readingItem))
         presenter.showSession(id)
         if let sound = startSound(id) { play(sound) }
         requestTick()
     }
 
-    package func finishSession(_ id: HabitID) {
+    package func finishSession(_ id: HabitID, timedOut: Bool = false) {
         guard let s = session(id) else { return }
         let minutes = Double(Int((s.end.timeIntervalSince(s.start) / Timing.minute).rounded()))
         let amount = doneAmount(id, minutes: minutes)
@@ -36,7 +40,7 @@ extension Engine {
         habits[id] = HabitState(nextDue: freshDue(id, lastDone: n))
         close(id)
         if resetsIdea(id) { gymIdea = 0 }
-        celebrate(id, amount)
+        celebrate(id, amount, readingAsk: timedOut && id == .reading && usesCorner(.reading) ? unreadItem(s)?.id : nil)
     }
 
     package func stopSession(_ id: HabitID) {

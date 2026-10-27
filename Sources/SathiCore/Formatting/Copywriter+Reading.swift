@@ -29,6 +29,13 @@ extension Copywriter {
     package static let readingAdd = "Add"
     package static let readingUpNext = "Up next"
     package static let readingUndo = "Undo"
+    package static let readingWith = "Boi is reading with you"
+    package static let readingFinishedIt = "Finished it"
+    package static let readingYesDone = "Yes, done"
+    package static let readingNotYet = "Not yet"
+
+    package static func readingUpNextLine(_ title: String) -> String { "Up next: \(title)" }
+    package static func readingAsk(_ title: String) -> String { "Did you finish \(title)?" }
 
     package static func readingMoveUp(_ title: String) -> String { "Move \(title) up" }
     package static func readingMoveDown(_ title: String) -> String { "Move \(title) down" }

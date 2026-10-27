@@ -14,6 +14,7 @@ package enum Timing {
     package static let maxTickTolerance: TimeInterval = 2
 
     package static let celebrationDuration: TimeInterval = 4.5
+    package static let readingAskDuration: TimeInterval = 20
     package static let cornerNoteDuration: TimeInterval = 4
     package static let lockHoldDuration: TimeInterval = 3
     package static let lockConfirmDelay: TimeInterval = 0.45

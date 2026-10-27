@@ -64,3 +64,16 @@ Settings > Reading gets a section "What to read", placed right after "When". It 
 5. A "Read" section label with the count, below the unread rows, only when there are read items. Each read row shows the title, the done date ("Read Oct 27"), an "Undo" button (`undoReadingDone`), and a remove button. Read rows are muted.
 6. Every button has an accessibility label that names the item ("Remove <title>", "Move <title> up").
 7. Strings go in `Copywriter+Reading`. Sizes go in `UIMetrics+Settings`. Each view stays under 200 lines: split into `ReadingListCard`, `ReadingAddRow`, `ReadingItemRow`.
+
+## Popup, pill, thank-you, menu (10c)
+
+All of these show only when there is a pick. With no pick, each view stays exactly as today.
+
+1. Corner popup (`ReadingInvite`): one line under the hint, "Up next: <displayTitle>", one line, truncated at the tail, in `Night.reading`.
+2. Timer pill (`ReadingTimerPill`): the caption becomes the pick's `displayTitle` (one line, tail truncated) instead of "Boi is reading with you". A "Finished it" button sits before "Stop" and calls `finishReading(markDone: true)`. With no pick the pill has no "Finished it" button and keeps its caption.
+3. Thank-you (`ReadingDoneCard`): `Celebration` gets `readingAsk: UUID?`. A reading session that ends by its timer while there is a pick sets it to the pick's id. `finishReading(markDone: true)` and `finishReading(markDone: false)` leave it nil. When it is set and that item is still unread, the card shows "Did you finish <displayTitle>?" with "Yes, done" (`markReadingDone(id:)`, then `endCelebrate()`) and "Not yet" (`endCelebrate()`). While it asks, the card stays `Timing.readingAskDuration` (20 s) instead of `celebrationDuration` (4.5 s). No answer before the card closes counts as "Not yet". The minutes line and streak line stay.
+4. Menu bar (`HabitCard` for reading, via `StatusModel` or an Engine read): a line "Up next: <displayTitle>" under the reading goal, one line, tail truncated. A tap on it calls `startReading()` (opens the link and starts the session).
+5. The focus style (`reminderStyle == .focus`) is out of scope: it does not show the title or "Finished it".
+6. The reading session remembers the item it opened (`Session.readingItem`, in memory only). The timer ask, "Finished it", and the pill caption use that item while it is still unread, not the current pick. A session with no opened link has none, so it never asks. The focus style never asks.
+7. "Up next" is hidden while a reading session runs.
+8. Strings in `Copywriter+Reading`. Sizes in `UIMetrics`. No new timer, no new repeating work.

@@ -132,15 +132,25 @@ extension Engine {
         }
     }
 
-    func celebrate(_ id: HabitID, _ amount: Double) {
-        celebration = Celebration(id: id, amount: amount, title: Copywriter.celebrationTitle(id, amount: amount))
+    package var celebrationDuration: TimeInterval {
+        celebration.readingAsk == nil ? Timing.celebrationDuration : Timing.readingAskDuration
+    }
+
+    func celebrate(_ id: HabitID, _ amount: Double, readingAsk: UUID? = nil) {
+        celebration = Celebration(
+            id: id,
+            amount: amount,
+            title: Copywriter.celebrationTitle(id, amount: amount),
+            readingAsk: readingAsk
+        )
         isCelebrating = true
         presenter.showCelebration()
         if let sound = celebrationSound(id) { play(sound) }
         let token = UUID()
         celebrateToken = token
+        let duration = celebrationDuration
         Task { @MainActor [weak self] in
-            try? await Task.sleep(nanoseconds: UInt64(Timing.celebrationDuration * 1_000_000_000))
+            try? await Task.sleep(nanoseconds: UInt64(duration * 1_000_000_000))
             guard let self, celebrateToken == token else { return }
             endCelebrate()
         }

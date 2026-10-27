@@ -26,6 +26,7 @@ struct HabitCard: View {
                         .font(Typography.hint)
                         .foregroundStyle(Night.muted)
                 }
+                if id == .reading, e.session(.reading) == nil, let pick = e.readingPick { upNext(pick) }
             }
             Spacer(minLength: 0)
             Button(actionTitle) { act() }
@@ -34,6 +35,20 @@ struct HabitCard: View {
         .padding(UIMetrics.cardPadding)
         .background(shape.fill(Night.card))
         .overlay(shape.strokeBorder(Night.border, lineWidth: UIMetrics.cardBorder))
+    }
+
+    private func upNext(_ pick: ReadingItem) -> some View {
+        Button {
+            MenuBarWindow.close()
+            e.startReading()
+        } label: {
+            Text(verbatim: Copywriter.readingUpNextLine(pick.displayTitle))
+                .font(Typography.hint)
+                .foregroundStyle(Night.reading)
+                .lineLimit(1)
+                .truncationMode(.tail)
+        }
+        .buttonStyle(.plain)
     }
 
     private var title: some View {

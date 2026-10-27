@@ -21,6 +21,7 @@ extension UIMetrics {
     static let pillSpacing: CGFloat = 10
     static let pillTextSpacing: CGFloat = 1
     static let timerPillPadding = EdgeInsets(top: 8, leading: 10, bottom: 8, trailing: 8)
+    static let pillCaptionMaxWidth: CGFloat = 150
     static let notePadding = EdgeInsets(top: 8, leading: 14, bottom: 8, trailing: 14)
 
     static let closeIconSize: CGFloat = 14

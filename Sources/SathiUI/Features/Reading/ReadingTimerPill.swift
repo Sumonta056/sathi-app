@@ -6,11 +6,16 @@ struct ReadingTimerPill: View {
 
     var body: some View {
         let s = e.session(.reading) ?? Session(start: e.now, end: e.now)
+        let item = e.readingSessionItem
         HStack(spacing: UIMetrics.pillSpacing) {
             PillRing(start: s.start, end: s.end, now: e.now)
             VStack(alignment: .leading, spacing: UIMetrics.pillTextSpacing) {
                 PillCountdown(now: e.now, end: s.end)
-                PillCaption()
+                PillCaption(title: item?.displayTitle)
+            }
+            if item != nil {
+                Button(Copywriter.readingFinishedIt) { e.finishReading(markDone: true) }
+                    .buttonStyle(AccentButton(accent: Night.reading, height: UIMetrics.pillButtonHeight))
             }
             Button("Stop") { e.stopSession(.reading) }
                 .buttonStyle(GhostButton(accent: Night.chipText, height: UIMetrics.pillButtonHeight))
@@ -38,10 +43,16 @@ private struct PillCountdown: View {
 }
 
 private struct PillCaption: View {
+    let title: String?
+
     var body: some View {
-        Text("Boi is reading with you")
+        Text(verbatim: title ?? Copywriter.readingWith)
             .font(Typography.pillHint)
             .foregroundStyle(Night.muted)
+            .lineLimit(1)
+            .truncationMode(.tail)
+            .frame(maxWidth: UIMetrics.pillCaptionMaxWidth, alignment: .leading)
+            .fixedSize()
     }
 }
 
