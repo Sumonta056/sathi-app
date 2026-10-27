@@ -1,6 +1,6 @@
 # Sathi
 
-Sathi is a macOS menu bar app (macOS 13+, Swift 5.9 tools, SwiftUI + AppKit). Four buddies remind the user: Fota (water), Boi (reading), Shanti (meditation, off by default), and Shokti (gym, off by default). An ignored reminder escalates: bubble → persistent bubble → full-screen lock (water and meditation, at Strict). Meditation has a daily goal and stops for the day when it is met. Shokti suggests 1 short workout every hour during work hours, keeps a list of 4 workouts, and never locks. Reading, meditation, and gym use a calm corner popup that never takes focus.
+Sathi is a macOS menu bar app (macOS 13+, Swift 5.9 tools, SwiftUI + AppKit). Four buddies remind the user: Fota (water), Boi (reading), Shanti (meditation, off by default), and Shokti (gym, off by default). An ignored reminder escalates: bubble → persistent bubble → full-screen lock (water and meditation, at Strict). Meditation has a daily goal and stops for the day when it is met. Shokti suggests 1 short workout every hour during work hours, on the days you pick, keeps a list of 4 workouts, and never locks. Reading, meditation, and gym use a calm corner popup that never takes focus. Each buddy has its own weekdays and single days off; a day off keeps that buddy quiet and never breaks its streak.
 
 ## Commands
 
@@ -22,8 +22,8 @@ Sathi is a macOS menu bar app (macOS 13+, Swift 5.9 tools, SwiftUI + AppKit). Fo
 ```
 Sources/
   SathiCore/     Foundation only. All logic. Fully unit-tested.
-    Models/        HabitID, Strictness, Container, Mood, Prefs, GeneralPrefs, LiveState, HistoryEvent, Persisted, ReminderState, GoalText, Set+KeepOne, DecodingDefaults, Calendar+Days, Date+WholeSecond
-    Habits/        HabitRules, DayClock, one folder per habit: Water/, Reading/, Meditation/, Gym/ (prefs, rules, helpers such as Weekday, BreathingPattern, GymWorkout)
+    Models/        HabitID, Strictness, Container, Mood, Prefs, GeneralPrefs, LiveState, HistoryEvent, Persisted, ReminderState, GoalText, Set+KeepOne, DecodingDefaults, Calendar+Days, Date+WholeSecond, DayKey
+    Habits/        HabitRules, HabitDays, DayClock, one folder per habit: Water/, Reading/, Meditation/, Gym/ (prefs, rules, helpers such as Weekday, BreathingPattern, GymWorkout)
     Constants/     Timing, Limits, StorageKeys, SoundName
     Scheduling/    EscalationPolicy (bubble/lock), TickPlanner (timer delay)
     Stats/         Stats (daily totals), StreakCalculator, ReportBuilder + Report, ReportScreen + ReportScreenInput, ReportScreenBuilder (+Tiles, +Chart, +Calendar, +Text)
@@ -35,7 +35,7 @@ Sources/
   SathiUI/       SwiftUI + AppKit. Views and windows only.
     Constants/     UIMetrics (+Bubble, +Components, +Corner, +Lock, +Meditation, +Menu, +Reports, +Settings), TimeSlots
     Theme/         NightPalette (Night tokens), Typography, ButtonStyles, GhostButton, ProgressBar, Shake, ShakeSound, Color+Hex
-    Components/    HeroCard, SettingsCard, SettingRow, OptionCard, ChipRow, SectionLabel, BuddySwitch
+    Components/    HeroCard, SettingsCard, SettingRow, OptionCard, ChipRow, SectionLabel, BuddySwitch, WeekdayRow, DaysOffCard, DaysOffRow
     Buddy/         BuddyView, BuddyCanvas (+Pebble, +Kettlebell), BuddyKind, BuddyInk, WaterInk, BuddyPaths, BobbingBuddy, GlassIcon, BottleView
     Features/      MenuBar/, Bubble/, Water/, Reading/, Meditation/, Gym/, Session/, Celebrate/, Lock/, Settings/, Reports/
     Windows/       UIController (+Corner, +Placement; ReminderPresenter impl), PanelFactory, CornerToast, SettingsWindow, ReportsWindow, LockScreen, PanelWindows, WindowCloseWatcher
