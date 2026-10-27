@@ -36,11 +36,15 @@ struct OptionCard<Top: View>: View {
 }
 
 struct OptionCardRow<Content: View>: View {
-    @ViewBuilder let content: () -> Content
+    let content: Content
+
+    init(@ViewBuilder cards: () -> Content) {
+        content = cards()
+    }
 
     var body: some View {
         HStack(alignment: .top, spacing: UIMetrics.chipSpacing) {
-            content()
+            content
         }
         .fixedSize(horizontal: false, vertical: true)
     }
