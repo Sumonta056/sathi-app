@@ -42,3 +42,14 @@ extension UIMetrics {
     static let dayOffRemoveSize: CGFloat = 22
     static let dayOffRemoveIconSize: CGFloat = 10
 }
+
+extension UIMetrics {
+    static let readingFieldSpacing: CGFloat = 8
+    static let readingTitleFieldWidth: CGFloat = 140
+    static let readingRowSpacing: CGFloat = 10
+    static let readingTextSpacing: CGFloat = 2
+    static let readingTagSpacing: CGFloat = 6
+    static let readingIconSize: CGFloat = 11
+    static let readingIconButton: CGFloat = 24
+    static let readingProblemPadding = EdgeInsets(top: 0, leading: 16, bottom: 12, trailing: 16)
+}

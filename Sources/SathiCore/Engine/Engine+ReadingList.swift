@@ -22,6 +22,8 @@ extension Engine {
         setReadingList(data.prefs.reading.list.markingDone(id: id, on: today))
     }
 
+    package var canUndoReading: Bool { data.prefs.reading.list.unread.count < Limits.readingListMax }
+
     package func undoReadingDone(id: UUID) {
         setReadingList(data.prefs.reading.list.undoingDone(id: id))
     }

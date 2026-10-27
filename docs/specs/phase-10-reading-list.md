@@ -52,3 +52,15 @@ package struct ReadingItem: Codable, Equatable, Identifiable, Sendable {
 ## Out of scope
 
 Fetching page titles from the network. Reports listing read articles. A separate window.
+
+## Settings card (10b)
+
+Settings > Reading gets a section "What to read", placed right after "When". It holds a `ReadingListCard`:
+
+1. Add row: a link field (placeholder "Paste a link"), an optional title field (placeholder "Title (optional)"), and an "Add" button in `Night.reading`. A "Paste" button fills the link field from the clipboard (plain text only). Return in either field also adds. After a good add both fields clear.
+2. A refused add keeps the text and shows one short line under the row, by `ReadingAddResult`: unsupportedScheme "Only web links and files.", missingHost "That does not look like a link.", tooLong "That link is too long.", duplicate "That link is already on your list.", full "Your list is full. Read one first." The line clears when the link text changes.
+3. Unread rows, in queue order. The first row has the tag "Up next". Each row shows `displayTitle` and the host (or file name) in muted text, and has up and down buttons (`moveReading`), and a remove button (`removeReading`). The first row has no up button; the last unread row has no down button.
+4. Empty state when there is no unread item: "Add a link and Boi will suggest it at reading time."
+5. A "Read" section label with the count, below the unread rows, only when there are read items. Each read row shows the title, the done date ("Read Oct 27"), an "Undo" button (`undoReadingDone`), and a remove button. Read rows are muted.
+6. Every button has an accessibility label that names the item ("Remove <title>", "Move <title> up").
+7. Strings go in `Copywriter+Reading`. Sizes go in `UIMetrics+Settings`. Each view stays under 200 lines: split into `ReadingListCard`, `ReadingAddRow`, `ReadingItemRow`.

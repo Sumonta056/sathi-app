@@ -32,12 +32,13 @@ package struct ReadingItem: Codable, Equatable, Identifiable, Sendable {
         doneOn = try c.decodeIfPresent(DayKey.self, forKey: .doneOn)
     }
 
-    package var displayTitle: String {
-        if !title.isEmpty { return title }
+    package var source: String {
         if url.isFileURL { return url.lastPathComponent }
         guard let host = url.host, !host.isEmpty else { return url.absoluteString }
         return host.hasPrefix("www.") ? String(host.dropFirst(4)) : host
     }
+
+    package var displayTitle: String { title.isEmpty ? source : title }
 }
 
 package enum ReadingAddResult: Error, Equatable, Sendable {

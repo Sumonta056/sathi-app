@@ -44,6 +44,16 @@ struct ReadingItemTitleTests {
         #expect(item(url).displayTitle == expected)
     }
 
+    @Test(arguments: [
+        ("https://www.example.com/a", "example.com"),
+        ("https://blog.example.com/a", "blog.example.com"),
+        ("file:///Users/asha/notes/article.pdf", "article.pdf"),
+    ])
+    func sourceIsTheHostWithoutWwwOrTheFileName(_ url: String, _ expected: String) {
+        #expect(item(url, title: "Deep work").source == expected)
+        #expect(item(url).source == expected)
+    }
+
     @Test func emptyTitleOfAFileShowsTheFileName() {
         #expect(item("file:///Users/asha/notes/article.pdf").displayTitle == "article.pdf")
     }
