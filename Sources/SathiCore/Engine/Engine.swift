@@ -29,6 +29,7 @@ package final class Engine: ObservableObject {
     let clock: Clock
     let sound: SoundPlayer
     let presenter: ReminderPresenter
+    let links: LinkOpener
     let calendar: Calendar
 
     var timer: Timer?
@@ -46,6 +47,7 @@ package final class Engine: ObservableObject {
         clock: Clock,
         sound: SoundPlayer,
         presenter: ReminderPresenter,
+        links: LinkOpener,
         calendar: Calendar = .current
     ) {
         let n = clock.now
@@ -58,6 +60,7 @@ package final class Engine: ObservableObject {
         self.clock = clock
         self.sound = sound
         self.presenter = presenter
+        self.links = links
         self.calendar = calendar
         data = loaded
         now = n

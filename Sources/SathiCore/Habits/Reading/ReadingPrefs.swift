@@ -9,11 +9,12 @@ package struct ReadingPrefs: Codable, Equatable, Sendable {
     package var reminderStyle: ReadingReminderStyle = .corner
     package var daysOff: Set<DayKey> = []
     package var showsCloseButton = true
+    package var list: [ReadingItem] = []
 
     package init() {}
 
     enum CodingKeys: String, CodingKey {
-        case enabled, timeMinutes, sessionMinutes, strictness, weekdays, reminderStyle, daysOff, showsCloseButton
+        case enabled, timeMinutes, sessionMinutes, strictness, weekdays, reminderStyle, daysOff, showsCloseButton, list
     }
 
     package var sortedWeekdays: [Weekday] {
@@ -33,6 +34,7 @@ extension ReadingPrefs {
         weekdays = try c.knownSet(.weekdays, or: d.weekdays, keepsEmpty: false)
         reminderStyle = try c.known(.reminderStyle, or: d.reminderStyle)
         daysOff = c.lenientSet(.daysOff, or: d.daysOff)
+        list = (c.lenientArray(.list) as [ReadingItem]).tidied()
     }
 
     package func encode(to encoder: Encoder) throws {
@@ -45,5 +47,6 @@ extension ReadingPrefs {
         try c.encode(sortedWeekdays, forKey: .weekdays)
         try c.encode(reminderStyle, forKey: .reminderStyle)
         try c.encode(daysOff.sorted(), forKey: .daysOff)
+        try c.encode(list, forKey: .list)
     }
 }

@@ -6,7 +6,10 @@ extension Engine {
         return s
     }
 
-    package func startReading() { startSession(.reading) }
+    package func startReading() {
+        if let url = readingPick?.url, ReadingLink.problem(with: url) == nil { links.open(url) }
+        startSession(.reading)
+    }
 
     package func startMeditation() { startSession(.meditation) }
 

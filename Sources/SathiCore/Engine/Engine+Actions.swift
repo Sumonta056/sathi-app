@@ -38,7 +38,7 @@ extension Engine {
     package func lockConfirmed(_ id: HabitID) {
         switch id {
         case .water: logWater(1)
-        case .reading: startReading()
+        case .reading: startSession(.reading)
         case .meditation: startMeditation()
         case .gym: startSession(.gym)
         }

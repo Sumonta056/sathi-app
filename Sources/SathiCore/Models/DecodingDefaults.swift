@@ -27,6 +27,10 @@ extension KeyedDecodingContainer {
         guard let items = (try? decodeIfPresent([Lenient<T>].self, forKey: key)) ?? nil else { return fallback }
         return Set(items.compactMap(\.value))
     }
+
+    func lenientArray<T: Decodable>(_ key: Key) -> [T] {
+        ((try? decodeIfPresent([Lenient<T>].self, forKey: key)) ?? nil)?.compactMap(\.value) ?? []
+    }
 }
 
 private struct Lenient<T: Decodable>: Decodable {

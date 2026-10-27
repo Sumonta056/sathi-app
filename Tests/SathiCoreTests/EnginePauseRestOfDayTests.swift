@@ -24,6 +24,7 @@ struct EnginePauseRestOfDayTests {
             clock: FakeClock(zone.date(2026, 3, 29, 15)),
             sound: SpySoundPlayer(),
             presenter: SpyPresenter(),
+            links: SpyLinkOpener(),
             calendar: zone.calendar
         )
         engine.pauseRestOfDay()

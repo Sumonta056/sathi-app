@@ -60,6 +60,7 @@ struct GregorianTests {
             clock: FakeClock(zone.date(2026, 3, 4, 10)),
             sound: SpySoundPlayer(),
             presenter: SpyPresenter(),
+            links: SpyLinkOpener(),
             calendar: buddhist
         )
         let outcome = await engine.export(.csv, screen: engine.reportScreen(.week, selected: .water), to: spy, renderer: SpySummaryRenderer())

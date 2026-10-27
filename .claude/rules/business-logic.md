@@ -92,6 +92,12 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
    - A Strict habit that reaches its lock while another lock shows gets a Nudgy bubble (Habits rule 7). If that bubble has no snooze left, it becomes the lock as soon as the other lock ends.
    - A change of the limit while a bubble shows takes effect at once: a bubble that gets snoozes back gets a fresh ignore timer, and a bubble that loses its last snooze loses its ignore timer.
    - When 1 snooze is left, the bubble's Snooze button says "Last snooze".
+10. Reading list: `ReadingPrefs.list` is a queue of links (`ReadingItem`). Full rules are in `docs/specs/phase-10-reading-list.md`.
+   - Today's pick is the first unread item. "Start reading" opens it with the `LinkOpener` port and starts the session. The lock's press-and-hold and every other session start never open a link.
+   - Only `http`, `https`, and `file` links are accepted. At most `Limits.readingListMax` unread items.
+   - Mark done sets `doneOn` to today. The last `Limits.readingReadKeep` read items are kept; unread items are never removed. Undo moves a read item back to the end of the unread items.
+   - "Finished it" during a session finishes the session as done (full minutes) and marks the pick done. An unfinished pick stays first and comes back the next day.
+   - List changes never change a due time, a snooze, or a streak.
 
 ## History and storage
 

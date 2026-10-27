@@ -45,6 +45,10 @@ package enum Limits {
     package static let gymEndMinutes = 17 * 60
     package static let daysOffMaxAhead = 365
     package static let daysOffMax = 100
+    package static let readingListMax = 50
+    package static let readingReadKeep = 50
+    package static let readingTitleMax = 120
+    package static let readingURLMax = 2048
 
     package static let morningStartHour = 5
     package static let afternoonStartHour = 12
