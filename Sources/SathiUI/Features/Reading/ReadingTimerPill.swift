@@ -18,7 +18,6 @@ struct ReadingTimerPill: View {
         .padding(UIMetrics.timerPillPadding)
         .background(Capsule().fill(Night.card))
         .overlay(Pill().strokeBorder(Night.heroBorder(.reading), lineWidth: UIMetrics.bubbleBorder))
-        .modifier(CornerShadow())
         .padding(UIMetrics.bubbleShadowPadding)
         .environment(\.colorScheme, .dark)
     }

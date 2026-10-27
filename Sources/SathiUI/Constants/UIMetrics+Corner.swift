@@ -12,9 +12,6 @@ extension UIMetrics {
     static let cornerBuddySize: CGFloat = 52
     static let cornerDoneBuddySize: CGFloat = 44
     static let cornerButtonHeight: CGFloat = 34
-    static let cornerShadowOpacity: Double = 0.55
-    static let cornerShadowRadius: CGFloat = 22
-    static let cornerShadowY: CGFloat = 18
     static let cornerStackOverlap: CGFloat = 36
     static let cornerColumnGap: CGFloat = -cornerStackOverlap
 

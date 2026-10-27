@@ -29,7 +29,6 @@ struct LegacyBubble: View {
             RoundedRectangle(cornerRadius: 22, style: .continuous)
                 .strokeBorder(level == .persist ? accent : Night.border, lineWidth: level == .persist ? 2 : 1)
         )
-        .shadow(color: Color.black.opacity(0.28), radius: 18, x: 0, y: 10)
         .modifier(Shake(amount: shakes))
         .padding(UIMetrics.bubbleShadowPadding)
         .foregroundStyle(Night.text)

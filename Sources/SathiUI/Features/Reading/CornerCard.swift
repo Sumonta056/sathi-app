@@ -15,24 +15,12 @@ struct CornerCard: ViewModifier {
                 alert ? Night.accent(habit) : Night.heroBorder(habit),
                 lineWidth: alert ? UIMetrics.bubbleAlertBorder : UIMetrics.bubbleBorder
             ))
-            .modifier(CornerShadow())
             .padding(UIMetrics.bubbleShadowPadding)
             .environment(\.colorScheme, .dark)
     }
 
     private var shape: RoundedRectangle {
         RoundedRectangle(cornerRadius: UIMetrics.cornerRadius, style: .continuous)
-    }
-}
-
-struct CornerShadow: ViewModifier {
-    func body(content: Content) -> some View {
-        content.shadow(
-            color: Color.black.opacity(UIMetrics.cornerShadowOpacity),
-            radius: UIMetrics.cornerShadowRadius,
-            x: 0,
-            y: UIMetrics.cornerShadowY
-        )
     }
 }
 
