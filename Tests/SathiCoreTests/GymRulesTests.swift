@@ -13,6 +13,12 @@ struct GymRulesTests {
         return c
     }()
 
+    private var workWeek: GymRules {
+        var prefs = Prefs()
+        prefs.gym.weekdays = [.monday, .tuesday, .wednesday, .thursday, .friday]
+        return GymRules(prefs: prefs)
+    }
+
     private func rules(every interval: Int) -> GymRules {
         var prefs = Prefs()
         prefs.gym.intervalMinutes = interval
@@ -37,7 +43,8 @@ struct GymRulesTests {
     }
 
     @Test func fridayEveningMovesToMondayFirstReminder() {
-        #expect(rules.nextDue(now: day(2026, 3, 6, 16, 30), lastDone: day(2026, 3, 6, 16, 30), doneToday: 3, skipToday: false) == day(2026, 3, 9, 10))
+        let due = workWeek.nextDue(now: day(2026, 3, 6, 16, 30), lastDone: day(2026, 3, 6, 16, 30), doneToday: 3, skipToday: false)
+        #expect(due == day(2026, 3, 9, 10))
     }
 
     @Test func lastDoneYesterdayGivesTodaysFirstReminder() {
@@ -54,20 +61,20 @@ struct GymRulesTests {
     }
 
     @Test func activeOnlyInWorkHoursOnWorkDays() {
-        #expect(rules.isActiveTime(day(2026, 3, 4, 9)))
-        #expect(!rules.isActiveTime(day(2026, 3, 4, 17)))
-        #expect(!rules.isActiveTime(day(2026, 3, 7, 11)))
+        #expect(workWeek.isActiveTime(day(2026, 3, 4, 9)))
+        #expect(!workWeek.isActiveTime(day(2026, 3, 4, 17)))
+        #expect(!workWeek.isActiveTime(day(2026, 3, 7, 11)))
     }
 
     @Test func nextActiveStartSkipsTheWeekend() {
-        #expect(rules.nextActiveStart(after: day(2026, 3, 6, 18)) == day(2026, 3, 9, 9))
+        #expect(workWeek.nextActiveStart(after: day(2026, 3, 6, 18)) == day(2026, 3, 9, 9))
     }
 
-    @Test func emptyWeekdaysCountAsMondayToFriday() {
+    @Test func emptyWeekdaysCountAsEveryDay() {
         var prefs = Prefs()
         prefs.gym.weekdays = []
         let r = GymRules(prefs: prefs)
-        #expect(r.nextDue(now: day(2026, 3, 7, 7), lastDone: nil, doneToday: 0, skipToday: false) == day(2026, 3, 9, 10))
+        #expect(r.nextDue(now: day(2026, 3, 7, 7), lastDone: nil, doneToday: 0, skipToday: false) == day(2026, 3, 7, 10))
     }
 
     @Test func startPlusIntervalAtOrAfterEndEveryDayHasNoReminder() {

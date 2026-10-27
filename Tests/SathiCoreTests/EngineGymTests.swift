@@ -129,7 +129,9 @@ struct EngineGymTests {
     }
 
     @Test func noReminderOnSaturday() {
-        let h = gymHarness(at: day(2026, 3, 7, 9))
+        let h = gymHarness(at: day(2026, 3, 7, 9)) {
+            $0.prefs.gym.weekdays = [.monday, .tuesday, .wednesday, .thursday, .friday]
+        }
         h.advance(minutes: 8 * 60)
         #expect(!h.presenter.calls.contains { if case .showBubble(.gym, _) = $0 { true } else { false } })
     }

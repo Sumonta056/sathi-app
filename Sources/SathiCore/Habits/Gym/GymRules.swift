@@ -62,7 +62,7 @@ package struct GymRules: HabitRules {
     }
 
     private func isWorkDay(_ date: Date) -> Bool {
-        let days = gym.weekdays.isEmpty ? Limits.gymWorkDays : gym.weekdays
+        let days = gym.weekdays.isEmpty ? Set(Weekday.allCases) : gym.weekdays
         guard let w = Weekday(rawValue: clock.calendar.component(.weekday, from: date)) else { return false }
         return days.contains(w)
     }

@@ -21,3 +21,18 @@ extension KeyedDecodingContainer {
         return known.isEmpty ? fallback : known
     }
 }
+
+extension KeyedDecodingContainer {
+    func lenientSet<T: Decodable & Hashable>(_ key: Key, or fallback: Set<T>) -> Set<T> {
+        guard let items = (try? decodeIfPresent([Lenient<T>].self, forKey: key)) ?? nil else { return fallback }
+        return Set(items.compactMap(\.value))
+    }
+}
+
+private struct Lenient<T: Decodable>: Decodable {
+    let value: T?
+
+    init(from decoder: Decoder) throws {
+        value = try? T(from: decoder)
+    }
+}

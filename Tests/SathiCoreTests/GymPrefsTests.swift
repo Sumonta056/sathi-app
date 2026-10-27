@@ -15,7 +15,7 @@ struct GymPrefsTests {
         #expect(p.intervalMinutes == 60)
         #expect(p.startMinutes == 9 * 60)
         #expect(p.endMinutes == 17 * 60)
-        #expect(p.sortedWeekdays == [.monday, .tuesday, .wednesday, .thursday, .friday])
+        #expect(p.sortedWeekdays == [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday])
         #expect(p.strictness == .friendly)
         #expect(p.workouts.map(\.name) == ["Neck and shoulder stretch", "Short walk", "10 squats", "Wall push-ups"])
         #expect(p.workouts.map(\.minutes) == [5, 5, 3, 3])

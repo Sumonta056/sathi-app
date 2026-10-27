@@ -5,14 +5,15 @@ package struct GymPrefs: Codable, Equatable, Sendable {
     package var intervalMinutes = 60
     package var startMinutes = Limits.gymStartMinutes
     package var endMinutes = Limits.gymEndMinutes
-    package var weekdays: Set<Weekday> = Limits.gymWorkDays
+    package var weekdays: Set<Weekday> = Set(Weekday.allCases)
+    package var daysOff: Set<DayKey> = []
     package var workouts = GymWorkout.defaults
     package var strictness: Strictness = .friendly
 
     package init() {}
 
     enum CodingKeys: String, CodingKey {
-        case enabled, intervalMinutes, startMinutes, endMinutes, weekdays, workouts, strictness
+        case enabled, intervalMinutes, startMinutes, endMinutes, weekdays, daysOff, workouts, strictness
     }
 
     package var sortedWeekdays: [Weekday] {
@@ -47,6 +48,7 @@ extension GymPrefs {
         startMinutes = try c.value(.startMinutes, or: d.startMinutes)
         endMinutes = try c.value(.endMinutes, or: d.endMinutes)
         weekdays = try c.knownSet(.weekdays, or: d.weekdays, keepsEmpty: false)
+        daysOff = c.lenientSet(.daysOff, or: d.daysOff)
         workouts = try Self.cleaned(c.value(.workouts, or: d.workouts))
         strictness = try c.known(.strictness, or: d.strictness)
     }
@@ -58,6 +60,7 @@ extension GymPrefs {
         try c.encode(startMinutes, forKey: .startMinutes)
         try c.encode(endMinutes, forKey: .endMinutes)
         try c.encode(sortedWeekdays, forKey: .weekdays)
+        try c.encode(daysOff.sorted(), forKey: .daysOff)
         try c.encode(workouts, forKey: .workouts)
         try c.encode(strictness, forKey: .strictness)
     }

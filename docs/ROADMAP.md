@@ -115,7 +115,7 @@ Plan: `docs/superpowers/plans/2026-10-26-gym-shokti.md`
 Plan and spec: `docs/superpowers/plans/2026-10-27-days-off.md`
 
 - [x] Rules in `.claude/rules/business-logic.md`
-- [ ] `DayKey`, `HabitDays`, and weekdays plus days off in every buddy's prefs
+- [x] `DayKey`, `HabitDays`, and weekdays plus days off in every buddy's prefs
 - [ ] Reminders skip days off
 - [ ] Engine: today off closes that buddy's reminder; "Day off" pill
 - [ ] Streaks and reports skip days off

@@ -27,6 +27,12 @@ struct PrefsCodingTests {
         p.water.intervalMinutes = 90
         p.water.container = .bottle
         p.water.bottleSizeGlasses = 4.5
+        p.water.enabled = false
+        p.water.startMinutes = 8 * 60
+        p.water.endMinutes = 20 * 60
+        p.water.strictness = .friendly
+        p.water.dailyGoalGlasses = 10
+        p.water.weekdays = [.monday, .friday]
         p.reading.enabled = false
         p.reading.strictness = .friendly
         return p

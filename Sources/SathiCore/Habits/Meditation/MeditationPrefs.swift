@@ -14,11 +14,18 @@ package struct MeditationPrefs: Codable, Equatable, Sendable {
     package var style: BreathingStyle = .box
     package var chime = true
     package var strictness: Strictness = .friendly
+    package var weekdays: Set<Weekday> = Set(Weekday.allCases)
+    package var daysOff: Set<DayKey> = []
 
     package init() {}
 
     enum CodingKeys: String, CodingKey {
         case enabled, dailyGoalMinutes, sessionMinutes, intervalMinutes, startMinutes, endMinutes, style, chime, strictness
+        case weekdays, daysOff
+    }
+
+    package var sortedWeekdays: [Weekday] {
+        Weekday.allCases.filter(weekdays.contains)
     }
 }
 
@@ -35,6 +42,8 @@ extension MeditationPrefs {
         style = try c.known(.style, or: d.style)
         chime = try c.value(.chime, or: d.chime)
         strictness = try c.known(.strictness, or: d.strictness)
+        weekdays = try c.knownSet(.weekdays, or: d.weekdays, keepsEmpty: false)
+        daysOff = c.lenientSet(.daysOff, or: d.daysOff)
     }
 
     package func encode(to encoder: Encoder) throws {
@@ -48,6 +57,8 @@ extension MeditationPrefs {
         try c.encode(style, forKey: .style)
         try c.encode(chime, forKey: .chime)
         try c.encode(strictness, forKey: .strictness)
+        try c.encode(sortedWeekdays, forKey: .weekdays)
+        try c.encode(daysOff.sorted(), forKey: .daysOff)
     }
 }
 

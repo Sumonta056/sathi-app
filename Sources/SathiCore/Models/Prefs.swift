@@ -13,12 +13,24 @@ package struct Prefs: Codable, Equatable, Sendable {
         [
             "\(water.enabled)", "\(water.intervalMinutes)", "\(water.startMinutes)", "\(water.endMinutes)",
             "\(reading.enabled)", "\(reading.timeMinutes)", "\(reading.sessionMinutes)",
-            reading.sortedWeekdays.map { "\($0.rawValue)" }.joined(separator: "+"),
             "\(meditation.enabled)", "\(meditation.dailyGoalMinutes)", "\(meditation.sessionMinutes)",
             "\(meditation.intervalMinutes)", "\(meditation.startMinutes)", "\(meditation.endMinutes)",
-            "\(gym.enabled)", "\(gym.intervalMinutes)", "\(gym.startMinutes)", "\(gym.endMinutes)",
-            gym.sortedWeekdays.map { "\($0.rawValue)" }.joined(separator: "+")
-        ].joined(separator: "-")
+            "\(gym.enabled)", "\(gym.intervalMinutes)", "\(gym.startMinutes)", "\(gym.endMinutes)"
+        ].joined(separator: "-") + "|" + HabitID.allCases.map { Self.key(days($0)) }.joined(separator: "|")
+    }
+
+    package func days(_ id: HabitID) -> HabitDays {
+        switch id {
+        case .water: return HabitDays(weekdays: water.weekdays, daysOff: water.daysOff)
+        case .reading: return HabitDays(weekdays: reading.weekdays, daysOff: reading.daysOff)
+        case .meditation: return HabitDays(weekdays: meditation.weekdays, daysOff: meditation.daysOff)
+        case .gym: return HabitDays(weekdays: gym.weekdays, daysOff: gym.daysOff)
+        }
+    }
+
+    private static func key(_ d: HabitDays) -> String {
+        let weekdays = Weekday.allCases.filter(d.weekdays.contains).map { "\($0.rawValue)" }
+        return weekdays.joined(separator: "+") + "/" + d.daysOff.sorted().map(\.raw).joined(separator: "+")
     }
 
     package func isEnabled(_ id: HabitID) -> Bool {

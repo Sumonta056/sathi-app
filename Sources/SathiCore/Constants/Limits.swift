@@ -46,7 +46,8 @@ package enum Limits {
     package static let gymIntervalChips = [45, 60, 90]
     package static let gymStartMinutes = 9 * 60
     package static let gymEndMinutes = 17 * 60
-    package static let gymWorkDays: Set<Weekday> = [.monday, .tuesday, .wednesday, .thursday, .friday]
+    package static let daysOffMaxAhead = 365
+    package static let daysOffMax = 100
 
     package static let morningStartHour = 5
     package static let afternoonStartHour = 12
