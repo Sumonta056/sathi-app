@@ -22,7 +22,8 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 | Session | A timed activity: reading, meditation, or gym. `Activity.session(Session)` in `Engine.activities[id]`. |
 | Event | One record in history: done, snooze, or skip. `HistoryEvent`. |
 | Goal | The daily target of a habit. Water: glasses. Reading and meditation: minutes. Gym: workouts (fixed at 4; each done workout counts 1). |
-| Streak | Count of days in a row, up to today, on which the goal was met. |
+| Streak | Count of days in a row, up to today, on which the goal was met. A day off with the goal met adds 1. A day off without the goal met is skipped: it neither breaks the streak nor adds to it. |
+| Day off | A day on which one habit is quiet: a weekday that is off, or a date in that habit's days-off list. |
 
 ## Habits
 
@@ -46,7 +47,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 | Water | Every `intervalMinutes`, only between start and end time | The user logs an amount (minimum `Limits.minimumLog`) |
 | Reading | Once a day at a set time, on the selected weekdays | A session of `sessionMinutes` ends |
 | Meditation | Every `intervalMinutes`, only between start and end time, until today's minutes meet `dailyGoalMinutes`. Then the next reminder is at tomorrow's start time. | A breathing session of `sessionMinutes` ends |
-| Gym | Every `intervalMinutes` on the selected work days. The first reminder of a work day is at the start of work hours plus 1 interval. No reminder at or after the end. Reminders continue after the goal. A last done from an earlier day does not count: the next reminder is 1 interval from now, inside work hours. | A workout session ends, or the user taps Done during it. |
+| Gym | Every `intervalMinutes` on the selected days (all 7 by default). The first reminder of a day is at the start of work hours plus 1 interval. No reminder at or after the end. Reminders continue after the goal. A last done from an earlier day does not count: the next reminder is 1 interval from now, inside work hours. | A workout session ends, or the user taps Done during it. |
 
 1. After "done", the next due time starts from the done time, not from the old due time.
 2. A due time outside active hours moves to the next start of active hours.
@@ -55,8 +56,10 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 5. A settings change never fires a past slot. At launch, a missed slot is still due now. Water and Meditation have no slots: when a settings change moves their due time into the past, the reminder shows at once.
 6. A session started when nothing is due and stopped early does nothing: no snooze, no event, the next due time stays.
 7. A goal of 0 never counts as met.
-8. Reading weekdays: a weekday that is off has no reading reminder. The next due time is the set time on the next selected weekday. All 7 days are on by default. An empty set decodes as all 7 days; the Settings window never saves an empty set (the last selected day cannot be turned off).
+8. Weekdays, for every habit: a weekday that is off has no reminder of that habit. All 7 days are on by default. An empty set decodes as all 7 days; the Settings window never saves an empty set (the last selected day cannot be turned off).
 9. A stored value that is unknown (a weekday, slot, or style from a newer version) is dropped or replaced by its default. It never resets the other settings.
+10. Single days off, for every habit: each habit has its own list of dates off. A date is a day key `YYYY-MM-DD` in the Gregorian calendar of the user's time zone. Settings adds a date from today to `Limits.daysOffMaxAhead` (365) days ahead, never twice, and at most `Limits.daysOffMax` (100) future dates. Dates are kept forever. Settings lists only today and later. A key that cannot be read is dropped; the other keys and settings stay.
+11. No due time falls on a day off. A due day that is off moves to the first reminder of the next day that is on: Water and Meditation start time, Reading set time, Gym start plus 1 interval. When no day is on in the next 14 days, the habit has no next reminder (Habits rule 12). When today becomes a day off, that habit's open reminder (bubble, corner popup, or lock) closes at once with no event. A running session continues. Other habits do not change. "Show a reminder now" still works on a day off (Habits rule 8).
 
 ## Escalation
 
@@ -95,14 +98,15 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 1. A day starts at `Calendar.startOfDay` in the user's time zone. Dates for storage, reports, and export use the Gregorian calendar, whatever the system calendar is.
 2. Daily total = sum of `done` event amounts of that habit on that day, after the last streak reset.
 3. Day report: buckets of `Limits.reportDayBucketHours`. Week: Monday to Sunday. Month: each calendar day.
-4. Average per day counts only days up to today, never future days.
+4. Average per day, "% of goal", and "days met" count only days up to today, never future days. They leave out days off, except a day off with the goal met, which counts as met. If no day counts, the average is 0. Days off use today's weekday setting for every past day (Sathi does not store old settings). Single dates off are kept, so they stay correct.
 5. "% of goal" is capped at 100.
 6. Export formats in Core: CSV (one row per event), JSON (full backup). PDF (one-page summary) needs a UI renderer and has none now.
 7. The Reports window has no Export menu for now (2026-10-25: the macOS save panel keeps the app awake, see `performance.md`). Core export stays and is tested. When export comes back: it asks for the file location first. A cancel does nothing and shows nothing. A failed render or write shows an error. CSV and JSON are built and written off the main thread.
 8. The Reports window shows one tile per habit. A habit that is off shows a dimmed tile with "Off" and cannot be selected. Its history stays in the totals.
 9. The chart, the streak calendar, and the facts (best day, snoozes, longest streak) follow the selected tile. If the selected habit is off, the first enabled habit is used. If no habit is enabled, Water is used.
 10. The Day range has no goal line, because the goal is per day and the bars are 2-hour buckets.
-11. The streak calendar shows the current month. A day's shade comes from its total divided by the goal: none, under half, under the goal, goal met.
+11. The streak calendar shows the current month. A day's shade comes from its total divided by the goal: none, under half, under the goal, goal met. A day off without the goal met has its own "off" style and no shade.
+12. The menu card says "Day off" when today is a day off for that habit and nothing of that habit is active.
 
 ## Time
 

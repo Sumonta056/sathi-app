@@ -110,6 +110,19 @@ Plan: `docs/superpowers/plans/2026-10-26-gym-shokti.md`
 - [ ] Website text and screenshots (`/sathi-website`)
 - [ ] `perf.sh --windows` run by the user in Terminal, and the visual check with `ui-verifier`
 
+## Phase 9: Days off
+
+Plan and spec: `docs/superpowers/plans/2026-10-27-days-off.md`
+
+- [x] Rules in `.claude/rules/business-logic.md`
+- [ ] `DayKey`, `HabitDays`, and weekdays plus days off in every buddy's prefs
+- [ ] Reminders skip days off
+- [ ] Engine: today off closes that buddy's reminder; "Day off" pill
+- [ ] Streaks and reports skip days off
+- [ ] Settings: weekday row and days-off card for every buddy
+- [ ] Menu pill and report calendar style
+- [ ] Docs, Definition of done, website
+
 ## Later
 
 - 6b: `RawJSON` stores numbers as `Double`; integers above 2^53 and `-0.0` are not written back exactly
