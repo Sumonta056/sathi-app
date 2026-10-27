@@ -37,4 +37,6 @@ extension UIMetrics {
     static let timePickerSpacing: CGFloat = 14
     static let hourChipWidth: CGFloat = 48
     static let minuteChipWidth: CGFloat = 60
+    static let dayOffRemoveSize: CGFloat = 22
+    static let dayOffRemoveIconSize: CGFloat = 10
 }

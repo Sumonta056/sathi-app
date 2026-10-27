@@ -27,14 +27,7 @@ struct GymRhythmCard: View {
                 }
             }
             SettingRow(label: "Work days") {
-                ChipRow(
-                    options: Weekday.allCases,
-                    accent: Night.gym,
-                    isSelected: { gym.weekdays.contains($0) },
-                    onTap: { engine.data.prefs.gym.weekdays = gym.weekdays.togglingKeepingOne($0) },
-                    label: \.shortLabel,
-                    spokenLabel: \.name
-                )
+                WeekdayRow(habit: .gym)
             }
         }
     }

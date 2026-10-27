@@ -45,4 +45,23 @@ package struct HabitDays: Equatable, Sendable {
         let today = DayKey(now, calendar: calendar)
         return daysOff.filter { $0 >= today }.sorted()
     }
+
+    package func addingDayOff(_ date: Date, now: Date, calendar: Calendar) -> HabitDays {
+        let g = Calendar.gregorian(in: calendar.timeZone)
+        let range = Self.dayOffRange(now: now, calendar: g)
+        let key = DayKey(date, calendar: g)
+        let today = DayKey(range.lowerBound, calendar: g)
+        let isFull = upcoming(from: now, calendar: g).count >= Limits.daysOffMax
+        guard key >= today, key <= DayKey(range.upperBound, calendar: g), !daysOff.contains(key), !isFull else { return self }
+        var next = self
+        next.daysOff.insert(key)
+        return next
+    }
+
+    package static func dayOffRange(now: Date, calendar: Calendar) -> ClosedRange<Date> {
+        let g = Calendar.gregorian(in: calendar.timeZone)
+        let today = g.startOfDay(for: now)
+        let last = g.stepDays(Limits.daysOffMaxAhead, from: today)
+        return today ... g.nextDay(after: last).addingTimeInterval(-Timing.second)
+    }
 }

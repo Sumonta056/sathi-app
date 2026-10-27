@@ -26,6 +26,9 @@ struct MeditationRhythmCard: View {
                     TimeMenu(minutes: $e.data.prefs.meditation.endMinutes, accent: Night.calm)
                 }
             }
+            SettingRow(label: "On these days") {
+                WeekdayRow(habit: .meditation)
+            }
         }
     }
 }

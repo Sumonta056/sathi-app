@@ -15,6 +15,7 @@ struct WaterSettingsTab: View {
         let engine = e
         HabitSettingsPage(habit: .water, copy: Self.copy) {
             SettingsSection("Rhythm") { WaterRhythmCard() }
+            DaysOffCard(habit: .water)
             SettingsSection("Daily goal") {
                 SettingsCard { GlassGoalRow(goal: $e.data.prefs.water.dailyGoalGlasses) }
             }

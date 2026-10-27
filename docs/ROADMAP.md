@@ -119,7 +119,7 @@ Plan and spec: `docs/superpowers/plans/2026-10-27-days-off.md`
 - [x] Reminders skip days off
 - [x] Engine: today off closes that buddy's reminder; "Day off" pill
 - [x] Streaks and reports skip days off
-- [ ] Settings: weekday row and days-off card for every buddy
+- [x] Settings: weekday row and days-off card for every buddy
 - [ ] Menu pill and report calendar style
 - [ ] Docs, Definition of done, website
 

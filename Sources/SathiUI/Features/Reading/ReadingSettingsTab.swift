@@ -15,6 +15,7 @@ struct ReadingSettingsTab: View {
         let engine = e
         HabitSettingsPage(habit: .reading, copy: Self.copy) {
             SettingsSection("When") { ReadingWhenCard() }
+            DaysOffCard(habit: .reading)
             SettingsSection("How Boi says hi") { ReadingStyleCards() }
             SettingsSection("If I ignore Boi") {
                 StrictnessCards(

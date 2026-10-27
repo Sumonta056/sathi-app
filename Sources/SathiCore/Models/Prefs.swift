@@ -28,6 +28,15 @@ package struct Prefs: Codable, Equatable, Sendable {
         }
     }
 
+    package mutating func setDays(_ id: HabitID, _ d: HabitDays) {
+        switch id {
+        case .water: (water.weekdays, water.daysOff) = (d.weekdays, d.daysOff)
+        case .reading: (reading.weekdays, reading.daysOff) = (d.weekdays, d.daysOff)
+        case .meditation: (meditation.weekdays, meditation.daysOff) = (d.weekdays, d.daysOff)
+        case .gym: (gym.weekdays, gym.daysOff) = (d.weekdays, d.daysOff)
+        }
+    }
+
     private static func key(_ d: HabitDays) -> String {
         let weekdays = Weekday.allCases.filter(d.weekdays.contains).map { "\($0.rawValue)" }
         return weekdays.joined(separator: "+") + "/" + d.daysOff.sorted().map(\.raw).joined(separator: "+")

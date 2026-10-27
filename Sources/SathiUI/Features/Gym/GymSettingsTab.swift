@@ -15,6 +15,7 @@ struct GymSettingsTab: View {
         let engine = e
         HabitSettingsPage(habit: .gym, copy: Self.copy) {
             SettingsSection("Rhythm") { GymRhythmCard() }
+            DaysOffCard(habit: .gym)
             SettingsSection("My 4 workouts") { GymWorkoutsCard() }
             SettingsSection("If I ignore Shokti") {
                 StrictnessCards(

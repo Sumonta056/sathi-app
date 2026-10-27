@@ -26,6 +26,9 @@ struct WaterRhythmCard: View {
                     TimeMenu(minutes: $e.data.prefs.water.endMinutes, accent: Night.water)
                 }
             }
+            SettingRow(label: "On these days") {
+                WeekdayRow(habit: .water)
+            }
             SettingRow(label: "I drink from") {
                 ChipRow(
                     options: Container.allCases,

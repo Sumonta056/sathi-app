@@ -44,3 +44,13 @@ extension Engine {
         change(&data.prefs.gym.workouts[index])
     }
 }
+
+extension Engine {
+    func weekdays(_ id: HabitID) -> Binding<Set<Weekday>> {
+        Binding(get: { self.data.prefs.days(id).weekdays }, set: { days in
+            var d = self.data.prefs.days(id)
+            d.weekdays = days
+            self.data.prefs.setDays(id, d)
+        })
+    }
+}
