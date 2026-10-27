@@ -10,6 +10,7 @@ struct SettingsSidebar: View {
         VStack(alignment: .leading, spacing: UIMetrics.sidebarSpacing) {
             SidebarLogo()
             SidebarNavButton(title: "General", icon: "slider.horizontal.3", tint: Night.muted, tab: .general, selection: $tab)
+            OpenReportsRow()
             Text(verbatim: "BUDDIES")
                 .font(Typography.sectionLabel)
                 .tracking(UIMetrics.labelTracking)
@@ -25,7 +26,7 @@ struct SettingsSidebar: View {
             }
             SidebarNavButton(title: "Add a buddy", icon: "plus.circle", tint: Night.sprout, textColor: Night.sprout, tab: .addBuddy, selection: $tab)
             Spacer()
-            OpenReportsRow()
+            MadeByFooter()
         }
         .padding(UIMetrics.sidebarPadding)
         .padding(.top, UIMetrics.titleBarInset)

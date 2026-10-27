@@ -74,6 +74,35 @@ struct SettingsSidebarTests {
         #expect(h.presenter.calls.last == .showReports)
     }
 
+    @Test func openReportsSitsRightAfterGeneral() throws {
+        let sut = try sidebar(EngineHarness()).inspect()
+        let order = sut.findAll(ViewType.Text.self).compactMap { try? $0.string() }
+        let general = try #require(order.firstIndex(of: "General"))
+        #expect(order[general + 1] == "Open reports")
+    }
+
+    @Test func footerShowsMadeByWithLinks() throws {
+        let sut = try sidebar(EngineHarness()).inspect()
+        #expect(throws: Never.self) { try sut.find(text: "Made by Sumonta") }
+        let links = sut.findAll(ViewType.Link.self)
+        let urls = try links.map { try $0.url() }
+        #expect(urls.contains(Links.github))
+        #expect(urls.contains(Links.portfolio))
+        #expect(Links.github.absoluteString == "https://github.com/Sumonta056")
+        #expect(Links.portfolio.absoluteString == "https://sumonta056.vercel.app/")
+    }
+
+    @Test func footerLinksAreIconsWithNames() throws {
+        let sut = try sidebar(EngineHarness()).inspect()
+        let links = sut.findAll(ViewType.Link.self)
+        let labels = links.compactMap { try? $0.accessibilityLabel().string() }
+        #expect(labels.contains("GitHub"))
+        #expect(labels.contains("Portfolio"))
+        for link in links {
+            #expect(try link.labelView().findAll(ViewType.Text.self).isEmpty)
+        }
+    }
+
     @Test func waterTabShowsItsHero() throws {
         let sut = try hosted(WaterSettingsTab(), EngineHarness()).inspect()
         #expect(throws: Never.self) { try sut.find(text: "Small sips, all day long") }

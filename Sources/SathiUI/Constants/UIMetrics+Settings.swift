@@ -13,6 +13,8 @@ extension UIMetrics {
     static let sidebarPadding = EdgeInsets(top: 20, leading: 14, bottom: 18, trailing: 14)
     static let titleBarInset: CGFloat = 28
     static let sidebarSpacing: CGFloat = 4
+    static let creditSpacing: CGFloat = 8
+    static let creditIconSize: CGFloat = 14
     static let navPadding = EdgeInsets(top: 8, leading: 10, bottom: 8, trailing: 10)
     static let logoSize: CGFloat = 32
     static let logoIconSize: CGFloat = 15
