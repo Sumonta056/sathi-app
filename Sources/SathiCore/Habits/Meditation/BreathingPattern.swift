@@ -47,7 +47,7 @@ package enum BreathingPattern {
     }
 
     package static func totalRounds(_ style: BreathingStyle, minutes: Int) -> Int {
-        max(1, Int((Double(minutes) * Timing.minute / cycleLength(style)).rounded(.down)))
+        max(1, Int((Double(minutes) * Timing.minute / cycleLength(style)).rounded(.up)))
     }
 
     package static func round(_ style: BreathingStyle, elapsed: TimeInterval, minutes: Int) -> Int {

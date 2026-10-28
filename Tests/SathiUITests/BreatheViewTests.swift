@@ -33,7 +33,7 @@ struct BreatheViewTests {
         let sut = try breathe(h)
         #expect(try sut.find(text: "BOX BREATHING · 4·4·4·4") != nil)
         #expect(try sut.find(text: "Breathe in") != nil)
-        #expect(try sut.find(text: "Round 1 of 18") != nil)
+        #expect(try sut.find(text: "Round 1 of 19") != nil)
         #expect(try sut.find(text: "Stop") != nil)
         #expect(try sut.find(BreathCircle.self) != nil)
     }
@@ -45,7 +45,7 @@ struct BreatheViewTests {
         let sut = try breathe(h)
         #expect(try sut.find(text: "Hold") != nil)
         #expect(Find.lacks(sut, text: "Breathe in"))
-        #expect(try sut.find(text: "Round 1 of 18") != nil)
+        #expect(try sut.find(text: "Round 1 of 19") != nil)
     }
 
     @Test func eighteenSecondsInStartsRoundTwo() throws {
@@ -54,7 +54,7 @@ struct BreatheViewTests {
         advance(h, seconds: 18)
         let sut = try breathe(h)
         #expect(try sut.find(text: "Breathe in") != nil)
-        #expect(try sut.find(text: "Round 2 of 18") != nil)
+        #expect(try sut.find(text: "Round 2 of 19") != nil)
     }
 
     @Test func stopEndsWithoutCounting() throws {
@@ -108,13 +108,13 @@ struct BreatheViewTests {
         }
     }
 
-    @Test func relaxStartsWithWindDownAndFifteenRounds() throws {
+    @Test func relaxStartsWithWindDownAndSixteenRounds() throws {
         let h = styled(.relax)
         h.engine.startMeditation()
         let sut = try breathe(h)
         #expect(try sut.find(text: "WIND DOWN · 4·7·8") != nil)
         #expect(try sut.find(text: "Breathe in") != nil)
-        #expect(try sut.find(text: "Round 1 of 15") != nil)
+        #expect(try sut.find(text: "Round 1 of 16") != nil)
     }
 
     @Test func evenBreathesOutAfterSixSeconds() throws {
