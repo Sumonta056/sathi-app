@@ -24,6 +24,7 @@ package enum Limits {
 
     package static let minutesPerDay = 24 * 60
     package static let scheduleSlotMinutes = 15
+    package static let daySummaryMinutes = 22 * 60
 
     package static let intervalChips = [15, 30, 45, 60, 75, 90, 105, 120]
     package static let bottleSizeGlasses: ClosedRange<Double> = 1 ... 6
