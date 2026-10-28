@@ -125,6 +125,15 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 11. The streak calendar shows the current month. A day's shade comes from its total divided by the goal: none, under half, under the goal, goal met. A day off without the goal met has its own "off" style and no shade.
 12. The menu card says "Day off" when today is a day off for that habit and nothing of that habit is active.
 
+## Day summary
+
+Full rules are in `docs/specs/phase-11-day-summary.md`.
+
+1. Every day at `GeneralPrefs.daySummaryMinutes` (default 22:00), when `daySummaryOn` (default on), a corner popup shows today's progress. It shows at most 1 time a day (`LiveState.lastDaySummary`).
+2. A missed time shows it later the same day. After midnight it never shows for the day before.
+3. A pause does not stop it. It has no snooze, no sound, no history event, and no streak effect. It stays until the user closes it.
+4. It always shows 4 rows: off, day off (goal not met), or progress. Its header comes from the progress rows only: all met ("Congratulations"), some met, none met, or a rest day.
+
 ## Time
 
 1. Core reads time only from `clock.now`. Never `Date()`.
