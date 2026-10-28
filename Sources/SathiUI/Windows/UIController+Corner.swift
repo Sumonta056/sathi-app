@@ -13,6 +13,16 @@ extension UIController {
         }
     }
 
+    package func showDaySummary() {
+        closeDaySummary()
+        daySummaryPanel = presentCorner(DaySummaryCard())
+    }
+
+    package func closeDaySummary() {
+        dismiss(daySummaryPanel)
+        daySummaryPanel = nil
+    }
+
     func closeNote() {
         noteTask?.cancel()
         noteTask = nil

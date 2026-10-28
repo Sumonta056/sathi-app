@@ -33,4 +33,15 @@ struct PanelSizeTests {
         #expect(size.width > 0)
         #expect(size.height > 0)
     }
+
+    @Test func daySummaryPanelHasARealSize() throws {
+        let h = EngineHarness()
+        let ui = controller(h)
+        ui.showDaySummary()
+        let size = try #require(ui.daySummaryPanel).frame.size
+        ui.closeDaySummary()
+        #expect(size.width > 0)
+        #expect(size.height > 0)
+        #expect(ui.daySummaryPanel == nil)
+    }
 }

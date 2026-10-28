@@ -38,6 +38,18 @@ struct GeneralTab: View {
                     }
                 }
             }
+            SettingsSection("Day summary") {
+                SettingsCard {
+                    SettingRow(label: "Show my day summary", hint: "A calm look at today's goals.", showsDivider: false) {
+                        BuddySwitch(isOn: $e.data.prefs.general.daySummaryOn, accent: Night.sprout, label: "Day summary")
+                    }
+                    if e.data.prefs.general.daySummaryOn {
+                        SettingRow(label: "Show it at") {
+                            TimeMenu(minutes: $e.data.prefs.general.daySummaryMinutes, accent: Night.sprout)
+                        }
+                    }
+                }
+            }
             SettingsSection("Behaviour") { BehaviourCard() }
         }
     }
