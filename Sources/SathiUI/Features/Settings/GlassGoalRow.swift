@@ -13,7 +13,8 @@ struct GlassGoalRow: View {
                 ForEach(Self.glasses, id: \.self) { i in
                     GlassShape()
                         .fill(Double(i) <= goal ? Night.water : Night.switchOff)
-                        .frame(width: UIMetrics.glassIconSize.width, height: UIMetrics.glassIconSize.height)
+                        .aspectRatio(UIMetrics.glassIconSize, contentMode: .fit)
+                        .frame(maxWidth: UIMetrics.glassIconSize.width, maxHeight: UIMetrics.glassIconSize.height)
                 }
             }
             .accessibilityHidden(true)
