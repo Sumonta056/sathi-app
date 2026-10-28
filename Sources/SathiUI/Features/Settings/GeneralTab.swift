@@ -10,13 +10,8 @@ struct GeneralTab: View {
             SettingsSection("You") {
                 SettingsCard {
                     SettingRow(label: "What should we call you?", showsDivider: false) {
-                        TextField("Your name", text: $e.data.prefs.general.name)
-                            .textFieldStyle(.plain)
-                            .font(Typography.chip)
-                            .foregroundStyle(Night.text)
-                            .padding(UIMetrics.timeButtonPadding)
+                        LazyTextField(placeholder: "Your name", text: $e.data.prefs.general.name)
                             .frame(width: UIMetrics.fieldWidth)
-                            .background(RoundedRectangle(cornerRadius: UIMetrics.buttonRadius, style: .continuous).fill(Night.bg))
                     }
                 }
             }

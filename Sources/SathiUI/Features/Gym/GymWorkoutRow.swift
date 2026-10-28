@@ -4,7 +4,6 @@ import SwiftUI
 struct GymWorkoutRow: View {
     @EnvironmentObject var e: Engine
     let index: Int
-    @FocusState private var editing: Bool
 
     var body: some View {
         let engine = e
@@ -36,16 +35,12 @@ struct GymWorkoutRow: View {
     }
 
     private func field(_ engine: Engine) -> some View {
-        TextField("Workout \(index + 1)", text: engine.gymWorkoutName(at: index))
-            .textFieldStyle(.plain)
-            .font(Typography.chip)
-            .foregroundStyle(Night.text)
-            .padding(UIMetrics.timeButtonPadding)
-            .frame(maxWidth: .infinity)
-            .background(RoundedRectangle(cornerRadius: UIMetrics.buttonRadius, style: .continuous).fill(Night.bg))
-            .focused($editing)
-            .onSubmit { engine.commitGymWorkoutNames() }
-            .onChange(of: editing) { if !$0 { engine.commitGymWorkoutNames() } }
+        LazyTextField(
+            placeholder: "Workout \(index + 1)",
+            text: engine.gymWorkoutName(at: index),
+            onSubmit: { engine.commitGymWorkoutNames() },
+            onEndEditing: { engine.commitGymWorkoutNames() }
+        )
     }
 
     private func chips(_ minutes: Binding<Int>) -> some View {

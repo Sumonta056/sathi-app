@@ -50,13 +50,7 @@ struct ReadingAddRow: View {
     }
 
     private func field(_ placeholder: String, text: Binding<String>) -> some View {
-        TextField(placeholder, text: text)
-            .textFieldStyle(.plain)
-            .font(Typography.chip)
-            .foregroundStyle(Night.text)
-            .padding(UIMetrics.timeButtonPadding)
-            .background(RoundedRectangle(cornerRadius: UIMetrics.buttonRadius, style: .continuous).fill(Night.bg))
-            .onSubmit(add)
+        LazyTextField(placeholder: placeholder, text: text, onSubmit: add)
     }
 
     private func add() {

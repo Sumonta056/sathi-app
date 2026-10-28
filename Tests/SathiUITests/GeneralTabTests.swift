@@ -18,9 +18,14 @@ struct GeneralTabTests {
         #expect(throws: Never.self) { try sut.find(text: "A few things that apply to every buddy.") }
     }
 
+    @Test func atRestThereIsNoTextField() throws {
+        let sut = try tab(EngineHarness())
+        #expect(sut.findAll(ViewType.TextField.self).isEmpty)
+    }
+
     @Test func nameFieldEditsTheName() throws {
         let h = EngineHarness()
-        try tab(h).find(ViewType.TextField.self).setInput("Asha")
+        try lazyField(tab(h), "Your name").text = "Asha"
         #expect(h.engine.data.prefs.general.name == "Asha")
         #expect(h.store.prefs.general.name == "Asha")
     }

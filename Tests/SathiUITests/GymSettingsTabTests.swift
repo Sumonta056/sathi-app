@@ -20,7 +20,8 @@ struct GymSettingsTabTests {
     }
 
     @Test func tabShowsHeroRhythmWorkoutsAndThreeStrictnessCards() throws {
-        let sut = try tab(harness())
+        let h = harness()
+        let sut = try tab(h)
         let texts = [
             "SHOKTI · GYM", "Get up, little and often", "Shokti suggests a short move while you work.",
             "RHYTHM", "Remind me every", "Work hours", "Shokti sleeps outside these hours.", "Work days",
@@ -31,7 +32,10 @@ struct GymSettingsTabTests {
             #expect(throws: Never.self) { try sut.find(text: text) }
         }
         #expect(throws: Never.self) { try Find.button(sut, label: "Gym reminders") }
-        #expect(sut.findAll(ViewType.TextField.self).count == Limits.gymWorkoutCount)
+        #expect(sut.findAll(ViewType.TextField.self).isEmpty)
+        for name in h.engine.data.prefs.gym.workouts.map(\.name) {
+            #expect(throws: Never.self) { try sut.find(button: name) }
+        }
     }
 
     @Test func intervalChipsAreFortyFiveSixtyNinety() throws {

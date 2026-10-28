@@ -72,8 +72,4 @@ final class AddRowState {
     func inspect(_ h: EngineHarness) throws -> InspectableView<ViewType.ClassifiedView> {
         try hosted(row(), h).inspect()
     }
-
-    static func field(_ sut: InspectableView<some BaseViewType>, _ placeholder: String) throws -> InspectableView<ViewType.TextField> {
-        try sut.find(text: placeholder).find(ViewType.TextField.self, relation: .parent)
-    }
 }

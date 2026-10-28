@@ -11,8 +11,9 @@ import ViewInspector
 struct ReadingAddRowTests {
     @Test func showsBothFieldsAndTheButtons() throws {
         let sut = try AddRowState().inspect(Books.harness([]))
-        #expect(throws: Never.self) { try AddRowState.field(sut, "Paste a link") }
-        #expect(throws: Never.self) { try AddRowState.field(sut, "Title (optional)") }
+        #expect(sut.findAll(ViewType.TextField.self).isEmpty)
+        #expect(throws: Never.self) { try sut.find(button: "Paste a link") }
+        #expect(throws: Never.self) { try sut.find(button: "Title (optional)") }
         #expect(throws: Never.self) { try sut.find(button: "Add") }
         #expect(throws: Never.self) { try sut.find(button: "Paste") }
     }
@@ -41,7 +42,7 @@ struct ReadingAddRowTests {
     func returnInEitherFieldAdds(_ placeholder: String) throws {
         let h = Books.harness([])
         let state = AddRowState(link: "https://example.com/a", title: "A")
-        try AddRowState.field(state.inspect(h), placeholder).callOnSubmit()
+        try lazyField(state.inspect(h), placeholder).onSubmit()
         #expect(h.engine.data.prefs.reading.list.map(\.url.absoluteString) == ["https://example.com/a"])
         #expect(state.link.isEmpty)
         #expect(state.title.isEmpty)
@@ -106,7 +107,7 @@ struct ReadingAddRowTests {
 
     @Test func editingTheLinkClearsTheLine() throws {
         let state = AddRowState(link: "ftp://a", problem: .unsupportedScheme)
-        try AddRowState.field(state.inspect(Books.harness([])), "Paste a link").setInput("https://a.com")
+        try lazyField(state.inspect(Books.harness([])), "Paste a link").text = "https://a.com"
         #expect(state.link == "https://a.com")
         #expect(state.problem == nil)
     }
