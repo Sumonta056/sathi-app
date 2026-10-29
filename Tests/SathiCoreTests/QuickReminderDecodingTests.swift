@@ -59,6 +59,25 @@ struct QuickReminderDecodingTests {
         #expect(s.quickReminders.map(\.text) == ["early", "late"])
     }
 
+    @Test func equalTimesOrderById() throws {
+        let low = "00000000-0000-0000-0000-000000000001"
+        let high = "00000000-0000-0000-0000-000000000002"
+        func raw(_ id: String, _ text: String) -> String {
+            #"{"id":"\#(id)","text":"\#(text)","due":"\#(stamp(5))","createdAt":"\#(stamp(0))","snoozes":0}"#
+        }
+        let s = try live(#"{"quickReminders":[\#(raw(high, "b")),\#(raw(low, "a"))]}"#)
+        #expect(s.quickReminders.map(\.text) == ["a", "b"])
+    }
+
+    @Test func duplicateIdKeepsOne() throws {
+        let id = UUID().uuidString
+        func raw(_ text: String) -> String {
+            #"{"id":"\#(id)","text":"\#(text)","due":"\#(stamp(5))","createdAt":"\#(stamp(0))","snoozes":0}"#
+        }
+        let s = try live(#"{"quickReminders":[\#(raw("first")),\#(raw("second"))]}"#)
+        #expect(s.quickReminders.count == 1)
+    }
+
     @Test func decodeCutsLongText() throws {
         let s = try live(#"{"quickReminders":[\#(item(String(repeating: "a", count: 100)))]}"#)
         #expect(s.quickReminders.first?.text.count == Limits.quickTextMax)

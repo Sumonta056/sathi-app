@@ -90,7 +90,7 @@ struct QuickAddForm: View {
                     .datePickerStyle(.field)
                     .environment(\.timeZone, e.timeZone)
                     .environment(\.calendar, calendar)
-                Text(verbatim: Copywriter.quickPreview(e.quickDate(quickTime), now: e.now, calendar: calendar))
+                Text(verbatim: e.quickPreview(quickTime))
                     .font(Typography.hint)
                     .foregroundStyle(Night.quick)
             }

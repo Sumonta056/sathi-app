@@ -11,6 +11,10 @@ extension Engine {
         t.date(now: clock.now, calendar: calendar)
     }
 
+    package func quickPreview(_ t: QuickTime) -> String {
+        Copywriter.quickPreview(quickDate(t), now: clock.now, calendar: calendar)
+    }
+
     @discardableResult
     package func addQuick(text: String, when: QuickTime) -> QuickAddResult {
         let clean = QuickText.clean(text)
@@ -33,7 +37,7 @@ extension Engine {
     }
 
     package func snoozeQuick(_ id: UUID) {
-        guard let item = quick(id), canSnoozeQuick(id) else { return }
+        guard case .popup = quickActivities[id], let item = quick(id), canSnoozeQuick(id) else { return }
         let until = clock.now.addingTimeInterval(TimeInterval(data.prefs.general.snoozeMinutes) * Timing.minute).wholeSecond
         var changed = item
         changed.snoozes += 1

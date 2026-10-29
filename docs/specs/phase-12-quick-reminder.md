@@ -33,7 +33,7 @@ Design: https://claude.ai/artifact/Cj6jHTShgvTFXxyZ6ZFPjs (artboards 1 to 5).
     - With more than `UIMetrics.quickVisibleRows` (4) rows, the rows scroll inside the card.
     - With no reminders, the card has only the "+ Quick reminder" row.
     - When n > 0, the line "Quick reminders still show during a break." shows under the pause chips.
-16. Add form (inline, in the card):
+16. Add form (inline, in the card). The form title is "New quick reminder". A section label "When" sits above the chips. A hint "A time that has passed today goes to tomorrow." sits under the preview.
     - A "Remind me to" text field (`LazyTextField`) and a counter "{n} / 80".
     - The 4 chips. The 15 min chip is selected when the form opens.
     - An "or at" time field (hour and minute). A pick of a time clears the chip selection, and a tap on a chip replaces the time.

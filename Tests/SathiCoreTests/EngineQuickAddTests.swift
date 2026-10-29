@@ -14,6 +14,13 @@ struct EngineQuickAddTests {
         #expect(h.store.live.quickReminders.count == 2)
     }
 
+    @Test func previewUsesTheClockNow() {
+        let h = EngineHarness(at: day(2026, 3, 4, 23, 59))
+        h.clock.advance(minutes: 2)
+        let text = h.engine.quickPreview(.at(minutes: 10))
+        #expect(text.hasPrefix("Today at"))
+    }
+
     @Test func addRefusesBlank() {
         let h = EngineHarness()
         #expect(h.engine.addQuick(text: "   ", when: .inMinutes(5)) == .empty)

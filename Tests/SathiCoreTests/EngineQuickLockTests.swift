@@ -31,6 +31,19 @@ private func lockWater(_ h: EngineHarness) {
 @MainActor
 @Suite("Engine quick lock")
 struct EngineQuickLockTests {
+    @Test func snoozeOnLockDoesNothing() {
+        let (h, id) = lockHarness(limit: nil, quickDue: day(2026, 3, 4, 15), quickSnoozes: 2)
+        let before = h.presenter.calls.count
+        h.engine.snoozeQuick(id)
+        guard case .lock = h.engine.quickActivities[id] else {
+            Issue.record("lock should stay")
+            return
+        }
+        #expect(h.engine.quick(id)?.snoozes == 2)
+        #expect(h.presenter.calls.count == before)
+        #expect(!h.presenter.calls.contains(.closeLock))
+    }
+
     @Test func lockDoneCloses() {
         let (h, id) = lockHarness(limit: nil, quickDue: day(2026, 3, 4, 15), quickSnoozes: 2)
         h.engine.quickDone(id)

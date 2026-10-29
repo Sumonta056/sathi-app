@@ -34,8 +34,11 @@ extension QuickReminder {
 
 extension [QuickReminder] {
     package func kept() -> [QuickReminder] {
-        let sorted = filter { !$0.text.isEmpty }.sorted {
-            $0.fireDate == $1.fireDate ? $0.createdAt < $1.createdAt : $0.fireDate < $1.fireDate
+        var seen = Set<UUID>()
+        let sorted = filter { !$0.text.isEmpty && seen.insert($0.id).inserted }.sorted {
+            if $0.fireDate != $1.fireDate { return $0.fireDate < $1.fireDate }
+            if $0.createdAt != $1.createdAt { return $0.createdAt < $1.createdAt }
+            return $0.id.uuidString < $1.id.uuidString
         }
         return Array(sorted.prefix(Limits.quickMax))
     }

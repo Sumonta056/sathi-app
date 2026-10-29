@@ -41,6 +41,16 @@ struct EngineQuickSnoozeTests {
         #expect(h.engine.quick(id)?.snoozes == 1)
     }
 
+    @Test func snoozeBeforeDueDoesNothing() {
+        let h = EngineHarness()
+        let id = quickID(h)
+        let before = h.presenter.calls.count
+        h.engine.snoozeQuick(id)
+        #expect(h.engine.quick(id)?.snoozes == 0)
+        #expect(h.engine.quick(id)?.snoozedUntil == nil)
+        #expect(h.presenter.calls.count == before)
+    }
+
     @Test func closeButtonFollowsPrefs() {
         let h = EngineHarness { $0.prefs.quick.showsCloseButton = false }
         let id = quickID(h)
