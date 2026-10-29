@@ -144,18 +144,20 @@ Full rules are in `docs/specs/phase-12-quick-reminder.md`.
 4. When: "In" a chip from `Limits.quickChips` (5, 15, 30, 60 minutes), or "at" a wall-clock minute. A time at or before now means tomorrow at that minute.
 5. Due: a reminder shows when `now >= fireDate` (`snoozedUntil ?? due`). Pauses, weekdays, and days off do not stop it. A time that passes while the Mac sleeps shows at the next tick. Due reminders stack in order of `fireDate`, then `createdAt`.
 6. The popup is a corner popup that never takes focus. It has the bell, the "QUICK REMINDER · {time}" eyebrow, the text, "You set this at {time}.", "Done", "In {n} min", and a close button. Accent `Night.quick`.
-7. Done removes the reminder and closes its popup or lock. No thank-you and no event.
-8. Levels follow `QuickPrefs.strictness`: Gentle shows a new popup each time. Nudgy stays on top and wiggles after 1 snooze. Strict locks after 2 snoozes. The lock has "Hold for Done" and a "Delete this reminder" link.
-9. Only 1 lock shows at a time, shared with buddies. A quick reminder that reaches its lock while another lock shows gets a Nudgy popup instead, and locks when the other lock ends.
-10. Snooze (the button, the close button, or no answer for `ignoreMinutes`) adds 1 to `snoozes` and sets `snoozedUntil = now + snoozeMinutes`. A note "“{text}” comes back at {time}" shows, cut to `Limits.quickNoteTextMax` (24) characters.
-11. The close button shows when `QuickPrefs.showsCloseButton` is on, the level is Gentle, and a snooze is left.
-12. The snooze limit (`GeneralPrefs.snoozeLimit`) applies to each reminder. At the limit the popup has no snooze and no close button, and no ignore timer. It shows "No snoozes left. It stays until you tap Done."
-13. Storage: `LiveState.quickReminders` in `state.json`. A missing key loads `[]`. An unreadable item is dropped and the others stay. Text is cut to 80. Above 20 items, the 20 with the earliest `fireDate` stay. Dates are whole seconds. Open popups and locks are not saved.
-14. Settings: `Prefs.quick` holds `strictness` (an unknown value loads Nudgy) and `showsCloseButton` (default on). It is a "Quick reminders" card on the General tab. A change applies at the next show.
-15. Menu: a "Quick reminders" card below the buddy cards and above "Take a break". Rows are in `fireDate` order and show the time, the text, and a second line ("Showing now", "in {time left}", or "Tomorrow"). More than 4 rows scroll. The add form is inline. At 20 it shows "You have 20 quick reminders. Delete one to add more." and no Add button.
-16. The menu bar countdown and status icon do not change.
-17. Quick reminders still show during a break, and "Quick reminders still show during a break." shows under the pause chips.
-18. No new timer. `upcomingDeadlines()` adds each pending `fireDate` and each popup ignore deadline.
+7. Sound: 1 `.ping` each time a popup shows, at every level. A lock plays `.sosumi`. With sound off, nothing plays.
+8. Done (and Delete in the menu) removes the reminder and closes its popup or lock. No thank-you and no event.
+9. Level: `QuickPrefs.strictness` (default Nudgy) picks the form from the reminder's own `snoozes` via `EscalationPolicy.presentation(for:snoozes:)`. Gentle: popup each time. Nudgy: stays on top and wiggles after 1 snooze, with no close button. Strict: locks after 2 snoozes. The lock has "Hold for Done" and a "Delete this reminder" link.
+10. Only 1 lock shows at a time, shared with buddies. A quick reminder that reaches its lock while another lock shows gets a Nudgy popup. It becomes the lock only when it has no snooze left, as soon as the other lock ends. A buddy waits for a quick lock the same way.
+11. Snooze (the button, the close button, or no answer for `ignoreMinutes`) adds 1 to `snoozes` and sets `snoozedUntil = now + snoozeMinutes`. A note "“{text}” comes back at {time}" shows, cut to `Limits.quickNoteTextMax` (24) characters.
+12. The close button shows when `QuickPrefs.showsCloseButton` is on, the level is Gentle, and a snooze is left.
+13. The snooze limit (`GeneralPrefs.snoozeLimit`) applies to each reminder. At the limit the popup has no snooze and no close button, and no ignore timer. It shows "No snoozes left. It stays until you tap Done."
+14. Storage: `LiveState.quickReminders` in `state.json`. A missing key loads `[]`. An unreadable item, or one with empty text, is dropped and the others stay. Text is cut to 80. Above 20 items, the 20 with the earliest `fireDate` stay. Dates are whole seconds. Open popups and locks are not saved. After a restart a due reminder shows again at the level its saved `snoozes` gives.
+15. Settings: `Prefs.quick` holds `strictness` (an unknown value loads Nudgy) and `showsCloseButton` (default on). It is a "Quick reminders" card on the General tab. A change applies at the next show.
+16. Menu: a "Quick reminders" card below the buddy cards and above "Take a break". Header badge "{n} of 20" when n > 0. Rows are in `fireDate` order: a time pill (the `fireDate` time), the text, and a second line ("Showing now", "in {time left}", or "Tomorrow"), plus a delete button. More than 4 rows scroll. With no reminders the card has only the "+ Quick reminder" row.
+17. Add form (inline): "Remind me to" field with a "{n} / 80" counter. 4 chips, with 15 min selected on open. An "or at" hour and minute field: a time pick clears the chip, a chip tap replaces the time. Preview "Today at {time}" or "Tomorrow at {time}". "Cancel" and "Add reminder". Add is disabled when the text is blank, and Return adds. At 20 it shows "You have 20 quick reminders. Delete one to add more." and no Add button.
+18. The menu bar countdown and status icon do not change.
+19. Quick reminders still show during a break, and "Quick reminders still show during a break." shows under the pause chips.
+20. No new timer. `upcomingDeadlines()` adds each pending `fireDate` and each popup ignore deadline.
 
 ## Time
 
