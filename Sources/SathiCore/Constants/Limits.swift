@@ -22,7 +22,8 @@ package enum Limits {
     package static let statusIconSteps: Double = 20
     package static let absoluteTimeThreshold: TimeInterval = 3 * Timing.hour
 
-    package static let minutesPerDay = 24 * 60
+    package static let minutesPerHour = 60
+    package static let minutesPerDay = 24 * Limits.minutesPerHour
     package static let scheduleSlotMinutes = 15
     package static let daySummaryMinutes = 22 * 60
 

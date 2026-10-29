@@ -81,10 +81,38 @@ struct QuickAddFormTests {
         #expect(throws: Never.self) { try sut.find(button: "Cancel") }
     }
 
-    @Test func textStopsAtEighty() {
-        let long = String(repeating: "a", count: 120)
-        #expect(QuickAddForm.capped(long).count == Limits.quickTextMax)
-        #expect(QuickAddForm.capped("short") == "short")
+    @Test func textStopsAtEighty() throws {
+        let state = FieldText(String(repeating: "a", count: 120))
+        let binding = Binding(get: { state.value }, set: { state.value = $0 })
+        let view = Color.clear.modifier(QuickTextLimit(text: binding, limit: Limits.quickTextMax))
+        try view.inspect().callOnChange(newValue: state.value)
+        #expect(state.value.count == Limits.quickTextMax)
+    }
+
+    @Test func textUnderTheLimitIsKept() throws {
+        let state = FieldText("short")
+        let binding = Binding(get: { state.value }, set: { state.value = $0 })
+        try Color.clear.modifier(QuickTextLimit(text: binding, limit: Limits.quickTextMax)).inspect().callOnChange(newValue: "short")
+        #expect(state.value == "short")
+    }
+
+    @Test func formFieldCarriesTheLimit() throws {
+        let sut = try form(Quick.harness())
+        #expect(sut.findAll(where: { (try? $0.modifier(QuickTextLimit.self)) != nil }).isEmpty == false)
+    }
+
+    private func selected(_ sut: InspectableView<some BaseViewType>) throws -> [String] {
+        try Limits.quickChips.map(QuickChips.title).filter {
+            try sut.find(button: $0).accessibilityTraits().contains(.isSelected)
+        }
+    }
+
+    @Test func fifteenIsSelectedOnOpen() throws {
+        #expect(try selected(form(Quick.harness())) == ["15 min"])
+    }
+
+    @Test func noChipIsSelectedAfterATimePick() throws {
+        #expect(try selected(form(Quick.harness(), chip: nil, time: day(2026, 3, 4, 14, 37))).isEmpty)
     }
 
     @Test func counterShowsLength() throws {

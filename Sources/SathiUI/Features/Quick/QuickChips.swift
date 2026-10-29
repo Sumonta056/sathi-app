@@ -1,21 +1,12 @@
 import SathiCore
 import SwiftUI
 
-extension View {
-    func quickCardStyle() -> some View {
-        let shape = RoundedRectangle(cornerRadius: UIMetrics.cardRadius, style: .continuous)
-        return padding(UIMetrics.cardPadding)
-            .background(shape.fill(Night.card))
-            .overlay(shape.strokeBorder(Night.quickBorder, lineWidth: UIMetrics.cardBorder))
-    }
-}
-
 struct QuickChips: View {
     let selected: Int?
     let pick: (Int) -> Void
 
     static func title(_ minutes: Int) -> String {
-        minutes % 60 == 0 ? "\(minutes / 60) hour" : "\(minutes) min"
+        minutes % Limits.minutesPerHour == 0 ? "\(minutes / Limits.minutesPerHour) hour" : "\(minutes) min"
     }
 
     var body: some View {

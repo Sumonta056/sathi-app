@@ -17,10 +17,6 @@ struct QuickAddForm: View {
         self.onClose = onClose
     }
 
-    static func capped(_ raw: String) -> String {
-        String(raw.prefix(Limits.quickTextMax))
-    }
-
     static func when(chip: Int?, time: Date, calendar: Calendar) -> QuickTime {
         if let chip { return .inMinutes(chip) }
         return .at(minutes: DayClock(calendar: calendar).minutesOfDay(time))
@@ -57,10 +53,6 @@ struct QuickAddForm: View {
 
     private var isBlank: Bool { QuickText.clean(text).isEmpty }
 
-    private var textBinding: Binding<String> {
-        Binding(get: { text }, set: { text = Self.capped($0) })
-    }
-
     private var timeBinding: Binding<Date> {
         Binding(get: { shown }, set: { time = $0; chip = nil })
     }
@@ -68,7 +60,8 @@ struct QuickAddForm: View {
     private var textField: some View {
         VStack(alignment: .leading, spacing: UIMetrics.quickFieldSpacing) {
             SectionLabel("Remind me to")
-            LazyTextField(placeholder: "Remind me to", text: textBinding, startsEditing: true, onSubmit: add)
+            LazyTextField(placeholder: "Remind me to", text: $text, startsEditing: true, onSubmit: add)
+                .modifier(QuickTextLimit(text: $text, limit: Limits.quickTextMax))
                 .frame(height: UIMetrics.quickFieldHeight)
                 .overlay(
                     RoundedRectangle(cornerRadius: UIMetrics.buttonRadius, style: .continuous)
