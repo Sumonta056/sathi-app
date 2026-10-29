@@ -55,7 +55,8 @@ struct EngineQuickFireTests {
         let b = quickID(h, "B")
         h.advance(minutes: 15)
         let shown = h.presenter.calls.filter { if case .showQuick = $0 { return true } else { return false } }
-        #expect(shown == [.showQuick(a, .nudge), .showQuick(b, .nudge)])
+        let order = [a, b].sorted { $0.uuidString < $1.uuidString }
+        #expect(shown == order.map { .showQuick($0, .nudge) })
         h.engine.snoozeQuick(a)
         #expect(h.engine.quickActivities[b] != nil)
         #expect(h.engine.quickActivities[a] == nil)
