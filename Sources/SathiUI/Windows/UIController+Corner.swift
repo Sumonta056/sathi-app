@@ -52,3 +52,10 @@ extension UIController {
         }
     }
 }
+
+extension UIController {
+    package func showQuick(_ id: UUID, _ level: Level) {}
+    package func closeQuick(_ id: UUID) {}
+    package func showQuickLock(_ id: UUID) {}
+    package func showQuickSnoozed(text: String, until: Date) {}
+}

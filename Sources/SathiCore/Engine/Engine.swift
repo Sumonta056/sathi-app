@@ -20,6 +20,7 @@ package final class Engine: ObservableObject {
     @Published package var pausedUntil: Date?
     @Published package internal(set) var habits: [HabitID: HabitState]
     @Published package internal(set) var activities: [HabitID: Activity] = [:]
+    @Published package internal(set) var quickActivities: [UUID: QuickActivity] = [:]
     @Published package var celebration = Celebration()
     @Published package var isCelebrating = false
     @Published package internal(set) var gymIdea = 0

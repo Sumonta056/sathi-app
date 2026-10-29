@@ -21,6 +21,7 @@ extension Engine {
         }
         if pausedUntil == nil { presentDueHabits() }
         lockWaitingHabit()
+        tickQuick()
         showDaySummaryIfDue()
         updateStatus()
         scheduleNextTick()
@@ -60,8 +61,8 @@ extension Engine {
         }
     }
 
-    private func upcomingDeadlines() -> [Date] {
-        var deadlines: [Date] = []
+    func upcomingDeadlines() -> [Date] {
+        var deadlines: [Date] = quickDeadlines
         if let p = pausedUntil { deadlines.append(p) }
         if let s = nextDaySummary { deadlines.append(s) }
         for id in HabitID.allCases {

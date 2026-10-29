@@ -15,4 +15,8 @@ package protocol ReminderPresenter: AnyObject {
     func showSnoozed(_ id: HabitID, until: Date)
     func showDaySummary()
     func closeDaySummary()
+    func showQuick(_ id: UUID, _ level: Level)
+    func closeQuick(_ id: UUID)
+    func showQuickLock(_ id: UUID)
+    func showQuickSnoozed(text: String, until: Date)
 }
