@@ -14,6 +14,11 @@ struct PauseChips: View {
                 chip("1 hour") { e.pause(hours: Timing.defaultPauseHours) }
                 chip("Rest of day") { e.pauseRestOfDay() }
             }
+            if !e.quickReminders.isEmpty {
+                Text(verbatim: "Quick reminders still show during a break.")
+                    .font(Typography.pill)
+                    .foregroundStyle(Night.faint)
+            }
         }
     }
 

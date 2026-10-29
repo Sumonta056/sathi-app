@@ -16,6 +16,7 @@ package struct MenuPanel: View {
             ForEach(HabitID.allCases.filter { !e.enabled($0) }) { id in
                 SleepingRow(id: id)
             }
+            QuickListCard()
             Spacer(minLength: 0)
             PauseChips()
             MenuFooter()

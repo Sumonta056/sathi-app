@@ -2,6 +2,7 @@ import AppKit
 import SathiCore
 import SathiTestSupport
 @testable import SathiUI
+import SwiftUI
 import Testing
 
 @MainActor
@@ -43,5 +44,21 @@ struct PanelSizeTests {
         #expect(size.width > 0)
         #expect(size.height > 0)
         #expect(ui.daySummaryPanel == nil)
+    }
+
+    private func menuHeight(_ items: Int) -> CGFloat {
+        let h = Quick.harness(Quick.many(items))
+        let host = NSHostingView(rootView: MenuPanel().environmentObject(h.engine))
+        return host.fittingSize.height
+    }
+
+    @Test func menuHeightIsBoundedByTheVisibleRows() {
+        let none = menuHeight(0)
+        let four = menuHeight(UIMetrics.quickVisibleRows)
+        let full = menuHeight(Limits.quickMax)
+        #expect(none > 0)
+        #expect(four > none)
+        #expect(full == four)
+        #expect(full < UIMetrics.menuMaxHeight)
     }
 }

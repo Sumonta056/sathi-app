@@ -26,6 +26,9 @@ enum Night {
     static let chipText = Color(hex: 0xC9D2E3)
     static let navSelected = Color(hex: 0x1E2840)
     static let calmGround = Color(hex: 0x16142A)
+    static let quick = Color(hex: 0xFF9FB8)
+    static let quickFill = Color(hex: 0x2A1C25)
+    static let quickBorder = Color(hex: 0x4A2E3D)
 
     static func accent(_ id: HabitID) -> Color {
         switch id {

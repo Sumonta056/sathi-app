@@ -26,7 +26,7 @@ extension Copywriter {
         return day + " at " + quickClock(date, calendar: calendar)
     }
 
-    private static func quickClock(_ date: Date, calendar: Calendar) -> String {
+    package static func quickClock(_ date: Date, calendar: Calendar) -> String {
         var style = Date.FormatStyle(date: .omitted, time: .shortened)
         style.timeZone = calendar.timeZone
         return date.formatted(style)

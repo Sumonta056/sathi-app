@@ -3,6 +3,7 @@ import SwiftUI
 extension UIMetrics {
     static let menuPadding: CGFloat = 16
     static let menuSpacing: CGFloat = 10
+    static let menuMaxHeight: CGFloat = 900
     static let ringSize: CGFloat = 52
     static let ringLine: CGFloat = 4
     static let ringBuddySize: CGFloat = 30
