@@ -5,6 +5,7 @@ package struct LiveState: Codable, Equatable, Sendable {
     package var lastWaterDone: Date?
     package var streakReset: [String: Date] = [:]
     package var lastDaySummary: DayKey?
+    package var quickReminders: [QuickReminder] = []
 
     package init() {}
 }
@@ -17,5 +18,6 @@ extension LiveState {
         lastWaterDone = try c.decodeIfPresent(Date.self, forKey: .lastWaterDone)?.wholeSecond
         streakReset = try c.value(.streakReset, or: d.streakReset).mapValues(\.wholeSecond)
         lastDaySummary = c.lenient(.lastDaySummary, or: d.lastDaySummary)
+        quickReminders = (c.lenientArray(.quickReminders) as [QuickReminder]).kept()
     }
 }

@@ -50,6 +50,10 @@ package enum Limits {
     package static let readingReadKeep = 50
     package static let readingTitleMax = 120
     package static let readingURLMax = 2048
+    package static let quickTextMax = 80
+    package static let quickMax = 20
+    package static let quickChips = [5, 15, 30, 60]
+    package static let quickNoteTextMax = 24
 
     package static let morningStartHour = 5
     package static let afternoonStartHour = 12
