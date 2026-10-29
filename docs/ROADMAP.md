@@ -129,14 +129,15 @@ Spec: `docs/specs/phase-12-quick-reminder.md`
 Plan: `docs/superpowers/plans/2026-10-29-quick-reminder.md`
 
 - [x] Spec, business rules, branch
-- [ ] Core models, time math, decoding
-- [ ] Copy
-- [ ] Engine actions, show loop, snooze, port
-- [ ] Levels and the shared lock
-- [ ] Menu card and add form
-- [ ] Popup, snoozed note, lock, presenter
-- [ ] Settings card
+- [x] Core models, time math, decoding
+- [x] Copy
+- [x] Engine actions, show loop, snooze, port
+- [x] Levels and the shared lock
+- [x] Menu card and add form
+- [x] Popup, snoozed note, lock, presenter
+- [x] Settings card
 - [ ] Definition of done
+- Open: perf.sh, perf.sh --windows, hand test, ui-verifier, website.
 
 ## Later
 

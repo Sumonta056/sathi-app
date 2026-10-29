@@ -47,6 +47,10 @@ To see a reminder right away, open Settings, pick a buddy, and click **Show a re
   <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/reading-corner.png" alt="Reading corner popup from Boi with Start reading and In 5 min buttons" width="378" />
 </p>
 
+## Quick reminders
+
+Write a one-off note such as "Call mom" and pick when it shows: 5 min, 15 min, 30 min, 1 hour, or a time of day. A calm corner popup shows it then and keeps coming back until you tap **Done**. Snooze it or close it. Up to 20 can be pending at once. A quick reminder is a note, not a habit, so it has no streak or goal. Its level is set in Settings, General tab.
+
 ## Reminders that escalate
 
 If you ignore a reminder, it gets firmer, step by step:
