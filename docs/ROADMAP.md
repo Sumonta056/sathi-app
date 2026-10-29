@@ -123,6 +123,21 @@ Plan and spec: `docs/superpowers/plans/2026-10-27-days-off.md`
 - [x] Menu pill and report calendar style
 - [ ] Docs, Definition of done, website
 
+## Phase 12: Quick reminder
+
+Spec: `docs/specs/phase-12-quick-reminder.md`
+Plan: `docs/superpowers/plans/2026-10-29-quick-reminder.md`
+
+- [x] Spec, business rules, branch
+- [ ] Core models, time math, decoding
+- [ ] Copy
+- [ ] Engine actions, show loop, snooze, port
+- [ ] Levels and the shared lock
+- [ ] Menu card and add form
+- [ ] Popup, snoozed note, lock, presenter
+- [ ] Settings card
+- [ ] Definition of done
+
 ## Later
 
 - Days off: a lock or Nudgy bubble that shows at 23:58 stays after midnight into a day off (only a settings change closes it, rule 11). Close it at the first tick of a new day if users notice
