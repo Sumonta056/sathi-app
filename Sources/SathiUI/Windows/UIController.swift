@@ -9,6 +9,7 @@ package final class UIController: ReminderPresenter {
     var bubbles: [HabitID: NSPanel] = [:]
     var sessions: [HabitID: NSPanel] = [:]
     var corner: [NSPanel] = []
+    var quickPanels: [UUID: NSPanel] = [:]
     var cornerScreen: NSScreen?
     var celebration: NSPanel?
     var note: NSPanel?
@@ -88,10 +89,14 @@ package final class UIController: ReminderPresenter {
     }
 
     package func showLock(_ id: HabitID) {
+        presentLocks(LockView(id: id))
+    }
+
+    func presentLocks(_ primary: some View) {
         closeLock()
         guard let engine else { return }
         for (i, screen) in NSScreen.screens.enumerated() {
-            let content = i == 0 ? AnyView(LockView(id: id)) : AnyView(LockShade())
+            let content = i == 0 ? AnyView(primary) : AnyView(LockShade())
             locks.append(LockScreen.makeWindow(on: screen, content: content, engine: engine))
         }
         NSApp.activate(ignoringOtherApps: true)

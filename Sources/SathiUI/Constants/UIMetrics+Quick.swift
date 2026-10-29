@@ -21,4 +21,10 @@ extension UIMetrics {
     static let quickTimeSpacing: CGFloat = 10
     static let quickButtonHeight: CGFloat = 36
     static let quickHeaderGap: CGFloat = 6
+    static let quickTileSize: CGFloat = 44
+    static let quickTileRadius: CGFloat = 12
+    static let quickTileIcon: CGFloat = 22
+    static let quickNoteIcon: CGFloat = 14
+    static let quickNoteSpacing: CGFloat = 8
+    static let quickLockIcon: CGFloat = 56
 }

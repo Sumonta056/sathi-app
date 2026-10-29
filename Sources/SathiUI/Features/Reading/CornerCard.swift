@@ -6,6 +6,7 @@ struct CornerCard: ViewModifier {
     var alert = false
     var habit: HabitID = .reading
     var border: Color?
+    var alertColor: Color?
 
     func body(content: Content) -> some View {
         content
@@ -13,7 +14,7 @@ struct CornerCard: ViewModifier {
             .frame(width: width)
             .background(shape.fill(Night.card))
             .overlay(shape.strokeBorder(
-                alert ? Night.accent(habit) : border ?? Night.heroBorder(habit),
+                alert ? alertColor ?? Night.accent(habit) : border ?? Night.heroBorder(habit),
                 lineWidth: alert ? UIMetrics.bubbleAlertBorder : UIMetrics.bubbleBorder
             ))
             .padding(UIMetrics.bubbleShadowPadding)

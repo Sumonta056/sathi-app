@@ -4,8 +4,12 @@ import SwiftUI
 
 extension UIController {
     package func showSnoozed(_ id: HabitID, until: Date) {
+        presentNote(SnoozedNote(id: id, until: until))
+    }
+
+    func presentNote(_ view: some View) {
         closeNote()
-        note = presentCorner(SnoozedNote(id: id, until: until))
+        note = presentCorner(view)
         noteTask = Task { @MainActor [weak self] in
             try? await Task.sleep(nanoseconds: UInt64(Timing.cornerNoteDuration * 1_000_000_000))
             guard !Task.isCancelled else { return }
@@ -51,11 +55,4 @@ extension UIController {
             return e.usesCorner(id) ? placeTopRight(CornerToast.make(h)) : presentCentered(h, level: .statusBar)
         }
     }
-}
-
-extension UIController {
-    package func showQuick(_ id: UUID, _ level: Level) {}
-    package func closeQuick(_ id: UUID) {}
-    package func showQuickLock(_ id: UUID) {}
-    package func showQuickSnoozed(text: String, until: Date) {}
 }
