@@ -18,13 +18,44 @@ extension Engine {
         for item in quickReminders where quickActivities[item.id] == nil && now >= item.fireDate {
             presentQuick(item)
         }
+        lockWaitingQuick()
     }
 
     private func presentQuick(_ item: QuickReminder) {
         switch EscalationPolicy.presentation(for: data.prefs.quick.strictness, snoozes: item.snoozes) {
         case let .bubble(level): showQuickPopup(item, level)
-        case .lock: showQuickPopup(item, .persist)
+        case .lock where isAnyLockShowing: showQuickPopup(item, .persist)
+        case .lock: showQuickLock(item)
         }
+    }
+
+    private func showQuickLock(_ item: QuickReminder) {
+        quickActivities[item.id] = .lock
+        presenter.showQuickLock(item.id)
+        play(.sosumi)
+    }
+
+    func lockWaitingQuick() {
+        guard !isAnyLockShowing else { return }
+        let waiting = quickReminders.first { item in
+            guard case .popup = quickActivities[item.id], !canSnoozeQuick(item.id) else { return false }
+            return EscalationPolicy.presentation(for: data.prefs.quick.strictness, snoozes: item.snoozes) == .lock
+        }
+        guard let item = waiting else { return }
+        presenter.closeQuick(item.id)
+        showQuickLock(item)
+    }
+
+    func refreshQuickIgnoreDeadlines() {
+        for item in quickReminders {
+            guard case let .popup(level, deadline) = quickActivities[item.id],
+                  canSnoozeQuick(item.id) == (deadline == .distantFuture) else { continue }
+            quickActivities[item.id] = .popup(level, ignoreDeadline: freshQuickDeadline(item.id))
+        }
+    }
+
+    var isAnyLockShowing: Bool {
+        HabitID.allCases.contains { phase($0) == .lock } || quickActivities.values.contains { $0 == .lock }
     }
 
     private func showQuickPopup(_ item: QuickReminder, _ level: Level) {

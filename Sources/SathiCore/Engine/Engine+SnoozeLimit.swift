@@ -15,9 +15,8 @@ extension Engine {
     }
 
     func lockWaitingHabit() {
-        let ids = HabitID.allCases
-        guard !ids.contains(where: { phase($0) == .lock }) else { return }
-        let waiting = ids.first { id in
+        guard !isAnyLockShowing else { return }
+        let waiting = HabitID.allCases.first { id in
             guard case .bubble = activities[id], !canSnooze(id) else { return false }
             return EscalationPolicy.presentation(for: strictness(id), snoozes: state(id).snoozes) == .lock
         }
@@ -32,6 +31,7 @@ extension Engine {
                   canSnooze(id) == (deadline == .distantFuture) else { continue }
             activities[id] = .bubble(level, copy: copy, ignoreDeadline: freshIgnoreDeadline(id))
         }
+        refreshQuickIgnoreDeadlines()
         requestTick()
     }
 }

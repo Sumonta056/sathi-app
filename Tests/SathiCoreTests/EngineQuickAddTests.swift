@@ -31,7 +31,7 @@ struct EngineQuickAddTests {
 
     @Test func noHistoryEvents() {
         let h = EngineHarness()
-        guard case let .added(id) = h.engine.addQuick(text: "Call mom", when: .inMinutes(5)) else { return }
+        let id = quickID(h, "Call mom", .inMinutes(5))
         h.advance(minutes: 5)
         h.engine.snoozeQuick(id)
         h.advance(minutes: 5)

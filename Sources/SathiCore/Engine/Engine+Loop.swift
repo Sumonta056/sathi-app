@@ -61,7 +61,7 @@ extension Engine {
         }
     }
 
-    func upcomingDeadlines() -> [Date] {
+    private func upcomingDeadlines() -> [Date] {
         var deadlines: [Date] = quickDeadlines
         if let p = pausedUntil { deadlines.append(p) }
         if let s = nextDaySummary { deadlines.append(s) }
@@ -97,7 +97,7 @@ extension Engine {
         if resetsIdea(id) { gymIdea = 0 }
         switch EscalationPolicy.presentation(for: strictness(id), snoozes: state(id).snoozes) {
         case let .bubble(level): showBubble(id, level)
-        case .lock where HabitID.allCases.contains(where: { phase($0) == .lock }): showBubble(id, .persist)
+        case .lock where isAnyLockShowing: showBubble(id, .persist)
         case .lock: showLock(id)
         }
     }

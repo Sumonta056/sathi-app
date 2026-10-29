@@ -55,3 +55,32 @@ struct EngineQuickSnoozeTests {
         #expect(h.engine.showsQuickClose(id))
     }
 }
+
+@MainActor
+@Suite("Engine quick snooze limit change")
+struct EngineQuickLimitChangeTests {
+    private func deadline(_ h: EngineHarness, _ id: UUID) -> Date? {
+        guard case let .popup(_, d) = h.engine.quickActivities[id] else { return nil }
+        return d
+    }
+
+    @Test func raisingTheLimitGivesAnOpenPopupItsTimerBack() {
+        let h = quickLevelHarness(.persistent, limit: 1)
+        let id = quickID(h)
+        h.advance(minutes: 15)
+        snoozeQuickAndReturn(h, id)
+        #expect(deadline(h, id) == .distantFuture)
+        h.engine.data.prefs.general.snoozeLimit = 3
+        #expect(deadline(h, id) == h.clock.now.addingTimeInterval(5 * 60))
+    }
+
+    @Test func loweringTheLimitStopsTheTimerOfAnOpenPopup() {
+        let h = quickLevelHarness(.persistent, limit: 3)
+        let id = quickID(h)
+        h.advance(minutes: 15)
+        snoozeQuickAndReturn(h, id)
+        #expect(deadline(h, id) == h.clock.now.addingTimeInterval(5 * 60))
+        h.engine.data.prefs.general.snoozeLimit = 1
+        #expect(deadline(h, id) == .distantFuture)
+    }
+}
