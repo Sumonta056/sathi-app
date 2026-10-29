@@ -15,12 +15,16 @@ struct CopywriterQuickTests {
 
     @Test func eyebrowShowsTheDueTime() {
         let due = zone.date(2026, 3, 4, 14, 30)
-        #expect(Copywriter.quickEyebrow(due: due, calendar: zone.calendar) == "QUICK REMINDER · " + shortTime(due))
+        let text = Copywriter.quickEyebrow(due: due, calendar: zone.calendar)
+        #expect(text == "QUICK REMINDER · " + shortTime(due))
+        #expect(text.contains("2:30") || text.contains("14:30"))
     }
 
     @Test func setAtShowsTheCreationTime() {
         let created = zone.date(2026, 3, 4, 11, 5)
-        #expect(Copywriter.quickSetAt(created, calendar: zone.calendar) == "You set this at " + shortTime(created) + ".")
+        let text = Copywriter.quickSetAt(created, calendar: zone.calendar)
+        #expect(text == "You set this at " + shortTime(created) + ".")
+        #expect(text.contains("11:05"))
     }
 
     @Test func noSnoozeLine() {
@@ -31,12 +35,14 @@ struct CopywriterQuickTests {
         let at = zone.date(2026, 3, 4, 14, 35)
         let line = Copywriter.quickComesBack(text: "Call mom", at: at, calendar: zone.calendar)
         #expect(line == "“Call mom” comes back at " + shortTime(at))
+        #expect(line.contains("2:35") || line.contains("14:35"))
     }
 
     @Test func comesBackCutsTextOverTheLimit() {
         let at = zone.date(2026, 3, 4, 14, 35)
         let line = Copywriter.quickComesBack(text: "Send the invoice to Rahim today", at: at, calendar: zone.calendar)
         #expect(line == "“Send the invoice to Rahi…” comes back at " + shortTime(at))
+        #expect(line.contains("2:35") || line.contains("14:35"))
     }
 
     @Test func comesBackKeepsTextOfExactlyTheLimit() {
@@ -44,6 +50,7 @@ struct CopywriterQuickTests {
         let text = String(repeating: "a", count: Limits.quickNoteTextMax)
         let line = Copywriter.quickComesBack(text: text, at: at, calendar: zone.calendar)
         #expect(line == "“" + text + "” comes back at " + shortTime(at))
+        #expect(line.contains("2:35") || line.contains("14:35"))
     }
 
     @Test func whenSaysShowingNow() {
@@ -55,7 +62,7 @@ struct CopywriterQuickTests {
         let now = zone.date(2026, 3, 4, 14, 0)
         let fire = zone.date(2026, 3, 4, 14, 25)
         let line = Copywriter.quickWhen(fire, now: now, showing: false, calendar: zone.calendar)
-        #expect(line == "in " + Fmt.short(fire.timeIntervalSince(now)))
+        #expect(line == "in 25m")
     }
 
     @Test func whenSaysTomorrowOnALaterDay() {
@@ -67,12 +74,16 @@ struct CopywriterQuickTests {
     @Test func previewSaysToday() {
         let now = zone.date(2026, 3, 4, 10, 0)
         let date = zone.date(2026, 3, 4, 14, 30)
-        #expect(Copywriter.quickPreview(date, now: now, calendar: zone.calendar) == "Today at " + shortTime(date))
+        let text = Copywriter.quickPreview(date, now: now, calendar: zone.calendar)
+        #expect(text == "Today at " + shortTime(date))
+        #expect(text.contains("2:30") || text.contains("14:30"))
     }
 
     @Test func previewSaysTomorrow() {
         let now = zone.date(2026, 3, 4, 10, 0)
         let date = zone.date(2026, 3, 5, 9, 0)
-        #expect(Copywriter.quickPreview(date, now: now, calendar: zone.calendar) == "Tomorrow at " + shortTime(date))
+        let text = Copywriter.quickPreview(date, now: now, calendar: zone.calendar)
+        #expect(text == "Tomorrow at " + shortTime(date))
+        #expect(text.contains("9:00") || text.contains("09:00"))
     }
 }
