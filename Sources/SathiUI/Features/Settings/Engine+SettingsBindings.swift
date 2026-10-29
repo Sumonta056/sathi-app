@@ -10,6 +10,14 @@ extension Engine {
         Binding(get: { self.data.prefs.showsCloseButton(id) }, set: { self.data.prefs.setShowsCloseButton(id, $0) })
     }
 
+    var quickStrictness: Binding<Strictness> {
+        Binding(get: { self.data.prefs.quick.strictness }, set: { self.data.prefs.quick.strictness = $0 })
+    }
+
+    var quickShowsClose: Binding<Bool> {
+        Binding(get: { self.data.prefs.quick.showsCloseButton }, set: { self.data.prefs.quick.showsCloseButton = $0 })
+    }
+
     static let noSnoozeLimitStep = Limits.snoozeLimits.upperBound + 1
 
     var snoozeLimitStep: Binding<Int> {

@@ -45,6 +45,7 @@ struct GeneralTab: View {
                     }
                 }
             }
+            QuickSettingsCard()
             SettingsSection("Behaviour") { BehaviourCard() }
         }
     }
