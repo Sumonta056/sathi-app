@@ -63,10 +63,7 @@ Spec 5d: `docs/specs/phase-5d-water-bubble.md`
 Spec 5e: `docs/specs/phase-5e-reading-corner.md`
 Spec 5f: `docs/specs/phase-5f-meditation.md`
 Spec 5g: `docs/specs/phase-5g-reports.md`
-Review fixes 5g: `docs/specs/phase-5g-review-fixes.md`
 Spec 5g2: `docs/specs/phase-5g2-palette.md`
-Review fixes 5d/5f: `docs/specs/phase-5df-review-fixes.md`
-Review fixes 5a–5c: `docs/specs/phase-5abc-review-fixes.md` (done)
 
 - [x] Theme: night-sprout `Night` palette, SF Rounded `Typography`, shared components
 - [x] Settings window: sidebar, General, Water, Reading, Meditation, Add a buddy (coming soon)
@@ -101,7 +98,6 @@ Spec 6b: `docs/specs/phase-6b-tolerant-decoding.md`
 ## Phase 8: Gym (Shokti)
 
 Spec: `docs/specs/gym-shokti-design.md`
-Plan: `docs/superpowers/plans/2026-10-26-gym-shokti.md`
 
 - [x] Rules in `.claude/rules/business-logic.md`
 - [x] Gym core: `HabitID.gym`, `GymPrefs`, `GymRules`
@@ -112,7 +108,7 @@ Plan: `docs/superpowers/plans/2026-10-26-gym-shokti.md`
 
 ## Phase 9: Days off
 
-Plan and spec: `docs/superpowers/plans/2026-10-27-days-off.md`
+Rules: `.claude/rules/business-logic.md`
 
 - [x] Rules in `.claude/rules/business-logic.md`
 - [x] `DayKey`, `HabitDays`, and weekdays plus days off in every buddy's prefs
@@ -126,7 +122,6 @@ Plan and spec: `docs/superpowers/plans/2026-10-27-days-off.md`
 ## Phase 12: Quick reminder
 
 Spec: `docs/specs/phase-12-quick-reminder.md`
-Plan: `docs/superpowers/plans/2026-10-29-quick-reminder.md`
 
 - [x] Spec, business rules, branch
 - [x] Core models, time math, decoding
