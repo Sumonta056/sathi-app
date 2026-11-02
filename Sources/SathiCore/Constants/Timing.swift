@@ -22,6 +22,11 @@ package enum Timing {
     package static let shortPauseHours: Double = 0.5
     package static let saveCoalesce: TimeInterval = 0.5
 
+    package static let blockCheckIn: TimeInterval = 2 * hour
+    package static let blockCap: TimeInterval = 12 * hour
+    package static let blockExtend: TimeInterval = 15 * minute
+    package static let blockMinimum: TimeInterval = minute
+
     package static let breathBox: TimeInterval = 4
     package static let breathRelaxIn: TimeInterval = 4
     package static let breathRelaxHold: TimeInterval = 7

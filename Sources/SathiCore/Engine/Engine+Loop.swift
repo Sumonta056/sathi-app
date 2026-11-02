@@ -4,6 +4,7 @@ extension Engine {
     package func start() {
         guard !isRunning else { return }
         isRunning = true
+        restoreBlock()
         tick()
     }
 
@@ -22,6 +23,8 @@ extension Engine {
         if pausedUntil == nil { presentDueHabits() }
         lockWaitingHabit()
         tickQuick()
+        refreshCalendarAccess()
+        tickBlock()
         showDaySummaryIfDue()
         updateStatus()
         scheduleNextTick()
@@ -62,7 +65,7 @@ extension Engine {
     }
 
     private func upcomingDeadlines() -> [Date] {
-        var deadlines: [Date] = quickDeadlines
+        var deadlines: [Date] = quickDeadlines + blockDeadlines
         if let p = pausedUntil { deadlines.append(p) }
         if let s = nextDaySummary { deadlines.append(s) }
         for id in HabitID.allCases {

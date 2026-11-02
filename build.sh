@@ -23,7 +23,7 @@ cp Resources/Info.plist "$APP/Contents/Info.plist"
 cp Resources/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
 
 # Ad-hoc sign so macOS lets it run and "Open at login" works.
-codesign --force --deep --sign - "$APP"
+codesign --force --deep --entitlements Resources/Sathi.entitlements --sign - "$APP"
 
 echo "Built $APP"
 

@@ -25,7 +25,8 @@ struct EnginePauseRestOfDayTests {
             sound: SpySoundPlayer(),
             presenter: SpyPresenter(),
             links: SpyLinkOpener(),
-            calendar: zone.calendar
+            calendar: zone.calendar,
+            calendarWriter: SpyCalendarWriter()
         )
         engine.pauseRestOfDay()
         let until = engine.pausedUntil

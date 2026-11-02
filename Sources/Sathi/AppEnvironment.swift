@@ -24,7 +24,8 @@ enum AppEnvironment {
             clock: SystemClock(),
             sound: SystemSoundPlayer(),
             presenter: presenter,
-            links: WorkspaceLinkOpener()
+            links: WorkspaceLinkOpener(),
+            calendarWriter: EventKitCalendarWriter()
         )
         presenter.engine = engine
         return engine

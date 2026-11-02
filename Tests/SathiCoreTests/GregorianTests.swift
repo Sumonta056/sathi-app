@@ -61,7 +61,8 @@ struct GregorianTests {
             sound: SpySoundPlayer(),
             presenter: SpyPresenter(),
             links: SpyLinkOpener(),
-            calendar: buddhist
+            calendar: buddhist,
+            calendarWriter: SpyCalendarWriter()
         )
         let outcome = await engine.export(.csv, screen: engine.reportScreen(.week, selected: .water), to: spy, renderer: SpySummaryRenderer())
         #expect(outcome == .saved(url))

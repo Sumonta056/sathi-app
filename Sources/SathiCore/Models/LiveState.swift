@@ -6,6 +6,7 @@ package struct LiveState: Codable, Equatable, Sendable {
     package var streakReset: [String: Date] = [:]
     package var lastDaySummary: DayKey?
     package var quickReminders: [QuickReminder] = []
+    package var timeBlock: TimeBlock?
 
     package init() {}
 }
@@ -19,5 +20,6 @@ extension LiveState {
         streakReset = try c.value(.streakReset, or: d.streakReset).mapValues(\.wholeSecond)
         lastDaySummary = c.lenient(.lastDaySummary, or: d.lastDaySummary)
         quickReminders = (c.lenientArray(.quickReminders) as [QuickReminder]).kept()
+        timeBlock = c.lenient(.timeBlock, or: d.timeBlock)
     }
 }

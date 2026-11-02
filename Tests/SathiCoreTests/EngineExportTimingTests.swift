@@ -35,7 +35,8 @@ struct EngineExportTimingTests {
             clock: clock,
             sound: SpySoundPlayer(),
             presenter: SpyPresenter(),
-            links: SpyLinkOpener()
+            links: SpyLinkOpener(),
+            calendarWriter: SpyCalendarWriter()
         )
         let url = try target("out")
         let screen = engine.reportScreen(.week, selected: .water)

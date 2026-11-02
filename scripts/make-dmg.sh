@@ -14,7 +14,7 @@ DMG="build/Sathi-$VERSION.dmg"
 
 if [[ -n "$SIGN_IDENTITY" ]]; then
   echo "Signing with ${SIGN_IDENTITY}…"
-  codesign --force --deep --options runtime --timestamp --sign "$SIGN_IDENTITY" "$APP"
+  codesign --force --deep --options runtime --timestamp --entitlements Resources/Sathi.entitlements --sign "$SIGN_IDENTITY" "$APP"
 fi
 
 rm -rf "$STAGE" "$DMG"

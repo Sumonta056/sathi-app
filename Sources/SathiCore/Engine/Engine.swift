@@ -24,6 +24,9 @@ package final class Engine: ObservableObject {
     @Published package var celebration = Celebration()
     @Published package var isCelebrating = false
     @Published package internal(set) var gymIdea = 0
+    @Published package internal(set) var finishedBlock: FinishedBlock?
+    @Published package internal(set) var blockCheckInShowing = false
+    @Published package internal(set) var calendarAccess: CalendarAccess
 
     package let status = StatusModel()
     let store: StateStore
@@ -32,6 +35,7 @@ package final class Engine: ObservableObject {
     let sound: SoundPlayer
     let presenter: ReminderPresenter
     let links: LinkOpener
+    let calendarWriter: CalendarWriter
     let calendar: Calendar
 
     var timer: Timer?
@@ -50,7 +54,8 @@ package final class Engine: ObservableObject {
         sound: SoundPlayer,
         presenter: ReminderPresenter,
         links: LinkOpener,
-        calendar: Calendar = .current
+        calendar: Calendar = .current,
+        calendarWriter: CalendarWriter
     ) {
         let n = clock.now
         var loaded = Persisted()
@@ -64,6 +69,8 @@ package final class Engine: ObservableObject {
         self.presenter = presenter
         self.links = links
         self.calendar = calendar
+        self.calendarWriter = calendarWriter
+        calendarAccess = calendarWriter.access
         data = loaded
         now = n
         habits = Dictionary(uniqueKeysWithValues: HabitID.allCases.map { id in
