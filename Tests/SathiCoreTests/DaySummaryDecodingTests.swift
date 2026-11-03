@@ -40,6 +40,22 @@ struct DaySummaryDecodingTests {
         #expect(g.daySummaryMinutes == minutes)
     }
 
+    @Test func settingsTimesUseFiveMinuteSteps() {
+        #expect(Limits.scheduleSlotMinutes == 5)
+    }
+
+    @Test(arguments: [5, 1265, 1435])
+    func aFiveMinuteTimeLoads(_ minutes: Int) throws {
+        let g = try general(#"{"daySummaryOn":false,"daySummaryMinutes":\#(minutes)}"#)
+        #expect(g.daySummaryMinutes == minutes)
+    }
+
+    @Test(arguments: [7, 1262])
+    func aTimeOffTheStepLoadsTheDefault(_ minutes: Int) throws {
+        let g = try general(#"{"daySummaryOn":false,"daySummaryMinutes":\#(minutes)}"#)
+        #expect(g.daySummaryMinutes == Limits.daySummaryMinutes)
+    }
+
     @Test(arguments: [-1, -60, 1440, 5000])
     func aTimeOutsideTheDayLoadsTheDefault(_ minutes: Int) throws {
         let g = try general(#"{"name":"Asha","daySummaryOn":false,"daySummaryMinutes":\#(minutes)}"#)

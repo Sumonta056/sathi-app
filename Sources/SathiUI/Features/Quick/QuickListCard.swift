@@ -3,17 +3,10 @@ import SwiftUI
 
 struct QuickListCard: View {
     @EnvironmentObject var e: Engine
-    @State private var adding: Bool
-
-    init(adding: Bool = false) {
-        _adding = State(initialValue: adding)
-    }
 
     var body: some View {
-        if adding {
-            QuickAddForm { adding = false }
-        } else {
-            let items = e.quickReminders
+        let items = e.quickReminders
+        if !items.isEmpty {
             VStack(alignment: .leading, spacing: UIMetrics.quickCardSpacing) {
                 header(count: items.count)
                 rows(items)
@@ -32,13 +25,11 @@ struct QuickListCard: View {
                 .font(Typography.cardTitle)
                 .foregroundStyle(Night.text)
             Spacer(minLength: 0)
-            if count > 0 {
-                Text(verbatim: "\(count) of \(Limits.quickMax)")
-                    .font(Typography.pill)
-                    .foregroundStyle(Night.quick)
-                    .padding(UIMetrics.quickBadgePadding)
-                    .background(RoundedRectangle(cornerRadius: UIMetrics.quickPillRadius, style: .continuous).fill(Night.quickFill))
-            }
+            Text(verbatim: "\(count) of \(Limits.quickMax)")
+                .font(Typography.pill)
+                .foregroundStyle(Night.quick)
+                .padding(UIMetrics.quickBadgePadding)
+                .background(RoundedRectangle(cornerRadius: UIMetrics.quickPillRadius, style: .continuous).fill(Night.quickFill))
         }
         .padding(.bottom, UIMetrics.quickHeaderGap)
     }
@@ -59,7 +50,7 @@ struct QuickListCard: View {
     }
 
     private var addRow: some View {
-        Button { adding = true } label: {
+        Button { e.openQuickAdd() } label: {
             HStack(spacing: UIMetrics.quickTimeSpacing) {
                 Image(systemName: "plus")
                     .font(.system(size: UIMetrics.quickIconSize, weight: .heavy))

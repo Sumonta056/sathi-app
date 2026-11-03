@@ -24,7 +24,7 @@ package enum Limits {
 
     package static let minutesPerHour = 60
     package static let minutesPerDay = 24 * Limits.minutesPerHour
-    package static let scheduleSlotMinutes = 15
+    package static let scheduleSlotMinutes = 5
     package static let daySummaryMinutes = 22 * 60
 
     package static let intervalChips = [15, 30, 45, 60, 75, 90, 105, 120]
@@ -55,6 +55,8 @@ package enum Limits {
     package static let quickMax = 20
     package static let quickChips = [5, 15, 30, 60]
     package static let quickNoteTextMax = 24
+    package static let blockLengths = [15, 30, 40, 45, 60, 120]
+    package static let blockTitleMax = 60
 
     package static let morningStartHour = 5
     package static let afternoonStartHour = 12

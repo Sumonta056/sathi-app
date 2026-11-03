@@ -74,3 +74,17 @@ extension Engine {
         })
     }
 }
+
+extension Engine {
+    var blockDisplay: Binding<TimeBlockDisplay> {
+        Binding(get: { self.data.prefs.timeBlock.display }, set: { self.data.prefs.timeBlock.display = $0 })
+    }
+
+    var blockPlaysSound: Binding<Bool> {
+        Binding(get: { self.data.prefs.timeBlock.playsSound }, set: { self.data.prefs.timeBlock.playsSound = $0 })
+    }
+
+    func pickDefaultCalendar(_ id: String) {
+        data.prefs.timeBlock.defaultCalendarID = id
+    }
+}

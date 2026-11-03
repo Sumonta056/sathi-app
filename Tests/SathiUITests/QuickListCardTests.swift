@@ -9,15 +9,14 @@ import ViewInspector
 @MainActor
 @Suite("Quick list card")
 struct QuickListCardTests {
-    private func card(_ h: EngineHarness, adding: Bool = false) throws -> InspectableView<ViewType.ClassifiedView> {
-        try hosted(QuickListCard(adding: adding), h).inspect()
+    private func card(_ h: EngineHarness) throws -> InspectableView<ViewType.ClassifiedView> {
+        try hosted(QuickListCard(), h).inspect()
     }
 
-    @Test func emptyCardShowsOnlyAddRow() throws {
+    @Test func emptyCardRendersNothing() throws {
         let sut = try card(Quick.harness())
-        #expect(throws: Never.self) { try sut.find(text: "Quick reminder") }
-        #expect(throws: Never.self) { try sut.find(text: "Quick reminders") }
-        #expect(!MenuFind.hasText(sut, containing: " of 20"))
+        #expect(MenuFind.texts(sut).isEmpty)
+        #expect(sut.findAll(ViewType.Button.self).isEmpty)
         #expect(sut.findAll(QuickRow.self).isEmpty)
     }
 
@@ -57,21 +56,33 @@ struct QuickListCardTests {
         #expect(more.findAll(ViewType.ScrollView.self).count == 1)
     }
 
-    @Test func addRowOpensTheFormInsteadOfShowingItself() throws {
-        let sut = try card(Quick.harness(), adding: true)
-        #expect(throws: Never.self) { try sut.find(text: "New quick reminder") }
+    @Test func addRowOpensTheAddPopup() throws {
+        let h = Quick.harness(Quick.many(1))
+        try Find.button(card(h), holding: "Quick reminder").tap()
+        #expect(h.presenter.calls.last == .showQuickAdd)
+    }
+
+    @Test func popupCancelClosesTheAddPopup() throws {
+        let h = Quick.harness()
+        try hosted(QuickAddPopup(), h).inspect().find(button: "Cancel").tap()
+        #expect(h.presenter.calls.last == .closeQuickAdd)
+    }
+
+    @Test func popupHoldsTheAddForm() throws {
+        #expect(try hosted(QuickAddPopup(), Quick.harness()).inspect().findAll(QuickAddForm.self).count == 1)
     }
 
     @Test func breakHintOnlyWithItems() throws {
         let hint = "Quick reminders still show during a break."
-        let empty = try hosted(MenuPanel(), Quick.harness()).inspect()
+        let empty = try hosted(BreakMenu(), Quick.harness()).inspect()
         #expect(!MenuFind.hasText(empty, containing: hint))
-        let some = try hosted(MenuPanel(), Quick.harness([Quick.item("A", minutes: 5)])).inspect()
+        let some = try hosted(BreakMenu(), Quick.harness([Quick.item("A", minutes: 5)])).inspect()
         #expect(MenuFind.hasText(some, containing: hint))
     }
 
-    @Test func panelShowsTheCard() throws {
-        let sut = try hosted(MenuPanel(), Quick.harness()).inspect()
+    @Test func panelShowsTheCardWithAReminder() throws {
+        let sut = try hosted(MenuPanel(), Quick.harness([Quick.item("A", minutes: 5)])).inspect()
         #expect(sut.findAll(QuickListCard.self).count == 1)
+        #expect(throws: Never.self) { try sut.find(text: "Quick reminders") }
     }
 }

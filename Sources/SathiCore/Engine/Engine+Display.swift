@@ -100,6 +100,7 @@ extension Engine {
         if pausedUntil != nil { return "Paused" }
         let ids = HabitID.allCases
         if ids.contains(where: { phase($0) == .lock }) { return "Locked" }
+        if let block = blockStatusText { return block }
         if let id = ids.first(where: showsBubble) { return Self.callToAction(id) }
         if let end = ids.compactMap({ session($0)?.end }).min() { return Fmt.clock(end.timeIntervalSince(now)) }
         if isCelebrating { return "Done" }
@@ -131,6 +132,8 @@ extension Engine {
 
     func updateStatus() {
         let level = (waterLevel * Limits.statusIconSteps).rounded() / Limits.statusIconSteps
-        status.update(text: statusText, isBook: focus == .reading, iconLevel: level)
+        let text = statusText
+        let block = blockStatusText
+        status.update(text: text, isBook: focus == .reading, isBlock: block != nil && text == block, iconLevel: level)
     }
 }

@@ -35,6 +35,17 @@ struct PanelSizeTests {
         #expect(size.height > 0)
     }
 
+    @Test func quickAddPanelHasARealSizeAndCloses() throws {
+        let h = EngineHarness()
+        let ui = controller(h)
+        ui.showQuickAdd()
+        let size = try #require(ui.quickAddPanel).frame.size
+        ui.closeQuickAdd()
+        #expect(size.width > 0)
+        #expect(size.height > 0)
+        #expect(ui.quickAddPanel == nil)
+    }
+
     @Test func daySummaryPanelHasARealSize() throws {
         let h = EngineHarness()
         let ui = controller(h)
@@ -46,10 +57,10 @@ struct PanelSizeTests {
         #expect(ui.daySummaryPanel == nil)
     }
 
-    private func menuHeight(_ items: Int) -> CGFloat {
+    private func menuHeight(_ items: Int, block: TimeBlockLength? = nil) -> CGFloat {
         let h = Quick.harness(Quick.many(items))
-        let host = NSHostingView(rootView: MenuPanel().environmentObject(h.engine))
-        return host.fittingSize.height
+        if let block { h.startBlock("Plan", block) }
+        return MenuSize.smallest(MenuPanel(), h)
     }
 
     @Test func menuHeightIsBoundedByTheVisibleRows() {
@@ -60,5 +71,18 @@ struct PanelSizeTests {
         #expect(four > none)
         #expect(full == four)
         #expect(full < UIMetrics.menuMaxHeight)
+    }
+
+    @Test(arguments: [TimeBlockLength.minutes(30), .open])
+    func menuWithARunningBlockStaysUnderTheBound(_ length: TimeBlockLength) {
+        let full = menuHeight(Limits.quickMax, block: length)
+        #expect(full > 0)
+        #expect(full < UIMetrics.menuMaxHeight)
+    }
+
+    @Test(arguments: [0, UIMetrics.quickVisibleRows, Limits.quickMax])
+    func menuWindowTakesItsNaturalHeight(_ items: Int) {
+        let h = Quick.harness(Quick.many(items))
+        #expect(MenuSize.smallest(MenuPanel(), h) == MenuSize.ideal(MenuPanel(), h))
     }
 }

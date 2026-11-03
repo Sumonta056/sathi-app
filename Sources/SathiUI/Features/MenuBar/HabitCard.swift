@@ -29,12 +29,12 @@ struct HabitCard: View {
                 if id == .reading, e.session(.reading) == nil, let pick = e.readingPick { upNext(pick) }
             }
             Spacer(minLength: 0)
-            Button(actionTitle) { act() }
-                .buttonStyle(AccentButton(accent: Night.accent(id)))
+            Button { act() } label: {
+                Text(actionTitle).frame(width: UIMetrics.menuActionWidth)
+            }
+            .buttonStyle(AccentButton(accent: Night.accent(id), height: UIMetrics.menuActionHeight, padding: 0))
         }
-        .padding(UIMetrics.cardPadding)
-        .background(shape.fill(Night.card))
-        .overlay(shape.strokeBorder(Night.border, lineWidth: UIMetrics.cardBorder))
+        .padding(UIMetrics.habitRowPadding)
     }
 
     private func upNext(_ pick: ReadingItem) -> some View {
@@ -87,9 +87,5 @@ struct HabitCard: View {
         case .meditation: e.startMeditation()
         case .gym: e.startSession(.gym)
         }
-    }
-
-    private var shape: RoundedRectangle {
-        RoundedRectangle(cornerRadius: UIMetrics.cardRadius, style: .continuous)
     }
 }

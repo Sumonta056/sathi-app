@@ -30,6 +30,7 @@ struct SettingsView: View {
         switch tab {
         case .general: GeneralTab()
         case let .habit(id): HabitTab(id: id)
+        case .timeBlocks: TimeBlockSettingsPage()
         case .addBuddy: AddBuddyTab()
         }
     }

@@ -41,9 +41,25 @@ struct TimePickerTests {
         #expect(TimeParts(minutes: 12 * 60 + 30).with(isPM: false).minutes == 30)
     }
 
-    @Test func offersEveryHourAndQuarterHour() {
+    @Test func offersEveryHourAndEveryFiveMinutes() {
         #expect(TimeParts.hours == [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
-        #expect(TimeParts.minuteOptions == [0, 15, 30, 45])
+        #expect(TimeParts.minuteOptions == Array(stride(from: 0, to: 60, by: 5)))
+    }
+
+    @Test func minutesSitInTwoRowsOfSix() {
+        #expect(TimePickerGrid.minuteRows == [[0, 5, 10, 15, 20, 25], [30, 35, 40, 45, 50, 55]])
+    }
+
+    @Test func gridTapsAFiveMinuteStep() throws {
+        let time = Box(22 * 60)
+        try TimePickerGrid(minutes: time.binding, accent: Night.reading).inspect().find(button: ":05").tap()
+        #expect(time.value == 22 * 60 + 5)
+    }
+
+    @Test func menuBorderShowsTheAccentWhenOpenOrActive() {
+        #expect(TimeMenu.border(isOpen: true, active: false, accent: Night.quick) == Night.quick)
+        #expect(TimeMenu.border(isOpen: false, active: true, accent: Night.quick) == Night.quick)
+        #expect(TimeMenu.border(isOpen: false, active: false, accent: Night.quick) == Night.fieldBorder)
     }
 
     @Test func gridTapsSetTheTime() throws {

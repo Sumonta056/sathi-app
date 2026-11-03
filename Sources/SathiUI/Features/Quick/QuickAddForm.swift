@@ -42,7 +42,6 @@ struct QuickAddForm: View {
             }
             buttons
         }
-        .quickCardStyle()
     }
 
     private var calendar: Calendar { Calendar.gregorian(in: e.timeZone) }
@@ -53,8 +52,11 @@ struct QuickAddForm: View {
 
     private var isBlank: Bool { QuickText.clean(text).isEmpty }
 
-    private var timeBinding: Binding<Date> {
-        Binding(get: { shown }, set: { time = $0; chip = nil })
+    private var minuteBinding: Binding<Int> {
+        Binding(
+            get: { DayClock(calendar: calendar).minutesOfDay(shown) },
+            set: { time = e.quickDate(.at(minutes: $0)); chip = nil }
+        )
     }
 
     private var textField: some View {
@@ -85,11 +87,7 @@ struct QuickAddForm: View {
                 Text(verbatim: "or at")
                     .font(Typography.hint)
                     .foregroundStyle(Night.muted)
-                DatePicker("or at", selection: timeBinding, displayedComponents: .hourAndMinute)
-                    .labelsHidden()
-                    .datePickerStyle(.field)
-                    .environment(\.timeZone, e.timeZone)
-                    .environment(\.calendar, calendar)
+                TimeMenu(minutes: minuteBinding, accent: Night.quick, active: chip == nil)
                 Text(verbatim: e.quickPreview(quickTime))
                     .font(Typography.hint)
                     .foregroundStyle(Night.quick)

@@ -22,7 +22,8 @@ struct StreakReloadTests {
             clock: clock,
             sound: SpySoundPlayer(),
             presenter: SpyPresenter(),
-            links: SpyLinkOpener()
+            links: SpyLinkOpener(),
+            calendarWriter: SpyCalendarWriter()
         )
     }
 

@@ -20,10 +20,7 @@ struct MenuFooter: View {
                     e.openSettings()
                 }
                 Spacer()
-                Text(Self.versionText)
-                    .font(Typography.hint)
-                    .foregroundStyle(Night.faint)
-                Spacer()
+                BreakMenu()
                 icon("power", "Quit Sathi") { NSApp.terminate(nil) }
             }
         }

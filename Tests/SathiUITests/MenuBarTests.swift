@@ -87,28 +87,6 @@ struct MenuBarTests {
         #expect(h.store.prefs.meditation.enabled)
     }
 
-    @Test func thirtyMinutesPausesForHalfAnHour() throws {
-        let h = EngineHarness()
-        try MenuFind.control(panel(h), "30 min").tap()
-        #expect(h.engine.pausedUntil == day(2026, 3, 4, 10, 30))
-    }
-
-    @Test func oneHourPausesForAnHour() throws {
-        let h = EngineHarness()
-        try MenuFind.control(panel(h), "1 hour").tap()
-        #expect(h.engine.pausedUntil == day(2026, 3, 4, 11))
-    }
-
-    @Test func restOfDayPausesUntilMidnight() throws {
-        let h = EngineHarness()
-        try MenuFind.control(panel(h), "Rest of day").tap()
-        #expect(h.engine.pausedUntil == day(2026, 3, 5))
-    }
-
-    @Test func pauseChipsHaveAHint() throws {
-        #expect(throws: Never.self) { try panel(EngineHarness()).find(text: "Take a break from reminders") }
-    }
-
     @Test func pausedPanelShowsTheNapBanner() throws {
         let h = EngineHarness()
         h.engine.pause(hours: 1)
@@ -149,11 +127,6 @@ struct MenuBarTests {
 
     @Test func quitIsThere() throws {
         #expect(throws: Never.self) { try MenuFind.control(panel(EngineHarness()), "Quit Sathi") }
-    }
-
-    @Test func footerShowsTheAppName() throws {
-        let names = try MenuFind.texts(hosted(MenuFooter(), EngineHarness()).inspect())
-        #expect(names.contains { $0 == "Sathi" || $0.hasPrefix("Sathi ") })
     }
 
     @Test func statusLabelShowsTheStatusText() throws {

@@ -24,9 +24,14 @@ struct SettingsSidebar: View {
                     BuddySwitch(isOn: engine.enabledBinding(id), accent: Night.accent(id), label: "\(id.name) reminders")
                 }
             }
+            SidebarNavButton(title: Copywriter.blockSettingsTitle, icon: "clock.fill", tint: Night.block, tab: .timeBlocks, selection: $tab)
             SidebarNavButton(title: "Add a buddy", icon: "plus.circle", tint: Night.sprout, textColor: Night.sprout, tab: .addBuddy, selection: $tab)
             Spacer()
             MadeByFooter()
+            Text(verbatim: MenuFooter.versionText)
+                .font(Typography.hint)
+                .foregroundStyle(Night.faint)
+                .padding(.horizontal, UIMetrics.navPadding.leading)
         }
         .padding(UIMetrics.sidebarPadding)
         .padding(.top, UIMetrics.titleBarInset)

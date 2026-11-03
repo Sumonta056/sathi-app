@@ -27,4 +27,5 @@ extension UIMetrics {
     static let quickNoteIcon: CGFloat = 14
     static let quickNoteSpacing: CGFloat = 8
     static let quickLockIcon: CGFloat = 56
+    static let quickAddWidth: CGFloat = 380
 }

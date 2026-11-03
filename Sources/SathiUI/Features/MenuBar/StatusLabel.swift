@@ -10,7 +10,9 @@ package struct StatusLabel: View {
 
     package var body: some View {
         HStack(spacing: 4) {
-            if status.isBook {
+            if status.isBlock {
+                Image(systemName: "timer")
+            } else if status.isBook {
                 Image(systemName: "book.closed.fill")
             } else {
                 Image(nsImage: StatusIcon.image(level: status.iconLevel))

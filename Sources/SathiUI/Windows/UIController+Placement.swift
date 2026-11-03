@@ -35,6 +35,13 @@ extension UIController {
         restack()
     }
 
+    func detachFromCorner(_ p: NSPanel) {
+        guard corner.contains(where: { $0 === p }) else { return }
+        corner.removeAll { $0 === p }
+        if corner.isEmpty { cornerScreen = nil }
+        restack()
+    }
+
     private func restack() {
         guard let vf = (cornerScreen ?? activeScreen)?.visibleFrame else { return }
         let origins = CornerLayout.origins(

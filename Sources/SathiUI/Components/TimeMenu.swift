@@ -4,6 +4,7 @@ import SwiftUI
 struct TimeMenu: View {
     @Binding var minutes: Int
     let accent: Color
+    var active = false
     @State private var isOpen = false
 
     var body: some View {
@@ -16,7 +17,7 @@ struct TimeMenu: View {
                 .background(RoundedRectangle(cornerRadius: UIMetrics.buttonRadius, style: .continuous).fill(Night.bg))
                 .overlay(
                     RoundedRectangle(cornerRadius: UIMetrics.buttonRadius, style: .continuous)
-                        .strokeBorder(isOpen ? accent : Night.fieldBorder, lineWidth: UIMetrics.chipBorder)
+                        .strokeBorder(Self.border(isOpen: isOpen, active: active, accent: accent), lineWidth: UIMetrics.chipBorder)
                 )
                 .contentShape(Rectangle())
         }
@@ -25,5 +26,9 @@ struct TimeMenu: View {
         .popover(isPresented: $isOpen, arrowEdge: .bottom) {
             TimePickerGrid(minutes: $minutes, accent: accent)
         }
+    }
+
+    static func border(isOpen: Bool, active: Bool, accent: Color) -> Color {
+        isOpen || active ? accent : Night.fieldBorder
     }
 }

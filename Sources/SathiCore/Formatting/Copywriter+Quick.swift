@@ -2,6 +2,8 @@ import Foundation
 
 extension Copywriter {
     package static let quickNoSnooze = "No snoozes left. It stays until you tap Done."
+    package static let quickToolTitle = "Reminder"
+    package static let quickToolButton = "Add a quick reminder"
 
     package static func quickEyebrow(due: Date, calendar: Calendar) -> String {
         "QUICK REMINDER · " + quickClock(due, calendar: calendar)
