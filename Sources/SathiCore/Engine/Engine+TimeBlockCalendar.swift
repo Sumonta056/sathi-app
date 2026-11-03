@@ -8,11 +8,13 @@ extension Engine {
         return fresh
     }
 
-    func refreshCalendarChoices() {
+    @discardableResult
+    func refreshCalendarChoices() -> Bool {
         let fresh = calendarWriter.calendars()
-        guard fresh != calendarChoicesCache else { return }
+        guard fresh != calendarChoicesCache else { return false }
         objectWillChange.send()
         calendarChoicesCache = fresh
+        return true
     }
 
     package func calendarTitle(_ id: String) -> String? {
@@ -26,14 +28,16 @@ extension Engine {
     }
 
     package func requestCalendarAccess() async {
+        let before = calendarAccess
         calendarAccess = await calendarWriter.requestAccess()
-        refreshCalendarChoices()
+        calendarStateRead(accessChanged: before != calendarAccess)
     }
 
     package func saveWaitingBlock(to calendarID: String) {
         guard var b = timeBlock, b.waitingForCalendar, let end = b.endedAt else { return }
         b.calendarID = calendarID
         guard write(b, end: end) != nil else {
+            readCalendarAccess()
             refreshCalendarChoices()
             presenter.showBlockCalendarGone()
             return
@@ -68,13 +72,21 @@ extension Engine {
     }
 
     package func refreshCalendarAccess() {
-        readCalendarAccess()
-        refreshCalendarChoices()
+        calendarStateRead(accessChanged: readCalendarAccess())
     }
 
     func refreshCalendarAccessIfDue() {
         if let last = lastAccessRefresh, clock.now.timeIntervalSince(last) < Timing.minute { return }
-        if readCalendarAccess() { refreshCalendarChoices() }
+        let waiting = timeBlock?.waitingForCalendar == true
+        let accessChanged = readCalendarAccess()
+        guard accessChanged || waiting else { return }
+        calendarStateRead(accessChanged: accessChanged)
+    }
+
+    private func calendarStateRead(accessChanged: Bool) {
+        let listChanged = refreshCalendarChoices()
+        guard timeBlock?.waitingForCalendar == true, accessChanged || listChanged else { return }
+        presenter.showBlockCalendarGone()
     }
 
     @discardableResult
@@ -92,6 +104,7 @@ extension Engine {
         waiting.endedAt = end
         data.live.timeBlock = waiting
         waitingCalendarPick = nil
+        readCalendarAccess()
         refreshCalendarChoices()
         presenter.showBlockCalendarGone()
     }

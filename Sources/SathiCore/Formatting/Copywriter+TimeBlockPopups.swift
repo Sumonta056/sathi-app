@@ -7,6 +7,9 @@ extension Copywriter {
     package static let blockKeepGoing = "Keep going"
     package static let blockYourCalendar = "your calendar"
     package static let blockGoneEyebrow = "TIME BLOCK · NOT SAVED YET"
+    package static let blockAllowCalendarAccess = "Allow calendar access"
+    package static let blockNoAccessHeadline = "Sathi can’t reach your calendars"
+    package static let blockNoWritableCalendar = "No calendar you can save to. Add one in the Calendar app."
     package static let blockExtendLabel = "+\(Int(Timing.blockExtend / Timing.minute)) min"
     package static let blockCheckInEyebrow = "TIME BLOCK · \(checkInHours) HOURS"
 
@@ -22,6 +25,10 @@ extension Copywriter {
 
     package static func blockStartedAt(_ start: Date, calendar: Calendar) -> String {
         "Started at " + quickClock(start, calendar: calendar) + ". Sathi asks again in \(checkInHours) hours."
+    }
+
+    package static func blockNoAccessDetail(minutes: Int, title: String) -> String {
+        "Allow calendar access in System Settings to save " + blockLength(minutes) + " on " + title + "."
     }
 
     package static func blockChooseCalendar(minutes: Int, title: String) -> String {

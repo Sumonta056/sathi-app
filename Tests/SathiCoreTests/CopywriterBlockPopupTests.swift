@@ -68,3 +68,28 @@ struct CopywriterBlockPopupTests {
         #expect(text == "since " + shortTime(start) + " · Work")
     }
 }
+
+@Suite("Time block waiting copy")
+struct CopywriterBlockWaitingTests {
+    @Test func noAccessHeadline() {
+        #expect(Copywriter.blockNoAccessHeadline == "Sathi can’t reach your calendars")
+    }
+
+    @Test(arguments: [5, 30, 60, 75])
+    func noAccessDetail(_ minutes: Int) {
+        let expected = "Allow calendar access in System Settings to save " + Copywriter.blockLength(minutes) + " on Plan."
+        #expect(Copywriter.blockNoAccessDetail(minutes: minutes, title: "Plan") == expected)
+    }
+
+    @Test func noAccessDetailForThirtyMinutes() {
+        #expect(Copywriter.blockNoAccessDetail(minutes: 30, title: "Plan") == "Allow calendar access in System Settings to save 30 min on Plan.")
+    }
+
+    @Test func allowCalendarAccess() {
+        #expect(Copywriter.blockAllowCalendarAccess == "Allow calendar access")
+    }
+
+    @Test func noWritableCalendar() {
+        #expect(Copywriter.blockNoWritableCalendar == "No calendar you can save to. Add one in the Calendar app.")
+    }
+}

@@ -21,3 +21,14 @@ extension Engine {
         }
     }
 }
+
+package enum WaitingSaveState: Equatable {
+    case noAccess, noCalendar, choose
+}
+
+extension Engine {
+    package var waitingSaveState: WaitingSaveState {
+        guard calendarAccess == .allowed else { return .noAccess }
+        return calendarChoices().isEmpty ? .noCalendar : .choose
+    }
+}

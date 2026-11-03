@@ -9,7 +9,7 @@ struct TimeBlockCard: View {
             VStack(alignment: .leading, spacing: UIMetrics.blockCardSpacing) {
                 if b.waitingForCalendar {
                     header
-                    BlockSaveHere()
+                    WaitingSaveAction(idPrefix: "block.")
                 } else {
                     BlockRunningRow(block: b).id(b.id)
                 }
