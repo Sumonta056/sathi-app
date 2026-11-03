@@ -10,6 +10,7 @@ struct SettingsSidebar: View {
         VStack(alignment: .leading, spacing: UIMetrics.sidebarSpacing) {
             SidebarLogo()
             SidebarNavButton(title: "General", icon: "slider.horizontal.3", tint: Night.muted, tab: .general, selection: $tab)
+            OpenReportsRow()
             Text(verbatim: "BUDDIES")
                 .font(Typography.sectionLabel)
                 .tracking(UIMetrics.labelTracking)
@@ -23,9 +24,14 @@ struct SettingsSidebar: View {
                     BuddySwitch(isOn: engine.enabledBinding(id), accent: Night.accent(id), label: "\(id.name) reminders")
                 }
             }
+            SidebarNavButton(title: Copywriter.blockSettingsTitle, icon: "clock.fill", tint: Night.block, tab: .timeBlocks, selection: $tab)
             SidebarNavButton(title: "Add a buddy", icon: "plus.circle", tint: Night.sprout, textColor: Night.sprout, tab: .addBuddy, selection: $tab)
             Spacer()
-            OpenReportsRow()
+            MadeByFooter()
+            Text(verbatim: MenuFooter.versionText)
+                .font(Typography.hint)
+                .foregroundStyle(Night.faint)
+                .padding(.horizontal, UIMetrics.navPadding.leading)
         }
         .padding(UIMetrics.sidebarPadding)
         .padding(.top, UIMetrics.titleBarInset)
@@ -36,13 +42,14 @@ struct SettingsSidebar: View {
         case .water: return "drop.fill"
         case .reading: return "book.fill"
         case .meditation: return "leaf.fill"
+        case .gym: return "figure.strengthtraining.traditional"
         }
     }
 
     static func isNew(_ id: HabitID) -> Bool {
         switch id {
         case .water, .reading: return false
-        case .meditation: return true
+        case .meditation, .gym: return true
         }
     }
 }

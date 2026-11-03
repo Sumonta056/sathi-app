@@ -12,6 +12,7 @@ package enum Copywriter {
         case .water: [amount >= 1 ? "Ahh, refreshing!" : "Every sip counts!"]
         case .reading: ["Chapter done.", "Boi is proud of you.", "Nice reading."]
         case .meditation: ["Calm and clear.", "Shanti feels lighter.", "Nicely breathed."]
+        case .gym: ["Nice move!", "Shokti feels stronger.", "Body thanks you."]
         }
         return titles.randomElement() ?? titles[0]
     }
@@ -72,6 +73,16 @@ package enum Copywriter {
             return [
                 ("Still here, \(n).", "Just a few minutes of breathing. I'll wait."),
                 ("One calm moment, please.", "Start the session and let everything else go quiet.")
+            ]
+        case (.gym, .nudge):
+            return [
+                ("Time to stretch, \(n)?", "A few minutes of movement. Your chair will wait."),
+                ("Shokti says: move!", "Stand up, roll your shoulders, and let's go.")
+            ]
+        case (.gym, .persist):
+            return [
+                ("Still here, \(n).", "Just a few minutes. Your body will thank you."),
+                ("A little move, please.", "Start the timer and I'll keep count.")
             ]
         }
     }

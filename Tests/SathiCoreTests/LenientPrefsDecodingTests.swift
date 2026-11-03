@@ -48,4 +48,41 @@ struct LenientPrefsDecodingTests {
         #expect(p.meditation.intervalMinutes == 90)
         #expect(p.meditation.startMinutes == 480)
     }
+
+    @Test func unknownGymStrictnessAndWeekdayDecodeToDefaultsAndKeepTheRest() throws {
+        let p = try decode(#"{"gym":{"enabled":true,"intervalMinutes":90,"strictness":"fierce","weekdays":[9]}}"#)
+        #expect(p.gym.strictness == .friendly)
+        #expect(p.gym.weekdays == Set(Weekday.allCases))
+        #expect(p.gym.enabled)
+        #expect(p.gym.intervalMinutes == 90)
+    }
+
+    @Test func emptyGymWeekdaysDecodeAsEveryDay() throws {
+        let p = try decode(#"{"gym":{"weekdays":[]}}"#)
+        #expect(p.gym.weekdays == Set(Weekday.allCases))
+    }
+
+    @Test func badDayKeysAreDroppedOthersKept() throws {
+        let p = try decode(#"{"general":{"name":"Asha"},"water":{"intervalMinutes":90,"daysOff":["2026-11-03","2026-13-40",42]}}"#)
+        #expect(p.water.daysOff.map(\.raw) == ["2026-11-03"])
+        #expect(p.general.name == "Asha")
+        #expect(p.water.intervalMinutes == 90)
+    }
+
+    @Test(arguments: [HabitID.reading, .meditation, .gym])
+    func badDayKeysAreDroppedForEveryHabit(_ id: HabitID) throws {
+        let keys = #"["2026-11-03","2026-13-40",42,null,"2026-02-30"]"#
+        let json = #"{"general":{"name":"Asha"},"water":{"intervalMinutes":90},"\#(id.rawValue)":{"daysOff":\#(keys)}}"#
+        let p = try decode(json)
+        #expect(p.days(id).daysOff.map(\.raw) == ["2026-11-03"])
+        #expect(p.water.intervalMinutes == 90)
+        #expect(p.general.name == "Asha")
+    }
+
+    @Test func daysOffThatIsNotAListDecodesAsEmptyAndKeepsTheRest() throws {
+        let p = try decode(#"{"general":{"name":"Asha"},"water":{"intervalMinutes":90,"daysOff":"2026-11-03"}}"#)
+        #expect(p.water.daysOff.isEmpty)
+        #expect(p.water.intervalMinutes == 90)
+        #expect(p.general.name == "Asha")
+    }
 }

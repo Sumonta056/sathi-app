@@ -16,6 +16,7 @@ struct MeditationSettingsTab: View {
         HabitSettingsPage(habit: .meditation, copy: Self.copy) {
             SettingsSection("Goal") { MeditationGoalCard() }
             SettingsSection("Rhythm") { MeditationRhythmCard() }
+            DaysOffCard(habit: .meditation)
             SettingsSection("Breathing pattern") { BreathingPatternCards() }
             SettingsSection("If I ignore Shanti") {
                 StrictnessCards(
@@ -23,6 +24,7 @@ struct MeditationSettingsTab: View {
                     selected: engine.data.prefs.meditation.strictness,
                     accent: Night.calm
                 ) { engine.data.prefs.meditation.strictness = $0 }
+                CloseButtonCard(habit: .meditation)
             }
         }
     }

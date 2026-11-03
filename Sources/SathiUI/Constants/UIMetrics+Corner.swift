@@ -12,10 +12,8 @@ extension UIMetrics {
     static let cornerBuddySize: CGFloat = 52
     static let cornerDoneBuddySize: CGFloat = 44
     static let cornerButtonHeight: CGFloat = 34
-    static let cornerShadowOpacity: Double = 0.55
-    static let cornerShadowRadius: CGFloat = 22
-    static let cornerShadowY: CGFloat = 18
     static let cornerStackOverlap: CGFloat = 36
+    static let cornerColumnGap: CGFloat = -cornerStackOverlap
 
     static let pillRingSize: CGFloat = 36
     static let pillRingLine: CGFloat = 3.5
@@ -23,6 +21,7 @@ extension UIMetrics {
     static let pillSpacing: CGFloat = 10
     static let pillTextSpacing: CGFloat = 1
     static let timerPillPadding = EdgeInsets(top: 8, leading: 10, bottom: 8, trailing: 8)
+    static let pillCaptionMaxWidth: CGFloat = 150
     static let notePadding = EdgeInsets(top: 8, leading: 14, bottom: 8, trailing: 14)
 
     static let closeIconSize: CGFloat = 14

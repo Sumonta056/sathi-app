@@ -6,12 +6,13 @@ struct ReadingStyleCards: View {
 
     var body: some View {
         let engine = e
+        let selected = engine.data.prefs.reading.reminderStyle
         OptionCardRow {
             ForEach(ReadingReminderStyle.allCases, id: \.self) { style in
                 OptionCard(
                     title: Self.title(style),
                     detail: Self.detail(style),
-                    isSelected: engine.data.prefs.reading.reminderStyle == style,
+                    isSelected: selected == style,
                     accent: Night.reading,
                     action: { engine.data.prefs.reading.reminderStyle = style },
                     top: {

@@ -2,11 +2,16 @@ import Foundation
 
 extension Engine {
     package func snooze(_ id: HabitID) {
-        guard case .bubble = activities[id] else { return }
+        guard case .bubble = activities[id], canSnooze(id) else { return }
         snoozeHabit(id)
         presenter.closeBubble(id)
-        if usesCorner(id), let until = state(id).snoozedUntil { presenter.showSnoozed(id, until: until) }
+        if freshDue(id, lastDone: clock.now) == .distantFuture {
+            habits[id] = HabitState(nextDue: .distantFuture)
+        } else if usesCorner(id), let until = state(id).snoozedUntil {
+            presenter.showSnoozed(id, until: until)
+        }
         activities[id] = nil
+        if resetsIdea(id) { gymIdea = 0 }
         requestTick()
     }
 
@@ -33,8 +38,9 @@ extension Engine {
     package func lockConfirmed(_ id: HabitID) {
         switch id {
         case .water: logWater(1)
-        case .reading: startReading()
+        case .reading: startSession(.reading)
         case .meditation: startMeditation()
+        case .gym: startSession(.gym)
         }
     }
 
@@ -84,11 +90,12 @@ extension Engine {
         sound.play(name)
     }
 
-    func reschedule() {
+    func reschedule(turnedOff: [HabitID]) {
         let n = clock.now
         for id in HabitID.allCases where !enabled(id) {
             close(id)
         }
+        closeReminders(turnedOff)
         for id in HabitID.allCases where !isActive(id) {
             let fresh = freshDue(id, lastDone: data.lastDone(id))
             var due = fresh
@@ -116,22 +123,34 @@ extension Engine {
     func snoozeHabit(_ id: HabitID) {
         let n = clock.now
         record(.snooze(id, at: n))
-        let until = n.addingTimeInterval(TimeInterval(data.prefs.general.snoozeMinutes) * Timing.minute)
+        let end = n.addingTimeInterval(TimeInterval(data.prefs.general.snoozeMinutes) * Timing.minute)
+        let rule = rules(id)
+        let until = rule.isActiveTime(end) ? end : rule.nextActiveStart(after: end)
         update(id) { st in
             st.snoozes += 1
             st.snoozedUntil = until
         }
     }
 
-    func celebrate(_ id: HabitID, _ amount: Double) {
-        celebration = Celebration(id: id, amount: amount, title: Copywriter.celebrationTitle(id, amount: amount))
+    package var celebrationDuration: TimeInterval {
+        celebration.readingAsk == nil ? Timing.celebrationDuration : Timing.readingAskDuration
+    }
+
+    func celebrate(_ id: HabitID, _ amount: Double, readingAsk: UUID? = nil) {
+        celebration = Celebration(
+            id: id,
+            amount: amount,
+            title: Copywriter.celebrationTitle(id, amount: amount),
+            readingAsk: readingAsk
+        )
         isCelebrating = true
         presenter.showCelebration()
         if let sound = celebrationSound(id) { play(sound) }
         let token = UUID()
         celebrateToken = token
+        let duration = celebrationDuration
         Task { @MainActor [weak self] in
-            try? await Task.sleep(nanoseconds: UInt64(Timing.celebrationDuration * 1_000_000_000))
+            try? await Task.sleep(nanoseconds: UInt64(duration * 1_000_000_000))
             guard let self, celebrateToken == token else { return }
             endCelebrate()
         }

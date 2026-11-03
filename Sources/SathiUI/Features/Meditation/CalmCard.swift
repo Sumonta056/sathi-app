@@ -13,12 +13,6 @@ struct CalmCard: ViewModifier {
                 alert ? Night.calm : Night.heroBorder(.meditation),
                 lineWidth: alert ? UIMetrics.bubbleAlertBorder : UIMetrics.bubbleBorder
             ))
-            .shadow(
-                color: Color.black.opacity(UIMetrics.bubbleShadowOpacity),
-                radius: UIMetrics.bubbleShadowRadius,
-                x: 0,
-                y: UIMetrics.bubbleShadowY
-            )
             .padding(UIMetrics.bubbleShadowPadding)
             .environment(\.colorScheme, .dark)
     }

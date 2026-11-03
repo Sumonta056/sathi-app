@@ -9,9 +9,16 @@ package final class UIController: ReminderPresenter {
     var bubbles: [HabitID: NSPanel] = [:]
     var sessions: [HabitID: NSPanel] = [:]
     var corner: [NSPanel] = []
+    var quickPanels: [UUID: NSPanel] = [:]
     var cornerScreen: NSScreen?
     var celebration: NSPanel?
     var note: NSPanel?
+    var daySummaryPanel: NSPanel?
+    var blockStartPanel: NSPanel?
+    var blockStartReturnApp: NSRunningApplication?
+    var quickAddPanel: NSPanel?
+    var quickAddReturnApp: NSRunningApplication?
+    var blockPanels: [BlockPanel: NSPanel] = [:]
     var noteTask: Task<Void, Never>?
     private var locks: [NSWindow] = []
     private var settings: NSWindow?
@@ -37,6 +44,8 @@ package final class UIController: ReminderPresenter {
             return engine?.usesCorner(id) == true ? presentCorner(ReadingInvite(level: level)) : focusedBubble(id, level)
         case .meditation:
             return presentCorner(BubbleView(id: id, level: level))
+        case .gym:
+            return presentCorner(GymInvite(level: level))
         }
     }
 
@@ -54,7 +63,7 @@ package final class UIController: ReminderPresenter {
     package func showSession(_ id: HabitID) {
         closeSession(id)
         if engine?.usesCorner(id) == true {
-            sessions[id] = presentCorner(ReadingTimerPill())
+            sessions[id] = presentCorner(cornerSessionView(id))
             return
         }
         guard let h = hosting(sessionView(id)) else { return }
@@ -65,7 +74,7 @@ package final class UIController: ReminderPresenter {
     private func sessionView(_ id: HabitID) -> some View {
         switch id {
         case .meditation: BreatheView()
-        case .water, .reading: SessionView(id: id)
+        case .water, .reading, .gym: SessionView(id: id)
         }
     }
 
@@ -85,10 +94,14 @@ package final class UIController: ReminderPresenter {
     }
 
     package func showLock(_ id: HabitID) {
+        presentLocks(LockView(id: id))
+    }
+
+    func presentLocks(_ primary: some View) {
         closeLock()
         guard let engine else { return }
         for (i, screen) in NSScreen.screens.enumerated() {
-            let content = i == 0 ? AnyView(LockView(id: id)) : AnyView(LockShade())
+            let content = i == 0 ? AnyView(primary) : AnyView(LockShade())
             locks.append(LockScreen.makeWindow(on: screen, content: content, engine: engine))
         }
         NSApp.activate(ignoringOtherApps: true)

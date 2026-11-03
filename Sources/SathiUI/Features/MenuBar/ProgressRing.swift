@@ -14,7 +14,7 @@ struct ProgressRing: View {
                 .rotationEffect(.degrees(UIMetrics.ringStartAngle))
         }
         .padding(UIMetrics.ringLine / 2)
-        .frame(width: UIMetrics.ringSize, height: UIMetrics.ringSize)
+        .frame(width: UIMetrics.habitRingSize, height: UIMetrics.habitRingSize)
         .accessibilityElement(children: .ignore)
         .accessibilityValue(Self.percent(progress))
     }

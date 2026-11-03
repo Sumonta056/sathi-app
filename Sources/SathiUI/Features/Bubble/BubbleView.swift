@@ -9,6 +9,7 @@ struct BubbleView: View {
         switch id {
         case .water: WaterBubble(level: level)
         case .reading: LegacyBubble(id: id, level: level)
+        case .gym: GymInvite(level: level)
         case .meditation: MeditationInvite(level: level)
         }
     }

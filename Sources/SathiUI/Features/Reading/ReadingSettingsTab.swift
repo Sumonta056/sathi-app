@@ -7,7 +7,7 @@ struct ReadingSettingsTab: View {
     private static let copy = HeroCopy(
         eyebrow: "BOI · READING",
         title: "A few pages before bed",
-        hint: "Boi peeks in from the corner. It never blocks your screen.",
+        hint: "Boi peeks in from the corner when it is time to read.",
         switchLabel: "Reading reminders"
     )
 
@@ -15,13 +15,16 @@ struct ReadingSettingsTab: View {
         let engine = e
         HabitSettingsPage(habit: .reading, copy: Self.copy) {
             SettingsSection("When") { ReadingWhenCard() }
+            SettingsSection("What to read") { ReadingListCard() }
+            DaysOffCard(habit: .reading)
             SettingsSection("How Boi says hi") { ReadingStyleCards() }
             SettingsSection("If I ignore Boi") {
                 StrictnessCards(
-                    options: [.friendly, .persistent],
+                    options: Strictness.allCases,
                     selected: engine.data.prefs.strictness(.reading),
                     accent: Night.reading
                 ) { engine.data.prefs.reading.strictness = $0 }
+                CloseButtonCard(habit: .reading)
             }
         }
     }

@@ -1,8 +1,12 @@
+import SathiCore
 import SwiftUI
 
 struct CornerCard: ViewModifier {
     var width = UIMetrics.cornerWidth
     var alert = false
+    var habit: HabitID = .reading
+    var border: Color?
+    var alertColor: Color?
 
     func body(content: Content) -> some View {
         content
@@ -10,27 +14,15 @@ struct CornerCard: ViewModifier {
             .frame(width: width)
             .background(shape.fill(Night.card))
             .overlay(shape.strokeBorder(
-                alert ? Night.reading : Night.heroBorder(.reading),
+                alert ? alertColor ?? Night.accent(habit) : border ?? Night.heroBorder(habit),
                 lineWidth: alert ? UIMetrics.bubbleAlertBorder : UIMetrics.bubbleBorder
             ))
-            .modifier(CornerShadow())
             .padding(UIMetrics.bubbleShadowPadding)
             .environment(\.colorScheme, .dark)
     }
 
     private var shape: RoundedRectangle {
         RoundedRectangle(cornerRadius: UIMetrics.cornerRadius, style: .continuous)
-    }
-}
-
-struct CornerShadow: ViewModifier {
-    func body(content: Content) -> some View {
-        content.shadow(
-            color: Color.black.opacity(UIMetrics.cornerShadowOpacity),
-            radius: UIMetrics.cornerShadowRadius,
-            x: 0,
-            y: UIMetrics.cornerShadowY
-        )
     }
 }
 

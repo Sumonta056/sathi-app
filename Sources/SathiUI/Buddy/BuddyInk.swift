@@ -16,5 +16,8 @@ enum BuddyInk {
     static let bookLine = Color(hex: 0x7A420F)
     static let ribbon = Color(hex: 0xE0473C)
     static let cheek = Color(hex: 0xFF9FB8)
+    static let kettle = Color(hex: 0xCDEF5A)
+    static let kettleDeep = Color(hex: 0x8FB52E)
+    static let kettleLine = Color(hex: 0x46561F)
     static let spark = Color(hex: 0xFFC94A)
 }

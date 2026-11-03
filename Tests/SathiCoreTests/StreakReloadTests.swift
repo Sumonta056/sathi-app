@@ -21,7 +21,9 @@ struct StreakReloadTests {
             history: FileHistoryStore(base: base, calendar: .current, delay: 3600),
             clock: clock,
             sound: SpySoundPlayer(),
-            presenter: SpyPresenter()
+            presenter: SpyPresenter(),
+            links: SpyLinkOpener(),
+            calendarWriter: SpyCalendarWriter()
         )
     }
 

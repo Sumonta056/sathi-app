@@ -6,6 +6,7 @@ enum ShakeSound {
         case .water: .tink
         case .reading: nil
         case .meditation: nil
+        case .gym: nil
         }
     }
 }

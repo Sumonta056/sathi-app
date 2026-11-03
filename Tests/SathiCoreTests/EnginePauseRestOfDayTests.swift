@@ -24,7 +24,9 @@ struct EnginePauseRestOfDayTests {
             clock: FakeClock(zone.date(2026, 3, 29, 15)),
             sound: SpySoundPlayer(),
             presenter: SpyPresenter(),
-            calendar: zone.calendar
+            links: SpyLinkOpener(),
+            calendar: zone.calendar,
+            calendarWriter: SpyCalendarWriter()
         )
         engine.pauseRestOfDay()
         let until = engine.pausedUntil

@@ -6,7 +6,12 @@ extension Engine {
         case .water: return false
         case .reading: return data.prefs.reading.reminderStyle == .corner
         case .meditation: return false
+        case .gym: return true
         }
+    }
+
+    package func showsClose(_ id: HabitID, level: Level) -> Bool {
+        data.prefs.showsCloseButton(id) && level == .nudge && canSnooze(id)
     }
 
     package var snoozeShortLabel: String { "In \(data.prefs.general.snoozeMinutes) min" }

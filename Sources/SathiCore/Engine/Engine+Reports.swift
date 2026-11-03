@@ -4,7 +4,9 @@ extension Engine {
     package func streak(_ id: HabitID) -> Int {
         refreshStreakDay()
         if let cached = streakCache[id] { return cached }
-        let value = streaks.current(id, goal: rules(id).dailyGoal, reset: streakReset(id), now: clock.now, load: loadStreakMonth)
+        let value = streaks.current(
+            id, goal: rules(id).dailyGoal, reset: streakReset(id), now: clock.now, isOn: isOn(id), load: loadStreakMonth
+        )
         streakCache[id] = value
         return value
     }
@@ -12,7 +14,9 @@ extension Engine {
     package func longestStreak(_ id: HabitID) -> Int {
         refreshStreakDay()
         if let cached = longestCache[id] { return cached }
-        let value = streaks.longest(id, goal: rules(id).dailyGoal, reset: streakReset(id), now: clock.now, load: loadStreakMonth)
+        let value = streaks.longest(
+            id, goal: rules(id).dailyGoal, reset: streakReset(id), now: clock.now, isOn: isOn(id), load: loadStreakMonth
+        )
         longestCache[id] = value
         return value
     }
@@ -49,7 +53,8 @@ extension Engine {
     }
 
     func streakInputsChanged(from old: Persisted) -> Bool {
-        old.events != data.events || old.live.streakReset != data.live.streakReset || goals(old.prefs) != goals(data.prefs)
+        old.events != data.events || old.live.streakReset != data.live.streakReset
+            || goals(old.prefs) != goals(data.prefs) || schedules(old.prefs) != schedules(data.prefs)
     }
 
     func clearStreakCache() {
@@ -62,6 +67,16 @@ extension Engine {
 
     private func goals(_ prefs: Prefs) -> [Double] {
         HabitID.allCases.map { $0.rules(prefs, calendar: calendar).dailyGoal }
+    }
+
+    private func schedules(_ prefs: Prefs) -> [HabitDays] {
+        HabitID.allCases.map(prefs.days)
+    }
+
+    private func isOn(_ id: HabitID) -> (Date) -> Bool {
+        let days = data.prefs.days(id)
+        let calendar = calendar
+        return { days.isOn($0, calendar: calendar) }
     }
 
     private func refreshStreakDay() {

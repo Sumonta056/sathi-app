@@ -8,11 +8,13 @@ package struct ReportBucket: Equatable, Sendable {
     package var start: Date
     package var end: Date
     package var total: Double
+    package var isOff: Bool
 
-    package init(start: Date, end: Date, total: Double) {
+    package init(start: Date, end: Date, total: Double, isOff: Bool = false) {
         self.start = start
         self.end = end
         self.total = total
+        self.isOff = isOff
     }
 }
 

@@ -85,12 +85,12 @@ struct MeditationGoalTests {
         #expect(r.nextActiveStart(after: day(2026, 3, 4, 22)) == day(2026, 3, 5, 9))
     }
 
-    @Test func strictIsKeptForMeditationButNotForReading() {
+    @Test func strictIsKeptForMeditationAndReading() {
         var prefs = Prefs()
         prefs.meditation.strictness = .strict
         prefs.reading.strictness = .strict
         #expect(prefs.strictness(.meditation) == .strict)
-        #expect(prefs.strictness(.reading) == .persistent)
+        #expect(prefs.strictness(.reading) == .strict)
     }
 
     @Test func strictMeditationLocksAfterTwoSnoozesAndTheLockStartsASession() {

@@ -24,7 +24,14 @@ extension Engine {
 
     package var focus: HabitID? {
         if let id = HabitID.allCases.first(where: isActive) { return id }
-        return HabitID.allCases.filter { enabled($0) }.min { remaining($0) < remaining($1) }
+        return HabitID.allCases.filter { enabled($0) && !isOffToday($0) && hasReminder($0) }.min { remaining($0) < remaining($1) }
+    }
+
+    func hasReminder(_ id: HabitID) -> Bool {
+        let st = state(id)
+        guard (st.snoozedUntil ?? st.nextDue) != .distantFuture else { return false }
+        let rule = rules(id)
+        return forced.contains(id) || rule.isActiveTime(now) || rule.nextActiveStart(after: now) != .distantFuture
     }
 
     package func copy(_ id: HabitID) -> Copy {
@@ -43,7 +50,7 @@ extension Engine {
         case .water:
             if phase(.water) == .lock { return .sad }
             if waiting || waterLevel < Limits.lowWaterLevel { return .thirsty }
-        case .reading, .meditation:
+        case .reading, .meditation, .gym:
             if phase(id) == .session { return .reading }
             if waiting { return .thirsty }
         }
@@ -54,6 +61,8 @@ extension Engine {
         if !enabled(id) { return "Off" }
         if isActive(id) { return phase(id) == .session ? Self.sessionPill(id) : "Due now" }
         if pausedUntil != nil { return "Paused" }
+        if isOffToday(id) { return "Day off" }
+        if !hasReminder(id) { return "No reminder" }
         let r = remaining(id)
         if state(id).snoozedUntil != nil { return "Snoozed · " + Fmt.short(r) }
         if r > Limits.absoluteTimeThreshold {
@@ -72,11 +81,17 @@ extension Engine {
     }
 
     package func snoozeLabel(_ id: HabitID) -> String {
-        lockIsNext(id) ? "Last snooze" : "Snooze \(data.prefs.general.snoozeMinutes) min"
+        lockIsNext(id) || snoozesLeft(id) == 1 ? "Last snooze" : "Snooze \(data.prefs.general.snoozeMinutes) min"
+    }
+
+    package func noSnoozeEyebrow(_ id: HabitID) -> String {
+        let limit = data.prefs.general.snoozeLimit ?? 0
+        return "NO SNOOZES LEFT · \(min(state(id).snoozes, limit)) OF \(limit) USED"
     }
 
     package func warnText(_ id: HabitID) -> String {
-        lockIsNext(id)
+        if !canSnooze(id) { return "No snoozes left. \(id.buddy) stays until you're done." }
+        return lockIsNext(id)
             ? "No close button. Snooze again and \(id.buddy) pauses your screen."
             : "No close button. \(id.buddy) stays on top until you're done."
     }
@@ -85,6 +100,7 @@ extension Engine {
         if pausedUntil != nil { return "Paused" }
         let ids = HabitID.allCases
         if ids.contains(where: { phase($0) == .lock }) { return "Locked" }
+        if let block = blockStatusText { return block }
         if let id = ids.first(where: showsBubble) { return Self.callToAction(id) }
         if let end = ids.compactMap({ session($0)?.end }).min() { return Fmt.clock(end.timeIntervalSince(now)) }
         if isCelebrating { return "Done" }
@@ -101,6 +117,7 @@ extension Engine {
         case .water: return "Drink!"
         case .reading: return "Read!"
         case .meditation: return "Breathe!"
+        case .gym: return "Move!"
         }
     }
 
@@ -109,11 +126,14 @@ extension Engine {
         case .water: return "Due now"
         case .reading: return "Reading…"
         case .meditation: return "Breathing…"
+        case .gym: return "Moving…"
         }
     }
 
     func updateStatus() {
         let level = (waterLevel * Limits.statusIconSteps).rounded() / Limits.statusIconSteps
-        status.update(text: statusText, isBook: focus == .reading, iconLevel: level)
+        let text = statusText
+        let block = blockStatusText
+        status.update(text: text, isBook: focus == .reading, isBlock: block != nil && text == block, iconLevel: level)
     }
 }

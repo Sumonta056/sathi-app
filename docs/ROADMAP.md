@@ -63,10 +63,7 @@ Spec 5d: `docs/specs/phase-5d-water-bubble.md`
 Spec 5e: `docs/specs/phase-5e-reading-corner.md`
 Spec 5f: `docs/specs/phase-5f-meditation.md`
 Spec 5g: `docs/specs/phase-5g-reports.md`
-Review fixes 5g: `docs/specs/phase-5g-review-fixes.md`
 Spec 5g2: `docs/specs/phase-5g2-palette.md`
-Review fixes 5d/5f: `docs/specs/phase-5df-review-fixes.md`
-Review fixes 5a–5c: `docs/specs/phase-5abc-review-fixes.md` (done)
 
 - [x] Theme: night-sprout `Night` palette, SF Rounded `Typography`, shared components
 - [x] Settings window: sidebar, General, Water, Reading, Meditation, Add a buddy (coming soon)
@@ -98,8 +95,48 @@ Spec 6b: `docs/specs/phase-6b-tolerant-decoding.md`
 - [x] Definition of done in `CLAUDE.md` passes (tests, lint, release build, install, idle perf 0.0% / 18 MB / 0 wakeups; version 2.0, `Sathi-2.0.dmg`)
 - [ ] `perf.sh --windows` run by the user in Terminal (not run yet)
 
+## Phase 8: Gym (Shokti)
+
+Spec: `docs/specs/gym-shokti-design.md`
+
+- [x] Rules in `.claude/rules/business-logic.md`
+- [x] Gym core: `HabitID.gym`, `GymPrefs`, `GymRules`
+- [x] Gym UI: Shokti buddy, invite, session, settings tab, menu card
+- [x] Reports and README
+- [ ] Website text and screenshots (`/sathi-website`)
+- [ ] `perf.sh --windows` run by the user in Terminal, and the visual check with `ui-verifier`
+
+## Phase 9: Days off
+
+Rules: `.claude/rules/business-logic.md`
+
+- [x] Rules in `.claude/rules/business-logic.md`
+- [x] `DayKey`, `HabitDays`, and weekdays plus days off in every buddy's prefs
+- [x] Reminders skip days off
+- [x] Engine: today off closes that buddy's reminder; "Day off" pill
+- [x] Streaks and reports skip days off
+- [x] Settings: weekday row and days-off card for every buddy
+- [x] Menu pill and report calendar style
+- [ ] Docs, Definition of done, website
+
+## Phase 12: Quick reminder
+
+Spec: `docs/specs/phase-12-quick-reminder.md`
+
+- [x] Spec, business rules, branch
+- [x] Core models, time math, decoding
+- [x] Copy
+- [x] Engine actions, show loop, snooze, port
+- [x] Levels and the shared lock
+- [x] Menu card and add form
+- [x] Popup, snoozed note, lock, presenter
+- [x] Settings card
+- [ ] Definition of done
+- Open: perf.sh, perf.sh --windows, hand test, ui-verifier, website.
+
 ## Later
 
+- Days off: a lock or Nudgy bubble that shows at 23:58 stays after midnight into a day off (only a settings change closes it, rule 11). Close it at the first tick of a new day if users notice
 - 6b: `RawJSON` stores numbers as `Double`; integers above 2^53 and `-0.0` are not written back exactly
 - 6b: a written month file lists known events first, then unknown events (not sorted by date; Sathi sorts on read)
 - 6b: each month file is decoded twice and each event encoded once more (about 3–4 ms for a few hundred events)
@@ -154,6 +191,7 @@ Spec 6b: `docs/specs/phase-6b-tolerant-decoding.md`
 | 2026-10-24 | A stored Strict on Reading or Meditation acts as Nudgy. Only Water can lock. |
 | 2026-10-24 | Phase 5: new `Night` palette next to the old `Palette`; each slice moves its screen; 5g deletes the old one. |
 | 2026-10-24 | `faint` is #7784A0 (canvas #6F7C97 fails 4.5:1). Never on a card. |
+| 2026-10-27 | Every buddy may use Gentle, Nudgy, or Strict, and each keeps its own level. At Strict any buddy locks after 2 snoozes. This replaces "Reading and Meditation never lock" and "A stored Strict … acts as Nudgy". Each buddy has a "Show a close button" switch, on by default; a close is a normal snooze. |
 | 2026-10-24 | Phase 5: commit approval per group (5a–5c, 5d–5f, 5g–5h); full review only for 5e and 5g, one shared review for view slices. |
 | 2026-10-25 | 5b: reading weekdays (all on by default) and `reminderStyle` (corner default) added to Core. Water interval chips 30/60/90/120. "Quiet in meetings" shows a disabled "Soon" switch. |
 | 2026-10-25 | 5c: header streak = best current streak of enabled habits. "Rest of day" pause ends at midnight. |

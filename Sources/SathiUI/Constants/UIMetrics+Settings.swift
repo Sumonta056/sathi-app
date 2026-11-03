@@ -13,6 +13,8 @@ extension UIMetrics {
     static let sidebarPadding = EdgeInsets(top: 20, leading: 14, bottom: 18, trailing: 14)
     static let titleBarInset: CGFloat = 28
     static let sidebarSpacing: CGFloat = 4
+    static let creditSpacing: CGFloat = 8
+    static let creditIconSize: CGFloat = 14
     static let navPadding = EdgeInsets(top: 8, leading: 10, bottom: 8, trailing: 10)
     static let logoSize: CGFloat = 32
     static let logoIconSize: CGFloat = 15
@@ -37,4 +39,17 @@ extension UIMetrics {
     static let timePickerSpacing: CGFloat = 14
     static let hourChipWidth: CGFloat = 48
     static let minuteChipWidth: CGFloat = 60
+    static let dayOffRemoveSize: CGFloat = 22
+    static let dayOffRemoveIconSize: CGFloat = 10
+}
+
+extension UIMetrics {
+    static let readingFieldSpacing: CGFloat = 8
+    static let readingTitleFieldWidth: CGFloat = 140
+    static let readingRowSpacing: CGFloat = 10
+    static let readingTextSpacing: CGFloat = 2
+    static let readingTagSpacing: CGFloat = 6
+    static let readingIconSize: CGFloat = 11
+    static let readingIconButton: CGFloat = 24
+    static let readingProblemPadding = EdgeInsets(top: 0, leading: 16, bottom: 12, trailing: 16)
 }

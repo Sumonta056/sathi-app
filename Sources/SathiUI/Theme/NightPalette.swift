@@ -15,6 +15,7 @@ enum Night {
     static let waterLine = Color(hex: 0x7FD3F5)
     static let reading = Color(hex: 0xF2A64A)
     static let calm = Color(hex: 0xA99CF5)
+    static let gym = Color(hex: 0xCDEF5A)
     static let sprout = Color(hex: 0x5FD39A)
     static let sproutLight = Color(hex: 0xA6EBC7)
     static let cheek = Color(hex: 0xFF9FB8)
@@ -25,12 +26,19 @@ enum Night {
     static let chipText = Color(hex: 0xC9D2E3)
     static let navSelected = Color(hex: 0x1E2840)
     static let calmGround = Color(hex: 0x16142A)
+    static let quick = Color(hex: 0xFF9FB8)
+    static let quickFill = Color(hex: 0x2A1C25)
+    static let quickBorder = Color(hex: 0x4A2E3D)
+    static let block = Color(hex: 0x5ED6C4)
+    static let blockFill = Color(hex: 0x142A2A)
+    static let blockBorder = Color(hex: 0x1F4744)
 
     static func accent(_ id: HabitID) -> Color {
         switch id {
         case .water: water
         case .reading: reading
         case .meditation: calm
+        case .gym: gym
         }
     }
 
@@ -39,6 +47,7 @@ enum Night {
         case .water: Color(hex: 0x15263A)
         case .reading: Color(hex: 0x2A2219)
         case .meditation: Color(hex: 0x211F38)
+        case .gym: Color(hex: 0x222A16)
         }
     }
 
@@ -47,6 +56,7 @@ enum Night {
         case .water: Color(hex: 0x1F3D5A)
         case .reading: Color(hex: 0x4A3720)
         case .meditation: Color(hex: 0x37335C)
+        case .gym: Color(hex: 0x46561F)
         }
     }
 }

@@ -55,4 +55,34 @@ struct EngineReportScreenTests {
         h.engine.openReports()
         #expect(h.presenter.calls.last == .showReports)
     }
+
+    private func gymHarness(workouts: Int) -> EngineHarness {
+        EngineHarness {
+            $0.prefs.gym.enabled = true
+            $0.events = (0 ..< workouts).map { .done(.gym, 1, at: day(2026, 3, 4, 9, $0 * 10)) }
+        }
+    }
+
+    @Test func theGymTileCountsWorkoutsAgainstAGoalOfFour() throws {
+        let h = gymHarness(workouts: 2)
+        let tile = try #require(h.engine.reportScreen(.day, selected: .gym).tiles.first { $0.habit == .gym })
+        #expect(tile.value == "2")
+        #expect(tile.unit == "workouts today")
+        #expect(tile.percent == 50)
+        #expect(!tile.isOff)
+    }
+
+    @Test func fourWorkoutsMeetTheGymGoalOnTheCalendar() throws {
+        let h = gymHarness(workouts: 4)
+        let screen = h.engine.reportScreen(.month, selected: .gym)
+        #expect(screen.selected == .gym)
+        let today = try #require(screen.calendar.cells.first { $0.isToday })
+        #expect(today.level == 3)
+    }
+
+    @Test func threeWorkoutsLeaveTheGymGoalUnmet() throws {
+        let h = gymHarness(workouts: 3)
+        let today = try #require(h.engine.reportScreen(.month, selected: .gym).calendar.cells.first { $0.isToday })
+        #expect(today.level == 2)
+    }
 }

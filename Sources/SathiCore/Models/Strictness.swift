@@ -29,3 +29,9 @@ package enum Strictness: String, Codable, CaseIterable, Identifiable, Sendable {
         }
     }
 }
+
+extension Strictness {
+    package static func upgraded(_ s: Strictness, oldFile: Bool) -> Strictness {
+        oldFile && s == .strict ? .persistent : s
+    }
+}

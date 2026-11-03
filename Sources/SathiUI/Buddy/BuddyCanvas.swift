@@ -16,6 +16,7 @@ struct BuddyCanvas: View {
             case .drop: drawDrop(&ctx)
             case .book: drawBook(&ctx)
             case .pebble: drawPebble(&ctx)
+            case .kettlebell: drawKettlebell(&ctx)
             }
             drawFace(&ctx)
         }

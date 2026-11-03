@@ -10,13 +10,8 @@ struct GeneralTab: View {
             SettingsSection("You") {
                 SettingsCard {
                     SettingRow(label: "What should we call you?", showsDivider: false) {
-                        TextField("Your name", text: $e.data.prefs.general.name)
-                            .textFieldStyle(.plain)
-                            .font(Typography.chip)
-                            .foregroundStyle(Night.text)
-                            .padding(UIMetrics.timeButtonPadding)
+                        LazyTextField(placeholder: "Your name", text: $e.data.prefs.general.name)
                             .frame(width: UIMetrics.fieldWidth)
-                            .background(RoundedRectangle(cornerRadius: UIMetrics.buttonRadius, style: .continuous).fill(Night.bg))
                     }
                 }
             }
@@ -26,11 +21,31 @@ struct GeneralTab: View {
                     SettingRow(label: "Snooze for", showsDivider: false) {
                         MiniStepper(value: $e.data.prefs.general.snoozeMinutes, range: Limits.snoozeMinutes, step: 1) { "\($0) min" }
                     }
+                    SettingRow(label: "Snoozes allowed", hint: "Then only Done or Skip today.") {
+                        MiniStepper(
+                            value: e.snoozeLimitStep,
+                            range: Limits.snoozeLimits.lowerBound ... Engine.noSnoozeLimitStep,
+                            step: 1
+                        ) { $0 == Engine.noSnoozeLimitStep ? "No limit" : "\($0)" }
+                    }
                     SettingRow(label: "Count it as a snooze after") {
                         MiniStepper(value: $e.data.prefs.general.ignoreMinutes, range: Limits.ignoreMinutes, step: 1) { "\($0) min" }
                     }
                 }
             }
+            SettingsSection("Day summary") {
+                SettingsCard {
+                    SettingRow(label: "Show my day summary", hint: "A calm look at today's goals.", showsDivider: false) {
+                        BuddySwitch(isOn: $e.data.prefs.general.daySummaryOn, accent: Night.sprout, label: "Day summary")
+                    }
+                    if e.data.prefs.general.daySummaryOn {
+                        SettingRow(label: "Show it at") {
+                            TimeMenu(minutes: $e.data.prefs.general.daySummaryMinutes, accent: Night.sprout)
+                        }
+                    }
+                }
+            }
+            QuickSettingsCard()
             SettingsSection("Behaviour") { BehaviourCard() }
         }
     }

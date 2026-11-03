@@ -13,7 +13,7 @@ struct MeditationPrefsTests {
         #expect(HabitID.meditation.rawValue == "meditation")
         #expect(HabitID.meditation.name == "Meditation")
         #expect(HabitID.meditation.buddy == "Shanti")
-        #expect(HabitID.allCases == [.water, .reading, .meditation])
+        #expect(HabitID.allCases == [.water, .reading, .meditation, .gym])
     }
 
     @Test func defaults() {
@@ -38,7 +38,7 @@ struct MeditationPrefsTests {
     @Test func lengthsGoalsAndIntervals() {
         #expect(Limits.meditationLengths == [1, 2, 5])
         #expect(Limits.meditationGoals == [5, 10, 20])
-        #expect(Limits.meditationIntervalChips == [30, 60, 90, 120])
+        #expect(Limits.intervalChips == [15, 30, 45, 60, 75, 90, 105, 120])
     }
 
     @Test func emptyJSONDecodesToDefaults() throws {
@@ -100,13 +100,13 @@ struct MeditationPrefsTests {
         #expect(p.scheduleKey == key)
     }
 
-    @Test func waterAndMeditationMayBeStrictButReadingMayNot() {
+    @Test func waterMeditationAndReadingMayBeStrict() {
         var p = Prefs()
         p.water.strictness = .strict
         p.reading.strictness = .strict
         p.meditation.strictness = .strict
         #expect(p.strictness(.water) == .strict)
-        #expect(p.strictness(.reading) == .persistent)
+        #expect(p.strictness(.reading) == .strict)
         #expect(p.strictness(.meditation) == .strict)
     }
 

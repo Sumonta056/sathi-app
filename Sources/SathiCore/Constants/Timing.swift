@@ -14,12 +14,19 @@ package enum Timing {
     package static let maxTickTolerance: TimeInterval = 2
 
     package static let celebrationDuration: TimeInterval = 4.5
+    package static let readingAskDuration: TimeInterval = 20
     package static let cornerNoteDuration: TimeInterval = 4
     package static let lockHoldDuration: TimeInterval = 3
     package static let lockConfirmDelay: TimeInterval = 0.45
     package static let defaultPauseHours: Double = 1
     package static let shortPauseHours: Double = 0.5
     package static let saveCoalesce: TimeInterval = 0.5
+
+    package static let blockCheckIn: TimeInterval = 2 * hour
+    package static let blockCap: TimeInterval = 12 * hour
+    package static let blockExtend: TimeInterval = 15 * minute
+    package static let blockMinimum: TimeInterval = minute
+    package static let blockUndoWindow: TimeInterval = 4
 
     package static let breathBox: TimeInterval = 4
     package static let breathRelaxIn: TimeInterval = 4

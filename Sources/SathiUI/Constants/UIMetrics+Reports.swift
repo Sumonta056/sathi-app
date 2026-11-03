@@ -23,4 +23,6 @@ extension UIMetrics {
     static let calendarCellRadius: CGFloat = 5
     static let calendarTodayLine: CGFloat = 1.5
     static let streakLevelOpacity: [Double] = [0.25, 0.6, 1]
+    static let calendarOffLine: CGFloat = 1
+    static let calendarOffDash: [CGFloat] = [2, 2]
 }

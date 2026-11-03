@@ -15,9 +15,12 @@ struct ReadingInvite: View {
                     Text("Start reading").frame(maxWidth: .infinity)
                 }
                 .buttonStyle(AccentButton(accent: Night.reading, height: UIMetrics.cornerButtonHeight))
-                Button { e.snooze(.reading) } label: { Text(e.snoozeShortLabel) }
-                    .buttonStyle(GhostButton(accent: Night.chipText, height: UIMetrics.cornerButtonHeight))
+                if e.canSnooze(.reading) {
+                    Button { e.snooze(.reading) } label: { Text(e.snoozeShortLabel) }
+                        .buttonStyle(GhostButton(accent: Night.chipText, height: UIMetrics.cornerButtonHeight))
+                }
             }
+            if !e.canSnooze(.reading) { SkipTodayButton(id: .reading) }
             if level == .persist {
                 Text(e.warnText(.reading))
                     .font(Typography.hint)
@@ -44,9 +47,16 @@ struct ReadingInvite: View {
                     .font(Typography.hint)
                     .foregroundStyle(Night.muted)
                     .fixedSize(horizontal: false, vertical: true)
+                if let pick = e.readingPick {
+                    Text(verbatim: Copywriter.readingUpNextLine(pick.displayTitle))
+                        .font(Typography.hint)
+                        .foregroundStyle(Night.reading)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+                }
             }
             Spacer(minLength: 0)
-            if level == .nudge {
+            if e.showsClose(.reading, level: level) {
                 CornerCloseButton(label: "Dismiss") { e.snooze(.reading) }
             }
         }

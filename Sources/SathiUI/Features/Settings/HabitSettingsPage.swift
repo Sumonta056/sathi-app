@@ -5,7 +5,13 @@ struct HabitSettingsPage<Sections: View>: View {
     @EnvironmentObject var e: Engine
     let habit: HabitID
     let copy: HeroCopy
-    @ViewBuilder let sections: () -> Sections
+    let sections: Sections
+
+    init(habit: HabitID, copy: HeroCopy, @ViewBuilder sections: () -> Sections) {
+        self.habit = habit
+        self.copy = copy
+        self.sections = sections()
+    }
 
     var body: some View {
         let engine = e
@@ -22,7 +28,7 @@ struct HabitSettingsPage<Sections: View>: View {
                 StaticBuddy(habit: habit)
             }
             VStack(alignment: .leading, spacing: UIMetrics.pageSpacing) {
-                sections()
+                sections
             }
             .opacity(on ? 1 : UIMetrics.disabledOpacity)
             .disabled(!on)
@@ -36,17 +42,17 @@ struct HabitSettingsPage<Sections: View>: View {
 
 struct SettingsSection<Content: View>: View {
     let title: String
-    @ViewBuilder let content: () -> Content
+    let content: Content
 
-    init(_ title: String, @ViewBuilder content: @escaping () -> Content) {
+    init(_ title: String, @ViewBuilder content: () -> Content) {
         self.title = title
-        self.content = content
+        self.content = content()
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: UIMetrics.sectionSpacing) {
             SectionLabel(title)
-            content()
+            content
         }
     }
 }

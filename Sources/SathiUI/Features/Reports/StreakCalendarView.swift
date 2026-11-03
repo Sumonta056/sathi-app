@@ -57,12 +57,17 @@ struct StreakCellView: View {
         shape
             .fill(fill)
             .aspectRatio(1, contentMode: .fit)
+            .overlay(shape.strokeBorder(
+                cell.isOff ? Night.border : .clear,
+                style: StrokeStyle(lineWidth: UIMetrics.calendarOffLine, dash: UIMetrics.calendarOffDash)
+            ))
             .overlay(shape.strokeBorder(cell.isToday ? Night.text : .clear, lineWidth: UIMetrics.calendarTodayLine))
-            .accessibilityLabel("\(cell.day)")
+            .accessibilityLabel(cell.isOff ? "\(cell.day), Day off" : "\(cell.day)")
     }
 
     private var fill: Color {
         let levels = UIMetrics.streakLevelOpacity
+        if cell.isOff { return .clear }
         guard cell.level > 0, cell.level <= levels.count else { return Night.divider }
         return Night.sprout.opacity(levels[cell.level - 1])
     }

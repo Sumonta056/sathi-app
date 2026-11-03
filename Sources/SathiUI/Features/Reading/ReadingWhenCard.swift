@@ -12,14 +12,7 @@ struct ReadingWhenCard: View {
                 TimeMenu(minutes: $e.data.prefs.reading.timeMinutes, accent: Night.reading)
             }
             SettingRow(label: "On these days") {
-                ChipRow(
-                    options: Weekday.allCases,
-                    accent: Night.reading,
-                    isSelected: { reading.weekdays.contains($0) },
-                    onTap: { engine.data.prefs.reading.weekdays = reading.weekdays.togglingKeepingOne($0) },
-                    label: \.shortLabel,
-                    spokenLabel: \.name
-                )
+                WeekdayRow(habit: .reading)
             }
             SettingRow(label: "Session length") {
                 ChipRow(

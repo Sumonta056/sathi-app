@@ -26,14 +26,29 @@ struct HabitCard: View {
                         .font(Typography.hint)
                         .foregroundStyle(Night.muted)
                 }
+                if id == .reading, e.session(.reading) == nil, let pick = e.readingPick { upNext(pick) }
             }
             Spacer(minLength: 0)
-            Button(actionTitle) { act() }
-                .buttonStyle(AccentButton(accent: Night.accent(id)))
+            Button { act() } label: {
+                Text(actionTitle).frame(width: UIMetrics.menuActionWidth)
+            }
+            .buttonStyle(AccentButton(accent: Night.accent(id), height: UIMetrics.menuActionHeight, padding: 0))
         }
-        .padding(UIMetrics.cardPadding)
-        .background(shape.fill(Night.card))
-        .overlay(shape.strokeBorder(Night.border, lineWidth: UIMetrics.cardBorder))
+        .padding(UIMetrics.habitRowPadding)
+    }
+
+    private func upNext(_ pick: ReadingItem) -> some View {
+        Button {
+            MenuBarWindow.close()
+            e.startReading()
+        } label: {
+            Text(verbatim: Copywriter.readingUpNextLine(pick.displayTitle))
+                .font(Typography.hint)
+                .foregroundStyle(Night.reading)
+                .lineLimit(1)
+                .truncationMode(.tail)
+        }
+        .buttonStyle(.plain)
     }
 
     private var title: some View {
@@ -60,6 +75,7 @@ struct HabitCard: View {
         case .water: return "+1 glass"
         case .reading: return "Read now"
         case .meditation: return "Breathe"
+        case .gym: return "Move"
         }
     }
 
@@ -69,10 +85,7 @@ struct HabitCard: View {
         case .water: e.logWater(1)
         case .reading: e.startReading()
         case .meditation: e.startMeditation()
+        case .gym: e.startSession(.gym)
         }
-    }
-
-    private var shape: RoundedRectangle {
-        RoundedRectangle(cornerRadius: UIMetrics.cardRadius, style: .continuous)
     }
 }

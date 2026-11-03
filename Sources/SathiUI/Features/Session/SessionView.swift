@@ -40,7 +40,6 @@ struct SessionView: View {
             .padding(24)
             .frame(width: 340)
             .background(RoundedRectangle(cornerRadius: 28, style: .continuous).fill(Night.card))
-            .shadow(color: Color.black.opacity(0.3), radius: 24, x: 0, y: 12)
             .padding(30)
             .foregroundStyle(Night.text)
             .environment(\.colorScheme, .dark)

@@ -15,11 +15,15 @@ package struct Session: Equatable, Sendable {
     package var start: Date
     package var end: Date
     package var fromReminder: Bool
+    package var workout: Int?
+    package var readingItem: UUID?
 
-    package init(start: Date, end: Date, fromReminder: Bool = false) {
+    package init(start: Date, end: Date, fromReminder: Bool = false, workout: Int? = nil, readingItem: UUID? = nil) {
         self.start = start
         self.end = end
         self.fromReminder = fromReminder
+        self.workout = workout
+        self.readingItem = readingItem
     }
 }
 
@@ -61,10 +65,12 @@ package struct Celebration: Equatable, Sendable {
     package var id: HabitID = .water
     package var amount: Double = 1
     package var title = ""
+    package var readingAsk: UUID?
 
-    package init(id: HabitID = .water, amount: Double = 1, title: String = "") {
+    package init(id: HabitID = .water, amount: Double = 1, title: String = "", readingAsk: UUID? = nil) {
         self.id = id
         self.amount = amount
         self.title = title
+        self.readingAsk = readingAsk
     }
 }

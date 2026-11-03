@@ -24,7 +24,7 @@ struct ReportScreenTileTests {
     @Test func oneTilePerHabitInOrderWithUppercasedLabels() {
         let tiles = fixture.screen(.week).tiles
         #expect(tiles.map(\.habit) == HabitID.allCases)
-        #expect(tiles.map(\.label) == ["WATER", "READING", "MEDITATION"])
+        #expect(tiles.map(\.label) == ["WATER", "READING", "MEDITATION", "GYM"])
         #expect(tiles.map(\.id) == HabitID.allCases)
     }
 

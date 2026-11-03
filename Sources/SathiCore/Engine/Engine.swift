@@ -7,7 +7,12 @@ package final class Engine: ObservableObject {
         didSet {
             if streakInputsChanged(from: oldValue) { clearStreakCache() }
             if enabledHabits(oldValue.prefs) != enabledHabits(data.prefs) { reportCache = nil }
-            if oldValue.prefs.scheduleKey != data.prefs.scheduleKey { reschedule() }
+            if oldValue.prefs.scheduleKey != data.prefs.scheduleKey {
+                reschedule(turnedOff: turnedOffToday(from: oldValue.prefs))
+            }
+            daySummaryPrefsChanged(from: oldValue.prefs.general)
+            if oldValue.prefs.general.snoozeLimit != data.prefs.general.snoozeLimit { refreshIgnoreDeadlines() }
+            if oldValue.prefs.timeBlock.display != data.prefs.timeBlock.display { blockDisplayChanged() }
             if oldValue.prefs != data.prefs { store.savePrefs(data.prefs) }
             if oldValue.live != data.live { store.saveLive(data.live) }
         }
@@ -16,8 +21,14 @@ package final class Engine: ObservableObject {
     @Published package var pausedUntil: Date?
     @Published package internal(set) var habits: [HabitID: HabitState]
     @Published package internal(set) var activities: [HabitID: Activity] = [:]
+    @Published package internal(set) var quickActivities: [UUID: QuickActivity] = [:]
     @Published package var celebration = Celebration()
     @Published package var isCelebrating = false
+    @Published package internal(set) var gymIdea = 0
+    @Published package internal(set) var finishedBlock: FinishedBlock?
+    @Published package internal(set) var blockCheckInShowing = false
+    @Published package internal(set) var waitingCalendarPick: String?
+    @Published package internal(set) var calendarAccess: CalendarAccess
 
     package let status = StatusModel()
     let store: StateStore
@@ -25,10 +36,14 @@ package final class Engine: ObservableObject {
     let clock: Clock
     let sound: SoundPlayer
     let presenter: ReminderPresenter
+    let links: LinkOpener
+    let calendarWriter: CalendarWriter
     let calendar: Calendar
 
     var timer: Timer?
     var isRunning = false
+    var lastAccessRefresh: Date?
+    var calendarChoicesCache: [CalendarChoice]?
     var forced: Set<HabitID> = []
     var celebrateToken = UUID()
     var streakCache: [HabitID: Int] = [:]
@@ -42,7 +57,9 @@ package final class Engine: ObservableObject {
         clock: Clock,
         sound: SoundPlayer,
         presenter: ReminderPresenter,
-        calendar: Calendar = .current
+        links: LinkOpener,
+        calendar: Calendar = .current,
+        calendarWriter: CalendarWriter
     ) {
         let n = clock.now
         var loaded = Persisted()
@@ -54,7 +71,10 @@ package final class Engine: ObservableObject {
         self.clock = clock
         self.sound = sound
         self.presenter = presenter
+        self.links = links
         self.calendar = calendar
+        self.calendarWriter = calendarWriter
+        calendarAccess = calendarWriter.access
         data = loaded
         now = n
         habits = Dictionary(uniqueKeysWithValues: HabitID.allCases.map { id in

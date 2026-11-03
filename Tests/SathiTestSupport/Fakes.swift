@@ -32,9 +32,19 @@ package final class SpyPresenter: ReminderPresenter {
         case showCelebration, closeCelebration
         case showSettings, showReports
         case showSnoozed(HabitID, Date)
+        case showDaySummary, closeDaySummary
+        case showQuick(UUID, Level), closeQuick(UUID), showQuickLock(UUID), showQuickSnoozed(String, Date)
+        case showQuickAdd, closeQuickAdd
+        case showBlockStart, closeBlockStart, showBlockNote(BlockNote), showBlockWidget, closeBlockWidget
+        case showBlockDone, closeBlockDone, showBlockCheckIn, closeBlockCheckIn
+        case showBlockCalendarGone, closeBlockCalendarGone
     }
 
     package private(set) var calls: [Call] = []
+
+    package var blockNotes: [BlockNote] {
+        calls.compactMap { if case let .showBlockNote(note) = $0 { note } else { nil } }
+    }
 
     package init() {}
 
@@ -49,4 +59,24 @@ package final class SpyPresenter: ReminderPresenter {
     package func showSettings() { calls.append(.showSettings) }
     package func showReports() { calls.append(.showReports) }
     package func showSnoozed(_ id: HabitID, until: Date) { calls.append(.showSnoozed(id, until)) }
+    package func showDaySummary() { calls.append(.showDaySummary) }
+    package func closeDaySummary() { calls.append(.closeDaySummary) }
+    package func showQuick(_ id: UUID, _ level: Level) { calls.append(.showQuick(id, level)) }
+    package func closeQuick(_ id: UUID) { calls.append(.closeQuick(id)) }
+    package func showQuickLock(_ id: UUID) { calls.append(.showQuickLock(id)) }
+    package func showQuickSnoozed(text: String, until: Date) { calls.append(.showQuickSnoozed(text, until)) }
+    package func showQuickAdd() { calls.append(.showQuickAdd) }
+    package func closeQuickAdd() { calls.append(.closeQuickAdd) }
+
+    package func showBlockStart() { calls.append(.showBlockStart) }
+    package func closeBlockStart() { calls.append(.closeBlockStart) }
+    package func showBlockNote(_ note: BlockNote) { calls.append(.showBlockNote(note)) }
+    package func showBlockWidget() { calls.append(.showBlockWidget) }
+    package func closeBlockWidget() { calls.append(.closeBlockWidget) }
+    package func showBlockDone() { calls.append(.showBlockDone) }
+    package func closeBlockDone() { calls.append(.closeBlockDone) }
+    package func showBlockCheckIn() { calls.append(.showBlockCheckIn) }
+    package func closeBlockCheckIn() { calls.append(.closeBlockCheckIn) }
+    package func showBlockCalendarGone() { calls.append(.showBlockCalendarGone) }
+    package func closeBlockCalendarGone() { calls.append(.closeBlockCalendarGone) }
 }

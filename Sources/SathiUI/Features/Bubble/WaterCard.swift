@@ -11,12 +11,6 @@ struct WaterCard: ViewModifier {
                 alert ? Night.water : Night.heroBorder(.water),
                 lineWidth: alert ? UIMetrics.bubbleAlertBorder : UIMetrics.bubbleBorder
             ))
-            .shadow(
-                color: Color.black.opacity(UIMetrics.bubbleShadowOpacity),
-                radius: UIMetrics.bubbleShadowRadius,
-                x: 0,
-                y: UIMetrics.bubbleShadowY
-            )
     }
 
     private var shape: RoundedRectangle {

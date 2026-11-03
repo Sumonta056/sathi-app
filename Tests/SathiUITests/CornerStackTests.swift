@@ -31,7 +31,9 @@ struct CornerStackTests {
         let water = try #require(ui.bubbles[.water]).frame
         let calm = try #require(ui.bubbles[.meditation]).frame
         #expect(ui.corner.count == 2)
-        #expect(calm.maxY < water.maxY)
+        let belowInTheSameColumn = calm.maxY < water.maxY
+        let topOfANewColumnToTheLeft = calm.maxY == water.maxY && calm.maxX == water.minX - UIMetrics.cornerColumnGap
+        #expect(belowInTheSameColumn || topOfANewColumnToTheLeft)
         ui.closeBubble(.water)
         ui.closeBubble(.meditation)
     }

@@ -70,8 +70,9 @@ The base folder is `~/Library/Application Support/Sathi/` (`AppEnvironment.base`
   - `value(_:or:)` for a plain field. A missing key gives the default.
   - `known(_:or:)` for an enum. An unknown raw value gives the default.
   - `knownSet(_:or:keepsEmpty:)` for a set of enums. It drops unknown values.
+  - `lenientSet(_:or:)` for a set of values that may not decode one by one (`daysOff`). It drops each element that does not decode. A value that is not a list gives the default and does not fail the file.
 - Use `known` or `knownSet` for every enum field that a newer version can extend (business rule Schedules 9).
-- A key with the wrong JSON type still throws. The whole file then fails and goes to `.corrupt` (rule 6).
+- A key with the wrong JSON type still throws, except a key read with `lenientSet`. The whole file then fails and goes to `.corrupt` (rule 6).
 - A month file is one JSON array. `MonthEvents` splits it into known events, the extra keys of each known event (`extras`, same order as `events`), and unknown `RawJSON` values. It writes all three back. Never drop extras or unknown values. The order of `extras` holds only because `FileHistoryStore` never changes or removes a stored event; keep it append-only. Tests: `FileHistoryUnknownEventsTests`, `TolerantPrefsDecodingTests`.
 
 ## 6. Corrupt and unreadable files

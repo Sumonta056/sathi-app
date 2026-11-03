@@ -8,14 +8,14 @@ import ViewInspector
 @MainActor
 @Suite("Water settings tab")
 struct WaterSettingsTabTests {
-    private let intervalChips = ["30 min", "60 min", "90 min", "120 min"]
+    private let intervalChips = ["15 min", "30 min", "45 min", "60 min", "75 min", "90 min", "105 min", "120 min"]
 
     private func tab(_ h: EngineHarness) throws -> InspectableView<ViewType.ClassifiedView> {
         try hosted(WaterSettingsTab(), h).inspect()
     }
 
-    @Test func intervalChipsAreTheFourChoices() {
-        #expect(Limits.waterIntervalChips == [30, 60, 90, 120])
+    @Test func intervalChipsAreTheEightChoices() {
+        #expect(Limits.intervalChips == [15, 30, 45, 60, 75, 90, 105, 120])
     }
 
     @Test func chipSetsTheInterval() throws {
@@ -31,7 +31,7 @@ struct WaterSettingsTabTests {
     }
 
     @Test func savedIntervalOutsideTheChipsSelectsNoChip() throws {
-        let sut = try tab(EngineHarness { $0.prefs.water.intervalMinutes = 45 })
+        let sut = try tab(EngineHarness { $0.prefs.water.intervalMinutes = 50 })
         for title in intervalChips {
             #expect(try !A11y.isSelected(sut.find(button: title)))
         }

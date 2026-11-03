@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://sumonta056.github.io/sathi-app/</loc>
-    <lastmod>2026-10-25</lastmod>
+    <lastmod>2026-11-04</lastmod>
     <image:image><image:loc>https://sumonta056.github.io/sathi-app/screenshots/menu-bar.png</image:loc></image:image>
     <image:image><image:loc>https://sumonta056.github.io/sathi-app/screenshots/water-bubble.png</image:loc></image:image>
     <image:image><image:loc>https://sumonta056.github.io/sathi-app/screenshots/water-nudgy.png</image:loc></image:image>
@@ -17,5 +17,14 @@
     <image:image><image:loc>https://sumonta056.github.io/sathi-app/screenshots/meditation-thanks.png</image:loc></image:image>
     <image:image><image:loc>https://sumonta056.github.io/sathi-app/screenshots/reports.png</image:loc></image:image>
     <image:image><image:loc>https://sumonta056.github.io/sathi-app/screenshots/settings.png</image:loc></image:image>
+    <image:image><image:loc>https://sumonta056.github.io/sathi-app/screenshots/gym-corner.png</image:loc></image:image>
+    <image:image><image:loc>https://sumonta056.github.io/sathi-app/screenshots/gym-thanks.png</image:loc></image:image>
+    <image:image><image:loc>https://sumonta056.github.io/sathi-app/screenshots/quick-add.png</image:loc></image:image>
+    <image:image><image:loc>https://sumonta056.github.io/sathi-app/screenshots/quick-popup.png</image:loc></image:image>
+    <image:image><image:loc>https://sumonta056.github.io/sathi-app/screenshots/block-start.png</image:loc></image:image>
+    <image:image><image:loc>https://sumonta056.github.io/sathi-app/screenshots/block-pill.png</image:loc></image:image>
+    <image:image><image:loc>https://sumonta056.github.io/sathi-app/screenshots/block-done.png</image:loc></image:image>
+    <image:image><image:loc>https://sumonta056.github.io/sathi-app/screenshots/block-settings.png</image:loc></image:image>
+    <image:image><image:loc>https://sumonta056.github.io/sathi-app/screenshots/day-summary.png</image:loc></image:image>
   </url>
 </urlset>

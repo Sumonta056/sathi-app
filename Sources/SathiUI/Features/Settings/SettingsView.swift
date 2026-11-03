@@ -30,6 +30,7 @@ struct SettingsView: View {
         switch tab {
         case .general: GeneralTab()
         case let .habit(id): HabitTab(id: id)
+        case .timeBlocks: TimeBlockSettingsPage()
         case .addBuddy: AddBuddyTab()
         }
     }
@@ -43,6 +44,7 @@ struct HabitTab: View {
         case .water: WaterSettingsTab()
         case .reading: ReadingSettingsTab()
         case .meditation: MeditationSettingsTab()
+        case .gym: GymSettingsTab()
         }
     }
 }

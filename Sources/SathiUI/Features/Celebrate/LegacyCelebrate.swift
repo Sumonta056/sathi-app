@@ -22,7 +22,7 @@ struct LegacyCelebrate: View {
                 .foregroundStyle(Night.muted)
             switch c.id {
             case .reading: ReadingWeekRow(streak: e.streak(.reading), today: e.now)
-            case .water, .meditation: EmptyView()
+            case .water, .meditation, .gym: EmptyView()
             }
             Button("Back to work") { e.endCelebrate() }
                 .buttonStyle(PillButton(kind: .primary))
@@ -33,7 +33,6 @@ struct LegacyCelebrate: View {
         .padding(.bottom, 20)
         .frame(width: 360)
         .background(RoundedRectangle(cornerRadius: 28, style: .continuous).fill(Night.card))
-        .shadow(color: Color.black.opacity(0.3), radius: 24, x: 0, y: 12)
         .padding(30)
         .foregroundStyle(Night.text)
         .environment(\.colorScheme, .dark)
@@ -44,6 +43,7 @@ struct LegacyCelebrate: View {
         case .water: return "+\(Fmt.glasses(c.amount))"
         case .reading: return "\(Int(c.amount)) min read"
         case .meditation: return "\(Int(c.amount)) min calm"
+        case .gym: return "+\(Int(c.amount)) workout"
         }
     }
 
@@ -55,6 +55,8 @@ struct LegacyCelebrate: View {
             return "\(e.streak(.reading))-day reading streak"
         case .meditation:
             return "\(e.streak(.meditation))-day calm streak"
+        case .gym:
+            return "\(e.streak(.gym))-day move streak"
         }
     }
 }

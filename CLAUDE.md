@@ -1,6 +1,6 @@
 # Sathi
 
-Sathi is a macOS menu bar app (macOS 13+, Swift 5.9 tools, SwiftUI + AppKit). Three buddies remind the user: Fota (water), Boi (reading), and Shanti (meditation, off by default). An ignored reminder escalates: bubble → persistent bubble → full-screen lock (water and meditation, at Strict). Meditation has a daily goal and stops for the day when it is met. Reading and meditation use a calm corner popup that never takes focus.
+Sathi is a macOS menu bar app (macOS 13+, Swift 5.9 tools, SwiftUI + AppKit). Four buddies remind the user: Fota (water), Boi (reading), Shanti (meditation, off by default), and Shokti (gym, off by default). An ignored reminder escalates: bubble → persistent bubble → full-screen lock (any buddy, at Strict). Each buddy has its own level (Gentle, Nudgy, Strict) and its own close-button switch. Meditation has a daily goal and stops for the day when it is met. Shokti suggests 1 short workout every hour during work hours, on the days you pick, and keeps a list of 4 workouts. Reading, meditation, and gym use a calm corner popup that never takes focus. Each buddy has its own weekdays and single days off; a day off keeps that buddy quiet and never breaks its streak. Every evening (default 10 PM) a calm corner popup shows the day summary of the 4 buddies and congratulates the user when every goal is met. A quick reminder is a one-off note the user writes for a set time; a calm corner popup shows it until the user taps Done. A time block is a work timer: the user starts it from the menu, and its end writes 1 event to a macOS calendar that the user picks (EventKit).
 
 ## Commands
 
@@ -22,24 +22,26 @@ Sathi is a macOS menu bar app (macOS 13+, Swift 5.9 tools, SwiftUI + AppKit). Th
 ```
 Sources/
   SathiCore/     Foundation only. All logic. Fully unit-tested.
-    Models/        HabitID, Strictness, Container, Mood, Prefs, GeneralPrefs, LiveState, HistoryEvent, Persisted, ReminderState, GoalText, Set+KeepOne, DecodingDefaults, Calendar+Days, Date+WholeSecond
-    Habits/        HabitRules, DayClock, one folder per habit: Water/, Reading/, Meditation/ (prefs, rules, helpers such as Weekday, BreathingPattern)
+    Models/        HabitID, Strictness, Container, Mood, Prefs, GeneralPrefs, LiveState, HistoryEvent, Persisted, ReminderState, GoalText, Set+KeepOne, DecodingDefaults, Calendar+Days, Date+WholeSecond, DayKey
+    Habits/        HabitRules, HabitDays, DayClock, one folder per habit: Water/, Reading/, Meditation/, Gym/ (prefs, rules, helpers such as Weekday, BreathingPattern, GymWorkout)
+    Quick/         QuickReminder, QuickPrefs, QuickTime, QuickActivity
+    TimeBlock/     TimeBlock, TimeBlockLength, TimeBlockPrefs
     Constants/     Timing, Limits, StorageKeys, SoundName
     Scheduling/    EscalationPolicy (bubble/lock), TickPlanner (timer delay)
-    Stats/         Stats (daily totals), StreakCalculator, ReportBuilder + Report, ReportScreen + ReportScreenInput, ReportScreenBuilder (+Tiles, +Chart, +Calendar, +Text)
+    Stats/         Stats (daily totals), StreakCalculator, ReportBuilder + Report, ReportScreen + ReportScreenInput, ReportScreenBuilder (+Tiles, +Chart, +Calendar, +Text), DaySummary
     Export/        CSVExporter, JSONExporter (backup), ExportNames, ExportFormat, ExportJob, ExportOutcome
-    Formatting/    Fmt, Copywriter (+Reading, +Meditation)
-    Ports/         Clock, StateStore, HistoryStore, SoundPlayer, ReminderPresenter, FileExporter, SummaryRenderer
+    Formatting/    Fmt, Copywriter (+Reading, +Meditation, +Gym, +DaySummary, +Quick, +TimeBlock, +TimeBlockPopups, +TimeBlockSettings, +TimeBlockView)
+    Ports/         Clock, StateStore, HistoryStore, SoundPlayer, ReminderPresenter, FileExporter, SummaryRenderer, CalendarWriter, LinkOpener
     Storage/       JSONFiles, FileSlot, FileStateStore, FileHistoryStore, MonthEvents, RawJSON, LegacyMigrator, Legacy/ (v1 shapes)
-    Engine/        Engine (+Loop, +Actions, +Session, +Corner, +Display, +Menu, +History, +Reports, +Export), StatusModel
+    Engine/        Engine (+Loop, +Actions, +Session, +Corner, +Display, +Menu, +History, +Reports, +Export, +DaySummary, +Quick, +QuickLoop, +TimeBlock, +TimeBlockLoop, +TimeBlockCalendar, +TimeBlockDisplay, +TimeBlockMenu), StatusModel
   SathiUI/       SwiftUI + AppKit. Views and windows only.
-    Constants/     UIMetrics (+Bubble, +Components, +Corner, +Lock, +Meditation, +Menu, +Reports, +Settings), TimeSlots
+    Constants/     UIMetrics (+Bubble, +Components, +Corner, +Lock, +Meditation, +Menu, +Quick, +Reports, +Settings, +TimeBlock, +TimeBlockSettings), TimeSlots
     Theme/         NightPalette (Night tokens), Typography, ButtonStyles, GhostButton, ProgressBar, Shake, ShakeSound, Color+Hex
-    Components/    HeroCard, SettingsCard, SettingRow, OptionCard, ChipRow, SectionLabel, BuddySwitch
-    Buddy/         BuddyView, BuddyCanvas (+Pebble), BuddyKind, BuddyInk, WaterInk, BuddyPaths, BobbingBuddy, GlassIcon, BottleView
-    Features/      MenuBar/, Bubble/, Water/, Reading/, Meditation/, Session/, Celebrate/, Lock/, Settings/, Reports/
-    Windows/       UIController (+Corner, +Placement; ReminderPresenter impl), PanelFactory, CornerToast, SettingsWindow, ReportsWindow, LockScreen, PanelWindows, WindowCloseWatcher
-    Platform/      SystemSoundPlayer
+    Components/    HeroCard, SettingsCard, SettingRow, OptionCard, ChipRow, SectionLabel, BuddySwitch, WeekdayRow, DaysOffCard, DaysOffRow, TimeMenu + TimePickerGrid + TimeParts (the 5-minute time chip grid)
+    Buddy/         BuddyView, BuddyCanvas (+Pebble, +Kettlebell), BuddyKind, BuddyInk, WaterInk, BuddyPaths, BobbingBuddy, GlassIcon, BottleView
+    Features/      MenuBar/, Bubble/, Water/, Reading/, Meditation/, Gym/, Session/, Celebrate/, Lock/, Settings/, Reports/, DaySummary/, Quick/, TimeBlock/
+    Windows/       UIController (+Corner, +Placement, +Quick, +TimeBlock; ReminderPresenter impl), MenuWindowFit, CornerLayout, PanelFactory, CornerToast, SettingsWindow, ReportsWindow, LockScreen, PanelWindows, WindowCloseWatcher
+    Platform/      SystemSoundPlayer, EventKitCalendarWriter, CalendarMapping, WorkspaceLinkOpener
   Sathi/         Executable. SathiApp, AppDelegate, AppEnvironment (composition root).
 Resources/        Info.plist (version), AppIcon.icns (app icon), AppIcon.png (1024 px preview)
 Tests/

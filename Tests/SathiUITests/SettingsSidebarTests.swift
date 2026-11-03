@@ -74,20 +74,58 @@ struct SettingsSidebarTests {
         #expect(h.presenter.calls.last == .showReports)
     }
 
+    @Test func openReportsSitsRightAfterGeneral() throws {
+        let sut = try sidebar(EngineHarness()).inspect()
+        let order = sut.findAll(ViewType.Text.self).compactMap { try? $0.string() }
+        let general = try #require(order.firstIndex(of: "General"))
+        #expect(order[general + 1] == "Open reports")
+    }
+
+    @Test func footerShowsMadeByWithLinks() throws {
+        let sut = try sidebar(EngineHarness()).inspect()
+        #expect(throws: Never.self) { try sut.find(text: "Made by Sumonta") }
+        let links = sut.findAll(ViewType.Link.self)
+        let urls = try links.map { try $0.url() }
+        #expect(urls.contains(Links.github))
+        #expect(urls.contains(Links.portfolio))
+        #expect(Links.github.absoluteString == "https://github.com/Sumonta056")
+        #expect(Links.portfolio.absoluteString == "https://sumonta056.vercel.app/")
+    }
+
+    @Test func footerLinksAreIconsWithNames() throws {
+        let sut = try sidebar(EngineHarness()).inspect()
+        let links = sut.findAll(ViewType.Link.self)
+        let labels = links.compactMap { try? $0.accessibilityLabel().string() }
+        #expect(labels.contains("GitHub"))
+        #expect(labels.contains("Portfolio"))
+        for link in links {
+            #expect(try link.labelView().findAll(ViewType.Text.self).isEmpty)
+        }
+    }
+
     @Test func waterTabShowsItsHero() throws {
         let sut = try hosted(WaterSettingsTab(), EngineHarness()).inspect()
         #expect(throws: Never.self) { try sut.find(text: "Small sips, all day long") }
         #expect(throws: Never.self) { try sut.find(text: "FOTA · WATER") }
     }
 
-    @Test func addBuddyTabShowsFourComingSoonBuddies() throws {
+    @Test func addBuddyTabShowsTwoComingSoonBuddies() throws {
         let sut = try AddBuddyTab().inspect()
-        for text in ["Add a buddy", "Stretch", "Eye break", "Walk", "Posture", "Loosen up every hour."] {
+        for text in ["Add a buddy", "Eye break", "Posture"] {
             #expect(throws: Never.self) { try sut.find(text: text) }
         }
+        #expect(Find.lacks(sut, text: "Stretch"))
+        #expect(Find.lacks(sut, text: "Walk"))
         let soon = sut.findAll(ViewType.Button.self).filter { (try? $0.labelView().find(text: "Soon")) != nil }
-        #expect(soon.count == 4)
+        #expect(soon.count == 2)
         #expect(soon.allSatisfy { $0.isDisabled() })
+    }
+
+    @Test func sidebarShowsGymWithNewLabel() throws {
+        let sut = try sidebar(EngineHarness()).inspect()
+        let gym = try Find.button(sut, holding: "Gym")
+        #expect(throws: Never.self) { try gym.find(text: "NEW") }
+        #expect(throws: Never.self) { try Find.button(sut, label: "Gym reminders") }
     }
 
     @Test func rootShowsSidebarAndGeneralTabFirst() throws {

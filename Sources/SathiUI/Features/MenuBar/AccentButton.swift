@@ -5,12 +5,13 @@ struct AccentButton: ButtonStyle {
     var height: CGFloat = UIMetrics.actionHeight
     var radius: CGFloat = UIMetrics.buttonRadius
     var text: Color = Night.onAccent
+    var padding: CGFloat = UIMetrics.chipPadding
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(Typography.chip)
             .foregroundStyle(text)
-            .padding(.horizontal, UIMetrics.chipPadding)
+            .padding(.horizontal, padding)
             .frame(height: height)
             .background(shape.fill(accent))
             .opacity(configuration.isPressed ? UIMetrics.pressedOpacity : 1)

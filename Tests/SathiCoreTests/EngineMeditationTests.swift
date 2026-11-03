@@ -101,15 +101,16 @@ struct EngineMeditationTests {
         #expect(h.engine.phase(.meditation) == .lock)
     }
 
-    @Test func strictStoredForReadingNeverLocks() {
+    @Test func strictStoredForReadingLocksAfterTwoSnoozes() {
         let h = EngineHarness { $0.prefs.reading.strictness = .strict }
         h.showReminder(.reading)
         h.engine.snooze(.reading)
         h.advance(minutes: 5)
+        #expect(h.engine.phase(.reading) == .bubble(.persist))
         h.engine.snooze(.reading)
         h.advance(minutes: 5)
-        #expect(h.engine.phase(.reading) == .bubble(.persist))
-        #expect(!h.presenter.calls.contains(.showLock(.reading)))
+        #expect(h.engine.phase(.reading) == .lock)
+        #expect(h.presenter.calls.contains(.showLock(.reading)))
     }
 
     @Test func meditationIsOffByDefaultAndNeverBecomesDue() {

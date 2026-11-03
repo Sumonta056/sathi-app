@@ -4,6 +4,7 @@ extension Engine {
     package func start() {
         guard !isRunning else { return }
         isRunning = true
+        restoreBlock()
         tick()
     }
 
@@ -20,6 +21,11 @@ extension Engine {
             endIfExpired(id)
         }
         if pausedUntil == nil { presentDueHabits() }
+        lockWaitingHabit()
+        tickQuick()
+        refreshCalendarAccessIfDue()
+        tickBlock()
+        showDaySummaryIfDue()
         updateStatus()
         scheduleNextTick()
     }
@@ -41,8 +47,9 @@ extension Engine {
 
     private func endIfExpired(_ id: HabitID) {
         switch activities[id] {
-        case let .bubble(_, _, deadline) where now >= deadline: snooze(id)
-        case let .session(s) where now >= s.end: finishSession(id)
+        case let .bubble(_, _, deadline) where now >= deadline:
+            snooze(id)
+        case let .session(s) where now >= s.end: finishSession(id, timedOut: true)
         default: break
         }
     }
@@ -58,8 +65,9 @@ extension Engine {
     }
 
     private func upcomingDeadlines() -> [Date] {
-        var deadlines: [Date] = []
+        var deadlines: [Date] = quickDeadlines + blockDeadlines
         if let p = pausedUntil { deadlines.append(p) }
+        if let s = nextDaySummary { deadlines.append(s) }
         for id in HabitID.allCases {
             switch activities[id] {
             case let .bubble(_, _, deadline): deadlines.append(deadline)
@@ -89,17 +97,17 @@ extension Engine {
 
     private func present(_ id: HabitID) {
         forced.remove(id)
+        if resetsIdea(id) { gymIdea = 0 }
         switch EscalationPolicy.presentation(for: strictness(id), snoozes: state(id).snoozes) {
         case let .bubble(level): showBubble(id, level)
-        case .lock where HabitID.allCases.contains(where: { phase($0) == .lock }): showBubble(id, .persist)
+        case .lock where isAnyLockShowing: showBubble(id, .persist)
         case .lock: showLock(id)
         }
     }
 
     private func showBubble(_ id: HabitID, _ level: Level) {
         let copy = Copywriter.pick(id, level, name: data.prefs.general.name)
-        let deadline = clock.now.addingTimeInterval(TimeInterval(data.prefs.general.ignoreMinutes) * Timing.minute)
-        activities[id] = .bubble(level, copy: copy, ignoreDeadline: deadline)
+        activities[id] = .bubble(level, copy: copy, ignoreDeadline: freshIgnoreDeadline(id))
         presenter.showBubble(id, level)
         play(level == .persist ? .ping : Self.greeting(id))
     }
@@ -108,11 +116,11 @@ extension Engine {
         switch id {
         case .water: return .glass
         case .reading: return .purr
-        case .meditation: return .tink
+        case .meditation, .gym: return .tink
         }
     }
 
-    private func showLock(_ id: HabitID) {
+    func showLock(_ id: HabitID) {
         activities[id] = .lock
         presenter.showLock(id)
         play(.sosumi)

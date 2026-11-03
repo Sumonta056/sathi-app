@@ -34,17 +34,21 @@ package struct ReportBuilder: Sendable {
         let slots = range == .day ? hourSlots(span) : daySlots(span)
         let days = daySlots(span).filter { $0.start <= now }
         let habits = HabitID.allCases.map { id in
-            habitReport(id, goal: id.rules(prefs, calendar: calendar).dailyGoal, events: inside, slots: slots, days: days)
+            habitReport(id, prefs: prefs, events: inside, slots: slots, days: days)
         }
         return Report(range: range, interval: span, habits: habits)
     }
 
-    private func habitReport(_ id: HabitID, goal: Double, events: [HistoryEvent], slots: [DateInterval], days: [DateInterval]) -> HabitReport {
+    private func habitReport(_ id: HabitID, prefs: Prefs, events: [HistoryEvent], slots: [DateInterval], days: [DateInterval]) -> HabitReport {
+        let goal = id.rules(prefs, calendar: calendar).dailyGoal
+        let schedule = prefs.days(id)
         let done = events.filter { $0.habit == id && $0.kind == .done }
-        let buckets = slots.map { ReportBucket(start: $0.start, end: $0.end, total: sum(done, in: $0)) }
+        let isOn = { (date: Date) in schedule.isOn(date, calendar: calendar) }
+        let buckets = slots.map { ReportBucket(start: $0.start, end: $0.end, total: sum(done, in: $0), isOff: !isOn($0.start)) }
         let dayTotals = days.map { (start: $0.start, total: sum(done, in: $0)) }
+        let counted = dayTotals.filter { (goal > 0 && $0.total >= goal) || isOn($0.start) }
         let total = buckets.reduce(0) { $0 + $1.total }
-        let average = dayTotals.reduce(0) { $0 + $1.total } / Double(max(1, days.count))
+        let average = counted.isEmpty ? 0 : counted.reduce(0) { $0 + $1.total } / Double(counted.count)
         var best: (start: Date, total: Double)?
         for day in dayTotals where day.total > (best?.total ?? 0) {
             best = day
@@ -56,7 +60,7 @@ package struct ReportBuilder: Sendable {
             total: total,
             averagePerDay: average,
             percentOfGoal: goal > 0 ? min(Limits.fullPercent, Int((average / goal * Double(Limits.fullPercent)).rounded())) : 0,
-            daysMet: goal > 0 ? dayTotals.filter { $0.total >= goal }.count : 0,
+            daysMet: goal > 0 ? counted.filter { $0.total >= goal }.count : 0,
             bestDay: best?.start,
             snoozes: events.filter { $0.habit == id && $0.kind == .snooze }.count
         )

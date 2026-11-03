@@ -6,12 +6,13 @@ struct BreathingPatternCards: View {
 
     var body: some View {
         let engine = e
+        let selected = engine.data.prefs.meditation.style
         OptionCardRow {
             ForEach(BreathingStyle.allCases, id: \.self) { style in
                 OptionCard(
                     title: Self.title(style),
                     detail: Self.detail(style),
-                    isSelected: engine.data.prefs.meditation.style == style,
+                    isSelected: selected == style,
                     accent: Night.calm,
                     action: { engine.data.prefs.meditation.style = style },
                     top: {

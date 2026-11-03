@@ -16,9 +16,10 @@ struct LegacyBubble: View {
             switch id {
             case .water: EmptyView()
             case .reading: ReadingInfoCard()
-            case .meditation: EmptyView()
+            case .meditation, .gym: EmptyView()
             }
             actions
+            if !e.canSnooze(id) { SkipTodayButton(id: id) }
             if level == .persist { warn }
             IgnoreBar(id: id, accent: accent, track: Night.border, label: Night.muted)
         }
@@ -29,7 +30,6 @@ struct LegacyBubble: View {
             RoundedRectangle(cornerRadius: 22, style: .continuous)
                 .strokeBorder(level == .persist ? accent : Night.border, lineWidth: level == .persist ? 2 : 1)
         )
-        .shadow(color: Color.black.opacity(0.28), radius: 18, x: 0, y: 10)
         .modifier(Shake(amount: shakes))
         .padding(UIMetrics.bubbleShadowPadding)
         .foregroundStyle(Night.text)
@@ -48,6 +48,7 @@ struct LegacyBubble: View {
     }
 
     private var eyebrow: String {
+        if !e.canSnooze(id) { return e.noSnoozeEyebrow(id) }
         let time = e.now.formatted(date: .omitted, time: .shortened)
         if level == .persist {
             return "STILL WAITING · SNOOZED \(e.state(id).snoozes)× · \(time)"
@@ -72,6 +73,10 @@ struct LegacyBubble: View {
                     .foregroundStyle(Night.muted)
                     .fixedSize(horizontal: false, vertical: true)
             }
+            Spacer(minLength: 0)
+            if e.showsClose(id, level: level) {
+                CornerCloseButton(label: "Dismiss") { e.snooze(id) }
+            }
         }
     }
 
@@ -88,9 +93,16 @@ struct LegacyBubble: View {
                 Button("Start \(e.data.prefs.meditation.sessionMinutes)-min breathing") { e.startMeditation() }
                     .buttonStyle(PillButton(kind: .primary))
                     .layoutPriority(1)
+            case .gym:
+                Button("Start \(e.data.prefs.gym.workouts[0].minutes)-min workout") { e.startSession(.gym) }
+                    .buttonStyle(PillButton(kind: .primary))
+                    .layoutPriority(1)
             }
-            Button(e.snoozeLabel(id)) { e.snooze(id) }
-                .buttonStyle(PillButton(kind: .ghost))
+            if e.canSnooze(id) {
+                Button(e.snoozeLabel(id)) { e.snooze(id) }
+                    .buttonStyle(PillButton(kind: .ghost))
+                    .fixedSize()
+            }
         }
     }
 

@@ -12,6 +12,9 @@
   --reading: #f2a64a;
   --calm: #a99cf5;
   --sprout: #5fd39a;
+  --gym: #cdef5a;
+  --quick: #ff9fb8;
+  --block: #5ed6c4;
   --on-accent: #0d1220;
   --radius: 16px;
   --font: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -175,6 +178,21 @@ p {
 
 .c-calm {
   color: var(--calm);
+  font-weight: 800;
+}
+
+.c-gym {
+  color: var(--gym);
+  font-weight: 800;
+}
+
+.c-quick {
+  color: var(--quick);
+  font-weight: 800;
+}
+
+.c-block {
+  color: var(--block);
   font-weight: 800;
 }
 
@@ -612,6 +630,18 @@ section {
 
 .dot.sprout {
   background: var(--sprout);
+}
+
+.dot.gym {
+  background: var(--gym);
+}
+
+.dot.quick {
+  background: var(--quick);
+}
+
+.dot.block {
+  background: var(--block);
 }
 
 .checks {

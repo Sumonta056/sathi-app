@@ -61,6 +61,7 @@ struct LockView: View {
         case .water: return "Fota is drying up. Go get some water."
         case .reading: return "Boi has waited long enough. Get your book."
         case .meditation: return "Shanti is waiting. Take a slow breath."
+        case .gym: return "Shokti is waiting. Time to move a little."
         }
     }
 
@@ -69,6 +70,7 @@ struct LockView: View {
         case .water: return "Take a few sips, then press and hold for 3 seconds. Your screen comes back right after."
         case .reading: return "Open your book, then press and hold for 3 seconds to start your reading timer."
         case .meditation: return "Sit back, then press and hold for 3 seconds to start your breathing session."
+        case .gym: return "Stand up, then press and hold for 3 seconds to start your workout timer."
         }
     }
 }

@@ -7,9 +7,6 @@ extension UIMetrics {
     static let bubbleRadius: CGFloat = 22
     static let bubbleBorder: CGFloat = 1
     static let bubbleAlertBorder: CGFloat = 2
-    static let bubbleShadowOpacity: Double = 0.5
-    static let bubbleShadowRadius: CGFloat = 30
-    static let bubbleShadowY: CGFloat = 12
     static let bubbleBuddySize: CGFloat = 78
     static let bubbleHeaderSpacing: CGFloat = 14
 
