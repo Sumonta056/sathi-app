@@ -9,18 +9,16 @@ import ViewInspector
 @MainActor
 @Suite("Time block card")
 struct TimeBlockCardTests {
-    @Test func idleShowsHeaderAndStartButtonOnly() throws {
+    @Test func idleRendersNothing() throws {
         let sut = try Block.card(Block.harness())
-        #expect(throws: Never.self) { try sut.find(text: "Time block") }
-        #expect(throws: Never.self) { try sut.find(button: "Start") }
-        #expect(throws: Never.self) { try sut.find(viewWithAccessibilityIdentifier: "block.start") }
-        #expect(sut.findAll(LengthChips.self).isEmpty)
-        #expect(sut.findAll(ViewType.TextField.self).isEmpty)
+        #expect(MenuFind.texts(sut).isEmpty)
+        #expect(sut.findAll(ViewType.Button.self).isEmpty)
+        #expect((try? sut.find(viewWithAccessibilityIdentifier: "block.start")) == nil)
     }
 
-    @Test func startButtonOpensTheStartPopup() throws {
+    @Test func toolRowTimeBlockOpensTheStartPopup() throws {
         let h = Block.harness()
-        try Block.card(h).find(viewWithAccessibilityIdentifier: "block.start").find(ViewType.Button.self, relation: .parent).tap()
+        try Find.button(hosted(ToolRow(), h).inspect(), holding: "Time block").tap()
         #expect(h.presenter.calls.last == .showBlockStart)
     }
 
@@ -102,11 +100,13 @@ struct TimeBlockCardTests {
     }
 
     @Test func menuPanelHoldsOneCardAfterTheQuickList() throws {
-        let sut = try hosted(MenuPanel(), Block.harness()).inspect()
+        let h = Quick.harness([Quick.item("A", minutes: 5)])
+        h.startBlock("Plan", .minutes(30))
+        let sut = try hosted(MenuPanel(), h).inspect()
         #expect(sut.findAll(TimeBlockCard.self).count == 1)
         let texts = MenuFind.texts(sut)
-        let quick = try #require(texts.firstIndex(of: "Quick reminder"))
-        let block = try #require(texts.firstIndex(of: "Time block"))
+        let quick = try #require(texts.firstIndex(of: "Quick reminders"))
+        let block = try #require(texts.firstIndex(of: "End now"))
         #expect(quick < block)
     }
 }

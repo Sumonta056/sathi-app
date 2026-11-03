@@ -3,7 +3,6 @@ import SwiftUI
 
 package struct MenuPanel: View {
     @EnvironmentObject var e: Engine
-
     package init() {}
 
     package var body: some View {
@@ -11,12 +10,12 @@ package struct MenuPanel: View {
             MenuHeader()
             if e.pausedUntil != nil { NapBanner() }
             MenuCards()
-            Spacer(minLength: 0)
-            PauseChips()
             MenuFooter()
         }
         .padding(UIMetrics.menuPadding)
         .frame(width: UIMetrics.menuWidth)
+        .fixedSize(horizontal: false, vertical: true)
+        .background(GeometryReader { g in MenuWindowFit(height: g.size.height) })
         .background(Night.bg)
         .environment(\.colorScheme, .dark)
         .onAppear {

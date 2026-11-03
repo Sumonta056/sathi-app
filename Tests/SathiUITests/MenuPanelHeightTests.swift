@@ -18,7 +18,6 @@ struct MenuPanelHeightTests {
     private var chrome: some View {
         VStack(alignment: .leading, spacing: UIMetrics.menuSpacing) {
             MenuHeader()
-            PauseChips()
             MenuFooter()
         }
         .padding(UIMetrics.menuPadding)

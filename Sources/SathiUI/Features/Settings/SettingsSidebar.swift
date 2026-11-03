@@ -28,6 +28,10 @@ struct SettingsSidebar: View {
             SidebarNavButton(title: "Add a buddy", icon: "plus.circle", tint: Night.sprout, textColor: Night.sprout, tab: .addBuddy, selection: $tab)
             Spacer()
             MadeByFooter()
+            Text(verbatim: MenuFooter.versionText)
+                .font(Typography.hint)
+                .foregroundStyle(Night.faint)
+                .padding(.horizontal, UIMetrics.navPadding.leading)
         }
         .padding(UIMetrics.sidebarPadding)
         .padding(.top, UIMetrics.titleBarInset)

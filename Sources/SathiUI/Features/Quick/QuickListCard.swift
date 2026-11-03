@@ -6,12 +6,14 @@ struct QuickListCard: View {
 
     var body: some View {
         let items = e.quickReminders
-        VStack(alignment: .leading, spacing: UIMetrics.quickCardSpacing) {
-            header(count: items.count)
-            rows(items)
-            addRow
+        if !items.isEmpty {
+            VStack(alignment: .leading, spacing: UIMetrics.quickCardSpacing) {
+                header(count: items.count)
+                rows(items)
+                addRow
+            }
+            .quickCardStyle()
         }
-        .quickCardStyle()
     }
 
     private func header(count: Int) -> some View {
@@ -23,13 +25,11 @@ struct QuickListCard: View {
                 .font(Typography.cardTitle)
                 .foregroundStyle(Night.text)
             Spacer(minLength: 0)
-            if count > 0 {
-                Text(verbatim: "\(count) of \(Limits.quickMax)")
-                    .font(Typography.pill)
-                    .foregroundStyle(Night.quick)
-                    .padding(UIMetrics.quickBadgePadding)
-                    .background(RoundedRectangle(cornerRadius: UIMetrics.quickPillRadius, style: .continuous).fill(Night.quickFill))
-            }
+            Text(verbatim: "\(count) of \(Limits.quickMax)")
+                .font(Typography.pill)
+                .foregroundStyle(Night.quick)
+                .padding(UIMetrics.quickBadgePadding)
+                .background(RoundedRectangle(cornerRadius: UIMetrics.quickPillRadius, style: .continuous).fill(Night.quickFill))
         }
         .padding(.bottom, UIMetrics.quickHeaderGap)
     }

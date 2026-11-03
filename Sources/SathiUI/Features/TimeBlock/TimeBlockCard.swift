@@ -21,22 +21,7 @@ struct TimeBlockCard: View {
                 noAccess
             }
             .blockCardStyle()
-        } else {
-            idle
         }
-    }
-
-    private var idle: some View {
-        HStack(spacing: UIMetrics.menuSpacing) {
-            header
-            Spacer(minLength: 0)
-            Button { e.openBlockStart() } label: {
-                Text(verbatim: Copywriter.blockStart).accessibilityIdentifier("block.start")
-            }
-            .accessibilityLabel(Copywriter.blockStartButton)
-            .buttonStyle(AccentButton(accent: Night.block, height: UIMetrics.actionHeight))
-        }
-        .blockCardStyle(padding: UIMetrics.cardPadding)
     }
 
     private var header: some View {
