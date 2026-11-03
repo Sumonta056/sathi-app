@@ -22,7 +22,7 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/menu-bar.png" alt="Sathi menu bar popover with progress rings for water, reading, and meditation, a 9-day streak, and buttons to pause reminders" width="380" />
+  <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/menu-bar.png" alt="Sathi menu bar popover with a row for water, reading, meditation, and gym, a 9-day streak, Reminder and Time block buttons, and a Take a break menu" width="380" />
 </p>
 
 ## Install
@@ -38,22 +38,41 @@ To see a reminder right away, open Settings, pick a buddy, and click **Show a re
 ## The buddies
 
 - **Fota** (water): a reminder every 2 hours between 9:30 and 18:30. Log a few sips, half, or a full glass, or drag the line on your sip bottle. The daily goal is 8 glasses.
-- **Boi** (reading): a small popup in the top-right corner at 22:00. It never takes focus from your work. Start a 15-minute timer, and Boi counts the minutes. Pick the days of the week.
+- **Boi** (reading): a small popup in the top-right corner at 22:00. It never takes focus from your work. Start a 15-minute timer, and Boi counts the minutes. Pick the days of the week. Keep a reading list of links: "Start reading" opens today's pick.
 - **Shanti** (meditation, off by default): short guided breathing sessions (box, relax, or even). Pick a daily goal of 5, 10, or 20 minutes. Shanti reminds you every hour between 9:00 and 21:00 and stops for the day when you reach the goal.
 - **Shokti** (gym, off by default): a small popup in the top-right corner every hour between 9:00 and 17:00 on the days you pick. It suggests 1 short workout from your list of 4 (a stretch, a short walk, squats, push-ups), in order. Start a short timer, and "Done" saves the workout. The daily goal is 4 workouts. The close button and "In 5 min" snooze it.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/water-bubble.png" alt="Water reminder bubble with buttons for a few sips, half, and a full glass" width="440" />
   <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/reading-corner.png" alt="Reading corner popup from Boi with Start reading and In 5 min buttons" width="378" />
+  <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/gym-corner.png" alt="Gym corner popup from Shokti with a short walk, and Start, Next idea, and In 5 min buttons" width="378" />
+</p>
+
+## Day summary
+
+Every evening at 22:00 a calm corner popup shows today's progress of the 4 buddies, with a streak for each. When every goal is met, it says congratulations. It shows once a day and stays until you close it. Change the time or turn it off in Settings, General tab.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/day-summary.png" alt="Day summary popup: Good day, Alex, 3 of 4 goals met, with a row for each buddy and a Good night button" width="378" />
 </p>
 
 ## Quick reminders
 
 Write a one-off note such as "Call mom" and pick when it shows: 5 min, 15 min, 30 min, 1 hour, or a time of day. A calm corner popup shows it then and keeps coming back until you tap **Done**. Snooze it or close it. Up to 20 can be pending at once. A quick reminder is a note, not a habit, so it has no streak or goal. Its level is set in Settings, General tab. Tap **Reminder** in the menu to add one: a small popup opens, and you pick a time with a tap grid in 5-minute steps.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/quick-add.png" alt="New quick reminder popup: Call mom, with chips for 5 min, 15 min, 30 min, and 1 hour, and an or at time" width="428" />
+  <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/quick-popup.png" alt="Quick reminder popup: Call mom, with Done and In 5 min buttons" width="378" />
+</p>
+
 ## Time blocks
 
-Track your work in the macOS Calendar app. Tap **Time block** in the menu, type a title, pick a length (15, 30, 40, 45, 60, or 120 min, or Open), and pick a calendar. When the block ends, Sathi saves 1 event to that calendar. A planned block asks "Done" or "+15 min". An open block checks in every 2 hours. The menu bar shows the minutes, and an optional pill in the corner shows a live timer. You can drag the pill. Settings has a Time blocks page for the default calendar, the display, and the sound. Sathi asks for calendar access the first time.
+Track your work in the macOS Calendar app. Tap **Time block** in the menu, type a title, pick a length (15, 30, 40, 45, 60, or 120 min, or Open), and pick a calendar. When the block ends, Sathi saves 1 event to that calendar. A planned block asks "Done" or "+15 min". An open block checks in every 2 hours. The menu bar shows the minutes, and an optional pill in the corner shows a live timer. You can drag the pill. For 4 seconds after Start, the pill shows **Undo**. Settings has a Time blocks page for the default calendar, the display, and the sound. Sathi asks for calendar access the first time and never reads your events.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/block-start.png" alt="New time block popup: length chips from Open to 2 hours, a calendar menu, and a Start button" width="428" />
+  <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/block-done.png" alt="Time block done popup: 45 minutes saved to the calendar, with Done and +15 min buttons" width="378" />
+</p>
 
 ## Reminders that escalate
 
@@ -65,7 +84,7 @@ If you ignore a reminder, it gets firmer, step by step:
 | Nudgy | After 1 snooze, the reminder stays on top and wiggles. |
 | Strict | After 2 snoozes, a full-screen lock. Hold a button for 3 seconds to unlock. An emergency skip is always there. |
 
-Each buddy has its own level: Gentle, Nudgy, or Strict. At Strict, any buddy locks the screen after 2 snoozes. Only one lock shows at a time. Each buddy also has a "Show a close button" switch. Each buddy reminds you on its own, so two reminders can show at once: they stack in the top-right corner of the display with your mouse pointer. The menu bar popover can pause all reminders for 30 minutes, 1 hour, or the rest of the day.
+Each buddy has its own level: Gentle, Nudgy, or Strict. At Strict, any buddy locks the screen after 2 snoozes. Only one lock shows at a time. Each buddy also has a "Show a close button" switch. An optional snooze limit (1 to 15) in the General tab takes the snooze away at the limit: the reminder stays until you act, and a buddy offers "Skip today". Each buddy reminds you on its own, so two reminders can show at once: they stack in the top-right corner of the display with your mouse pointer. The **Take a break** menu in the popover pauses buddy reminders for 30 minutes, 1 hour, or the rest of the day. Quick reminders still show during a break.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/water-nudgy.png" alt="Nudgy water reminder after 1 snooze, with no close button" width="400" />
@@ -77,8 +96,9 @@ See [every reminder on the website](https://sumonta056.github.io/sathi-app/#gall
 ## Reports and settings
 
 - The Reports window shows each habit by day, week, or month, with a chart, a streak calendar, your best day, and your longest streak.
-- Each buddy has its own Settings page. Water: interval, active hours, container, goal, strictness. Reading: time, weekdays, session length, style, strictness. Meditation: daily goal, session length, interval, active hours, breathing style, chime, strictness. Gym: interval, work hours, work days, your 4 workouts (name and minutes), strictness. You pick times in 15-minute steps. Every buddy also has its own weekdays and a list of days off (for example, next Tuesday): on a day off that buddy stays quiet, and the day never breaks its streak.
-- The General tab holds your name, snooze length, when no answer counts as a snooze, sound, and open at login.
+- Each buddy has its own Settings page. Water: interval, active hours, container, goal, strictness. Reading: time, weekdays, session length, style, reading list, strictness. Meditation: daily goal, session length, interval, active hours, breathing style, chime, strictness. Gym: interval, work hours, work days, your 4 workouts (name and minutes), strictness. You pick times on a grid in 5-minute steps. Every buddy also has its own weekdays and a list of days off (for example, next Tuesday): on a day off that buddy stays quiet, and the day never breaks its streak.
+- The General tab holds your name, snooze length, snooze limit, when no answer counts as a snooze, sound, the day summary, quick reminders, and open at login.
+- The Time blocks page holds calendar access, the default calendar, menu bar or corner pill, and the sound.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/reports.png" alt="Reports window with weekly averages, a water bar chart, and a streak calendar" width="640" />
