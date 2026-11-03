@@ -16,10 +16,10 @@ Make the menu panel short and calm. Today it is approximately 745 pt tall with 4
    - All action buttons have the same width: `UIMetrics.menuActionWidth` (84 pt), height 30 pt, label centered. The labels do not change: "+1 glass", "Read now", "Breathe", "Move".
 4. Sleeping rows: no change, below the habit list.
 5. Full cards, only when they have content:
-   - Quick reminders card when there is 1 or more reminder, or while the add form is open.
+   - Quick reminders card when there is 1 or more reminder.
    - Time block card while a block runs, waits for a calendar, or calendar access is denied.
 6. Tool row: 1 button for each tool that has no full card, side by side, equal width, 44 pt tall.
-   - "Reminder" (pink, dashed border) opens the Quick add form in place of the row.
+   - "Reminder" (pink, dashed border) opens the Quick add popup (`openQuickAdd`), a top-right popup that takes focus, like the Start popup.
    - "Time block" (teal fill) opens the start popup (`openBlockStart`).
    - When both tools show full cards, there is no tool row.
 7. Divider, then the footer: Reports, Settings, flexible space, "Take a break" menu button, Quit.
@@ -30,7 +30,9 @@ Make the menu panel short and calm. Today it is approximately 745 pt tall with 4
 
 ## The gap under the menu bar
 
-Hypothesis: the panel content becomes shorter after `MenuBarExtra` places its window. AppKit keeps the window bottom fixed, so the top edge moves down. Candidates:
+Result: `MenuBarExtra` keeps the height of the first window. The fix is `MenuWindowFit`: it sets the window height to the content height and keeps the top edge. The panel height is rigid (`fixedSize`).
+
+First hypothesis: the panel content becomes shorter after `MenuBarExtra` places its window. AppKit keeps the window bottom fixed, so the top edge moves down. Candidates:
 
 - `e.refreshCalendarAccess()` in `MenuPanel.onAppear` can change the Time block card after placement.
 - `CappedHeight` + `ScrollView` in `MenuCards` can report a different height in the first layout pass.
@@ -39,8 +41,13 @@ Step 1: prove the cause in the real app. Log the window frame at open and 1 seco
 
 ## Not in scope
 
-- No Core change. `goalText`, `pill`, `progress`, and the actions stay as they are.
-- No change to the Quick add form, the Time block card content, or the popups.
+- No change to `goalText`, `pill`, `progress`, or the habit actions.
+- No change to the Time block card content or its popups.
+
+## Changes added after the spec was approved (2026-11-03)
+
+- The Quick add form moved from the menu into its own popup: `Engine.openQuickAdd` and `closeQuickAdd`, port methods `showQuickAdd` and `closeQuickAdd`, and `QuickAddPopup`. Quick rule 17 and Time blocks rule 3 changed.
+- The add form uses the shared `TimeMenu` chip grid in place of the system time field. `Limits.scheduleSlotMinutes` changed from 15 to 5 (rule 4). Saved 15-minute values stay valid.
 - No change to saved data.
 
 ## Business rules to update first

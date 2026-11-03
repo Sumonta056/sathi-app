@@ -49,7 +49,11 @@ To see a reminder right away, open Settings, pick a buddy, and click **Show a re
 
 ## Quick reminders
 
-Write a one-off note such as "Call mom" and pick when it shows: 5 min, 15 min, 30 min, 1 hour, or a time of day. A calm corner popup shows it then and keeps coming back until you tap **Done**. Snooze it or close it. Up to 20 can be pending at once. A quick reminder is a note, not a habit, so it has no streak or goal. Its level is set in Settings, General tab.
+Write a one-off note such as "Call mom" and pick when it shows: 5 min, 15 min, 30 min, 1 hour, or a time of day. A calm corner popup shows it then and keeps coming back until you tap **Done**. Snooze it or close it. Up to 20 can be pending at once. A quick reminder is a note, not a habit, so it has no streak or goal. Its level is set in Settings, General tab. Tap **Reminder** in the menu to add one: a small popup opens, and you pick a time with a tap grid in 5-minute steps.
+
+## Time blocks
+
+Track your work in the macOS Calendar app. Tap **Time block** in the menu, type a title, pick a length (15, 30, 40, 45, 60, or 120 min, or Open), and pick a calendar. When the block ends, Sathi saves 1 event to that calendar. A planned block asks "Done" or "+15 min". An open block checks in every 2 hours. The menu bar shows the minutes, and an optional pill in the corner shows a live timer. You can drag the pill. Settings has a Time blocks page for the default calendar, the display, and the sound. Sathi asks for calendar access the first time.
 
 ## Reminders that escalate
 
@@ -82,7 +86,7 @@ See [every reminder on the website](https://sumonta056.github.io/sathi-app/#gall
 
 ## Privacy
 
-Sathi makes no network requests. All data stays on your Mac in `~/Library/Application Support/Sathi/`:
+Sathi makes no network requests. All data stays on your Mac in `~/Library/Application Support/Sathi/`. Time blocks are the only exception: with your permission, Sathi writes each block as an event to the calendar you pick, through macOS Calendar, and that calendar's account can sync it.
 
 | File | Holds |
 |---|---|
