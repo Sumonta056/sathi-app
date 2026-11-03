@@ -1,7 +1,19 @@
 import Foundation
 
 extension Engine {
-    package func calendarChoices() -> [CalendarChoice] { calendarWriter.calendars() }
+    package func calendarChoices() -> [CalendarChoice] {
+        if let cached = calendarChoicesCache { return cached }
+        let fresh = calendarWriter.calendars()
+        calendarChoicesCache = fresh
+        return fresh
+    }
+
+    func refreshCalendarChoices() {
+        let fresh = calendarWriter.calendars()
+        guard fresh != calendarChoicesCache else { return }
+        objectWillChange.send()
+        calendarChoicesCache = fresh
+    }
 
     package func calendarTitle(_ id: String) -> String? {
         calendarChoices().first { $0.id == id }?.title
@@ -15,13 +27,19 @@ extension Engine {
 
     package func requestCalendarAccess() async {
         calendarAccess = await calendarWriter.requestAccess()
+        refreshCalendarChoices()
     }
 
     package func saveWaitingBlock(to calendarID: String) {
         guard var b = timeBlock, b.waitingForCalendar, let end = b.endedAt else { return }
         b.calendarID = calendarID
-        guard write(b, end: end) != nil else { return }
+        guard write(b, end: end) != nil else {
+            refreshCalendarChoices()
+            presenter.showBlockCalendarGone()
+            return
+        }
         data.live.timeBlock = nil
+        waitingCalendarPick = nil
         presenter.closeBlockCalendarGone()
         requestTick()
     }
@@ -38,7 +56,7 @@ extension Engine {
     }
 
     func write(_ b: TimeBlock, end: Date) -> String? {
-        if let ev = b.savedEventID {
+        if let ev = b.savedEventID, !ev.isEmpty {
             switch calendarWriter.update(eventID: ev, draft: b.draft(end: end)) {
             case let .saved(id): return id
             case .failed: return nil
@@ -49,9 +67,23 @@ extension Engine {
         return id
     }
 
-    func refreshCalendarAccess() {
+    package func refreshCalendarAccess() {
+        readCalendarAccess()
+        refreshCalendarChoices()
+    }
+
+    func refreshCalendarAccessIfDue() {
+        if let last = lastAccessRefresh, clock.now.timeIntervalSince(last) < Timing.minute { return }
+        if readCalendarAccess() { refreshCalendarChoices() }
+    }
+
+    @discardableResult
+    private func readCalendarAccess() -> Bool {
+        lastAccessRefresh = clock.now
         let access = calendarWriter.access
-        if calendarAccess != access { calendarAccess = access }
+        guard calendarAccess != access else { return false }
+        calendarAccess = access
+        return true
     }
 
     func wait(_ b: TimeBlock, end: Date) {
@@ -59,6 +91,8 @@ extension Engine {
         waiting.waitingForCalendar = true
         waiting.endedAt = end
         data.live.timeBlock = waiting
+        waitingCalendarPick = nil
+        refreshCalendarChoices()
         presenter.showBlockCalendarGone()
     }
 }

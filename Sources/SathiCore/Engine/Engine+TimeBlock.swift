@@ -4,12 +4,17 @@ extension Engine {
     package var timeBlock: TimeBlock? { data.live.timeBlock }
 
     package func openBlockStart() {
+        tick()
         refreshCalendarAccess()
-        guard calendarWriter.access == .notAsked else { return presenter.showBlockStart() }
-        Task {
-            await requestCalendarAccess()
-            presenter.showBlockStart()
-        }
+        guard calendarAccess == .notAsked else { return presenter.showBlockStart() }
+        Task { await askThenOpenBlockStart() }
+    }
+
+    package func askThenOpenBlockStart() async {
+        await requestCalendarAccess()
+        guard calendarAccess == .allowed else { return }
+        tick()
+        presenter.showBlockStart()
     }
 
     @discardableResult
@@ -24,19 +29,19 @@ extension Engine {
         endRunningBlockForStart()
         guard timeBlock == nil else { return refuseStart() }
         if finishedBlock != nil { dismissBlockDone() }
-        let block = TimeBlock(
+        var block = TimeBlock(
             title: TimeBlockText.clean(title),
             startedAt: clock.now.wholeSecond,
             length: length,
             calendarID: calendarID
         )
+        block.calendarTitle = calendarTitle(calendarID)
         data.live.timeBlock = block
         data.prefs.timeBlock.lastLength = length
         presenter.closeBlockStart()
         if usesBlockWidget {
-            let calendarTitle = calendarTitle(calendarID) ?? calendarID
             presenter.showBlockNote(.started(
-                title: block.title, length: length, end: block.plannedEnd, calendarTitle: calendarTitle
+                title: block.title, length: length, end: block.plannedEnd, calendarTitle: block.calendarTitle ?? calendarID
             ))
             presenter.showBlockWidget()
         }
@@ -65,6 +70,7 @@ extension Engine {
     package func setBlockCalendar(_ id: String) {
         guard timeBlock != nil, calendarChoices().contains(where: { $0.id == id }) else { return }
         data.live.timeBlock?.calendarID = id
+        data.live.timeBlock?.calendarTitle = calendarTitle(id)
     }
 
     package func extendBlock() {

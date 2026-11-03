@@ -68,4 +68,19 @@ struct EngineTimeBlockUpdateTests {
         h.engine.extendBlock()
         #expect(h.engine.timeBlock?.plannedEnd == end30.addingTimeInterval(20 * Timing.minute + Timing.blockExtend))
     }
+
+    @Test func anEmptyEventIDIsTreatedAsNoSavedID() throws {
+        let h = EngineHarness.quiet()
+        h.startBlock("Plan", .minutes(30))
+        h.calendarWriter.nextSaveResult = .saved(eventID: "")
+        h.advance(minutes: 30)
+        let done = try #require(h.engine.finishedBlock)
+        #expect(done.block.savedEventID == nil)
+        #expect(h.engine.timeBlock == nil)
+        h.calendarWriter.nextSaveResult = nil
+        h.engine.extendBlock()
+        h.advance(minutes: 15)
+        #expect(h.calendarWriter.updated.isEmpty)
+        #expect(h.calendarWriter.saved.count == 2)
+    }
 }

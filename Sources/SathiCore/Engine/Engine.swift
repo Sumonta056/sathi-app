@@ -12,6 +12,7 @@ package final class Engine: ObservableObject {
             }
             daySummaryPrefsChanged(from: oldValue.prefs.general)
             if oldValue.prefs.general.snoozeLimit != data.prefs.general.snoozeLimit { refreshIgnoreDeadlines() }
+            if oldValue.prefs.timeBlock.display != data.prefs.timeBlock.display { blockDisplayChanged() }
             if oldValue.prefs != data.prefs { store.savePrefs(data.prefs) }
             if oldValue.live != data.live { store.saveLive(data.live) }
         }
@@ -26,6 +27,7 @@ package final class Engine: ObservableObject {
     @Published package internal(set) var gymIdea = 0
     @Published package internal(set) var finishedBlock: FinishedBlock?
     @Published package internal(set) var blockCheckInShowing = false
+    @Published package internal(set) var waitingCalendarPick: String?
     @Published package internal(set) var calendarAccess: CalendarAccess
 
     package let status = StatusModel()
@@ -40,6 +42,8 @@ package final class Engine: ObservableObject {
 
     var timer: Timer?
     var isRunning = false
+    var lastAccessRefresh: Date?
+    var calendarChoicesCache: [CalendarChoice]?
     var forced: Set<HabitID> = []
     var celebrateToken = UUID()
     var streakCache: [HabitID: Int] = [:]

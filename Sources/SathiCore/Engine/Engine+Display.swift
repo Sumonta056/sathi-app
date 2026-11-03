@@ -132,6 +132,8 @@ extension Engine {
 
     func updateStatus() {
         let level = (waterLevel * Limits.statusIconSteps).rounded() / Limits.statusIconSteps
-        status.update(text: statusText, isBook: focus == .reading, iconLevel: level)
+        let text = statusText
+        let block = blockStatusText
+        status.update(text: text, isBook: focus == .reading, isBlock: block != nil && text == block, iconLevel: level)
     }
 }

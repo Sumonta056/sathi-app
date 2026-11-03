@@ -19,6 +19,7 @@ package final class EventKitCalendarWriter: CalendarWriter {
     }
 
     package func requestAccess() async -> CalendarAccess {
+        let before = access
         do {
             if #available(macOS 14, *) {
                 _ = try await store.requestFullAccessToEvents()
@@ -28,7 +29,9 @@ package final class EventKitCalendarWriter: CalendarWriter {
         } catch {
             return access
         }
-        return access
+        let after = access
+        if before == .notAsked, after == .allowed { store.reset() }
+        return after
     }
 
     package func calendars() -> [CalendarChoice] {
@@ -80,6 +83,7 @@ package final class EventKitCalendarWriter: CalendarWriter {
         event.calendar = calendar
         event.startDate = draft.start
         event.endDate = draft.end
+        event.alarms = nil
     }
 
     private func commit(_ event: EKEvent) -> CalendarSaveResult {
@@ -88,8 +92,7 @@ package final class EventKitCalendarWriter: CalendarWriter {
         } catch {
             return .failed
         }
-        guard let id = event.eventIdentifier else { return .failed }
-        return .saved(eventID: id)
+        return .saved(eventID: event.eventIdentifier ?? "")
     }
 
     private static func hex(of color: CGColor?) -> UInt32 {

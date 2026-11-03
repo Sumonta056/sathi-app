@@ -52,7 +52,7 @@ extension Engine {
         closeRunningBlock()
         guard let eventID = write(b, end: end) else { return wait(b, end: end) }
         var saved = b
-        saved.savedEventID = eventID
+        saved.savedEventID = eventID.isEmpty ? nil : eventID
         saved.plannedEnd = end
         data.live.timeBlock = nil
         finishedBlock = FinishedBlock(block: saved, end: end, calendarTitle: calendarTitle(b.calendarID) ?? b.calendarID)

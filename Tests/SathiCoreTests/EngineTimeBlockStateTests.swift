@@ -26,6 +26,25 @@ struct EngineTimeBlockStateTests {
         #expect(h.engine.calendarAccess == .allowed)
     }
 
+    @Test func ticksInsideOneMinuteReadAccessOnce() {
+        let h = EngineHarness.quiet()
+        h.engine.tick()
+        let before = h.calendarWriter.accessReads
+        for _ in 0 ..< 5 {
+            h.engine.tick()
+        }
+        #expect(h.calendarWriter.accessReads == before)
+        h.advance(minutes: 1)
+        #expect(h.calendarWriter.accessReads > before)
+    }
+
+    @Test func refreshingAccessOnDemandReadsTheWriter() {
+        let h = EngineHarness.quiet()
+        h.calendarWriter.access = .denied
+        h.engine.refreshCalendarAccess()
+        #expect(h.engine.calendarAccess == .denied)
+    }
+
     @Test func openingTheStartPopupRefreshesAccess() {
         let h = EngineHarness.quiet()
         h.calendarWriter.access = .denied

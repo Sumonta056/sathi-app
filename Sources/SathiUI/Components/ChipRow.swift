@@ -8,6 +8,7 @@ struct ChipRow<Value: Hashable>: View {
     let label: (Value) -> String
     var spokenLabel: ((Value) -> String)?
     var chipWidth: CGFloat?
+    var identifier: ((Value) -> String)?
 
     var body: some View {
         HStack(spacing: UIMetrics.chipSpacing) {
@@ -32,5 +33,6 @@ struct ChipRow<Value: Hashable>: View {
         .fixedSize()
         .accessibilityLabel(Text(verbatim: spokenLabel?(value) ?? label(value)))
         .accessibilityAddTraits(on ? .isSelected : [])
+        .accessibilityIdentifier(identifier?(value) ?? "")
     }
 }

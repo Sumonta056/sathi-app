@@ -15,8 +15,9 @@ extension Copywriter {
         "Saved \(minutes) min on \(title) to \(calendar)."
     }
 
-    package static func blockCalendarGone(_ name: String) -> String {
-        "Your calendar “\(name)” is gone"
+    package static func blockCalendarGone(_ name: String?) -> String {
+        guard let name else { return "Your calendar is gone" }
+        return "Your calendar “\(name)” is gone"
     }
 
     package static func blockSaveFailed(_ name: String) -> String {

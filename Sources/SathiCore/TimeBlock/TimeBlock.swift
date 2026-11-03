@@ -7,6 +7,7 @@ package struct TimeBlock: Codable, Equatable, Identifiable, Sendable {
     package var length: TimeBlockLength
     package var plannedEnd: Date?
     package var calendarID: String
+    package var calendarTitle: String?
     package var savedEventID: String?
     package var nextCheckIn: Date?
     package var endedAt: Date?
@@ -22,7 +23,7 @@ package struct TimeBlock: Codable, Equatable, Identifiable, Sendable {
         nextCheckIn = length == .open ? startedAt.addingTimeInterval(Timing.blockCheckIn) : nil
     }
 
-    var isRunning: Bool { !waitingForCalendar }
+    package var isRunning: Bool { !waitingForCalendar }
 
     func draft(end: Date) -> CalendarEventDraft {
         CalendarEventDraft(calendarID: calendarID, title: title, start: startedAt, end: end)
@@ -38,6 +39,7 @@ extension TimeBlock {
         length = try c.decode(TimeBlockLength.self, forKey: .length)
         plannedEnd = c.lenient(.plannedEnd, or: Date?.none)?.wholeSecond
         calendarID = try c.decode(String.self, forKey: .calendarID)
+        calendarTitle = c.lenient(.calendarTitle, or: String?.none)
         savedEventID = c.lenient(.savedEventID, or: String?.none)
         nextCheckIn = c.lenient(.nextCheckIn, or: Date?.none)?.wholeSecond
         endedAt = c.lenient(.endedAt, or: Date?.none)?.wholeSecond

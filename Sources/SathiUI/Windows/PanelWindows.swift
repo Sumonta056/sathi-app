@@ -11,6 +11,13 @@ final class CornerPanel: NSPanel {
     override var canBecomeMain: Bool { false }
 }
 
+final class KeyCornerPanel: NSPanel {
+    var onCancel: () -> Void = {}
+    override var canBecomeKey: Bool { true }
+    override var canBecomeMain: Bool { false }
+    override func cancelOperation(_: Any?) { onCancel() }
+}
+
 final class LockWindow: NSWindow {
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { true }

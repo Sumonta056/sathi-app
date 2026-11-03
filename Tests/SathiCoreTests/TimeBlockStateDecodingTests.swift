@@ -66,4 +66,16 @@ struct TimeBlockStateDecodingTests {
         #expect(back.timeBlock?.length == .open)
         #expect(back.timeBlock?.plannedEnd == nil)
     }
+
+    @Test func anOldBlockWithoutACalendarTitleLoadsNil() throws {
+        let json = try blockJSON(length: lengthJSON(.minutes(30)))
+        let block = try #require(try live(#"{"timeBlock":\#(json)}"#).timeBlock)
+        #expect(block.calendarTitle == nil)
+        #expect(block.calendarID == "work")
+    }
+
+    @Test func aSavedCalendarTitleLoads() throws {
+        let json = try blockJSON(length: lengthJSON(.minutes(30)), extra: #","calendarTitle":"Gmail Work""#)
+        #expect(try live(#"{"timeBlock":\#(json)}"#).timeBlock?.calendarTitle == "Gmail Work")
+    }
 }

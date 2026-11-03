@@ -10,13 +10,7 @@ package struct MenuPanel: View {
         VStack(alignment: .leading, spacing: UIMetrics.menuSpacing) {
             MenuHeader()
             if e.pausedUntil != nil { NapBanner() }
-            ForEach(HabitID.allCases.filter { e.enabled($0) }) { id in
-                HabitCard(id: id)
-            }
-            ForEach(HabitID.allCases.filter { !e.enabled($0) }) { id in
-                SleepingRow(id: id)
-            }
-            QuickListCard()
+            MenuCards()
             Spacer(minLength: 0)
             PauseChips()
             MenuFooter()
@@ -25,6 +19,9 @@ package struct MenuPanel: View {
         .frame(width: UIMetrics.menuWidth)
         .background(Night.bg)
         .environment(\.colorScheme, .dark)
-        .onAppear { e.tick() }
+        .onAppear {
+            e.tick()
+            e.refreshCalendarAccess()
+        }
     }
 }

@@ -29,6 +29,9 @@ enum Night {
     static let quick = Color(hex: 0xFF9FB8)
     static let quickFill = Color(hex: 0x2A1C25)
     static let quickBorder = Color(hex: 0x4A2E3D)
+    static let block = Color(hex: 0x5ED6C4)
+    static let blockFill = Color(hex: 0x142A2A)
+    static let blockBorder = Color(hex: 0x1F4744)
 
     static func accent(_ id: HabitID) -> Color {
         switch id {

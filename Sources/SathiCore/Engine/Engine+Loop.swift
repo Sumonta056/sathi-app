@@ -23,7 +23,7 @@ extension Engine {
         if pausedUntil == nil { presentDueHabits() }
         lockWaitingHabit()
         tickQuick()
-        refreshCalendarAccess()
+        refreshCalendarAccessIfDue()
         tickBlock()
         showDaySummaryIfDue()
         updateStatus()
