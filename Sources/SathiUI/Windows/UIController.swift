@@ -16,6 +16,8 @@ package final class UIController: ReminderPresenter {
     var daySummaryPanel: NSPanel?
     var blockStartPanel: NSPanel?
     var blockStartReturnApp: NSRunningApplication?
+    var quickAddPanel: NSPanel?
+    var quickAddReturnApp: NSRunningApplication?
     var blockPanels: [BlockPanel: NSPanel] = [:]
     var noteTask: Task<Void, Never>?
     private var locks: [NSWindow] = []

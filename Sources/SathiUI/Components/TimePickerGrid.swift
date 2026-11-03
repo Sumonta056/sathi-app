@@ -6,7 +6,13 @@ struct TimePickerGrid: View {
     let accent: Color
 
     private var parts: TimeParts { TimeParts(minutes: minutes) }
-    private static let hourRows = [Array(TimeParts.hours.prefix(6)), Array(TimeParts.hours.suffix(6))]
+    private static let hourRows = halves(TimeParts.hours)
+    static let minuteRows = halves(TimeParts.minuteOptions)
+
+    private static func halves(_ items: [Int]) -> [[Int]] {
+        let half = (items.count + 1) / 2
+        return [Array(items.prefix(half)), Array(items.dropFirst(half))]
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: UIMetrics.timePickerSpacing) {
@@ -22,14 +28,16 @@ struct TimePickerGrid: View {
                 )
             }
             SectionLabel("Minute")
-            ChipRow(
-                options: TimeParts.minuteOptions,
-                accent: accent,
-                isSelected: { $0 == parts.minute },
-                onTap: { minutes = parts.with(minute: $0).minutes },
-                label: { String(format: ":%02d", $0) },
-                chipWidth: UIMetrics.minuteChipWidth
-            )
+            ForEach(Self.minuteRows, id: \.self) { row in
+                ChipRow(
+                    options: row,
+                    accent: accent,
+                    isSelected: { $0 == parts.minute },
+                    onTap: { minutes = parts.with(minute: $0).minutes },
+                    label: { String(format: ":%02d", $0) },
+                    chipWidth: UIMetrics.hourChipWidth
+                )
+            }
             ChipRow(
                 options: [false, true],
                 accent: accent,

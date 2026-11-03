@@ -35,6 +35,17 @@ struct PanelSizeTests {
         #expect(size.height > 0)
     }
 
+    @Test func quickAddPanelHasARealSizeAndCloses() throws {
+        let h = EngineHarness()
+        let ui = controller(h)
+        ui.showQuickAdd()
+        let size = try #require(ui.quickAddPanel).frame.size
+        ui.closeQuickAdd()
+        #expect(size.width > 0)
+        #expect(size.height > 0)
+        #expect(ui.quickAddPanel == nil)
+    }
+
     @Test func daySummaryPanelHasARealSize() throws {
         let h = EngineHarness()
         let ui = controller(h)

@@ -3,24 +3,15 @@ import SwiftUI
 
 struct QuickListCard: View {
     @EnvironmentObject var e: Engine
-    @State private var adding: Bool
-
-    init(adding: Bool = false) {
-        _adding = State(initialValue: adding)
-    }
 
     var body: some View {
-        if adding {
-            QuickAddForm { adding = false }
-        } else {
-            let items = e.quickReminders
-            VStack(alignment: .leading, spacing: UIMetrics.quickCardSpacing) {
-                header(count: items.count)
-                rows(items)
-                addRow
-            }
-            .quickCardStyle()
+        let items = e.quickReminders
+        VStack(alignment: .leading, spacing: UIMetrics.quickCardSpacing) {
+            header(count: items.count)
+            rows(items)
+            addRow
         }
+        .quickCardStyle()
     }
 
     private func header(count: Int) -> some View {
@@ -59,7 +50,7 @@ struct QuickListCard: View {
     }
 
     private var addRow: some View {
-        Button { adding = true } label: {
+        Button { e.openQuickAdd() } label: {
             HStack(spacing: UIMetrics.quickTimeSpacing) {
                 Image(systemName: "plus")
                     .font(.system(size: UIMetrics.quickIconSize, weight: .heavy))

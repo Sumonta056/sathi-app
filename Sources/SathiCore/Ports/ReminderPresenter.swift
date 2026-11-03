@@ -19,6 +19,8 @@ package protocol ReminderPresenter: AnyObject {
     func closeQuick(_ id: UUID)
     func showQuickLock(_ id: UUID)
     func showQuickSnoozed(text: String, until: Date)
+    func showQuickAdd()
+    func closeQuickAdd()
     func showBlockStart()
     func closeBlockStart()
     func showBlockNote(_ note: BlockNote)

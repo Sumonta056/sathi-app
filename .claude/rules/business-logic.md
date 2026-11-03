@@ -52,7 +52,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 1. After "done", the next due time starts from the done time, not from the old due time.
 2. A due time outside active hours moves to the next start of active hours.
 3. Reading and Meditation are skipped for the rest of the day when today's minutes already meet the goal.
-4. Clock times are wall-clock times. On a DST day, 8:00 is 8:00 local time. Settings picks clock times in 15-minute steps (`Limits.scheduleSlotMinutes`).
+4. Clock times are wall-clock times. On a DST day, 8:00 is 8:00 local time. Settings and the Quick add popup pick clock times with the same chip grid (`TimeMenu`) in 5-minute steps (`Limits.scheduleSlotMinutes`).
 5. A settings change never fires a past slot. At launch, a missed slot is still due now. Water and Meditation have no slots: when a settings change moves their due time into the past, the reminder shows at once.
 6. A session started when nothing is due and stopped early does nothing: no snooze, no event, the next due time stays.
 7. A goal of 0 never counts as met.
@@ -154,7 +154,7 @@ Full rules are in `docs/specs/phase-12-quick-reminder.md`.
 14. Storage: `LiveState.quickReminders` in `state.json`. A missing key loads `[]`. An unreadable item, or one with empty text, is dropped and the others stay. Text is cut to 80. Above 20 items, the 20 with the earliest `fireDate` stay. Dates are whole seconds. Open popups and locks are not saved. After a restart a due reminder shows again at the level its saved `snoozes` gives.
 15. Settings: `Prefs.quick` holds `strictness` (an unknown value loads Nudgy) and `showsCloseButton` (default on). It is a "Quick reminders" card on the General tab. A change applies at the next show.
 16. Menu: a "Quick reminders" card below the buddy cards and above "Take a break". Header badge "{n} of 20" when n > 0. Rows are in `fireDate` order: a time pill (the `fireDate` time), the text, and a second line ("Showing now", "in {time left}", or "Tomorrow"), plus a delete button. More than 4 rows scroll. With no reminders the card has only the "+ Quick reminder" row.
-17. Add form (inline): "Remind me to" field with a "{n} / 80" counter. 4 chips, with 15 min selected on open. An "or at" hour and minute field: a time pick clears the chip, a chip tap replaces the time. Preview "Today at {time}" or "Tomorrow at {time}". "Cancel" and "Add reminder". Add is disabled when the text is blank, and Return adds. At 20 it shows "You have 20 quick reminders. Delete one to add more." and no Add button.
+17. Add popup: a top-right corner popup that takes focus, like the time block Start popup. Esc, Cancel, and a successful Add close it, and focus goes back to the app that had it. The form: "Remind me to" field with a "{n} / 80" counter. 4 chips, with 15 min selected on open. An "or at" time menu (the shared `TimeMenu` grid, pink when a time is picked): a time pick clears the chip, a chip tap replaces the time. Preview "Today at {time}" or "Tomorrow at {time}". "Cancel" and "Add reminder". Add is disabled when the text is blank, and Return adds. At 20 it shows "You have 20 quick reminders. Delete one to add more." and no Add button.
 18. The menu bar countdown and status icon do not change.
 19. Quick reminders still show during a break, and "Quick reminders still show during a break." shows under the pause chips.
 20. No new timer. `upcomingDeadlines()` adds each pending `fireDate` and each popup ignore deadline.
@@ -165,7 +165,7 @@ Full rules are in `docs/specs/phase-13-time-blocks.md`.
 
 1. A time block is not a habit: no streak, goal, history event, stats, or day summary row. It is not a `HabitID`. The calendar event is its only record.
 2. Only 1 block runs at a time. A Start while a block runs ends and saves the old block now and shows "Saved {n} min on {title} to {calendar}.", then starts the new one.
-3. Start popup: the only Sathi popup that takes focus. Title (optional, empty → "Work", trimmed, line breaks → spaces, max `Limits.blockTitleMax` 60), length chips "Open" + `Limits.blockLengths` (15, 30, 40, 45, 60, 120; the last used is selected, default 30), a calendar menu (this block only), and "Start". Esc and close start nothing.
+3. Start popup: it takes focus (only this popup and the Quick add popup do). Title (optional, empty → "Work", trimmed, line breaks → spaces, max `Limits.blockTitleMax` 60), length chips "Open" + `Limits.blockLengths` (15, 30, 40, 45, 60, 120; the last used is selected, default 30), a calendar menu (this block only), and "Start". Esc and close start nothing.
 4. Started note: "Started · {title}" with length, end, calendar, and "Undo" for `Timing.cornerNoteDuration`. No focus. Undo removes the block and writes nothing. Not shown in "Menu bar only" mode.
 5. Menu bar: "Paused" and "Locked" win; otherwise, while a block runs, the status text is the block minutes: minutes left for a planned block ("12m"), minutes since Start for an open block ("42m", "2h", "2h 5m"). It changes 1 time per minute.
 6. Menu card while a block runs: ring, editable title, progress text, calendar menu, "End now".

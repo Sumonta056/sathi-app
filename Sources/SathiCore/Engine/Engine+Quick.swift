@@ -15,6 +15,14 @@ extension Engine {
         Copywriter.quickPreview(quickDate(t), now: clock.now, calendar: calendar)
     }
 
+    package func openQuickAdd() {
+        presenter.showQuickAdd()
+    }
+
+    package func closeQuickAdd() {
+        presenter.closeQuickAdd()
+    }
+
     @discardableResult
     package func addQuick(text: String, when: QuickTime) -> QuickAddResult {
         let clean = QuickText.clean(text)
@@ -23,6 +31,7 @@ extension Engine {
         let item = QuickReminder(text: clean, due: quickDate(when), createdAt: clock.now.wholeSecond)
         data.live.quickReminders = (quickReminders + [item]).kept()
         requestTick()
+        presenter.closeQuickAdd()
         return .added(item.id)
     }
 
