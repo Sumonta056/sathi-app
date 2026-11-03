@@ -71,8 +71,9 @@ struct BlockWidgetTests {
         #expect(h.calendarWriter.saved.first?.title == "Plan")
     }
 
-    @Test func theEndButtonOnAShortBlockSavesNothing() throws {
-        let h = Block.running(.minutes(30), after: 0)
+    @Test func theEndButtonAfterTheUndoWindowOnAShortBlockSavesNothing() throws {
+        let halfAMinute = 0.5
+        let h = Block.running(.minutes(30), after: halfAMinute)
         try Block.tap(Block.view(BlockWidget(), h), id: "block.widget.end")
         #expect(h.engine.timeBlock == nil)
         #expect(h.calendarWriter.saved.isEmpty)

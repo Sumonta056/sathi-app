@@ -18,7 +18,7 @@ struct BlockWidget: View {
     private func pill(_ b: TimeBlock) -> some View {
         HStack(spacing: UIMetrics.blockWidgetSpacing) {
             dragArea(b)
-            endButton
+            action(b)
         }
         .padding(UIMetrics.blockWidgetPadding)
         .frame(width: UIMetrics.blockWidgetWidth, height: UIMetrics.blockWidgetHeight)
@@ -55,19 +55,18 @@ struct BlockWidget: View {
         return CGSize(width: now.x - last.x, height: now.y - last.y)
     }
 
-    private var endButton: some View {
-        Button { e.endBlock() } label: {
-            Image(systemName: "xmark")
-                .font(.system(size: UIMetrics.blockWidgetEndIcon, weight: .heavy))
-                .foregroundStyle(Night.chipText)
-                .frame(width: UIMetrics.blockWidgetEnd, height: UIMetrics.blockWidgetEnd)
-                .background(Circle().fill(Night.bg))
-                .contentShape(Circle())
-                .accessibilityIdentifier("block.widget.end")
+    @ViewBuilder private func action(_ b: TimeBlock) -> some View {
+        if Self.showsUndo(b, now: e.now) {
+            TimelineView(.explicit([b.startedAt, b.undoEnd])) { context in
+                BlockWidgetAction(block: b, showsUndo: Self.showsUndo(b, now: context.date))
+            }
+        } else {
+            BlockWidgetAction(block: b, showsUndo: false)
         }
-        .buttonStyle(.plain)
-        .accessibilityLabel(Copywriter.blockEndAndSave)
-        .help(Copywriter.blockEndAndSave)
+    }
+
+    static func showsUndo(_ b: TimeBlock, now: Date) -> Bool {
+        now < b.undoEnd
     }
 
     static func timer(_ b: TimeBlock) -> (range: ClosedRange<Date>, countsDown: Bool) {

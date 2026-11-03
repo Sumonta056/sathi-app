@@ -30,10 +30,6 @@ extension UIController {
         presentNote(BlockNoteView(note: note))
     }
 
-    package func closeBlockNote() {
-        closeNote()
-    }
-
     package func showBlockWidget() {
         showBlock(.widget, BlockWidget { [weak self] in self?.moveBlockWidget(by: $0) })
         blockPanels[.widget]?.allowsToolTipsWhenApplicationIsInactive = true

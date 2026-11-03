@@ -24,7 +24,6 @@ package protocol ReminderPresenter: AnyObject {
     func showBlockStart()
     func closeBlockStart()
     func showBlockNote(_ note: BlockNote)
-    func closeBlockNote()
     func showBlockWidget()
     func closeBlockWidget()
     func showBlockDone()

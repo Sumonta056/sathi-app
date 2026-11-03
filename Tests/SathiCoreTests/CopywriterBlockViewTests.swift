@@ -51,19 +51,4 @@ struct CopywriterBlockViewTests {
         let start = zone.date(2026, 3, 4, 14, 30)
         #expect(Copywriter.blockSince(start: start, minutes: 42, calendar: zone.calendar) == "Since " + shortTime(start) + " · 42 min")
     }
-
-    @Test func startedTitle() {
-        #expect(Copywriter.blockStartedTitle("Write spec") == "Started · Write spec")
-    }
-
-    @Test func startedDetailForAPlannedLength() {
-        let end = zone.date(2026, 3, 4, 15, 0)
-        let text = Copywriter.blockStartedDetail(length: .minutes(30), end: end, calendarTitle: "Work", calendar: zone.calendar)
-        #expect(text == "30 min · ends at " + shortTime(end) + " · Work")
-    }
-
-    @Test func startedDetailForAnOpenBlock() {
-        let text = Copywriter.blockStartedDetail(length: .open, end: nil, calendarTitle: "Work", calendar: zone.calendar)
-        #expect(text == "Open · Work")
-    }
 }

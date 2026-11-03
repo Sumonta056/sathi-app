@@ -35,7 +35,7 @@ package final class SpyPresenter: ReminderPresenter {
         case showDaySummary, closeDaySummary
         case showQuick(UUID, Level), closeQuick(UUID), showQuickLock(UUID), showQuickSnoozed(String, Date)
         case showQuickAdd, closeQuickAdd
-        case showBlockStart, closeBlockStart, showBlockNote(BlockNote), closeBlockNote, showBlockWidget, closeBlockWidget
+        case showBlockStart, closeBlockStart, showBlockNote(BlockNote), showBlockWidget, closeBlockWidget
         case showBlockDone, closeBlockDone, showBlockCheckIn, closeBlockCheckIn
         case showBlockCalendarGone, closeBlockCalendarGone
     }
@@ -71,7 +71,6 @@ package final class SpyPresenter: ReminderPresenter {
     package func showBlockStart() { calls.append(.showBlockStart) }
     package func closeBlockStart() { calls.append(.closeBlockStart) }
     package func showBlockNote(_ note: BlockNote) { calls.append(.showBlockNote(note)) }
-    package func closeBlockNote() { calls.append(.closeBlockNote) }
     package func showBlockWidget() { calls.append(.showBlockWidget) }
     package func closeBlockWidget() { calls.append(.closeBlockWidget) }
     package func showBlockDone() { calls.append(.showBlockDone) }

@@ -31,15 +31,6 @@ extension Copywriter {
         "Since " + quickClock(start, calendar: calendar) + " · \(minutes) min"
     }
 
-    package static func blockStartedTitle(_ title: String) -> String {
-        "Started · " + title
-    }
-
-    package static func blockStartedDetail(length: TimeBlockLength, end: Date?, calendarTitle: String, calendar: Calendar) -> String {
-        guard let m = length.minutes, let end else { return blockOpen + " · " + calendarTitle }
-        return blockLength(m) + " · ends at " + quickClock(end, calendar: calendar) + " · " + calendarTitle
-    }
-
     package static func blockLength(_ minutes: Int) -> String {
         guard minutes >= Limits.minutesPerHour, minutes % Limits.minutesPerHour == 0 else { return "\(minutes) min" }
         return "\(minutes / Limits.minutesPerHour) h"

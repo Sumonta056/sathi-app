@@ -39,12 +39,7 @@ extension Engine {
         data.live.timeBlock = block
         data.prefs.timeBlock.lastLength = length
         presenter.closeBlockStart()
-        if usesBlockWidget {
-            presenter.showBlockNote(.started(
-                title: block.title, length: length, end: block.plannedEnd, calendarTitle: block.calendarTitle ?? calendarID
-            ))
-            presenter.showBlockWidget()
-        }
+        if usesBlockWidget { presenter.showBlockWidget() }
         requestTick()
         return .started(block.id)
     }

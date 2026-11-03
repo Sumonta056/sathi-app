@@ -63,13 +63,4 @@ struct EngineTimeBlockMenuTests {
         #expect(h.presenter.calls.last == .closeBlockStart)
         #expect(h.engine.timeBlock == nil)
     }
-
-    @Test func undoOfTheStartedNoteClosesTheNote() {
-        let h = EngineHarness.quiet { $0.prefs.timeBlock.display = .widget }
-        h.startBlock("Plan", .minutes(30))
-        h.engine.undoStartedNote(h.presenter.blockNotes[0])
-        #expect(h.engine.timeBlock == nil)
-        #expect(h.presenter.calls.contains(.closeBlockNote))
-        #expect(h.calendarWriter.saved.isEmpty)
-    }
 }

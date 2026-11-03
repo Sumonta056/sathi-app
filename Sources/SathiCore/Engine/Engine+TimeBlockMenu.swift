@@ -10,11 +10,4 @@ extension Engine {
     package func cancelBlockStart() {
         presenter.closeBlockStart()
     }
-
-    package func undoStartedNote(_ note: BlockNote) {
-        presenter.closeBlockNote()
-        guard case let .started(title, length, end, _) = note,
-              let b = timeBlock, b.title == title, b.length == length, b.plannedEnd == end else { return }
-        undoBlockStart(b.id)
-    }
 }

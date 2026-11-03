@@ -26,6 +26,7 @@ package enum Timing {
     package static let blockCap: TimeInterval = 12 * hour
     package static let blockExtend: TimeInterval = 15 * minute
     package static let blockMinimum: TimeInterval = minute
+    package static let blockUndoWindow: TimeInterval = 4
 
     package static let breathBox: TimeInterval = 4
     package static let breathRelaxIn: TimeInterval = 4

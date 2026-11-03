@@ -24,6 +24,7 @@ package struct TimeBlock: Codable, Equatable, Identifiable, Sendable {
     }
 
     package var isRunning: Bool { !waitingForCalendar }
+    package var undoEnd: Date { startedAt.addingTimeInterval(Timing.blockUndoWindow) }
 
     func draft(end: Date) -> CalendarEventDraft {
         CalendarEventDraft(calendarID: calendarID, title: title, start: startedAt, end: end)
@@ -54,7 +55,6 @@ package struct FinishedBlock: Equatable, Sendable {
 }
 
 package enum BlockNote: Equatable, Sendable {
-    case started(title: String, length: TimeBlockLength, end: Date?, calendarTitle: String)
     case savedPrevious(minutes: Int, title: String, calendarTitle: String)
     case tooShort
 }

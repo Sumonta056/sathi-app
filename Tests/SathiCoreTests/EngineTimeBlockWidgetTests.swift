@@ -12,14 +12,27 @@ struct EngineTimeBlockWidgetTests {
         EngineHarness.quiet { $0.prefs.timeBlock.display = .widget }
     }
 
-    @Test func widgetShowsTheNoteThenThePill() throws {
+    @Test func widgetStartShowsThePillAndNoBlockNote() {
         let h = widget()
         h.startBlock("Plan", .minutes(30))
-        let note = BlockNote.started(title: "Plan", length: .minutes(30), end: t0.addingTimeInterval(30 * Timing.minute), calendarTitle: "Gmail Work")
-        let calls = h.presenter.calls
-        let noteAt = try #require(calls.firstIndex(of: .showBlockNote(note)))
-        let pillAt = try #require(calls.firstIndex(of: .showBlockWidget))
-        #expect(noteAt < pillAt)
+        #expect(h.presenter.calls.contains(.showBlockWidget))
+        #expect(h.presenter.blockNotes.isEmpty)
+    }
+
+    @Test func undoEndsFourSecondsAfterTheStart() throws {
+        let h = widget()
+        h.startBlock("Plan", .minutes(30))
+        let b = try #require(h.engine.timeBlock)
+        #expect(b.undoEnd == b.startedAt.addingTimeInterval(4))
+    }
+
+    @Test func afterPlusFifteenTheUndoEndHasPassed() throws {
+        let h = widget()
+        h.startBlock("Plan", .minutes(15))
+        h.advance(minutes: 15)
+        h.engine.extendBlock()
+        let b = try #require(h.engine.timeBlock)
+        #expect(b.undoEnd < h.clock.now)
     }
 
     @Test func widgetClosesOnEnd() {

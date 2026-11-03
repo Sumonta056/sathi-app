@@ -38,14 +38,9 @@ extension UIMetrics {
     static let blockChipSpacing: CGFloat = 6
     static let blockStartButtonHeight: CGFloat = 40
 
-    static let blockNoteWidth: CGFloat = 360
-    static let blockNotePadding = EdgeInsets(top: 14, leading: 16, bottom: 14, trailing: 16)
     static let blockNoteRadius: CGFloat = 16
-    static let blockNoteRing: CGFloat = 40
-    static let blockNoteRingLine: CGFloat = 4
-    static let blockNoteSpacing: CGFloat = 12
     static let blockNoteTextSpacing: CGFloat = 2
-    static let blockUndoHeight: CGFloat = 30
+    static let blockUndoHeight: CGFloat = 24
     static let blockToastPadding = EdgeInsets(top: 12, leading: 14, bottom: 12, trailing: 14)
     static let blockToastRadius: CGFloat = 14
     static let blockToastIcon: CGFloat = 18
