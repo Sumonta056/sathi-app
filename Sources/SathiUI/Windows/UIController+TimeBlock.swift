@@ -35,8 +35,14 @@ extension UIController {
     }
 
     package func showBlockWidget() {
-        showBlock(.widget, BlockWidget())
+        showBlock(.widget, BlockWidget { [weak self] in self?.moveBlockWidget(by: $0) })
         blockPanels[.widget]?.allowsToolTipsWhenApplicationIsInactive = true
+    }
+
+    func moveBlockWidget(by delta: CGSize) {
+        guard delta != .zero, let p = blockPanels[.widget] else { return }
+        detachFromCorner(p)
+        p.setFrameOrigin(NSPoint(x: p.frame.minX + delta.width, y: p.frame.minY + delta.height))
     }
     package func closeBlockWidget() { closeBlock(.widget) }
     package func showBlockDone() { showBlock(.done, BlockDonePopup()) }

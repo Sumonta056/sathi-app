@@ -3,7 +3,9 @@ import SwiftUI
 
 struct BlockWidget: View {
     @EnvironmentObject var e: Engine
+    var onMove: (CGSize) -> Void = { _ in }
     @State private var hovering = false
+    @State private var lastMouse: CGPoint?
 
     var body: some View {
         if let b = e.timeBlock, b.isRunning {
@@ -15,9 +17,7 @@ struct BlockWidget: View {
 
     private func pill(_ b: TimeBlock) -> some View {
         HStack(spacing: UIMetrics.blockWidgetSpacing) {
-            BlockRing(progress: BlockRing.progress(b, now: e.now), size: UIMetrics.blockWidgetRing, line: UIMetrics.blockWidgetRingLine)
-            BlockWidgetTitle(title: b.title, hint: Self.hint(b, e), hovering: hovering)
-            BlockWidgetTimer(block: b)
+            dragArea(b)
             endButton
         }
         .padding(UIMetrics.blockWidgetPadding)
@@ -25,6 +25,34 @@ struct BlockWidget: View {
         .background(Capsule().fill(Night.card))
         .overlay(Capsule().strokeBorder(Night.border, lineWidth: UIMetrics.cardBorder))
         .onHover { hovering = $0 }
+    }
+
+    private func dragArea(_ b: TimeBlock) -> some View {
+        HStack(spacing: UIMetrics.blockWidgetSpacing) {
+            BlockRing(progress: BlockRing.progress(b, now: e.now), size: UIMetrics.blockWidgetRing, line: UIMetrics.blockWidgetRingLine)
+            BlockWidgetTitle(title: b.title, hint: Self.hint(b, e), hovering: hovering)
+            BlockWidgetTimer(block: b)
+        }
+        .frame(maxHeight: .infinity)
+        .contentShape(Rectangle())
+        .gesture(drag)
+        .accessibilityIdentifier("block.widget.drag")
+    }
+
+    private var drag: some Gesture {
+        DragGesture(minimumDistance: 0)
+            .onChanged { v in
+                if v.translation == .zero { lastMouse = nil }
+                let now = NSEvent.mouseLocation
+                onMove(Self.dragStep(from: lastMouse, to: now))
+                lastMouse = now
+            }
+            .onEnded { _ in lastMouse = nil }
+    }
+
+    static func dragStep(from last: CGPoint?, to now: CGPoint) -> CGSize {
+        guard let last else { return .zero }
+        return CGSize(width: now.x - last.x, height: now.y - last.y)
     }
 
     private var endButton: some View {

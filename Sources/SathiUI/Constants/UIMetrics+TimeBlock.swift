@@ -51,7 +51,7 @@ extension UIMetrics {
     static let blockToastIcon: CGFloat = 18
     static let blockToastSpacing: CGFloat = 10
 
-    static let blockWidgetWidth: CGFloat = 240
+    static let blockWidgetWidth: CGFloat = 320
     static let blockWidgetHeight: CGFloat = 34
     static let blockWidgetPadding = EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 4)
     static let blockWidgetSpacing: CGFloat = 7
