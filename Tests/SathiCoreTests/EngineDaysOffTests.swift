@@ -140,7 +140,7 @@ struct EngineDaysOffTests {
     @Test func dayOffMonthMatchesTheHabitDaysResult() throws {
         let h = EngineHarness(at: day(2026, 11, 7, 10))
         try h.engine.addDayOff(.gym, key: #require(DayKey(raw: "2026-11-20")))
-        let expected = h.engine.data.prefs.days(.gym).month(offset: 0, now: h.clock.now, calendar: .current)
+        let expected = h.engine.data.prefs.days(.gym).month(offset: 0, now: h.clock.now, calendar: Calendar.gregorian(in: h.engine.timeZone))
         #expect(h.engine.dayOffMonth(.gym, offset: 0) == expected)
         #expect(expected.weeks.flatMap { $0 }.compactMap { $0 }.contains { $0.state == .off })
     }

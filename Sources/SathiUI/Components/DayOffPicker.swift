@@ -24,10 +24,7 @@ struct DayOffPicker: View {
         .buttonStyle(.plain)
         .fixedSize()
         .popover(isPresented: $isOpen, arrowEdge: .bottom) {
-            DayOffCalendar(habit: habit, accent: accent, offset: $offset) {
-                isOpen = false
-                offset = 0
-            }
+            DayOffCalendar(habit: habit, accent: accent, offset: $offset)
         }
     }
 }

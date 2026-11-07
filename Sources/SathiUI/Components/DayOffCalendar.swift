@@ -5,7 +5,6 @@ struct DayOffCalendar: View {
     let habit: HabitID
     let accent: Color
     @Binding var offset: Int
-    let onPick: () -> Void
     @EnvironmentObject var e: Engine
 
     var body: some View {
@@ -67,7 +66,6 @@ struct DayOffCalendar: View {
         if let cell {
             DayOffCellButton(cell: cell, accent: accent) {
                 e.addDayOff(habit, key: cell.key)
-                onPick()
             }
         } else {
             Color.clear.frame(width: UIMetrics.dayChipSize, height: UIMetrics.dayChipSize)

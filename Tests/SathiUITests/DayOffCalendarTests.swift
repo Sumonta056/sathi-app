@@ -19,7 +19,7 @@ struct DayOffCalendarTests {
     private func spoken(_ d: Int) -> String { DaysOffRow.label(key(2026, 11, d)) }
 
     private func calendar(_ id: HabitID, _ h: EngineHarness, offset: Int = 0) throws -> InspectableView<ViewType.ClassifiedView> {
-        try hosted(DayOffCalendar(habit: id, accent: Night.accent(id), offset: .constant(offset), onPick: {}), h).inspect()
+        try hosted(DayOffCalendar(habit: id, accent: Night.accent(id), offset: .constant(offset)), h).inspect()
     }
 
     @Test(arguments: HabitID.allCases)
@@ -65,5 +65,23 @@ struct DayOffCalendarTests {
         let sut = try calendar(id, harness(id), offset: 12)
         #expect(try Find.button(sut, label: "Next month").isDisabled())
         #expect(try !Find.button(sut, label: "Previous month").isDisabled())
+    }
+
+    @Test(arguments: HabitID.allCases)
+    func aPickKeepsTheMonthAndMarksTheDay(_ id: HabitID) throws {
+        let h = harness(id)
+        var shown = 1
+        let offset = Binding(get: { shown }, set: { shown = $0 })
+        let view = { try hosted(DayOffCalendar(habit: id, accent: Night.accent(id), offset: offset), h).inspect() }
+        let dec4 = DaysOffRow.label(key(2026, 12, 4))
+        try Find.button(view(), label: dec4).tap()
+        #expect(shown == 1)
+        #expect(h.store.prefs.days(id).daysOff == [key(2026, 12, 4)])
+        let after = try view()
+        #expect(throws: Never.self) { try after.find(text: "December 2026") }
+        #expect(try after.find(viewWithAccessibilityLabel: dec4).accessibilityValue().string() == "Day off")
+        #expect(try Find.button(after, label: dec4).isDisabled())
+        try Find.button(after, label: DaysOffRow.label(key(2026, 12, 5))).tap()
+        #expect(h.store.prefs.days(id).daysOff == [key(2026, 12, 4), key(2026, 12, 5)])
     }
 }
