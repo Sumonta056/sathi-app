@@ -14,7 +14,18 @@ enum VoicePicker {
     }
 
     private static func rank(_ v: VoiceInfo) -> [Int] {
-        [v.quality, AudioFiles.preferredVoices.contains(v.name) ? 1 : 0, v.isFemale ? 1 : 0]
+        [
+            score(AudioFiles.preferredVoiceIDs) { $0 == v.id },
+            score(AudioFiles.preferredVoiceMarks) { v.name == $0 || v.id.contains($0) },
+            v.quality,
+            AudioFiles.preferredVoices.contains(v.name) ? 1 : 0,
+            v.isFemale ? 1 : 0
+        ]
+    }
+
+    private static func score(_ list: [String], _ matches: (String) -> Bool) -> Int {
+        guard let i = list.firstIndex(where: matches) else { return 0 }
+        return list.count - i
     }
 
     static func info(_ voice: AVSpeechSynthesisVoice) -> VoiceInfo {

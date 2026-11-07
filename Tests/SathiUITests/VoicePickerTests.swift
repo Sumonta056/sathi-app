@@ -42,4 +42,40 @@ struct VoicePickerTests {
     @Test func preferredNamesComeFromAudioFiles() {
         #expect(AudioFiles.preferredVoices == ["Ava", "Zoe"])
     }
+
+    @Test func neuralSimoneBeatsPremiumAva() {
+        let ava = voice("Ava", quality: 3)
+        let simone = VoiceInfo(
+            id: "com.apple.ttsbundle.gryphon-neural_Simone_en-US_premium",
+            name: "Voice 2", language: "en-US", quality: 2, isFemale: false
+        )
+        #expect(VoicePicker.best([ava, simone])?.id == simone.id)
+    }
+
+    @Test func exactSimoneIdentifierBeatsAnotherSimone() {
+        let named = voice("Simone", quality: 3)
+        let exact = VoiceInfo(id: AudioFiles.preferredVoiceIDs[0], name: "Voice 2", language: "en-US", quality: 1, isFemale: false)
+        #expect(VoicePicker.best([named, exact])?.id == exact.id)
+    }
+
+    @Test func simoneBeatsMartha() {
+        let martha = voice("Martha", quality: 3)
+        let simone = voice("Simone", quality: 1)
+        #expect(VoicePicker.best([martha, simone])?.name == "Simone")
+    }
+
+    @Test func marthaSiriVoiceBeatsDefaultSamantha() {
+        let samantha = voice("Samantha", quality: 3)
+        let martha = VoiceInfo(
+            id: "com.apple.speech.synthesis.voice.custom.siri.Martha.premium",
+            name: "Voice 1", language: "en-GB", quality: 1, isFemale: false
+        )
+        #expect(VoicePicker.best([samantha, martha])?.id == martha.id)
+    }
+
+    @Test func nonEnglishSimoneIsNeverPicked() {
+        let french = VoiceInfo(id: "x.gryphon-neural_Simone_fr-FR", name: "Simone", language: "fr-FR", quality: 3, isFemale: true)
+        let samantha = voice("Samantha", quality: 1)
+        #expect(VoicePicker.best([french, samantha])?.name == "Samantha")
+    }
 }
