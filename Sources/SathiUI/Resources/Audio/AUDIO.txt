@@ -1,5 +1,5 @@
 Optional audio files for the breathing session. A missing file is skipped.
-breath-music.mp3 (included: "Babylon Meditation" by leberch, Pixabay Content License)
+babylon-meditation.mp3 (included: "Babylon Meditation" by leberch, Pixabay Content License)
 voice-begin.mp3
 voice-inhale.mp3
 voice-hold.mp3

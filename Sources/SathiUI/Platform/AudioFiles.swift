@@ -1,7 +1,7 @@
 import SathiCore
 
 enum AudioFiles {
-    static let music = "breath-music"
+    static let music = "babylon-meditation"
     static let bell = "breath-bell"
     static let tick = "breath-tick"
     static let ext = "mp3"

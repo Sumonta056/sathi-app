@@ -9,7 +9,7 @@ struct AudioFilesTests {
     }
 
     @Test func musicName() {
-        #expect(AudioFiles.music == "breath-music")
+        #expect(AudioFiles.music == "babylon-meditation")
     }
 
     @Test func bellAndTickNames() {

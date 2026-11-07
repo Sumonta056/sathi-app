@@ -270,7 +270,7 @@ Tests first:
 Code:
 - `Package.swift:12`: `.target(name: "SathiUI", dependencies: ["SathiCore"], path: "Sources/SathiUI", resources: [.copy("Resources/Fonts"), .copy("Resources/Audio")])`.
 - Add `Sources/SathiUI/Resources/Fonts/OFL.txt` (SIL OFL 1.1 text with the Figtree copyright line).
-- Add `Sources/SathiUI/Resources/Audio/AUDIO.txt`. It lists the expected optional files, so the folder exists in git: `breath-music.mp3`, `voice-begin.mp3`, `voice-inhale.mp3`, `voice-hold.mp3`, `voice-exhale.mp3`, `voice-rest.mp3`, `voice-wellDone.mp3`, `breath-bell.mp3`, `breath-tick.mp3`.
+- Add `Sources/SathiUI/Resources/Audio/AUDIO.txt`. It lists the expected optional files, so the folder exists in git: `babylon-meditation.mp3`, `voice-begin.mp3`, `voice-inhale.mp3`, `voice-hold.mp3`, `voice-exhale.mp3`, `voice-rest.mp3`, `voice-wellDone.mp3`, `breath-bell.mp3`, `breath-tick.mp3`.
 - New `Sources/SathiUI/Platform/SathiResources.swift`: `enum ResourceFolder: String { case fonts = "Fonts", audio = "Audio" }` and `static func url(_ name: String, ext: String, in folder: ResourceFolder) -> URL?` (search order in Decision 12; the bundle name comes from a constant in this file).
 - `build.sh`, after line 22: `RES="$(swift build -c release --show-bin-path)/Sathi_SathiUI.bundle"; cp -R "$RES/Fonts" "$RES/Audio" "$APP/Contents/Resources/"`. `scripts/make-dmg.sh` calls `build.sh`, so no change there.
 - Manual check: `./build.sh`, then `ls build/Sathi.app/Contents/Resources/Fonts`, then `codesign --verify --deep build/Sathi.app`.
@@ -285,7 +285,7 @@ Tests first (`Tests/SathiUITests/VoicePickerTests.swift`, suite "Voice picker"; 
 
 `Tests/SathiUITests/AudioFilesTests.swift`:
 - `AudioFiles.voice(.wellDone) == "voice-wellDone"`.
-- The music name is `"breath-music"`.
+- The music name is `"babylon-meditation"`.
 
 Code:
 - `Sources/SathiUI/Platform/AudioFiles.swift`: file names and `preferredVoices`.
