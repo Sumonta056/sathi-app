@@ -7,6 +7,7 @@ package struct LiveState: Codable, Equatable, Sendable {
     package var lastDaySummary: DayKey?
     package var quickReminders: [QuickReminder] = []
     package var timeBlock: TimeBlock?
+    package var meditationSession: Session?
 
     package init() {}
 }
@@ -21,5 +22,6 @@ extension LiveState {
         lastDaySummary = c.lenient(.lastDaySummary, or: d.lastDaySummary)
         quickReminders = (c.lenientArray(.quickReminders) as [QuickReminder]).kept()
         timeBlock = c.lenient(.timeBlock, or: d.timeBlock)
+        meditationSession = c.lenient(.meditationSession, or: d.meditationSession)
     }
 }

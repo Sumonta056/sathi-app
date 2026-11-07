@@ -11,22 +11,6 @@ package enum Phase: Equatable, Sendable {
     case session
 }
 
-package struct Session: Equatable, Sendable {
-    package var start: Date
-    package var end: Date
-    package var fromReminder: Bool
-    package var workout: Int?
-    package var readingItem: UUID?
-
-    package init(start: Date, end: Date, fromReminder: Bool = false, workout: Int? = nil, readingItem: UUID? = nil) {
-        self.start = start
-        self.end = end
-        self.fromReminder = fromReminder
-        self.workout = workout
-        self.readingItem = readingItem
-    }
-}
-
 package enum Activity: Equatable, Sendable {
     case bubble(Level, copy: Copy, ignoreDeadline: Date)
     case lock

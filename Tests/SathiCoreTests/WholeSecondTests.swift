@@ -33,6 +33,14 @@ struct WholeSecondTests {
         #expect(live.lastWaterDone == whole)
         #expect(live.streakReset["water"] == Date(timeIntervalSinceReferenceDate: 792_320_400))
     }
+
+    @Test func decodedSessionDropsFractionalSeconds() throws {
+        let json = #"{"meditationSession":{"start":792403200.734512,"end":792403800.9,"pausedAt":792403300.5}}"#
+        let session = try #require(try decodeNumeric(LiveState.self, json).meditationSession)
+        #expect(session.start == whole)
+        #expect(session.end == Date(timeIntervalSinceReferenceDate: 792_403_800))
+        #expect(session.pausedAt == Date(timeIntervalSinceReferenceDate: 792_403_300))
+    }
 }
 
 @MainActor
