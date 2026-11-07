@@ -134,6 +134,23 @@ Spec: `docs/specs/phase-12-quick-reminder.md`
 - [ ] Definition of done
 - Open: perf.sh, perf.sh --windows, hand test, ui-verifier, website.
 
+## Phase 15: Breathing redesign
+
+Spec: `docs/specs/phase-15-breathing.md`
+
+- [x] Rules and words in `.claude/rules/business-logic.md`
+- [x] Pausable `Session`, saved `meditationSession`, restore, midnight end
+- [x] Calm 4·6 default pattern and breath copy
+- [x] `SessionAudio` port, `BreathCues`, Engine cues
+- [x] SPM resources, safe locator
+- [x] Breath audio player, voice, music fade
+- [x] Settings Sound card
+- [x] Days-off month calendar picker
+- [x] Figtree font with fallback
+- [x] Breathing card: orb, ring, time left, pause
+- [x] Docs
+- Open: perf.sh, perf.sh --windows, ui-verifier, website.
+
 ## Later
 
 - Days off: a lock or Nudgy bubble that shows at 23:58 stays after midnight into a day off (only a settings change closes it, rule 11). Close it at the first tick of a new day if users notice

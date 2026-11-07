@@ -24,6 +24,7 @@ The Engine talks to the outside world only through protocols in `Sources/SathiCo
 | `StateStore` | `FileStateStore` (`prefs.json`, `state.json`) | `InMemoryStateStore` |
 | `HistoryStore` | `FileHistoryStore` (`history/YYYY-MM.json`) | `InMemoryHistoryStore` |
 | `SoundPlayer` | `SystemSoundPlayer` (SathiUI) | `SpySoundPlayer` |
+| `SessionAudio` | `BreathAudioPlayer` (SathiUI) | `SpySessionAudio` |
 | `ReminderPresenter` | `UIController` (SathiUI) | `SpyPresenter` |
 | `FileExporter` | none yet (the Export menu was removed in 5h; see `docs/ROADMAP.md` Later) | `SpyFileExporter` |
 | `SummaryRenderer` | none yet (the PDF renderer was removed in 5h) | `SpySummaryRenderer` |

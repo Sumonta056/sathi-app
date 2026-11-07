@@ -23,9 +23,10 @@ Before the refactor the app used 27–36% CPU and 66 MB. Do not let it go back.
 
 ## Timers
 
-- The Engine has no repeating timer. `TickPlanner.delay` picks the next wake-up: the nearest deadline, the next minute change of the menu label, or 60 s at most. It uses 1 s only during a reading session.
+- The Engine has no repeating timer. `TickPlanner.delay` picks the next wake-up: the nearest deadline, the next minute change of the menu label, or 60 s at most. It uses 1 s only during a running session (not paused); a nearer deadline cuts it.
 - Every action that changes a deadline calls `requestTick()`. Do not add `Timer.scheduledTimer(... repeats: true)` to Core.
 - Give every timer a tolerance (`TickPlanner.tolerance`).
+- Audio players exist only during a session or a Preview.
 
 ## SwiftUI
 
