@@ -20,9 +20,6 @@ extension UIMetrics {
     static let breathScaleSmall: CGFloat = 0.62
     static let breathHaloBig: Double = 0.4
     static let breathHaloSmall: Double = 0.15
-    static let breathFaceSize: CGFloat = 70
 
     static let pebbleCheekOpacity: Double = 0.85
-
-    static let fontBreathPhase: CGFloat = 24
 }
