@@ -106,13 +106,13 @@ struct MeditationSettingsTabTests {
 
     @Test func chimeSwitchFlipsChime() throws {
         let h = harness()
-        try Find.button(tab(h), label: "Chime").tap()
+        try Find.button(tab(h), label: "Soft bell at start and end").tap()
         #expect(!h.engine.data.prefs.meditation.chime)
     }
 
     @Test func sectionsAreDisabledWhileMeditationIsOff() throws {
         let sut = try tab(EngineHarness())
         #expect(try sut.find(button: "20 min").isDisabled())
-        #expect(try Find.button(sut, label: "Chime").isDisabled())
+        #expect(try Find.button(sut, label: "Soft bell at start and end").isDisabled())
     }
 }
