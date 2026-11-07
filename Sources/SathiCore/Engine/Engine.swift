@@ -40,6 +40,7 @@ package final class Engine: ObservableObject {
     let presenter: ReminderPresenter
     let links: LinkOpener
     let calendarWriter: CalendarWriter
+    let audio: SessionAudio
     let calendar: Calendar
 
     var timer: Timer?
@@ -52,6 +53,8 @@ package final class Engine: ObservableObject {
     var longestCache: [HabitID: Int] = [:]
     var streakCacheDay: Date?
     var reportCache: ReportScreenCache?
+    var breathCueMark: Date?
+    var minuteTickMark: Date?
 
     package init(
         store: StateStore,
@@ -61,7 +64,8 @@ package final class Engine: ObservableObject {
         presenter: ReminderPresenter,
         links: LinkOpener,
         calendar: Calendar = .current,
-        calendarWriter: CalendarWriter
+        calendarWriter: CalendarWriter,
+        audio: SessionAudio = SilentSessionAudio()
     ) {
         let n = clock.now
         var loaded = Persisted()
@@ -76,6 +80,7 @@ package final class Engine: ObservableObject {
         self.links = links
         self.calendar = calendar
         self.calendarWriter = calendarWriter
+        self.audio = audio
         calendarAccess = calendarWriter.access
         data = loaded
         now = n

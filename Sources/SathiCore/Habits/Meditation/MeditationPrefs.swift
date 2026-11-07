@@ -17,12 +17,18 @@ package struct MeditationPrefs: Codable, Equatable, Sendable {
     package var weekdays: Set<Weekday> = Set(Weekday.allCases)
     package var daysOff: Set<DayKey> = []
     package var showsCloseButton = true
+    package var voiceOn = true
+    package var voiceVolume = Limits.voiceVolumeDefault
+    package var musicOn = true
+    package var musicVolume = Limits.musicVolumeDefault
+    package var minuteTick = false
 
     package init() {}
 
     enum CodingKeys: String, CodingKey {
         case enabled, dailyGoalMinutes, sessionMinutes, intervalMinutes, startMinutes, endMinutes, style, chime, strictness
         case weekdays, daysOff, showsCloseButton
+        case voiceOn, voiceVolume, musicOn, musicVolume, minuteTick
     }
 
     package var sortedWeekdays: [Weekday] {
@@ -46,6 +52,15 @@ extension MeditationPrefs {
         showsCloseButton = try c.value(.showsCloseButton, or: d.showsCloseButton)
         weekdays = try c.knownSet(.weekdays, or: d.weekdays, keepsEmpty: false)
         daysOff = c.lenientSet(.daysOff, or: d.daysOff)
+        voiceOn = try c.value(.voiceOn, or: d.voiceOn)
+        voiceVolume = try Self.volume(c.value(.voiceVolume, or: d.voiceVolume))
+        musicOn = try c.value(.musicOn, or: d.musicOn)
+        musicVolume = try Self.volume(c.value(.musicVolume, or: d.musicVolume))
+        minuteTick = try c.value(.minuteTick, or: d.minuteTick)
+    }
+
+    private static func volume(_ v: Double) -> Double {
+        min(max(v, Limits.sessionVolume.lowerBound), Limits.sessionVolume.upperBound)
     }
 
     package func encode(to encoder: Encoder) throws {
@@ -62,6 +77,11 @@ extension MeditationPrefs {
         try c.encode(showsCloseButton, forKey: .showsCloseButton)
         try c.encode(sortedWeekdays, forKey: .weekdays)
         try c.encode(daysOff.sorted(), forKey: .daysOff)
+        try c.encode(voiceOn, forKey: .voiceOn)
+        try c.encode(voiceVolume, forKey: .voiceVolume)
+        try c.encode(musicOn, forKey: .musicOn)
+        try c.encode(musicVolume, forKey: .musicVolume)
+        try c.encode(minuteTick, forKey: .minuteTick)
     }
 }
 

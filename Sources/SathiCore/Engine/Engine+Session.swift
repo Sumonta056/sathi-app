@@ -27,6 +27,7 @@ extension Engine {
         let end = n.wholeSecond.addingTimeInterval(TimeInterval(minutes) * Timing.minute)
         activities[id] = .session(Session(start: n.wholeSecond, end: end, fromReminder: fromReminder, workout: workout, readingItem: readingItem))
         presenter.showSession(id)
+        sessionStarted(id)
         if let sound = startSound(id) { play(sound) }
         requestTick()
     }
@@ -38,6 +39,7 @@ extension Engine {
         let n = clock.now
         record(.done(id, amount, at: n))
         habits[id] = HabitState(nextDue: freshDue(id, lastDone: n))
+        sessionFinishing(id)
         close(id)
         if resetsIdea(id) { gymIdea = 0 }
         celebrate(id, amount, readingAsk: timedOut && id == .reading && usesCorner(.reading) ? unreadItem(s)?.id : nil)
@@ -54,7 +56,7 @@ extension Engine {
     func celebrationSound(_ id: HabitID) -> SoundName? {
         switch id {
         case .water, .reading, .gym: return .hero
-        case .meditation: return data.prefs.meditation.chime ? .tink : nil
+        case .meditation: return nil
         }
     }
 

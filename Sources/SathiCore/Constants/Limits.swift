@@ -57,6 +57,12 @@ package enum Limits {
     package static let quickNoteTextMax = 24
     package static let blockLengths = [15, 30, 40, 45, 60, 120]
     package static let blockTitleMax = 60
+    package static let sessionVolume: ClosedRange<Double> = 0 ... 1
+    package static let voiceVolumeDefault = 0.8
+    package static let musicVolumeDefault = 0.5
+    package static let bellVolume = 0.6
+    package static let minuteTickVolume = 0.25
+    package static let speechRateRatio = 0.85
 
     package static let morningStartHour = 5
     package static let afternoonStartHour = 12

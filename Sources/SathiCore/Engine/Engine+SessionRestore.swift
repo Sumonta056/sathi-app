@@ -11,6 +11,7 @@ extension Engine {
         close(.meditation)
         activities[.meditation] = .session(saved)
         presenter.showSession(.meditation)
+        sessionRestored()
     }
 
     private func canRestore(_ s: Session, at n: Date) -> Bool {

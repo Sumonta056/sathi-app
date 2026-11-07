@@ -15,6 +15,7 @@ package struct EngineHarness {
     package let presenter: SpyPresenter
     package let links: SpyLinkOpener
     package let calendarWriter: SpyCalendarWriter
+    package let audio: SpySessionAudio
 
     package init(at start: Date = day(2026, 3, 4, 10), configure: (inout Persisted) -> Void = { _ in }) {
         var state = Persisted()
@@ -26,6 +27,7 @@ package struct EngineHarness {
         presenter = SpyPresenter()
         links = SpyLinkOpener()
         calendarWriter = SpyCalendarWriter()
+        audio = SpySessionAudio()
         engine = Engine(
             store: store,
             history: history,
@@ -33,7 +35,8 @@ package struct EngineHarness {
             sound: sound,
             presenter: presenter,
             links: links,
-            calendarWriter: calendarWriter
+            calendarWriter: calendarWriter,
+            audio: audio
         )
         engine.tick()
     }

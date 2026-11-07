@@ -4,12 +4,14 @@ extension Engine {
     package func pauseSession(_ id: HabitID) {
         guard let s = session(id), !s.isPaused else { return }
         activities[id] = .session(s.paused(at: clock.now))
+        sessionPaused(id)
         requestTick()
     }
 
     package func resumeSession(_ id: HabitID) {
         guard let s = session(id), s.isPaused else { return }
         activities[id] = .session(s.resumed(at: clock.now))
+        sessionResumed(id)
         requestTick()
     }
 
