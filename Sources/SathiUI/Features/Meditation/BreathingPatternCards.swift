@@ -27,6 +27,7 @@ struct BreathingPatternCards: View {
 
     static func title(_ s: BreathingStyle) -> String {
         switch s {
+        case .calm: return "Calm"
         case .box: return "Box"
         case .relax: return "Wind down"
         case .even: return "Even"
@@ -35,6 +36,7 @@ struct BreathingPatternCards: View {
 
     static func detail(_ s: BreathingStyle) -> String {
         switch s {
+        case .calm: return "Long, slow out-breath."
         case .box: return "Steady and calm."
         case .relax: return "Good before sleep."
         case .even: return "Simple in and out."

@@ -69,12 +69,13 @@ struct EngineSessionFixTests {
         #expect(h.sound.played.isEmpty)
     }
 
-    @Test func meditationFinishWithChimePlaysTinkNotHero() {
+    @Test func meditationFinishWithChimeRingsTheSessionBellNotHero() {
         let h = harness(at: day(2026, 3, 4, 7))
         h.engine.startMeditation()
         h.advance(minutes: 5)
         #expect(h.engine.isCelebrating)
-        #expect(h.sound.played == [.tink])
+        #expect(h.sound.played == [])
+        #expect(h.audio.calls.contains(.play(.bell, Limits.bellVolume)))
     }
 
     @Test func meditationFinishWithoutChimeIsSilent() {
@@ -83,6 +84,7 @@ struct EngineSessionFixTests {
         h.advance(minutes: 5)
         #expect(h.engine.isCelebrating)
         #expect(h.sound.played.isEmpty)
+        #expect(!h.audio.calls.contains(.play(.bell, Limits.bellVolume)))
     }
 
     @Test func readingFinishStillPlaysHero() {

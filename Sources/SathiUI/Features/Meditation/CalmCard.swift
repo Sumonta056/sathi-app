@@ -3,10 +3,14 @@ import SwiftUI
 
 struct CalmCard: ViewModifier {
     var alert = false
+    var top = UIMetrics.calmPadding
+    var bottom = UIMetrics.calmPadding
 
     func body(content: Content) -> some View {
         content
-            .padding(UIMetrics.calmPadding)
+            .padding(.horizontal, UIMetrics.calmPadding)
+            .padding(.top, top)
+            .padding(.bottom, bottom)
             .frame(width: UIMetrics.calmCardWidth)
             .background(shape.fill(Night.calmGround))
             .overlay(shape.strokeBorder(

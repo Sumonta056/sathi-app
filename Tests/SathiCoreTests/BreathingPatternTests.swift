@@ -16,6 +16,20 @@ struct BreathingPatternTests {
         #expect(steps.map(\.1) == seconds)
     }
 
+    @Test func calmIsFourInSixOut() {
+        let steps = BreathingPattern.steps(.calm)
+        #expect(steps.map(\.0) == [.inhale, .exhale])
+        #expect(steps.map(\.1) == [4.0, 6])
+        #expect(BreathingPattern.cycleLength(.calm) == 10)
+    }
+
+    @Test func calmAtFiveSecondsIsExhaleWithFiveLeft() {
+        let step = BreathingPattern.step(.calm, at: 5)
+        #expect(step.phase == .exhale)
+        #expect(step.remaining == 5)
+        #expect(step.cycle == 0)
+    }
+
     @Test(arguments: [(BreathingStyle.box, 16.0), (.relax, 19), (.even, 10)])
     func cycleLength(_ style: BreathingStyle, _ length: TimeInterval) {
         #expect(BreathingPattern.cycleLength(style) == length)

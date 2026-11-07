@@ -102,7 +102,7 @@ extension Engine {
         if ids.contains(where: { phase($0) == .lock }) { return "Locked" }
         if let block = blockStatusText { return block }
         if let id = ids.first(where: showsBubble) { return Self.callToAction(id) }
-        if let end = ids.compactMap({ session($0)?.end }).min() { return Fmt.clock(end.timeIntervalSince(now)) }
+        if let left = ids.compactMap({ session($0)?.left(at: now) }).min() { return Fmt.clock(left) }
         if isCelebrating { return "Done" }
         return focus.map { Fmt.short(remaining($0)) } ?? "Sathi"
     }

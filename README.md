@@ -39,7 +39,7 @@ To see a reminder right away, open Settings, pick a buddy, and click **Show a re
 
 - **Fota** (water): a reminder every 2 hours between 9:30 and 18:30. Log a few sips, half, or a full glass, or drag the line on your sip bottle. The daily goal is 8 glasses.
 - **Boi** (reading): a small popup in the top-right corner at 22:00. It never takes focus from your work. Start a 15-minute timer, and Boi counts the minutes. Pick the days of the week. Keep a reading list of links: "Start reading" opens today's pick.
-- **Shanti** (meditation, off by default): short guided breathing sessions (box, relax, or even). Pick a daily goal of 5, 10, or 20 minutes. Shanti reminds you every hour between 9:00 and 21:00 and stops for the day when you reach the goal.
+- **Shanti** (meditation, off by default): short guided breathing sessions (Calm 4·6 by default, or box, relax, or even). You can pause a session. A voice guide and soft background music are optional. Pick a daily goal of 5, 10, or 20 minutes. Shanti reminds you every hour between 9:00 and 21:00 and stops for the day when you reach the goal.
 - **Shokti** (gym, off by default): a small popup in the top-right corner every hour between 9:00 and 17:00 on the days you pick. It suggests 1 short workout from your list of 4 (a stretch, a short walk, squats, push-ups), in order. Start a short timer, and "Done" saves the workout. The daily goal is 4 workouts. The close button and "In 5 min" snooze it.
 
 <p align="center">
@@ -96,7 +96,7 @@ See [every reminder on the website](https://sumonta056.github.io/sathi-app/#gall
 ## Reports and settings
 
 - The Reports window shows each habit by day, week, or month, with a chart, a streak calendar, your best day, and your longest streak.
-- Each buddy has its own Settings page. Water: interval, active hours, container, goal, strictness. Reading: time, weekdays, session length, style, reading list, strictness. Meditation: daily goal, session length, interval, active hours, breathing style, chime, strictness. Gym: interval, work hours, work days, your 4 workouts (name and minutes), strictness. You pick times on a grid in 5-minute steps. Every buddy also has its own weekdays and a list of days off (for example, next Tuesday): on a day off that buddy stays quiet, and the day never breaks its streak.
+- Each buddy has its own Settings page. Water: interval, active hours, container, goal, strictness. Reading: time, weekdays, session length, style, reading list, strictness. Meditation: daily goal, session length, interval, active hours, breathing style, strictness, and a Sound card for the voice guide, music, bell, tick, and a preview. Gym: interval, work hours, work days, your 4 workouts (name and minutes), strictness. You pick times on a grid in 5-minute steps. Every buddy also has its own weekdays and a list of days off (pick them on a month calendar): on a day off that buddy stays quiet, and the day never breaks its streak.
 - The General tab holds your name, snooze length, snooze limit, when no answer counts as a snooze, sound, the day summary, quick reminders, and open at login.
 - The Time blocks page holds calendar access, the default calendar, menu bar or corner pill, and the sound.
 
@@ -161,6 +161,11 @@ SIGN_IDENTITY="Developer ID Application: Your Name (TEAMID)" NOTARY_PROFILE=sath
 - `docs/`: the roadmap, the spec of each phase, and the design reference images.
 
 `CLAUDE.md` has the full module map, rules, and definition of done. To add a habit, follow `.claude/skills/add-habit/SKILL.md`.
+
+## Credits
+
+- Fonts: Figtree, SIL Open Font License 1.1 (`Sources/SathiUI/Resources/Fonts/OFL.txt`).
+- Music: "Babylon Meditation" by leberch (Pixabay Content License).
 
 ## License
 

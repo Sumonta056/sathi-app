@@ -25,7 +25,8 @@ enum AppEnvironment {
             sound: SystemSoundPlayer(),
             presenter: presenter,
             links: WorkspaceLinkOpener(),
-            calendarWriter: EventKitCalendarWriter()
+            calendarWriter: EventKitCalendarWriter(),
+            audio: BreathAudioPlayer()
         )
         presenter.engine = engine
         return engine

@@ -9,7 +9,12 @@ let package = Package(
     ],
     targets: [
         .target(name: "SathiCore", path: "Sources/SathiCore"),
-        .target(name: "SathiUI", dependencies: ["SathiCore"], path: "Sources/SathiUI"),
+        .target(
+            name: "SathiUI",
+            dependencies: ["SathiCore"],
+            path: "Sources/SathiUI",
+            resources: [.copy("Resources/Fonts"), .copy("Resources/Audio")]
+        ),
         .executableTarget(name: "Sathi", dependencies: ["SathiCore", "SathiUI"], path: "Sources/Sathi"),
         .target(name: "SathiTestSupport", dependencies: ["SathiCore"], path: "Tests/SathiTestSupport"),
         .testTarget(

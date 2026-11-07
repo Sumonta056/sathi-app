@@ -5,6 +5,7 @@ extension Engine {
         guard !isRunning else { return }
         isRunning = true
         restoreBlock()
+        restoreMeditationSession()
         tick()
     }
 
@@ -17,9 +18,11 @@ extension Engine {
     package func tick() {
         now = clock.now
         if let p = pausedUntil, now >= p { pausedUntil = nil }
+        endPausedSessionIfNewDay()
         for id in HabitID.allCases {
             endIfExpired(id)
         }
+        tickBreath()
         if pausedUntil == nil { presentDueHabits() }
         lockWaitingHabit()
         tickQuick()
@@ -34,7 +37,7 @@ extension Engine {
         let showsCountdown = activities.isEmpty && pausedUntil == nil
         return TickPlanner.delay(
             now: now,
-            inSession: HabitID.allCases.contains { session($0) != nil },
+            inSession: HabitID.allCases.contains { session($0).map { !$0.isPaused } ?? false },
             deadlines: upcomingDeadlines(),
             focusRemaining: showsCountdown ? focus.map(remaining) : nil
         )
@@ -49,7 +52,7 @@ extension Engine {
         switch activities[id] {
         case let .bubble(_, _, deadline) where now >= deadline:
             snooze(id)
-        case let .session(s) where now >= s.end: finishSession(id, timedOut: true)
+        case let .session(s) where now >= s.end && !s.isPaused: finishSession(id, timedOut: true)
         default: break
         }
     }
@@ -65,13 +68,13 @@ extension Engine {
     }
 
     private func upcomingDeadlines() -> [Date] {
-        var deadlines: [Date] = quickDeadlines + blockDeadlines
+        var deadlines: [Date] = quickDeadlines + blockDeadlines + breathDeadlines
         if let p = pausedUntil { deadlines.append(p) }
         if let s = nextDaySummary { deadlines.append(s) }
         for id in HabitID.allCases {
             switch activities[id] {
             case let .bubble(_, _, deadline): deadlines.append(deadline)
-            case let .session(s): deadlines.append(s.end)
+            case let .session(s): deadlines.append(s.pausedAt.map { calendar.nextDay(after: $0) } ?? s.end)
             case .lock: break
             case nil:
                 if pausedUntil == nil && enabled(id) { deadlines.append(now.addingTimeInterval(remaining(id))) }

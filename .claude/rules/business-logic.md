@@ -19,7 +19,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 | Due | The time a reminder must show. Comes from the habit's `HabitRules.nextDue`. |
 | Reminder | What the user sees when a habit is due: bubble, corner popup, or lock. |
 | Snooze | The user delays a reminder. Not answering for `ignoreMinutes` also counts as a snooze, for every habit. A tap on the close button also counts as a snooze (Escalation rule 8). |
-| Session | A timed activity: reading, meditation, or gym. `Activity.session(Session)` in `Engine.activities[id]`. |
+| Session | A timed activity: reading, meditation, or gym. `Activity.session(Session)` in `Engine.activities[id]`. A meditation session can be paused (`Session.pausedAt`). |
 | Event | One record in history: done, snooze, or skip. `HistoryEvent`. |
 | Goal | The daily target of a habit. Water: glasses. Reading and meditation: minutes. Gym: workouts (fixed at 4; each done workout counts 1). |
 | Streak | Count of days in a row, up to today, on which the goal was met. A day off with the goal met adds 1. A day off without the goal met is skipped: it neither breaks the streak nor adds to it. |
@@ -79,7 +79,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
    - At Nudgy, the corner popup plays one ping when it shows, then wiggles in silence. It never repeats a sound.
 3. The lock always has an emergency skip. A skip resets that habit's streak and skips that habit for the rest of the day, also after a relaunch or a settings change.
 4. Raw values never change. They are in saved files. Change only the labels.
-5. The Meditation invite follows the same calm rules at Gentle and Nudgy (at Strict it locks after 2 snoozes, like water): it never takes focus from the active app, at Nudgy it wiggles in silence, and its snooze button uses the General snooze length. Its session button "Stop" follows Schedules rule 6: an early stop does not count.
+5. The Meditation invite follows the same calm rules at Gentle and Nudgy (at Strict it locks after 2 snoozes, like water): it never takes focus from the active app, at Nudgy it wiggles in silence, and its snooze button uses the General snooze length. Its session button "Stop" follows Schedules rule 6: an early stop does not count. Stop works the same while paused.
 6. The water thank-you button names the next reminder: "See you in {time}" or "See you tomorrow". While Sathi is paused it says "See you after your break". When water reminders are off it says "Nice one".
 7. The Gym invite follows Escalation rule 5 (calm, corner, no focus). Its close button, its "In {n} min" button, and no answer for `ignoreMinutes` are normal snoozes. "Next idea" shows the next workout in the popup only. At Nudgy the invite plays one ping, then wiggles in silence. At Strict it locks after 2 snoozes, like water.
 8. Each habit has a "Show a close button" switch (`showsCloseButton`, default on for every habit). When it is on, the reminder (bubble or corner popup) shows a close button at the first level (`Level.nudge`). At `Level.persist` (Nudgy or Strict after a snooze) there is no close button. When it is off, the reminder never shows a close button. A tap on close is a normal snooze of that habit only: it adds 1 to that habit's snooze count and never changes another habit.
@@ -179,6 +179,24 @@ Full rules are in `docs/specs/phase-13-time-blocks.md`.
 14. Access: the first open of the Start popup or the Settings page asks for full calendar access. Denied or restricted: the menu card explains and links to System Settings; Start is off. The Engine reads the access again at each tick and when the Start popup opens.
 15. Restart: the block is saved in `state.json` and continues. Deadlines that passed while Sathi was closed run at the next tick (an auto-end saves with the planned end).
 16. Pauses, weekdays, and days off do not affect a time block. No new timer: `upcomingDeadlines()` adds the planned end, the check-in, the cap, and the next minute change of the status text.
+
+## Breathing session
+
+1. A breathing session runs the selected pattern (`MeditationPrefs.style`). The card shows the time left (m:ss), never a round count.
+2. Pause (in a meditation session only; other buddies' sessions never pause) freezes the time left and the phase. Resume continues from the same point. The session end moves later by the paused length. There is no time limit. "Take a break" (Habits rule 9) is a different thing and does not pause a session.
+3. A pause survives a restart (`LiveState.meditationSession`). At launch, only when meditation is on and today is not its day off:
+   - A session paused today comes back paused.
+   - A running session whose end is still ahead and that started today comes back running.
+   - Anything else is dropped with no event and no snooze.
+4. At midnight a paused session ends. It does not count: no event, no snooze, and the next due time stays.
+5. An early Stop (running or paused) follows Schedules rule 6.
+6. During a pause, the voice is silent and the music fades out. Both come back on Resume. Other buddies keep reminding (Habits rule 5).
+7. Voice guide (`voiceOn`, `voiceVolume`): it speaks once at the start of each phase ("Breathe in", "Hold", "Breathe out", "Rest"), "Let's begin" at the start, and "Well done" at the natural end. It never counts aloud. A cue more than `Timing.cueLateLimit` late is skipped.
+8. Background music (`musicOn`, `musicVolume`): one loop that fades in at the start and fades out at the end, at Stop, and at Pause. A missing music file means no music.
+9. Bell (`chime`): at the start and at the natural end. Minute tick (`minuteTick`, default off): a very soft tick at each full minute of the session, not at the end.
+10. General Sound off silences all session audio, stops a running Preview, and Preview is off. Preview does nothing when both voice and music are off.
+11. Default pattern for new installs: Calm 4·6. A saved pattern is kept.
+12. No new timer. `upcomingDeadlines()` adds the next phase boundary, the next minute tick, and, while paused, the next midnight.
 
 ## Time
 

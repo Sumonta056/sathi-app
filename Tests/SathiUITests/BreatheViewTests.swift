@@ -9,11 +9,15 @@ import ViewInspector
 @MainActor
 @Suite("Breathe view")
 struct BreatheViewTests {
-    private func harness(at start: Date = day(2026, 3, 4, 15), lastWater: Date? = nil) -> EngineHarness {
+    private func harness(
+        _ style: BreathingStyle = .calm,
+        at start: Date = day(2026, 3, 4, 15),
+        lastWater: Date? = nil
+    ) -> EngineHarness {
         EngineHarness(at: start) {
             $0.prefs.meditation.enabled = true
             $0.prefs.meditation.sessionMinutes = 5
-            $0.prefs.meditation.style = .box
+            $0.prefs.meditation.style = style
             $0.live.lastWaterDone = lastWater ?? start.addingTimeInterval(-Timing.minute)
         }
     }
@@ -27,34 +31,59 @@ struct BreatheViewTests {
         try BreatheView().environmentObject(h.engine).inspect()
     }
 
-    @Test func startShowsHeaderFirstPhaseRoundAndStop() throws {
-        let h = harness()
-        h.engine.startMeditation()
-        let sut = try breathe(h)
-        #expect(try sut.find(text: "BOX BREATHING · 4·4·4·4") != nil)
-        #expect(try sut.find(text: "Breathe in") != nil)
-        #expect(try sut.find(text: "Round 1 of 19") != nil)
-        #expect(try sut.find(text: "Stop") != nil)
-        #expect(try sut.find(BreathCircle.self) != nil)
+    private func frame(_ h: EngineHarness) throws -> InspectableView<ViewType.ClassifiedView> {
+        try breathe(h).find(ViewType.TimelineView.self).contentView(.init(date: h.engine.now))
     }
 
-    @Test func sixSecondsInHolds() throws {
+    private func texts(_ sut: InspectableView<some BaseViewType>) -> [String] {
+        sut.findAll(ViewType.Text.self).compactMap { try? $0.string() }
+    }
+
+    @Test func startShowsEyebrowCountPhaseTimeLeftAndButtons() throws {
         let h = harness()
         h.engine.startMeditation()
-        advance(h, seconds: 6)
-        let sut = try breathe(h)
-        #expect(try sut.find(text: "Hold") != nil)
+        let root = try breathe(h)
+        let sut = try frame(h)
+        #expect(try root.find(text: "CALM · 4 6") != nil)
+        #expect(try sut.find(text: "4 · IN") != nil)
+        #expect(try sut.find(text: "Breathe in") != nil)
+        #expect(try sut.find(text: "5:00 left") != nil)
+        #expect(try root.find(text: "Pause") != nil)
+        #expect(try root.find(text: "Stop") != nil)
+        #expect(try sut.find(BreathOrb.self) != nil)
+    }
+
+    @Test func showsNoRoundCount() throws {
+        let h = harness()
+        h.engine.startMeditation()
+        let all = try texts(breathe(h)) + texts(frame(h))
+        #expect(!all.contains { $0.contains("Round") })
+    }
+
+    @Test func fiveSecondsInBreathesOut() throws {
+        let h = harness()
+        h.engine.startMeditation()
+        advance(h, seconds: 5)
+        let sut = try frame(h)
+        #expect(try sut.find(text: "Breathe out") != nil)
+        #expect(try sut.find(text: "5 · OUT") != nil)
+        #expect(try sut.find(text: "4:55 left") != nil)
         #expect(Find.lacks(sut, text: "Breathe in"))
-        #expect(try sut.find(text: "Round 1 of 19") != nil)
     }
 
-    @Test func eighteenSecondsInStartsRoundTwo() throws {
+    @Test func pauseFreezesTheTimeLeftAndShowsResume() throws {
         let h = harness()
         h.engine.startMeditation()
-        advance(h, seconds: 18)
-        let sut = try breathe(h)
-        #expect(try sut.find(text: "Breathe in") != nil)
-        #expect(try sut.find(text: "Round 2 of 19") != nil)
+        advance(h, seconds: 5)
+        try Find.button(breathe(h), holding: "Pause").tap()
+        #expect(h.engine.session(.meditation)?.isPaused == true)
+        advance(h, seconds: 60)
+        #expect(try frame(h).find(text: "4:55 left") != nil)
+        #expect(try frame(h).find(text: "Breathe out") != nil)
+        let root = try breathe(h)
+        #expect(Find.lacks(root, text: "Pause"))
+        try Find.button(root, holding: "Resume").tap()
+        #expect(h.engine.session(.meditation)?.isPaused == false)
     }
 
     @Test func stopEndsWithoutCounting() throws {
@@ -66,6 +95,42 @@ struct BreatheViewTests {
         #expect(!h.engine.data.events.contains { $0.habit == .meditation && $0.kind == .done })
     }
 
+    @Test func stopWhilePausedEndsWithoutCounting() throws {
+        let h = harness()
+        h.engine.startMeditation()
+        h.engine.pauseSession(.meditation)
+        try Find.button(breathe(h), holding: "Stop").tap()
+        #expect(h.engine.activities.isEmpty)
+        #expect(!h.engine.data.events.contains { $0.habit == .meditation && $0.kind == .done })
+    }
+
+    @Test func boxHoldsAfterSixSeconds() throws {
+        let h = harness(.box)
+        h.engine.startMeditation()
+        advance(h, seconds: 6)
+        let sut = try frame(h)
+        #expect(try breathe(h).find(text: "BOX · 4 4 4 4") != nil)
+        #expect(try sut.find(text: "Hold") != nil)
+        #expect(try sut.find(text: "2 · HOLD") != nil)
+        #expect(try sut.find(text: "4:54 left") != nil)
+    }
+
+    @Test func evenBreathesOutAfterSixSeconds() throws {
+        let h = harness(.even)
+        h.engine.startMeditation()
+        advance(h, seconds: 6)
+        let sut = try frame(h)
+        #expect(try sut.find(text: "Breathe out") != nil)
+        #expect(try sut.find(text: "4:54 left") != nil)
+    }
+
+    @Test func relaxStartsWithWindDown() throws {
+        let h = harness(.relax)
+        h.engine.startMeditation()
+        #expect(try breathe(h).find(text: "WIND DOWN · 4 7 8") != nil)
+        #expect(try frame(h).find(text: "4 · IN") != nil)
+    }
+
     @Test func noWaterNoteWhileWaterShows() throws {
         let h = harness(at: day(2026, 3, 4, 11, 58), lastWater: day(2026, 3, 4, 10))
         h.engine.startMeditation()
@@ -75,54 +140,11 @@ struct BreatheViewTests {
         #expect(try Find.lacks(breathe(h), text: "Fota is waiting for you after this"))
     }
 
-    @Test func noWaterNoteWithoutAQueue() throws {
-        let h = harness()
-        h.engine.startMeditation()
-        let sut = try breathe(h)
-        #expect(try sut.find(text: "BOX BREATHING · 4·4·4·4") != nil)
-        #expect(Find.lacks(sut, text: "Fota is waiting for you after this"))
-    }
-
-    @Test(arguments: [(BreathPhase.inhale, 1.0), (.hold, 1.0), (.exhale, 0.62), (.rest, 0.62)])
-    func circleScale(_ phase: BreathPhase, _ expected: Double) {
-        #expect(Double(BreathCircle.scale(for: phase)) == expected)
-        #expect(Double(UIMetrics.breathScaleBig) == 1)
-        #expect(Double(UIMetrics.breathScaleSmall) == 0.62)
-    }
-
     @Test func readingFocusSessionKeepsTheSessionView() throws {
         let h = EngineHarness { $0.prefs.reading.reminderStyle = .focus }
         h.engine.startReading()
         let sut = try SessionView(id: .reading).environmentObject(h.engine).inspect()
         #expect(try sut.find(text: "READING · DO NOT DISTURB") != nil)
-        #expect((try? sut.find(BreathCircle.self)) == nil)
-    }
-
-    private func styled(_ style: BreathingStyle) -> EngineHarness {
-        let start = day(2026, 3, 4, 15)
-        return EngineHarness(at: start) {
-            $0.prefs.meditation.enabled = true
-            $0.prefs.meditation.sessionMinutes = 5
-            $0.prefs.meditation.style = style
-            $0.live.lastWaterDone = start.addingTimeInterval(-Timing.minute)
-        }
-    }
-
-    @Test func relaxStartsWithWindDownAndSixteenRounds() throws {
-        let h = styled(.relax)
-        h.engine.startMeditation()
-        let sut = try breathe(h)
-        #expect(try sut.find(text: "WIND DOWN · 4·7·8") != nil)
-        #expect(try sut.find(text: "Breathe in") != nil)
-        #expect(try sut.find(text: "Round 1 of 16") != nil)
-    }
-
-    @Test func evenBreathesOutAfterSixSeconds() throws {
-        let h = styled(.even)
-        h.engine.startMeditation()
-        advance(h, seconds: 6)
-        let sut = try breathe(h)
-        #expect(try sut.find(text: "Breathe out") != nil)
-        #expect(try sut.find(text: "Round 1 of 30") != nil)
+        #expect((try? sut.find(BreathOrb.self)) == nil)
     }
 }

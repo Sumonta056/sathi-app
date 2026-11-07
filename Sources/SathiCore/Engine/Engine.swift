@@ -11,6 +11,7 @@ package final class Engine: ObservableObject {
                 reschedule(turnedOff: turnedOffToday(from: oldValue.prefs))
             }
             daySummaryPrefsChanged(from: oldValue.prefs.general)
+            breathSoundChanged(from: oldValue.prefs.general)
             if oldValue.prefs.general.snoozeLimit != data.prefs.general.snoozeLimit { refreshIgnoreDeadlines() }
             if oldValue.prefs.timeBlock.display != data.prefs.timeBlock.display { blockDisplayChanged() }
             if oldValue.prefs != data.prefs { store.savePrefs(data.prefs) }
@@ -20,7 +21,9 @@ package final class Engine: ObservableObject {
     @Published package var now: Date
     @Published package var pausedUntil: Date?
     @Published package internal(set) var habits: [HabitID: HabitState]
-    @Published package internal(set) var activities: [HabitID: Activity] = [:]
+    @Published package internal(set) var activities: [HabitID: Activity] = [:] {
+        didSet { if oldValue[.meditation] != activities[.meditation] { syncMeditationSession() } }
+    }
     @Published package internal(set) var quickActivities: [UUID: QuickActivity] = [:]
     @Published package var celebration = Celebration()
     @Published package var isCelebrating = false
@@ -38,6 +41,7 @@ package final class Engine: ObservableObject {
     let presenter: ReminderPresenter
     let links: LinkOpener
     let calendarWriter: CalendarWriter
+    let audio: SessionAudio
     let calendar: Calendar
 
     var timer: Timer?
@@ -50,6 +54,8 @@ package final class Engine: ObservableObject {
     var longestCache: [HabitID: Int] = [:]
     var streakCacheDay: Date?
     var reportCache: ReportScreenCache?
+    var breathCueMark: Date?
+    var minuteTickMark: Date?
 
     package init(
         store: StateStore,
@@ -59,7 +65,8 @@ package final class Engine: ObservableObject {
         presenter: ReminderPresenter,
         links: LinkOpener,
         calendar: Calendar = .current,
-        calendarWriter: CalendarWriter
+        calendarWriter: CalendarWriter,
+        audio: SessionAudio = SilentSessionAudio()
     ) {
         let n = clock.now
         var loaded = Persisted()
@@ -74,6 +81,7 @@ package final class Engine: ObservableObject {
         self.links = links
         self.calendar = calendar
         self.calendarWriter = calendarWriter
+        self.audio = audio
         calendarAccess = calendarWriter.access
         data = loaded
         now = n

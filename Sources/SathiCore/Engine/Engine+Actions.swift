@@ -114,7 +114,9 @@ extension Engine {
         switch activities[id] {
         case .bubble: presenter.closeBubble(id)
         case .lock: presenter.closeLock()
-        case .session: presenter.closeSession(id)
+        case .session:
+            presenter.closeSession(id)
+            sessionClosed(id)
         case nil: return
         }
         activities[id] = nil
