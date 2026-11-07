@@ -11,6 +11,12 @@ struct TickPlannerTests {
         #expect(TickPlanner.delay(now: now, inSession: true, deadlines: [], focusRemaining: nil) == Timing.activeTick)
     }
 
+    @Test func sessionTickStopsAtANearerDeadline() {
+        let deadlines = [now.addingTimeInterval(0.4)]
+        let delay = TickPlanner.delay(now: now, inSession: true, deadlines: deadlines, focusRemaining: nil)
+        #expect(abs(delay - 0.4) < 0.0001)
+    }
+
     @Test func idleWithNothingWaitsTheMaximum() {
         #expect(TickPlanner.delay(now: now, inSession: false, deadlines: [], focusRemaining: nil) == Timing.idleTickMax)
     }

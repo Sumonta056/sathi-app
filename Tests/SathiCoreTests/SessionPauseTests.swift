@@ -48,6 +48,14 @@ struct SessionPauseTests {
         #expect(once.paused(at: start.addingTimeInterval(500)) == once)
     }
 
+    @Test func resumeBeforeThePauseTimeNeverMovesBack() {
+        let paused = session.paused(at: start.addingTimeInterval(120))
+        let back = paused.resumed(at: start.addingTimeInterval(60))
+        #expect(back.start == start)
+        #expect(back.end == start.addingTimeInterval(600))
+        #expect(back.pausedAt == nil)
+    }
+
     @Test func resumingARunningSessionChangesNothing() {
         #expect(session.resumed(at: start.addingTimeInterval(500)) == session)
     }

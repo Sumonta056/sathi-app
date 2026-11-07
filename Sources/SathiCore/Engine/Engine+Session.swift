@@ -24,8 +24,8 @@ extension Engine {
         let st = state(id)
         let fromReminder = session(id)?.fromReminder ?? (isActive(id) || n >= (st.snoozedUntil ?? st.nextDue))
         close(id)
-        let end = n.addingTimeInterval(TimeInterval(minutes) * Timing.minute)
-        activities[id] = .session(Session(start: n, end: end, fromReminder: fromReminder, workout: workout, readingItem: readingItem))
+        let end = n.wholeSecond.addingTimeInterval(TimeInterval(minutes) * Timing.minute)
+        activities[id] = .session(Session(start: n.wholeSecond, end: end, fromReminder: fromReminder, workout: workout, readingItem: readingItem))
         presenter.showSession(id)
         if let sound = startSound(id) { play(sound) }
         requestTick()

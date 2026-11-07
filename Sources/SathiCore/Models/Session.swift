@@ -43,7 +43,7 @@ package struct Session: Codable, Equatable, Sendable {
 
     package func resumed(at now: Date) -> Session {
         guard let pausedAt else { return self }
-        let gap = now.wholeSecond.timeIntervalSince(pausedAt)
+        let gap = max(0, now.wholeSecond.timeIntervalSince(pausedAt))
         var s = self
         s.start = start.addingTimeInterval(gap)
         s.end = end.addingTimeInterval(gap)
