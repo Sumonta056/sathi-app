@@ -19,7 +19,6 @@ enum Typography {
     static let cornerTitle = rounded(UIMetrics.fontCornerTitle, .black)
     static let pillTime = rounded(UIMetrics.fontPillTime, .black).monospacedDigit()
     static let pillHint = rounded(UIMetrics.fontPillHint, .semibold)
-    static let breathPhase = rounded(UIMetrics.fontBreathPhase, .black)
 
     private static func rounded(_ size: CGFloat, _ weight: Font.Weight) -> Font {
         .system(size: size, weight: weight, design: .rounded)

@@ -12,14 +12,5 @@ extension UIMetrics {
     static let calmButtonHeight: CGFloat = 40
     static let calmThanksBuddySize: CGFloat = 120
 
-    static let breathCircleSize: CGFloat = 260
-    static let breathHaloRatio: CGFloat = 110 / 130
-    static let breathGlowRatio: CGFloat = 96 / 130
-    static let breathGlowOpacity: Double = 0.9
-    static let breathScaleBig: CGFloat = 1
-    static let breathScaleSmall: CGFloat = 0.62
-    static let breathHaloBig: Double = 0.4
-    static let breathHaloSmall: Double = 0.15
-
     static let pebbleCheekOpacity: Double = 0.85
 }

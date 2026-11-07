@@ -9,9 +9,6 @@ import Testing
 @Suite("Loop animations")
 struct LoopAnimationTests {
     private let tolerance = 0.0001
-    private let small = Double(UIMetrics.breathScaleSmall)
-    private let big = Double(UIMetrics.breathScaleBig)
-    private var midway: Double { (small + big) / 2 }
 
     private func near(_ a: Double, _ b: Double) -> Bool { abs(a - b) < tolerance }
 
@@ -53,23 +50,5 @@ struct LoopAnimationTests {
     @Test func ignoreBarWithNoTotalIsEmpty() {
         let now = day(2026, 3, 4, 10)
         #expect(IgnoreBar.fraction(deadline: now.addingTimeInterval(Timing.minute), now: now, total: 0) == 0)
-    }
-
-    @Test(arguments: [
-        (0.0, "small"), (2.0, "mid"), (4.0, "big"), (6.0, "big"),
-        (10.0, "mid"), (12.0, "small"), (14.0, "small"), (16.0, "small"),
-    ])
-    func boxCircleFollowsThePhases(_ elapsed: TimeInterval, _ expected: String) {
-        let table: [String: Double] = ["small": small, "mid": midway, "big": big]
-        let want = table[expected] ?? -1
-        #expect(near(Double(BreathCircle.scale(.box, elapsed: elapsed)), want))
-    }
-
-    @Test func evenCircleIsMidwayHalfwayThroughTheInhale() {
-        #expect(near(Double(BreathCircle.scale(.even, elapsed: 2.5)), midway))
-    }
-
-    @Test func relaxCircleIsMidwayHalfwayThroughTheExhale() {
-        #expect(near(Double(BreathCircle.scale(.relax, elapsed: 4 + 7 + 4)), midway))
     }
 }

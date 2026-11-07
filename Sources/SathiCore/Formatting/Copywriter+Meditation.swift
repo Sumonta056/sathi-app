@@ -5,10 +5,6 @@ extension Copywriter {
         "\(minutes) \(minutes == 1 ? "minute" : "minutes") of \(breathName(style)). Shanti counts for you."
     }
 
-    package static func breathHeader(_ style: BreathingStyle) -> String {
-        "\(headerTitle(style)) · \(breathBeats(style))"
-    }
-
     package static func breathBeats(_ style: BreathingStyle) -> String {
         BreathingPattern.steps(style).map { "\(Int($0.1))" }.joined(separator: "·")
     }
@@ -52,10 +48,6 @@ extension Copywriter {
         }
     }
 
-    package static func breathRound(_ round: Int, of total: Int) -> String {
-        "Round \(round) of \(total)"
-    }
-
     package static func calmThanksHint(streak: Int) -> String {
         streak >= 2 ? "\(streak) calm days in a row." : "A calm start."
     }
@@ -75,15 +67,6 @@ extension Copywriter {
         case .box: "box breathing"
         case .relax: "wind-down breathing"
         case .even: "even breathing"
-        }
-    }
-
-    private static func headerTitle(_ style: BreathingStyle) -> String {
-        switch style {
-        case .calm: "CALM BREATHING"
-        case .box: "BOX BREATHING"
-        case .relax: "WIND DOWN"
-        case .even: "EVEN BREATHING"
         }
     }
 }

@@ -13,15 +13,6 @@ struct BreathCopyTests {
     }
 
     @Test(arguments: [
-        (BreathingStyle.box, "BOX BREATHING · 4·4·4·4"),
-        (.relax, "WIND DOWN · 4·7·8"),
-        (.even, "EVEN BREATHING · 5·5")
-    ])
-    func header(_ style: BreathingStyle, _ expected: String) {
-        #expect(Copywriter.breathHeader(style) == expected)
-    }
-
-    @Test(arguments: [
         (BreathingStyle.calm, "CALM · 4 6"),
         (.box, "BOX · 4 4 4 4"),
         (.relax, "WIND DOWN · 4 7 8"),
@@ -70,10 +61,6 @@ struct BreathCopyTests {
         #expect(BreathCue(.hold) == .hold)
         #expect(BreathCue(.exhale) == .exhale)
         #expect(BreathCue(.rest) == .rest)
-    }
-
-    @Test func roundCounter() {
-        #expect(Copywriter.breathRound(3, of: 18) == "Round 3 of 18")
     }
 
     @Test(arguments: [(4, "4 calm days in a row."), (2, "2 calm days in a row."), (1, "A calm start."), (0, "A calm start.")])
