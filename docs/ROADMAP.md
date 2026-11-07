@@ -158,7 +158,6 @@ Spec: `docs/specs/phase-15-breathing.md`
 - 6b: a written month file lists known events first, then unknown events (not sorted by date; Sathi sorts on read)
 - 6b: each month file is decoded twice and each event encoded once more (about 3–4 ms for a few hundred events)
 - Phase 6: `schemaVersion` is written but never read. The first schema bump must add a version check in `JSONFiles.load`
-- 5f: breathing sessions end mid-cycle; the last ~12 s repeat the last round (user: accept for now)
 - 5f: `BreatheView` reads the breathing style live; a style change mid-session jumps the phase (store it at session start)
 - 5d: `goalText(.water)` uses `Int(dailyGoalGlasses)`; a fractional goal reads "of 7" next to 8 drops
 - 5e review: `EngineHarness` takes no calendar, so `Engine.comesBackText` time-zone use is not proven by a test

@@ -41,7 +41,7 @@ Sources/
     Buddy/         BuddyView, BuddyCanvas (+Pebble, +Kettlebell), BuddyKind, BuddyInk, WaterInk, BuddyPaths, BobbingBuddy, GlassIcon, BottleView
     Features/      MenuBar/, Bubble/, Water/, Reading/, Meditation/ (BreatheView, BreathFrame, BreathOrb, BreathRing, BreathMotion, BreathMood, BlobShape, MeditationSoundCard), Gym/, Session/, Celebrate/, Lock/, Settings/, Reports/, DaySummary/, Quick/, TimeBlock/
     Windows/       UIController (+Corner, +Placement, +Quick, +TimeBlock; ReminderPresenter impl), MenuWindowFit, CornerLayout, PanelFactory, CornerToast, SettingsWindow, ReportsWindow, LockScreen, PanelWindows, WindowCloseWatcher
-    Platform/      SystemSoundPlayer, EventKitCalendarWriter, CalendarMapping, WorkspaceLinkOpener, BreathAudioPlayer, BreathVoice, VoicePicker, AudioFiles, SathiResources
+    Platform/      SystemSoundPlayer, EventKitCalendarWriter, CalendarMapping, WorkspaceLinkOpener, BreathAudioPlayer, BreathVoice, PreviewHandoff, VoicePicker, AudioFiles, SathiResources
   SathiUI/Resources/  Fonts (Figtree-Variable.ttf + OFL.txt), Audio (optional MP3 clips, AUDIO.txt)
   Sathi/         Executable. SathiApp, AppDelegate, AppEnvironment (composition root).
 Resources/        Info.plist (version), AppIcon.icns (app icon), AppIcon.png (1024 px preview)

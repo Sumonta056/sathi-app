@@ -33,7 +33,7 @@ Design reference: card "D" in `breath-prototypes.html` (published prototype). Th
    - Reading and Gym sessions are still not saved. Out of scope.
 3. **Midnight.** A paused session whose `pausedAt` is before today's start ends at the next tick, with no event and no snooze, and the next due time stays. The next midnight is a deadline while paused. A running session that crosses midnight is unchanged.
 4. **Default pattern.** `BreathingStyle` gains `.calm` as the first case, so it is the first settings card. `MeditationPrefs().style = .calm`. A saved `"style"` is kept. An unknown or missing style decodes to the default (`.calm`), following Schedules rule 9. Every `prefs.json` written so far contains `style`, so existing users keep theirs.
-5. **One audio port.** `SessionAudio` (Core port) carries voice, music, bells and the minute tick. The Engine decides when and what plays. The Platform `BreathAudioPlayer` decides how: bundled clip if present, else `AVSpeechSynthesizer` with the best installed English voice. Bell: bundled clip if present, else system sound `SoundName.tink`. Tick: bundled clip if present, else system sound "Pop".
+5. **One audio port.** `SessionAudio` (Core port) carries voice, music, bells and the minute tick. The Engine decides when and what plays. The Platform `BreathAudioPlayer` decides how: bundled clip if present, else `AVSpeechSynthesizer` with the best installed English voice. Bell: bundled clip if present, else system sound `SoundName.tink`. Tick: bundled clip if present, else system sound `SoundName.pop`. Both system sounds play as private copies.
 6. **Chime moves to the port.** `celebrationSound(.meditation)` returns `nil`. The end bell goes through `SessionAudio.play(.bell, …)`. The `chime` pref keeps its key and now means "bell at start and natural end".
 7. **Master sound.** `GeneralPrefs.soundOn == false` silences all session audio (voice, music, bells, tick) and disables Preview. One rule: "Sound off = Sathi is silent".
 8. **Cue timing.**
@@ -49,9 +49,9 @@ Design reference: card "D" in `breath-prototypes.html` (published prototype). Th
     - `Bundle.module` is NOT used, because it calls `fatalError` when the bundle is missing. `SathiResources.url(_:in:)` searches, in order: `Bundle.main.resourceURL/<sub>` (the .app), `Bundle.main.bundleURL/Sathi_SathiUI.bundle/<sub>` (`swift run`), and the folder next to the test bundle (`swift test`). It returns `nil` when the file is not found.
     - `build.sh` copies the bundle's `Fonts/` and `Audio/` folders (not the `.bundle`) into `Sathi.app/Contents/Resources/`. This avoids codesign trouble with a nested bundle that has no Info.plist.
 13. **Figtree.**
-    - Four static TTFs (Light 300, Regular 400, Medium 500, SemiBold 600) from github.com/erikdkennedy/figtree (`fonts/ttf`), plus `OFL.txt`.
+    - One variable font `Sources/SathiUI/Resources/Fonts/Figtree-Variable.ttf` from Google Fonts, plus `OFL.txt`. The weights Light 300, Regular 400, Medium 500 and SemiBold 600 come from its weight axis.
     - Registered with `CTFontManagerRegisterFontsForURL(…, .process, …)` once, lazily, on the first breathing card.
-    - Referenced by PostScript name. If registration fails or a file is missing, the card uses `.system(…, design: .rounded)`.
+    - Referenced by family name "Figtree" with `.weight(_:)`. If registration fails or the file is missing, the card uses `.system(…, design: .rounded)` at the same weight.
     - Used on the breathing card only.
 14. **Days-off picker.**
     - A "Pick a date" chip opens a popover with a Monday-first month grid (`Limits.weekStartWeekday`).
@@ -289,7 +289,8 @@ Tests first (`Tests/SathiUITests/VoicePickerTests.swift`, suite "Voice picker"; 
 
 Code:
 - `Sources/SathiUI/Platform/AudioFiles.swift`: file names and `preferredVoices`.
-- `Sources/SathiUI/Platform/VoicePicker.swift`: `struct VoiceInfo { id, name, language, quality: Int, isFemale }` and `static func best(_:) -> VoiceInfo?` (rank by English, then quality, then preferred name, then female). Plus a mapper from `AVSpeechSynthesisVoice`.
+- `Sources/SathiUI/Platform/VoicePicker.swift`: `struct VoiceInfo { id, name, language, quality: Int, isFemale }` and `static func best(_:) -> VoiceInfo?`. Plus a mapper from `AVSpeechSynthesisVoice`.
+  - Voice preference (user ruling after a 4-voice demo): English only, then the identifier `com.apple.ttsbundle.gryphon-neural_Simone_en-US_premium` (`AudioFiles.preferredVoiceIDs`), then a voice named or identified "Simone", then "Martha" (`AudioFiles.preferredVoiceMarks`, matched on the name or as a substring of the identifier, because installed voices may show as "Voice 1"/"Voice 2"), then quality, then the preferred names Ava and Zoe, then female.
 - `Sources/SathiUI/Platform/BreathAudioPlayer.swift`: `@MainActor final class BreathAudioPlayer: SessionAudio`, AVFoundation, < 200 lines. If it grows, split out `BreathVoice.swift` (clips plus speech queue).
   - Music: created lazily in `startMusic`. `numberOfLoops = -1`, volume 0, `play()`, then `setVolume(v, fadeDuration: Timing.musicFadeIn)`. Reused after `pauseMusic`.
   - `pauseMusic`: `setVolume(0, fadeDuration: Timing.musicFadeOut)`, then `pause()` after the fade (one-shot `DispatchWorkItem`, cancelled by `startMusic`).
@@ -297,7 +298,8 @@ Code:
     - A clip is played if `SathiResources.url` finds it; otherwise an `AVSpeechUtterance` with the `VoicePicker` voice and rate `AVSpeechUtteranceDefaultSpeechRate * Limits.speechRateRatio`.
     - Clips are queued, so a phrase never overlaps another.
     - `silenceVoice` stops the clip and calls `stopSpeaking(at: .immediate)`.
-  - Bell and tick: a bundled clip if present, else `NSSound(named: SoundName.tink.rawValue)` or "Pop", with `volume` set.
+  - Bell and tick: a bundled clip if present, else a private copy of `NSSound(named:)` for `SoundName.tink` or `SoundName.pop`, with `volume` set. A copy, so the volume never leaks into the shared sound that reminders play.
+  - Preview hand-off: the first `speak`, `play` or `startMusic` of a session cancels the pending Preview end and any pending release, silences the Preview voice, and fades out the Preview music unless `startMusic` takes it over (`PreviewHandoff`). `endSession` drops queued voice lines; only the current line finishes.
   - `endSession`: fades the music out, then releases the music player and voice resources after the fade and after the last utterance.
   - `preview`: plays "Breathe in" and the music for `seconds`, then calls `endSession`.
   - A missing file → nothing plays, no crash.
@@ -344,8 +346,8 @@ Tests first:
 
 Code:
 - Fonts:
-  - Add `Sources/SathiUI/Resources/Fonts/Figtree-Light.ttf`, `-Regular.ttf`, `-Medium.ttf` and `-SemiBold.ttf` (Decision 13). If they cannot be fetched, commit `OFL.txt` only; the fallback path covers it.
-  - `Sources/SathiUI/Theme/BreathFont.swift`: `enum BreathFace: String { case light = "Figtree-Light", regular = "Figtree-Regular", medium = "Figtree-Medium", semibold = "Figtree-SemiBold" }`, a `static let isRegistered` (lazy `CTFontManagerRegisterFontsForURL` over all faces), and `static func font(_:size:) -> Font` (falls back to `.system(size:weight:design: .rounded)`).
+  - Add `Sources/SathiUI/Resources/Fonts/Figtree-Variable.ttf` (Google Fonts) and `OFL.txt` (Decision 13). If the file is missing, the fallback path covers it.
+  - `Sources/SathiUI/Theme/BreathFont.swift`: `enum BreathFace { case light, regular, medium, semibold }` with a `Font.Weight` for each, a `static let isRegistered` (lazy `CTFontManagerRegisterFontsForURL` of `Figtree-Variable.ttf`), and `static func font(_:size:) -> Font` (`.custom("Figtree", size:).weight(face.weight)`, falls back to `.system(size:weight:design: .rounded)`).
 - `Sources/SathiUI/Theme/NightPalette.swift`: add `enum NightHex` with `calm 0xA99CF5`, `water 0x4CC3F5`, `cheek 0xFF9FB8`, `spark 0xFFC94A`, `calmGround 0x16142A`, `text 0xEEF2FA`, `muted 0x9AA6BF`, `sprout 0x5FD39A`, `border 0x263049`. The matching `Night` tokens use them. New `Sources/SathiUI/Theme/RGB.swift`: `struct RGB { init(hex:), mix(_:_:), color(opacity:) }`.
 - New `Sources/SathiUI/Constants/UIMetrics+Breath.swift`, with the values from the prototype:
   - Stage and ring: stage 236; ring radius 114, width 1, track opacity 0.8; tick marks 5, from 110 to 117; dot radius 2.5; stage margins 14 and 10.
