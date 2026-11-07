@@ -63,7 +63,7 @@ struct DaysOffPrefsTests {
     @Test func oldPrefsWithoutNewKeysDecodeToDefaults() throws {
         let p = try decode(#"""
         {"general":{"name":"Asha"},"water":{"intervalMinutes":90},"reading":{"timeMinutes":1260,"weekdays":[2]},
-         "meditation":{"enabled":true,"intervalMinutes":45},"gym":{"enabled":true,"intervalMinutes":90}}
+         "meditation":{"enabled":true,"intervalMinutes":45},"gym":{"enabled":true,"sessionsPerDay":6}}
         """#)
         #expect(p.water.weekdays == everyDay)
         #expect(p.meditation.weekdays == everyDay)
@@ -76,7 +76,7 @@ struct DaysOffPrefsTests {
         #expect(p.water.intervalMinutes == 90)
         #expect(p.reading.timeMinutes == 1260)
         #expect(p.meditation.intervalMinutes == 45)
-        #expect(p.gym.intervalMinutes == 90)
+        #expect(p.gym.sessionsPerDay == 6)
     }
 
     @Test(arguments: HabitID.allCases)

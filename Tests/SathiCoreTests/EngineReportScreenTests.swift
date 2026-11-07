@@ -63,11 +63,11 @@ struct EngineReportScreenTests {
         }
     }
 
-    @Test func theGymTileCountsWorkoutsAgainstAGoalOfFour() throws {
+    @Test func theGymTileShowsOldWorkoutsAsFiveMinutesAgainstAGoalOfTwenty() throws {
         let h = gymHarness(workouts: 2)
         let tile = try #require(h.engine.reportScreen(.day, selected: .gym).tiles.first { $0.habit == .gym })
-        #expect(tile.value == "2")
-        #expect(tile.unit == "workouts today")
+        #expect(tile.value == "10")
+        #expect(tile.unit == "min today")
         #expect(tile.percent == 50)
         #expect(!tile.isOff)
     }

@@ -24,8 +24,7 @@ extension Copywriter {
         let shown = "\(Int(min(done, goal)))"
         switch id {
         case .water: return GoalText(done: Fmt.count(done), rest: "of \(goalCount) glasses")
-        case .reading, .meditation: return GoalText(done: shown, rest: "of \(goalCount) min")
-        case .gym: return GoalText(done: shown, rest: "of \(goalCount) workouts")
+        case .reading, .meditation, .gym: return GoalText(done: shown, rest: "of \(goalCount) min")
         }
     }
 }

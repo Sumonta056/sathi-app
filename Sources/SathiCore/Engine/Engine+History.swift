@@ -14,4 +14,8 @@ extension Engine {
         data.events = events
         history.append(event)
     }
+
+    func storedEvents(from start: Date, to end: Date) -> [HistoryEvent] {
+        GymLegacyMinutes.apply(history.events(from: start, to: end), since: data.live.gymMinutesSince)
+    }
 }

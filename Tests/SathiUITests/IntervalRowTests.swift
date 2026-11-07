@@ -39,7 +39,7 @@ struct IntervalRowTests {
         #expect(try !A11y.isSelected(sut.find(button: "15 min")))
     }
 
-    @Test(arguments: [HabitID.water, .meditation, .gym])
+    @Test(arguments: [HabitID.water, .meditation])
     func intervalTabsShowEveryChip(_ id: HabitID) throws {
         let h = settingsHarness()
         let sut = try settingsTab(id, h)
@@ -49,7 +49,7 @@ struct IntervalRowTests {
         }
     }
 
-    @Test(arguments: [HabitID.water, .meditation, .gym])
+    @Test(arguments: [HabitID.water, .meditation])
     func tappingFortyFiveSetsThatHabitsInterval(_ id: HabitID) throws {
         let h = settingsHarness()
         try settingsTab(id, h).find(button: "45 min").tap()
@@ -68,7 +68,6 @@ struct IntervalRowTests {
             $0.prefs.gym.enabled = true
             $0.prefs.water.intervalMinutes = 120
             $0.prefs.meditation.intervalMinutes = 60
-            $0.prefs.gym.intervalMinutes = 60
         }
     }
 
@@ -85,8 +84,7 @@ struct IntervalRowTests {
         switch id {
         case .water: return h.engine.data.prefs.water.intervalMinutes
         case .meditation: return h.engine.data.prefs.meditation.intervalMinutes
-        case .gym: return h.engine.data.prefs.gym.intervalMinutes
-        case .reading: return nil
+        case .gym, .reading: return nil
         }
     }
 }

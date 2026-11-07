@@ -25,7 +25,7 @@ extension Engine {
         let n = clock.now
         let builder = ReportBuilder(calendar: calendar)
         let span = builder.interval(range, containing: n)
-        let events = history.events(from: span.start, to: span.end)
+        let events = storedEvents(from: span.start, to: span.end)
         return builder.build(range, now: n, events: events, prefs: data.prefs)
     }
 
@@ -90,7 +90,7 @@ extension Engine {
 
     private func loadStreakMonth(_ month: DateInterval) -> [HistoryEvent] {
         guard month.start >= Self.windowStart(now: clock.now, calendar: calendar) else {
-            return history.events(from: month.start, to: month.end)
+            return storedEvents(from: month.start, to: month.end)
         }
         return data.events.filter { month.start <= $0.date && $0.date < month.end }
     }

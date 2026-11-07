@@ -14,18 +14,30 @@ package struct GymRules: HabitRules {
 
     private var days: HabitDays { prefs.days(id) }
 
-    private var interval: TimeInterval { TimeInterval(gym.intervalMinutes) * Timing.minute }
+    package var dailyGoal: Double { Double(gym.dailyGoalMinutes) }
 
-    package var dailyGoal: Double { Double(Limits.gymDailyGoal) }
+    package func nextDue(now: Date, lastDone: Date?, doneToday: Double, skipToday: Bool) -> Date {
+        guard gym.startMinutes < gym.endMinutes else { return .distantFuture }
+        let left = sessionsLeft(doneToday)
+        let start = clock.at(gym.startMinutes, on: now)
+        let end = end(of: now)
+        let tomorrow = firstReminder(onOrAfter: day(after: now, by: 1))
+        guard !skipToday, left > 0, days.isOn(now, calendar: clock.calendar), now < end else { return tomorrow }
+        guard let d = lastDone, d >= start, d < end else {
+            return start.addingTimeInterval(end.timeIntervalSince(start) / Double(2 * left))
+        }
+        let gap = max(end.timeIntervalSince(d) / (Double(left) + Self.halfSession), session)
+        let due = d.addingTimeInterval(gap)
+        return due < end ? due : tomorrow
+    }
 
-    package func nextDue(now: Date, lastDone: Date?, doneToday _: Double, skipToday: Bool) -> Date {
-        if skipToday { return firstReminder(onOrAfter: day(after: now, by: 1)) }
-        let cal = clock.calendar
-        let fresh = lastDone.flatMap { cal.startOfDay(for: $0) < cal.startOfDay(for: now) ? nil : $0 }
-        let candidate = (fresh ?? now).addingTimeInterval(interval)
-        let due = max(candidate, firstOf(candidate))
-        if days.isOn(candidate, calendar: cal), due < end(of: candidate) { return due }
-        return firstReminder(onOrAfter: day(after: candidate, by: 1))
+    private static let halfSession = 0.5
+
+    private var session: TimeInterval { TimeInterval(gym.sessionMinutes) * Timing.minute }
+
+    private func sessionsLeft(_ done: Double) -> Int {
+        let rest = dailyGoal - done
+        return rest > 0 ? Int((rest / Double(gym.sessionMinutes)).rounded(.up)) : 0
     }
 
     package func isActiveTime(_ date: Date) -> Bool {
@@ -44,11 +56,13 @@ package struct GymRules: HabitRules {
     }
 
     private func firstReminder(onOrAfter date: Date) -> Date {
-        days.firstReminder(onOrAfter: date, calendar: clock.calendar) { firstOf($0) < end(of: $0) ? firstOf($0) : .distantFuture }
+        days.firstReminder(onOrAfter: date, calendar: clock.calendar, at: firstOf)
     }
 
     private func firstOf(_ date: Date) -> Date {
-        clock.at(gym.startMinutes, on: date).addingTimeInterval(interval)
+        let start = clock.at(gym.startMinutes, on: date)
+        let span = end(of: date).timeIntervalSince(start)
+        return start.addingTimeInterval(span / Double(2 * gym.sessionsPerDay))
     }
 
     private func end(of date: Date) -> Date {

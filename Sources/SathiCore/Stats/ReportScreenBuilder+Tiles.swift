@@ -24,8 +24,7 @@ extension ReportScreenBuilder {
     private static func unitName(_ id: HabitID) -> String {
         switch id {
         case .water: return "glasses"
-        case .reading, .meditation: return "min"
-        case .gym: return "workouts"
+        case .reading, .meditation, .gym: return "min"
         }
     }
 }

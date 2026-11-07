@@ -29,6 +29,22 @@ struct GymTimerCardTests {
         #expect(h.engine.session(.gym) == nil)
     }
 
+    @Test func timerShowsTheIdeaPickedInThePopup() throws {
+        let h = gymReminder()
+        h.engine.data.prefs.gym.ideas = ["Plank", "Squats"]
+        h.engine.nextGymIdea()
+        h.engine.startSession(.gym)
+        #expect(throws: Never.self) { try card(h).find(text: "SHOKTI · Squats") }
+    }
+
+    @Test func timerRunsForTheSessionLength() throws {
+        let h = gymReminder()
+        h.engine.data.prefs.gym.sessionMinutes = 10
+        h.engine.startSession(.gym)
+        let s = try #require(h.engine.session(.gym))
+        #expect(s.end.timeIntervalSince(s.start) == 10 * Timing.minute)
+    }
+
     @Test func timerStopDoesNotCount() throws {
         let h = started()
         try Find.button(card(h), holding: "Stop").tap()

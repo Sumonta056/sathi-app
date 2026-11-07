@@ -10,7 +10,6 @@ struct GymDaysOffRulesTests {
     private func rules(off dates: [Date] = [], weekdays: Set<Weekday> = Set(Weekday.allCases)) -> GymRules {
         var p = Prefs()
         p.gym.enabled = true
-        p.gym.intervalMinutes = 60
         p.gym.startMinutes = 9 * 60
         p.gym.endMinutes = 17 * 60
         p.gym.weekdays = weekdays
@@ -18,15 +17,15 @@ struct GymDaysOffRulesTests {
         return GymRules(prefs: p, calendar: zone.calendar)
     }
 
-    @Test func gymSkipsADateOffToStartPlusInterval() {
+    @Test func goalMetSkipsADateOffToTheFirstEvenSpreadReminder() {
         let done = zone.date(2026, 3, 4, 16, 30)
-        let next = rules(off: [zone.date(2026, 3, 5)]).nextDue(now: done, lastDone: done, doneToday: 1, skipToday: false)
+        let next = rules(off: [zone.date(2026, 3, 5)]).nextDue(now: done, lastDone: done, doneToday: 20, skipToday: false)
         #expect(next == zone.date(2026, 3, 6, 10))
     }
 
     @Test func dueTodayOnADateOffMovesToTomorrow() {
         let now = zone.date(2026, 3, 4, 11)
-        let next = rules(off: [zone.date(2026, 3, 4)]).nextDue(now: now, lastDone: now, doneToday: 1, skipToday: false)
+        let next = rules(off: [zone.date(2026, 3, 4)]).nextDue(now: now, lastDone: now, doneToday: 5, skipToday: false)
         #expect(next == zone.date(2026, 3, 5, 10))
         #expect(next > now)
     }
@@ -39,7 +38,7 @@ struct GymDaysOffRulesTests {
     @Test func dateOffAndWeekdayOffAreBothSkipped() {
         let done = zone.date(2026, 3, 4, 16, 30)
         let r = rules(off: [zone.date(2026, 3, 5)], weekdays: Set(Weekday.allCases).subtracting([.friday]))
-        #expect(r.nextDue(now: done, lastDone: done, doneToday: 1, skipToday: false) == zone.date(2026, 3, 7, 10))
+        #expect(r.nextDue(now: done, lastDone: done, doneToday: 20, skipToday: false) == zone.date(2026, 3, 7, 10))
     }
 
     @Test func isNotActiveOnADateOff() {
@@ -56,7 +55,7 @@ struct GymDaysOffRulesTests {
     @Test func aThreeWeekBreakResumesOnDay22() {
         let done = zone.date(2026, 3, 4, 16, 30)
         let off = (0 ..< 21).map { zone.adding(days: $0, to: zone.date(2026, 3, 5)) }
-        #expect(rules(off: off).nextDue(now: done, lastDone: done, doneToday: 1, skipToday: false) == zone.date(2026, 3, 26, 10))
+        #expect(rules(off: off).nextDue(now: done, lastDone: done, doneToday: 20, skipToday: false) == zone.date(2026, 3, 26, 10))
     }
 
     @Test func nothingOnInTheWindowHasNoNextReminder() {

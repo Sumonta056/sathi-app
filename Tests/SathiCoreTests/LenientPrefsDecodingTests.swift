@@ -50,11 +50,22 @@ struct LenientPrefsDecodingTests {
     }
 
     @Test func unknownGymStrictnessAndWeekdayDecodeToDefaultsAndKeepTheRest() throws {
-        let p = try decode(#"{"gym":{"enabled":true,"intervalMinutes":90,"strictness":"fierce","weekdays":[9]}}"#)
+        let p = try decode(#"{"gym":{"enabled":true,"sessionsPerDay":6,"strictness":"fierce","weekdays":[9]}}"#)
         #expect(p.gym.strictness == .friendly)
         #expect(p.gym.weekdays == Set(Weekday.allCases))
         #expect(p.gym.enabled)
-        #expect(p.gym.intervalMinutes == 90)
+        #expect(p.gym.sessionsPerDay == 6)
+    }
+
+    @Test func offListGymGoalAndBlankIdeasNeverResetTheOtherSections() throws {
+        let gym = #""gym":{"enabled":true,"sessionsPerDay":0,"sessionMinutes":4,"ideas":["  "]}"#
+        let p = try decode(#"{"general":{"name":"Asha"},"water":{"intervalMinutes":90},\#(gym)}"#)
+        #expect(p.gym.sessionsPerDay == 1)
+        #expect(p.gym.sessionMinutes == 3)
+        #expect(p.gym.ideas == GymIdeas.defaults)
+        #expect(p.gym.enabled)
+        #expect(p.general.name == "Asha")
+        #expect(p.water.intervalMinutes == 90)
     }
 
     @Test func emptyGymWeekdaysDecodeAsEveryDay() throws {

@@ -10,13 +10,20 @@ struct GymInvite: View {
     var body: some View {
         VStack(alignment: .leading, spacing: UIMetrics.cornerSpacing) {
             header
+            GymProgressBar(progress: e.gymProgress)
             HStack(spacing: UIMetrics.cornerButtonSpacing) {
                 Button { e.startSession(.gym) } label: {
                     Text("Start").frame(maxWidth: .infinity)
                 }
                 .buttonStyle(AccentButton(accent: Night.gym, height: UIMetrics.cornerButtonHeight))
-                Button { e.nextGymIdea() } label: { Text("Next idea") }
-                    .buttonStyle(ghost)
+                Button { e.nextGymIdea() } label: {
+                    Image(systemName: "shuffle")
+                        .font(.system(size: UIMetrics.gymIconSize, weight: .bold))
+                        .foregroundStyle(Night.gym)
+                        .frame(width: UIMetrics.cornerButtonHeight)
+                }
+                .buttonStyle(ghost)
+                .accessibilityLabel(Text(verbatim: "Next idea"))
                 if e.canSnooze(.gym) {
                     Button { e.snooze(.gym) } label: { Text(e.snoozeShortLabel) }
                         .buttonStyle(ghost)
@@ -46,10 +53,11 @@ struct GymInvite: View {
                 Text("SHOKTI · GYM")
                     .font(Typography.eyebrow)
                     .foregroundStyle(Night.gym)
-                Text(e.copy(.gym).title)
+                Text(verbatim: Copywriter.gymInviteTitle(idea: e.gymIdeaText, name: e.data.prefs.general.name))
                     .font(Typography.cornerTitle)
                     .foregroundStyle(Night.text)
-                Text(Copywriter.gymInviteHint(e.gymWorkout))
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(verbatim: Copywriter.gymInviteLine(minutes: e.data.prefs.gym.sessionMinutes))
                     .font(Typography.hint)
                     .foregroundStyle(Night.muted)
                     .fixedSize(horizontal: false, vertical: true)

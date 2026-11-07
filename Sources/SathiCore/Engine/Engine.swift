@@ -8,7 +8,8 @@ package final class Engine: ObservableObject {
             if streakInputsChanged(from: oldValue) { clearStreakCache() }
             if enabledHabits(oldValue.prefs) != enabledHabits(data.prefs) { reportCache = nil }
             if oldValue.prefs.scheduleKey != data.prefs.scheduleKey {
-                reschedule(turnedOff: turnedOffToday(from: oldValue.prefs))
+                let changed = Set(HabitID.allCases.filter { oldValue.prefs.scheduleKey($0) != data.prefs.scheduleKey($0) })
+                reschedule(turnedOff: turnedOffToday(from: oldValue.prefs), changed: changed)
             }
             daySummaryPrefsChanged(from: oldValue.prefs.general)
             breathSoundChanged(from: oldValue.prefs.general)
@@ -72,7 +73,12 @@ package final class Engine: ObservableObject {
         var loaded = Persisted()
         loaded.prefs = store.loadPrefs()
         loaded.live = store.loadLive()
-        loaded.events = history.events(from: Self.windowStart(now: n, calendar: calendar), to: n)
+        if loaded.live.gymMinutesSince == nil {
+            loaded.live.gymMinutesSince = n.wholeSecond
+            store.saveLive(loaded.live)
+        }
+        let window = history.events(from: Self.windowStart(now: n, calendar: calendar), to: n)
+        loaded.events = GymLegacyMinutes.apply(window, since: loaded.live.gymMinutesSince)
         self.store = store
         self.history = history
         self.clock = clock

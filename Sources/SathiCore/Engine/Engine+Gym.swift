@@ -2,13 +2,13 @@ import Foundation
 
 extension Engine {
     package var gymWorkoutIndex: Int {
-        let done = Int(rules(.gym).total(on: clock.now, data: data))
-        return (done + gymIdea) % Limits.gymWorkoutCount
+        let today = calendar.startOfDay(for: clock.now)
+        let done = data.events.count { $0.habit == .gym && $0.kind == .done && calendar.startOfDay(for: $0.date) == today }
+        return (done + gymIdea) % GymIdeas.cleaned(data.prefs.gym.ideas).count
     }
 
-    package var gymWorkout: GymWorkout {
-        if let index = session(.gym)?.workout { return data.prefs.gym.workout(at: index) }
-        return data.prefs.gym.workout(at: gymWorkoutIndex)
+    package var gymIdeaText: String {
+        data.prefs.gym.idea(at: session(.gym)?.workout ?? gymWorkoutIndex)
     }
 
     package func nextGymIdea() {
@@ -21,5 +21,11 @@ extension Engine {
         case .water, .reading, .meditation: return false
         case .gym: return true
         }
+    }
+}
+
+extension Engine {
+    package var gymProgress: GymProgress {
+        GymProgress(prefs: data.prefs.gym, doneMinutes: rules(.gym).total(on: clock.now, data: data))
     }
 }

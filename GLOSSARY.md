@@ -57,3 +57,21 @@ _Avoid_: Soundtrack, ambient, chime
 **Minute tick**:
 A very soft sound at each full minute of a breathing session.
 _Avoid_: chime, bell
+
+## Gym
+
+**Gym goal**:
+The minutes of movement that the user wants on each gym day, for example 20 minutes. When today's minutes meet it, Shokti is quiet until the next gym day.
+_Avoid_: Workout count, target, daily workouts
+
+**Session length**:
+The minutes of one gym session, for example 5 minutes. Every workout idea uses the same session length.
+_Avoid_: Workout minutes, duration
+
+**Session count**:
+The number of gym popups in one day: the gym goal divided by the session length. Shokti spreads them evenly over work hours.
+_Avoid_: Reminder count, slots
+
+**Workout idea**:
+A name on the user's gym list, for example "10 squats". Shokti suggests one workout idea in each popup. It has no length of its own.
+_Avoid_: Workout, exercise, task
