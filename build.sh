@@ -21,6 +21,9 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN" "$APP/Contents/MacOS/Sathi"
 cp Resources/Info.plist "$APP/Contents/Info.plist"
 cp Resources/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
+RES="$(swift build -c release --show-bin-path)/Sathi_SathiUI.bundle"
+[[ -d "$RES/Contents/Resources" ]] && RES="$RES/Contents/Resources"
+cp -R "$RES/Fonts" "$RES/Audio" "$APP/Contents/Resources/"
 
 # Ad-hoc sign so macOS lets it run and "Open at login" works.
 codesign --force --deep --entitlements Resources/Sathi.entitlements --sign - "$APP"
