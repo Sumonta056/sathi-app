@@ -7,4 +7,5 @@ package enum SoundName: String, Sendable {
     case sosumi = "Sosumi"
     case hero = "Hero"
     case tink = "Tink"
+    case pop = "Pop"
 }

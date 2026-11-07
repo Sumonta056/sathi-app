@@ -42,7 +42,9 @@ final class BreathVoice: NSObject {
         voiceResolved = false
     }
 
-    var isIdle: Bool { !busy && queue.isEmpty }
+    func dropQueued() {
+        queue.removeAll()
+    }
 
     private func playNext() {
         guard !busy, !queue.isEmpty else { return }
