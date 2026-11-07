@@ -115,6 +115,15 @@ struct BreatheViewTests {
         #expect(try sut.find(text: "4:54 left") != nil)
     }
 
+    @Test func evenBreathesOutAfterSixSeconds() throws {
+        let h = harness(.even)
+        h.engine.startMeditation()
+        advance(h, seconds: 6)
+        let sut = try frame(h)
+        #expect(try sut.find(text: "Breathe out") != nil)
+        #expect(try sut.find(text: "4:54 left") != nil)
+    }
+
     @Test func relaxStartsWithWindDown() throws {
         let h = harness(.relax)
         h.engine.startMeditation()
