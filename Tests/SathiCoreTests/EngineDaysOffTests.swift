@@ -124,4 +124,24 @@ struct EngineDaysOffTests {
         #expect(h.engine.phase(.water) == .bubble(.nudge))
         #expect(h.presenter.calls.contains(.showBubble(.water, .nudge)))
     }
+
+    @Test func addingByKeyAddsTheDayOnce() throws {
+        let h = EngineHarness(at: day(2026, 11, 7, 10))
+        let k = try #require(DayKey(raw: "2026-11-12"))
+        h.engine.addDayOff(.water, key: k)
+        #expect(h.store.prefs.water.daysOff == [k])
+        let before = h.engine.data.prefs
+        h.engine.addDayOff(.water, key: k)
+        #expect(h.engine.data.prefs == before)
+        #expect(h.store.prefs.water.daysOff == [k])
+        #expect(h.store.prefs.gym.daysOff.isEmpty)
+    }
+
+    @Test func dayOffMonthMatchesTheHabitDaysResult() throws {
+        let h = EngineHarness(at: day(2026, 11, 7, 10))
+        try h.engine.addDayOff(.gym, key: #require(DayKey(raw: "2026-11-20")))
+        let expected = h.engine.data.prefs.days(.gym).month(offset: 0, now: h.clock.now, calendar: .current)
+        #expect(h.engine.dayOffMonth(.gym, offset: 0) == expected)
+        #expect(expected.weeks.flatMap { $0 }.compactMap { $0 }.contains { $0.state == .off })
+    }
 }

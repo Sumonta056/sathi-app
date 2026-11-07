@@ -21,25 +21,6 @@ struct DaysOffCardTapTests {
     }
 
     @Test(arguments: HabitID.allCases)
-    func tappingAddWithNoPickSavesTodayForThatBuddy(_ id: HabitID) throws {
-        let h = harness(id)
-        try card(id, h).find(button: "Add").tap()
-        #expect(h.store.prefs.days(id).daysOff == [key(2026, 3, 4)])
-        for other in HabitID.allCases where other != id {
-            #expect(h.store.prefs.days(other).daysOff.isEmpty)
-        }
-    }
-
-    @Test(arguments: HabitID.allCases)
-    func addAfterMidnightSavesTheNewToday(_ id: HabitID) throws {
-        let h = harness(id)
-        let sut = try card(id, h)
-        h.advance(minutes: 15 * 60)
-        try sut.find(button: "Add").tap()
-        #expect(h.store.prefs.days(id).daysOff == [key(2026, 3, 5)])
-    }
-
-    @Test(arguments: HabitID.allCases)
     func tappingRemoveOnARowRemovesThatDate(_ id: HabitID) throws {
         let h = harness(id, [key(2026, 3, 10), key(2026, 3, 12)])
         let label = "Remove \(DaysOffRow.label(key(2026, 3, 10)))"
@@ -48,8 +29,8 @@ struct DaysOffCardTapTests {
     }
 
     @Test(arguments: HabitID.allCases)
-    func pickerHasAnAccessibleLabel(_ id: HabitID) throws {
-        let picker = try card(id, harness(id)).find(ViewType.DatePicker.self)
-        #expect(try picker.labelView().text().string() == "Day off")
+    func pickADateChipIsAButtonWithThatLabel(_ id: HabitID) throws {
+        let b = try card(id, harness(id)).find(button: "Pick a date")
+        #expect(try !b.isDisabled())
     }
 }
