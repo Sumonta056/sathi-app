@@ -29,7 +29,8 @@ extension Engine {
     }
 
     func breathSoundChanged(from old: GeneralPrefs) {
-        guard old.soundOn, !soundOn, session(.meditation) != nil else { return }
+        guard old.soundOn, !soundOn else { return }
+        guard session(.meditation) != nil else { return audio.endSession() }
         audio.silenceVoice()
         audio.pauseMusic()
     }
@@ -89,7 +90,7 @@ extension Engine {
     }
 
     package func previewSessionSound() {
-        guard soundOn, session(.meditation) == nil else { return }
+        guard soundOn, session(.meditation) == nil, breath.voiceOn || breath.musicOn else { return }
         audio.preview(
             voiceVolume: breath.voiceOn ? breath.voiceVolume : nil,
             musicVolume: breath.musicOn ? breath.musicVolume : nil,

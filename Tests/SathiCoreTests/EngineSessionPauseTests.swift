@@ -116,4 +116,12 @@ struct EngineSessionPauseTests {
         h.engine.pauseSession(.meditation)
         #expect(h.engine.nextTickDelay() != Timing.activeTick)
     }
+
+    @Test func pausingAReadingSessionDoesNothing() throws {
+        let h = harness { $0.prefs.reading.enabled = true }
+        h.engine.startReading()
+        h.engine.pauseSession(.reading)
+        let s = try #require(h.engine.session(.reading))
+        #expect(!s.isPaused)
+    }
 }

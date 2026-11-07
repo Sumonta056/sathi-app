@@ -71,6 +71,36 @@ struct EngineSessionRestoreTests {
         #expect(again.history.appended.isEmpty)
     }
 
+    private func restart(_ h: EngineHarness, changing change: @escaping (inout Persisted) -> Void) -> EngineHarness {
+        let again = EngineHarness.quiet(at: h.clock.now) {
+            $0.prefs = h.store.prefs
+            $0.live = h.store.live
+            change(&$0)
+        }
+        again.engine.start()
+        again.engine.stop()
+        return again
+    }
+
+    @Test func pausedSessionIsDroppedWhenMeditationIsTurnedOff() {
+        let h = started()
+        h.engine.pauseSession(.meditation)
+        let again = restart(h) { $0.prefs.meditation.enabled = false }
+        #expect(again.engine.session(.meditation) == nil)
+        #expect(again.store.live.meditationSession == nil)
+        #expect(again.history.appended.isEmpty)
+    }
+
+    @Test func pausedSessionIsDroppedOnADayOff() throws {
+        let h = started()
+        h.engine.pauseSession(.meditation)
+        let today = try #require(DayKey(raw: "2026-03-04"))
+        let again = restart(h) { $0.prefs.meditation.daysOff = [today] }
+        #expect(again.engine.session(.meditation) == nil)
+        #expect(again.store.live.meditationSession == nil)
+        #expect(again.history.appended.isEmpty)
+    }
+
     @Test func finishClearsTheSavedSession() {
         let h = started()
         #expect(h.store.live.meditationSession != nil)

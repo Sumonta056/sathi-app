@@ -183,8 +183,8 @@ Full rules are in `docs/specs/phase-13-time-blocks.md`.
 ## Breathing session
 
 1. A breathing session runs the selected pattern (`MeditationPrefs.style`). The card shows the time left (m:ss), never a round count.
-2. Pause (in a session) freezes the time left and the phase. Resume continues from the same point. The session end moves later by the paused length. There is no time limit. "Take a break" (Habits rule 9) is a different thing and does not pause a session.
-3. A pause survives a restart (`LiveState.meditationSession`). At launch:
+2. Pause (in a meditation session only; other buddies' sessions never pause) freezes the time left and the phase. Resume continues from the same point. The session end moves later by the paused length. There is no time limit. "Take a break" (Habits rule 9) is a different thing and does not pause a session.
+3. A pause survives a restart (`LiveState.meditationSession`). At launch, only when meditation is on and today is not its day off:
    - A session paused today comes back paused.
    - A running session whose end is still ahead and that started today comes back running.
    - Anything else is dropped with no event and no snooze.
@@ -194,7 +194,7 @@ Full rules are in `docs/specs/phase-13-time-blocks.md`.
 7. Voice guide (`voiceOn`, `voiceVolume`): it speaks once at the start of each phase ("Breathe in", "Hold", "Breathe out", "Rest"), "Let's begin" at the start, and "Well done" at the natural end. It never counts aloud. A cue more than `Timing.cueLateLimit` late is skipped.
 8. Background music (`musicOn`, `musicVolume`): one loop that fades in at the start and fades out at the end, at Stop, and at Pause. A missing music file means no music.
 9. Bell (`chime`): at the start and at the natural end. Minute tick (`minuteTick`, default off): a very soft tick at each full minute of the session, not at the end.
-10. General Sound off silences all session audio, and Preview is off.
+10. General Sound off silences all session audio, stops a running Preview, and Preview is off. Preview does nothing when both voice and music are off.
 11. Default pattern for new installs: Calm 4·6. A saved pattern is kept.
 12. No new timer. `upcomingDeadlines()` adds the next phase boundary, the next minute tick, and, while paused, the next midnight.
 

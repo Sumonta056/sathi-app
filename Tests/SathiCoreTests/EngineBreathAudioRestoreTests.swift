@@ -36,6 +36,15 @@ struct EngineBreathAudioRestoreTests {
         #expect(h.audio.calls == [])
     }
 
+    @Test func previewWithVoiceAndMusicOffCallsNothing() {
+        let h = harness {
+            $0.prefs.meditation.voiceOn = false
+            $0.prefs.meditation.musicOn = false
+        }
+        h.engine.previewSessionSound()
+        #expect(h.audio.calls == [])
+    }
+
     @Test func restoreOfARunningSessionStartsMusic() {
         let saved = Session(start: start.addingTimeInterval(-30), end: start.addingTimeInterval(90))
         let h = harness { $0.live.meditationSession = saved }

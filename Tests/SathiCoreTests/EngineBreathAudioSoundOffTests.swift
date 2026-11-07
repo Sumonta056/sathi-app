@@ -47,10 +47,11 @@ struct EngineBreathAudioSoundOffTests {
         #expect(!speaks(h.audio.calls.dropFirst(before)))
     }
 
-    @Test func turningSoundOffWithoutASessionCallsNothing() {
+    @Test func turningSoundOffWithoutASessionEndsAnyPreview() {
         let h = harness()
+        h.engine.previewSessionSound()
         h.engine.data.prefs.general.soundOn = false
-        #expect(h.audio.calls == [])
+        #expect(h.audio.calls.last == .endSession)
     }
 
     @Test func aLateNaturalEndSkipsWellDoneAndTheBell() {

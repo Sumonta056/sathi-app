@@ -15,6 +15,7 @@ extension Engine {
     }
 
     private func canRestore(_ s: Session, at n: Date) -> Bool {
+        guard enabled(.meditation), !isOffToday(.meditation) else { return false }
         if let pausedAt = s.pausedAt { return calendar.isDate(pausedAt, inSameDayAs: n) }
         return s.end > n && calendar.isDate(s.start, inSameDayAs: n)
     }
