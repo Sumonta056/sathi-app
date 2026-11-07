@@ -45,9 +45,9 @@ struct StrictnessUpgradeTests {
     }
 
     @Test func upgradeKeepsTheOtherSettings() throws {
-        let p = try decode(#"{"reading":{"strictness":"strict","sessionMinutes":25},"gym":{"strictness":"strict","intervalMinutes":90}}"#)
+        let p = try decode(#"{"reading":{"strictness":"strict","sessionMinutes":25},"gym":{"strictness":"strict","sessionsPerDay":6}}"#)
         #expect(p.reading.sessionMinutes == 25)
-        #expect(p.gym.intervalMinutes == 90)
+        #expect(p.gym.sessionsPerDay == 6)
         #expect(p.reading.showsCloseButton)
         #expect(p.gym.showsCloseButton)
     }

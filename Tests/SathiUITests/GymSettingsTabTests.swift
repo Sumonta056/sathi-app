@@ -19,70 +19,49 @@ struct GymSettingsTabTests {
         try hosted(GymSettingsTab(), h).inspect()
     }
 
-    @Test func tabShowsHeroRhythmWorkoutsAndThreeStrictnessCards() throws {
+    private func texts(_ sut: InspectableView<some BaseViewType>) -> [String] {
+        sut.findAll(ViewType.Text.self).compactMap { try? $0.string() }
+    }
+
+    @Test func tabShowsHeroGoalRhythmIdeasAndThreeStrictnessCards() throws {
         let h = harness()
         let sut = try tab(h)
         let texts = [
             "SHOKTI · GYM", "Get up, little and often", "Shokti suggests a short move while you work.",
-            "RHYTHM", "Remind me every", "Work hours", "Shokti sleeps outside these hours.", "Work days",
-            "MY 4 WORKOUTS", "1", "2", "3", "4",
-            "IF I IGNORE SHOKTI", "Gentle", "Nudgy", "Strict", Strictness.strict.detail
+            "Sessions a day", "Each session", "Daily goal: 20 min · 4 × 5 min",
+            "Work hours", "Popups spread evenly inside these hours.", "Work days",
+            "+ Add idea", "Gentle", "Nudgy", "Strict", Strictness.strict.detail
         ]
         for text in texts {
             #expect(throws: Never.self) { try sut.find(text: text) }
         }
         #expect(throws: Never.self) { try Find.button(sut, label: "Gym reminders") }
+        #expect(throws: Never.self) { try sut.find(GymGoalCard.self) }
+        #expect(throws: Never.self) { try sut.find(GymIdeasCard.self) }
         #expect(sut.findAll(ViewType.TextField.self).isEmpty)
-        for name in h.engine.data.prefs.gym.workouts.map(\.name) {
+        for name in GymIdeas.defaults {
             #expect(throws: Never.self) { try sut.find(button: name) }
         }
     }
 
-    @Test func intervalChipsAreFortyFiveSixtyNinety() throws {
-        let h = harness()
-        let sut = try tab(h)
-        for label in ["45 min", "60 min", "90 min"] {
-            #expect(throws: Never.self) { try sut.find(button: label) }
-        }
-        #expect(try A11y.isSelected(sut.find(button: "60 min")))
-        try sut.find(button: "90 min").tap()
-        #expect(h.store.prefs.gym.intervalMinutes == 90)
+    @Test func sectionsAreInOrder() throws {
+        let labels = ["DAILY GOAL", "RHYTHM", "DAYS OFF", "MY WORKOUT IDEAS", "IF I IGNORE SHOKTI"]
+        let order = try texts(tab(harness())).filter { labels.contains($0) }
+        #expect(order == labels)
     }
 
-    @Test func editingANameSavesACleanedName() {
-        let h = harness()
-        h.engine.gymWorkoutName(at: 1).wrappedValue = String(repeating: "a", count: 60)
-        #expect(h.store.prefs.gym.workouts[1].name.count == Limits.gymNameMaxLength)
-        #expect(h.engine.gymWorkoutName(at: 1).wrappedValue == String(repeating: "a", count: 40))
-    }
-
-    @Test func clearingANameSavesTheDefaultName() {
-        let h = harness { $0.prefs.gym.workouts[0].name = "Jumping jacks" }
-        h.engine.gymWorkoutName(at: 0).wrappedValue = ""
-        h.engine.commitGymWorkoutNames()
-        #expect(h.store.prefs.gym.workouts[0].name == "Neck and shoulder stretch")
-    }
-
-    @Test func typingKeepsSpacesBetweenWords() {
-        let h = harness()
-        h.engine.gymWorkoutName(at: 1).wrappedValue = "Jumping "
-        #expect(h.engine.gymWorkoutName(at: 1).wrappedValue == "Jumping ")
-        h.engine.gymWorkoutName(at: 1).wrappedValue = "Jumping jacks"
-        #expect(h.store.prefs.gym.workouts[1].name == "Jumping jacks")
-    }
-
-    @Test func workoutsCardShowsTheOrderNote() throws {
+    @Test func gymTabHasNoIntervalRow() throws {
         let sut = try tab(harness())
-        #expect(throws: Never.self) { try sut.find(text: "Shokti uses them in order: 1 → 2 → 3 → 4.") }
+        #expect(sut.findAll(IntervalRow.self).isEmpty)
+        #expect(Find.lacks(sut, text: "Remind me every"))
+        #expect(Find.lacks(sut, text: "Shokti sleeps outside these hours."))
+        #expect(Find.lacks(sut, text: "MY 4 WORKOUTS"))
     }
 
-    @Test func minutesChipSavesTheChoice() throws {
-        let h = harness()
-        h.engine.gymWorkoutMinutes(at: 2).wrappedValue = 10
-        #expect(h.store.prefs.gym.workouts[2].minutes == 10)
-        let sut = try tab(h)
-        try Find.button(sut, label: "1 min", near: "4").tap()
-        #expect(h.store.prefs.gym.workouts[3].minutes == 1)
+    @Test func rhythmCardHasNoIntervalRow() throws {
+        let sut = try hosted(GymRhythmCard(), harness()).inspect()
+        #expect(sut.findAll(IntervalRow.self).isEmpty)
+        #expect(throws: Never.self) { try sut.find(text: "Work hours") }
     }
 
     @Test func lastWorkDayCannotBeTurnedOff() throws {

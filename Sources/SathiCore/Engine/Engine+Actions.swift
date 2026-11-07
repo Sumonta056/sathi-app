@@ -90,7 +90,7 @@ extension Engine {
         sound.play(name)
     }
 
-    func reschedule(turnedOff: [HabitID]) {
+    func reschedule(turnedOff: [HabitID], changed: Set<HabitID>) {
         let n = clock.now
         for id in HabitID.allCases where !enabled(id) {
             close(id)
@@ -101,7 +101,7 @@ extension Engine {
             var due = fresh
             if due < n, let slot = rules(id).nextSlot(after: n) { due = slot }
             let staleSnooze = state(id).snoozedUntil.map { $0 <= n } ?? false
-            if due == .distantFuture || !enabled(id) || staleSnooze || fresh > n {
+            if due == .distantFuture || !enabled(id) || staleSnooze || (fresh > n && changed.contains(id)) {
                 update(id) { $0 = HabitState(nextDue: due) }
             } else if state(id).snoozedUntil == nil {
                 update(id) { $0.nextDue = due }

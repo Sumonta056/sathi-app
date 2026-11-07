@@ -34,6 +34,21 @@ struct WholeSecondTests {
         #expect(live.streakReset["water"] == Date(timeIntervalSinceReferenceDate: 792_320_400))
     }
 
+    @Test func decodedGymMinutesSinceDropsFractionalSeconds() throws {
+        let live = try decodeNumeric(LiveState.self, #"{"gymMinutesSince":792403200.734512}"#)
+        #expect(live.gymMinutesSince == whole)
+    }
+
+    @Test func missingGymMinutesSinceDecodesAsNil() throws {
+        #expect(try decodeNumeric(LiveState.self, #"{"bottleLevel":0.5}"#).gymMinutesSince == nil)
+    }
+
+    @Test func anUnreadableGymCutoverLoadsNilAndKeepsTheRest() throws {
+        let live = try decodeNumeric(LiveState.self, #"{"gymMinutesSince":"soon","bottleLevel":0.5}"#)
+        #expect(live.gymMinutesSince == nil)
+        #expect(live.bottleLevel == 0.5)
+    }
+
     @Test func decodedSessionDropsFractionalSeconds() throws {
         let json = #"{"meditationSession":{"start":792403200.734512,"end":792403800.9,"pausedAt":792403300.5}}"#
         let session = try #require(try decodeNumeric(LiveState.self, json).meditationSession)
@@ -54,6 +69,12 @@ struct EngineWholeSecondTests {
         #expect(h.engine.data.live.lastWaterDone == day(2026, 3, 4, 10))
         #expect(h.store.live.lastWaterDone == day(2026, 3, 4, 10))
         #expect(h.history.appended.map(\.date) == [day(2026, 3, 4, 10)])
+    }
+
+    @Test func gymCutoverIsStoredInWholeSeconds() {
+        let h = EngineHarness(at: start)
+        #expect(h.engine.data.live.gymMinutesSince == day(2026, 3, 4, 10))
+        #expect(h.store.live.gymMinutesSince == day(2026, 3, 4, 10))
     }
 
     @Test func emergencySkipStoresWholeSecondTimes() {

@@ -22,11 +22,13 @@ struct ReportBuilderTests {
         prefs.reading.sessionMinutes = 20
         prefs.meditation.sessionMinutes = 2
         prefs.meditation.dailyGoalMinutes = 6
+        prefs.gym.sessionsPerDay = 3
+        prefs.gym.sessionMinutes = 10
         let r = report(.week, [], prefs: prefs)
         #expect(r.range == .week)
         #expect(r.interval == DateInterval(start: zone.date(2026, 3, 2), end: zone.date(2026, 3, 9)))
         #expect(r.habits.map(\.habit) == HabitID.allCases)
-        #expect(r.habits.map(\.goal) == [10, 20, 6, 4])
+        #expect(r.habits.map(\.goal) == [10, 20, 6, 30])
     }
 
     @Test(arguments: [

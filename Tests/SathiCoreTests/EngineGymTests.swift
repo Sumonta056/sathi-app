@@ -43,18 +43,18 @@ struct EngineGymTests {
 
     @Test func firstWorkoutOfTheDayIsWorkoutOne() {
         let h = gymAtTen()
-        #expect(h.engine.gymWorkout.name == "Neck and shoulder stretch")
+        #expect(h.engine.gymIdeaText == "Neck and shoulder stretch")
     }
 
     @Test func nextIdeaShowsTheNextWorkoutAndWrapsAfterFour() {
         let h = gymAtTen()
         let before = h.history.appended
         h.engine.nextGymIdea()
-        #expect(h.engine.gymWorkout.name == "Short walk")
+        #expect(h.engine.gymIdeaText == "Short walk")
         for _ in 0 ..< 4 {
             h.engine.nextGymIdea()
         }
-        #expect(h.engine.gymWorkout.name == "Short walk")
+        #expect(h.engine.gymIdeaText == "Short walk")
         #expect(h.history.appended == before)
     }
 
@@ -74,30 +74,48 @@ struct EngineGymTests {
         h.engine.startSession(.gym)
         let s = h.engine.session(.gym)
         #expect(s?.workout == 2)
-        #expect(s.map { $0.end.timeIntervalSince($0.start) } == 3 * Timing.minute)
-        #expect(h.engine.gymWorkout.name == "10 squats")
-        h.engine.data.events.append(.done(.gym, 1, at: day(2026, 3, 4, 10)))
+        #expect(s.map { $0.end.timeIntervalSince($0.start) } == 5 * Timing.minute)
+        #expect(h.engine.gymIdeaText == "10 squats")
+        h.engine.data.events.append(.done(.gym, 2, at: day(2026, 3, 4, 10)))
         #expect(h.engine.gymWorkoutIndex == 3)
-        #expect(h.engine.gymWorkout.name == "10 squats")
+        #expect(h.engine.gymIdeaText == "10 squats")
     }
 
-    @Test func doneEarlyCountsOneWorkout() {
+    @Test func doneEarlyLogsTheRealMinutes() {
         let h = gymAtTen()
         h.engine.startSession(.gym)
-        h.advance(minutes: 1)
+        h.advance(minutes: 2)
         h.engine.finishSession(.gym)
-        #expect(h.history.appended.last == .done(.gym, 1, at: day(2026, 3, 4, 10, 1)))
-        #expect(h.engine.celebration.amount == 1)
-        #expect(h.engine.state(.gym).nextDue == day(2026, 3, 4, 11, 1))
+        #expect(h.history.appended.last == .done(.gym, 2, at: day(2026, 3, 4, 10, 2)))
+        #expect(h.engine.celebration.amount == 2)
+        let d = day(2026, 3, 4, 10, 2)
+        #expect(h.engine.state(.gym).nextDue == d.addingTimeInterval(day(2026, 3, 4, 17).timeIntervalSince(d) / 4.5))
     }
 
-    @Test func timerEndCountsOneWorkout() {
+    @Test func doneAfterTwentySecondsLogsOneMinute() {
+        let h = gymAtTen()
+        h.engine.startSession(.gym)
+        h.clock.now = day(2026, 3, 4, 10).addingTimeInterval(20)
+        h.engine.finishSession(.gym)
+        #expect(h.history.appended.last == .done(.gym, 1, at: day(2026, 3, 4, 10).addingTimeInterval(20)))
+    }
+
+    @Test func timerEndLogsTheFullSessionAndReSpreadsTheRest() {
         let h = gymAtTen()
         h.engine.startSession(.gym)
         h.advance(minutes: 5)
-        #expect(h.history.appended.last == .done(.gym, 1, at: day(2026, 3, 4, 10, 5)))
-        #expect(h.engine.celebration.amount == 1)
-        #expect(h.engine.state(.gym).nextDue == day(2026, 3, 4, 11, 5))
+        #expect(h.history.appended.last == .done(.gym, 5, at: day(2026, 3, 4, 10, 5)))
+        #expect(h.engine.celebration.amount == 5)
+        let d = day(2026, 3, 4, 10, 5)
+        #expect(h.engine.state(.gym).nextDue == d.addingTimeInterval(day(2026, 3, 4, 17).timeIntervalSince(d) / 3.5))
+    }
+
+    @Test func aLateTimerEndLogsOnlyTheSessionLength() {
+        let h = gymAtTen()
+        h.engine.startSession(.gym)
+        h.clock.now = day(2026, 3, 4, 10, 9)
+        h.engine.finishSession(.gym)
+        #expect(h.history.appended.last == .done(.gym, 5, at: day(2026, 3, 4, 10, 9)))
     }
 
     @Test func stopDoesNotCount() {
@@ -113,19 +131,20 @@ struct EngineGymTests {
         h.engine.startSession(.gym)
         h.advance(minutes: 5)
         h.engine.endCelebrate()
-        h.advance(minutes: 60)
+        h.advance(minutes: 119)
         #expect(h.engine.phase(.gym) == .bubble(.nudge))
-        #expect(h.engine.gymWorkout.name == "Short walk")
+        #expect(h.engine.gymIdeaText == "Short walk")
         #expect(h.engine.gymIdea == 0)
     }
 
-    @Test func remindersContinueAfterFourWorkouts() {
+    @Test func goalMetKeepsShoktiQuietUntilTomorrowsFirstReminder() {
         let h = gymHarness(at: day(2026, 3, 4, 14)) {
-            $0.events = [10, 11, 12, 13].map { .done(.gym, 1, at: day(2026, 3, 4, $0, 30)) }
+            $0.live.gymMinutesSince = day(2026, 3, 4, 8)
+            $0.events = [10, 11, 12, 13].map { .done(.gym, 5, at: day(2026, 3, 4, $0, 30)) }
         }
-        #expect(h.engine.activities[.gym] == nil)
+        #expect(h.engine.state(.gym).nextDue == day(2026, 3, 5, 10))
         h.advance(minutes: 60)
-        #expect(h.engine.phase(.gym) == .bubble(.nudge))
+        #expect(h.engine.activities[.gym] == nil)
     }
 
     @Test func noReminderOnSaturday() {

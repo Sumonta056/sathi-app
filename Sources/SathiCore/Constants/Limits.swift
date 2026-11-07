@@ -40,10 +40,13 @@ package enum Limits {
     package static let meditationGoals = [5, 10, 20]
     package static let meditationStartMinutes = 9 * 60
     package static let meditationEndMinutes = 21 * 60
-    package static let gymWorkoutCount = 4
-    package static let gymDailyGoal = 4
+    package static let gymSessionCounts = Array(1 ... 8)
+    package static let gymSessionLengths = [2, 3, 5, 10, 15]
+    package static let gymDefaultSessions = 4
+    package static let gymDefaultSessionMinutes = 5
+    package static let gymLegacyDoneMinutes = 5
+    package static let gymIdeasMax = 8
     package static let gymNameMaxLength = 40
-    package static let gymWorkoutLengths = [1, 2, 3, 5, 10]
     package static let gymStartMinutes = 9 * 60
     package static let gymEndMinutes = 17 * 60
     package static let daysOffMaxAhead = 365

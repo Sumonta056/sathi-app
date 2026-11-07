@@ -73,13 +73,13 @@ struct EngineDaySummaryRowsTests {
     }
 
     @Test func aDayOffWithTheGoalMetIsProgress() {
-        let goal = Double(Limits.gymDailyGoal)
         let h = EngineHarness {
             $0.prefs.gym.enabled = true
             $0.prefs.gym.daysOff = [today]
-            $0.events = (0 ..< Limits.gymDailyGoal).map { .done(.gym, 1, at: day(2026, 3, 4, 8, $0)) }
+            $0.live.gymMinutesSince = day(2026, 3, 4, 7)
+            $0.events = (0 ..< 4).map { .done(.gym, 5, at: day(2026, 3, 4, 8, $0)) }
         }
-        #expect(status(h, .gym) == .progress(done: goal, goal: goal))
+        #expect(status(h, .gym) == .progress(done: 20, goal: 20))
     }
 
     @Test func anOffHabitWithLogsIsStillOff() {

@@ -16,7 +16,7 @@ struct GymTimerCard: View {
             HStack(alignment: .top, spacing: UIMetrics.cornerRowSpacing) {
                 BobbingBuddy(habit: .gym, size: UIMetrics.cornerBuddySize)
                 VStack(alignment: .leading, spacing: UIMetrics.cornerTextSpacing) {
-                    Text("SHOKTI · \(e.gymWorkout.name)")
+                    Text("SHOKTI · \(e.gymIdeaText)")
                         .font(Typography.eyebrow)
                         .foregroundStyle(Night.gym)
                     Text(Copywriter.gymTimerLine())

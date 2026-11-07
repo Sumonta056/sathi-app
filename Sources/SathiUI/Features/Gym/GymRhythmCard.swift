@@ -6,8 +6,7 @@ struct GymRhythmCard: View {
 
     var body: some View {
         SettingsCard {
-            IntervalRow(minutes: $e.data.prefs.gym.intervalMinutes, accent: Night.gym)
-            SettingRow(label: "Work hours", hint: "Shokti sleeps outside these hours.") {
+            SettingRow(label: "Work hours", hint: "Popups spread evenly inside these hours.", showsDivider: false) {
                 HStack(spacing: UIMetrics.chipSpacing) {
                     TimeMenu(minutes: $e.data.prefs.gym.startMinutes, accent: Night.gym)
                     Text(verbatim: "to")

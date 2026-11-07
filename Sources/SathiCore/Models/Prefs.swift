@@ -12,13 +12,20 @@ package struct Prefs: Codable, Equatable, Sendable {
     package init() {}
 
     package var scheduleKey: String {
-        [
-            "\(water.enabled)", "\(water.intervalMinutes)", "\(water.startMinutes)", "\(water.endMinutes)",
-            "\(reading.enabled)", "\(reading.timeMinutes)", "\(reading.sessionMinutes)",
-            "\(meditation.enabled)", "\(meditation.dailyGoalMinutes)", "\(meditation.sessionMinutes)",
-            "\(meditation.intervalMinutes)", "\(meditation.startMinutes)", "\(meditation.endMinutes)",
-            "\(gym.enabled)", "\(gym.intervalMinutes)", "\(gym.startMinutes)", "\(gym.endMinutes)"
-        ].joined(separator: "-") + "|" + HabitID.allCases.map { Self.key(days($0)) }.joined(separator: "|")
+        HabitID.allCases.map(scheduleKey).joined(separator: "|")
+    }
+
+    package func scheduleKey(_ id: HabitID) -> String {
+        let values: [String] = switch id {
+        case .water: ["\(water.enabled)", "\(water.intervalMinutes)", "\(water.startMinutes)", "\(water.endMinutes)"]
+        case .reading: ["\(reading.enabled)", "\(reading.timeMinutes)", "\(reading.sessionMinutes)"]
+        case .meditation: [
+                "\(meditation.enabled)", "\(meditation.dailyGoalMinutes)", "\(meditation.sessionMinutes)",
+                "\(meditation.intervalMinutes)", "\(meditation.startMinutes)", "\(meditation.endMinutes)"
+            ]
+        case .gym: ["\(gym.enabled)", "\(gym.sessionsPerDay)", "\(gym.sessionMinutes)", "\(gym.startMinutes)", "\(gym.endMinutes)"]
+        }
+        return values.joined(separator: "-") + "/" + Self.key(days(id))
     }
 
     package func days(_ id: HabitID) -> HabitDays {

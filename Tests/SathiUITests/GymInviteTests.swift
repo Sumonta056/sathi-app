@@ -26,12 +26,27 @@ struct GymInviteTests {
         try GymInvite(level: level).environmentObject(h.engine).inspect()
     }
 
-    @Test func inviteShowsLabelAndWorkoutHint() throws {
+    @Test func inviteShowsTheIdeaTitleAndTheSessionLine() throws {
+        let h = gymReminder()
+        h.engine.data.prefs.general.name = "Mira"
+        let sut = try invite(h, .nudge)
+        #expect(throws: Never.self) { try sut.find(text: "SHOKTI · GYM") }
+        #expect(throws: Never.self) { try sut.find(text: "Try neck and shoulder stretch, Mira") }
+        #expect(throws: Never.self) { try sut.find(text: "5 minutes. You can do this.") }
+        #expect(Find.lacks(sut, text: "Neck and shoulder stretch · 5 min"))
+    }
+
+    @Test func theLineUsesTheSessionLength() throws {
+        let h = gymReminder()
+        h.engine.data.prefs.gym.sessionMinutes = 10
+        #expect(throws: Never.self) { try invite(h, .nudge).find(text: "10 minutes. You can do this.") }
+    }
+
+    @Test func inviteShowsTheProgressBarForToday() throws {
         let h = gymReminder()
         let sut = try invite(h, .nudge)
-        #expect(try sut.find(text: "SHOKTI · GYM") != nil)
-        #expect(try sut.find(text: h.engine.copy(.gym).title) != nil)
-        #expect(try sut.find(text: "Neck and shoulder stretch · 5 min") != nil)
+        #expect(throws: Never.self) { try sut.find(GymProgressBar.self) }
+        #expect(throws: Never.self) { try sut.find(text: "0 of 20 min today · session 1 of 4") }
     }
 
     @Test func startButtonStartsTheGymSession() throws {
@@ -40,10 +55,14 @@ struct GymInviteTests {
         #expect(h.engine.session(.gym) != nil)
     }
 
-    @Test func nextIdeaButtonCallsNextGymIdea() throws {
+    @Test func nextIdeaIsAnIconButtonThatShowsTheNextIdea() throws {
         let h = gymReminder()
-        try Find.button(invite(h, .nudge), holding: "Next idea").tap()
+        h.engine.data.prefs.general.name = "Mira"
+        let sut = try invite(h, .nudge)
+        #expect(Find.lacks(sut, text: "Next idea"))
+        try Find.button(sut, label: "Next idea").tap()
         #expect(h.engine.gymIdea == 1)
+        #expect(throws: Never.self) { try invite(h, .nudge).find(text: "Try short walk, Mira") }
     }
 
     @Test func snoozeButtonUsesTheGeneralLabel() throws {

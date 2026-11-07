@@ -94,7 +94,7 @@ struct LegacyBubble: View {
                     .buttonStyle(PillButton(kind: .primary))
                     .layoutPriority(1)
             case .gym:
-                Button("Start \(e.data.prefs.gym.workouts[0].minutes)-min workout") { e.startSession(.gym) }
+                Button("Start \(e.data.prefs.gym.sessionMinutes)-min workout") { e.startSession(.gym) }
                     .buttonStyle(PillButton(kind: .primary))
                     .layoutPriority(1)
             }

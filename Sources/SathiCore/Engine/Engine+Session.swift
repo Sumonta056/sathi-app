@@ -34,9 +34,8 @@ extension Engine {
 
     package func finishSession(_ id: HabitID, timedOut: Bool = false) {
         guard let s = session(id) else { return }
-        let minutes = Double(Int((s.end.timeIntervalSince(s.start) / Timing.minute).rounded()))
-        let amount = doneAmount(id, minutes: minutes)
         let n = clock.now
+        let amount = doneAmount(id, session: s, now: n)
         record(.done(id, amount, at: n))
         habits[id] = HabitState(nextDue: freshDue(id, lastDone: n))
         sessionFinishing(id)
@@ -65,7 +64,7 @@ extension Engine {
         case .water: return nil
         case .reading: return data.prefs.reading.sessionMinutes
         case .meditation: return data.prefs.meditation.sessionMinutes
-        case .gym: return gymWorkout.minutes
+        case .gym: return data.prefs.gym.sessionMinutes
         }
     }
 
@@ -76,11 +75,16 @@ extension Engine {
         }
     }
 
-    private func doneAmount(_ id: HabitID, minutes: Double) -> Double {
+    private func doneAmount(_ id: HabitID, session s: Session, now: Date) -> Double {
+        let planned = Self.wholeMinutes(s.end.timeIntervalSince(s.start))
         switch id {
-        case .water, .reading, .meditation: return minutes
-        case .gym: return 1
+        case .water, .reading, .meditation: return planned
+        case .gym: return max(1, min(planned, Self.wholeMinutes(now.timeIntervalSince(s.start))))
         }
+    }
+
+    private static func wholeMinutes(_ span: TimeInterval) -> Double {
+        Double(Int((span / Timing.minute).rounded()))
     }
 
     private func startSound(_ id: HabitID) -> SoundName? {

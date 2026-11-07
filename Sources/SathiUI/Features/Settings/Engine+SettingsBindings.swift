@@ -37,31 +37,29 @@ extension Engine {
 }
 
 extension Engine {
-    func gymWorkoutName(at index: Int) -> Binding<String> {
-        Binding(get: { self.gymRow(index)?.name ?? "" }, set: { name in
-            self.editGymRow(index) { $0.name = String(name.prefix(Limits.gymNameMaxLength)) }
+    func gymIdeaName(at index: Int) -> Binding<String> {
+        Binding(get: {
+            let ideas = self.data.prefs.gym.ideas
+            return ideas.indices.contains(index) ? ideas[index] : ""
+        }, set: { name in
+            guard self.data.prefs.gym.ideas.indices.contains(index) else { return }
+            self.data.prefs.gym.ideas[index] = String(name.prefix(Limits.gymNameMaxLength))
         })
     }
 
-    func gymWorkoutMinutes(at index: Int) -> Binding<Int> {
-        Binding(get: { self.data.prefs.gym.workout(at: index).minutes }, set: { minutes in
-            self.editGymRow(index) { $0.minutes = minutes }
-        })
+    func addGymIdea() {
+        guard data.prefs.gym.ideas.count < Limits.gymIdeasMax else { return }
+        data.prefs.gym.ideas.append("")
     }
 
-    func commitGymWorkoutNames() {
-        let cleaned = GymPrefs.cleaned(data.prefs.gym.workouts)
-        if cleaned != data.prefs.gym.workouts { data.prefs.gym.workouts = cleaned }
+    func removeGymIdea(at index: Int) {
+        guard data.prefs.gym.ideas.count > 1, data.prefs.gym.ideas.indices.contains(index) else { return }
+        data.prefs.gym.ideas.remove(at: index)
     }
 
-    private func gymRow(_ index: Int) -> GymWorkout? {
-        let rows = data.prefs.gym.workouts
-        return rows.indices.contains(index) ? rows[index] : nil
-    }
-
-    private func editGymRow(_ index: Int, _ change: (inout GymWorkout) -> Void) {
-        guard data.prefs.gym.workouts.indices.contains(index) else { return }
-        change(&data.prefs.gym.workouts[index])
+    func commitGymIdeas() {
+        let cleaned = GymIdeas.cleaned(data.prefs.gym.ideas)
+        if cleaned != data.prefs.gym.ideas { data.prefs.gym.ideas = cleaned }
     }
 }
 

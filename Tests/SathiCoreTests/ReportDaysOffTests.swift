@@ -25,65 +25,71 @@ struct ReportDaysOffTests {
         return try #require(report.habits.first { $0.habit == id })
     }
 
-    private var workweek: [Int: Double] { [2: 4, 3: 4, 4: 4, 5: 4, 6: 4] }
+    private var workweek: [Int: Double] { [2: 20, 3: 20, 4: 20, 5: 20, 6: 20] }
 
     @Test func weekPercentIgnoresOffDays() throws {
         let r = try habit(.gym, .week, now: sundayNight, gym(workweek), prefs: gymPrefs(workdays))
         #expect(r.percentOfGoal == 100)
-        #expect(r.averagePerDay == 4)
+        #expect(r.averagePerDay == 20)
         #expect(r.daysMet == 5)
     }
 
     @Test func aMetOffDayCountsAsMet() throws {
         var amounts = workweek
-        amounts[7] = 6
+        amounts[7] = 30
         let r = try habit(.gym, .week, now: sundayNight, gym(amounts), prefs: gymPrefs(workdays))
-        #expect(r.averagePerDay == 26.0 / 6.0)
+        #expect(r.averagePerDay == 130.0 / 6.0)
         #expect(r.percentOfGoal == 100)
         #expect(r.daysMet == 6)
     }
 
     @Test func anUnmetOffDayIsLeftOut() throws {
         var amounts = workweek
-        amounts[8] = 2
+        amounts[8] = 10
         let r = try habit(.gym, .week, now: sundayNight, gym(amounts), prefs: gymPrefs(workdays))
-        #expect(r.averagePerDay == 4)
+        #expect(r.averagePerDay == 20)
         #expect(r.percentOfGoal == 100)
         #expect(r.daysMet == 5)
     }
 
     @Test func anUnmetOnDayStillLowersTheNumbers() throws {
-        let r = try habit(.gym, .week, now: sundayNight, gym([2: 4, 3: 4, 4: 4, 5: 4]), prefs: gymPrefs(workdays))
-        #expect(r.averagePerDay == 16.0 / 5.0)
+        let r = try habit(.gym, .week, now: sundayNight, gym([2: 20, 3: 20, 4: 20, 5: 20]), prefs: gymPrefs(workdays))
+        #expect(r.averagePerDay == 80.0 / 5.0)
         #expect(r.percentOfGoal == 80)
         #expect(r.daysMet == 4)
     }
 
     @Test func noCountedDayGivesAnAverageOfZero() throws {
-        let r = try habit(.gym, .day, now: sundayNight, gym([8: 2]), prefs: gymPrefs(workdays))
+        let r = try habit(.gym, .day, now: sundayNight, gym([8: 10]), prefs: gymPrefs(workdays))
         #expect(r.averagePerDay == 0)
         #expect(r.percentOfGoal == 0)
         #expect(r.daysMet == 0)
     }
 
     @Test func aDateOffIsLeftOut() throws {
-        let r = try habit(.gym, .week, now: zone.date(2026, 3, 4, 23), gym([2: 4, 3: 4]), prefs: gymPrefs(Set(Weekday.allCases), off: ["2026-03-04"]))
-        #expect(r.averagePerDay == 4)
+        let r = try habit(
+            .gym,
+            .week,
+            now: zone.date(2026, 3, 4, 23),
+            gym([2: 20, 3: 20]),
+            prefs: gymPrefs(Set(Weekday.allCases), off: ["2026-03-04"])
+        )
+        #expect(r.averagePerDay == 20)
         #expect(r.percentOfGoal == 100)
         #expect(r.daysMet == 2)
     }
 
     @Test func futureOnDaysStillNeverCount() throws {
-        let r = try habit(.gym, .week, now: zone.date(2026, 3, 3, 23), gym([2: 4, 3: 4]), prefs: gymPrefs(workdays))
-        #expect(r.averagePerDay == 4)
+        let r = try habit(.gym, .week, now: zone.date(2026, 3, 3, 23), gym([2: 20, 3: 20]), prefs: gymPrefs(workdays))
+        #expect(r.averagePerDay == 20)
         #expect(r.daysMet == 2)
     }
 
     @Test func pastDaysOfAWeekdayTurnedOffAreLeftOut() throws {
         let sundays: Set = [1, 8, 15, 22, 29]
-        let amounts = Dictionary(uniqueKeysWithValues: (1 ... 31).filter { !sundays.contains($0) }.map { ($0, 4.0) })
+        let amounts = Dictionary(uniqueKeysWithValues: (1 ... 31).filter { !sundays.contains($0) }.map { ($0, 20.0) })
         let r = try habit(.gym, .month, now: zone.date(2026, 3, 31, 23), gym(amounts), prefs: gymPrefs(Set(Weekday.allCases).subtracting([.sunday])))
-        #expect(r.averagePerDay == 4)
+        #expect(r.averagePerDay == 20)
         #expect(r.percentOfGoal == 100)
         #expect(r.daysMet == 26)
     }

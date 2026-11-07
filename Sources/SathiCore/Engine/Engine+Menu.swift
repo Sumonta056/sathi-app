@@ -22,16 +22,11 @@ extension Engine {
         case .reading:
             let s = data.prefs.reading.sessionMinutes
             return GoalText(done: "\(min(readToday, s))", rest: "of \(s) min")
-        case .meditation:
-            let r = rules(.meditation)
+        case .meditation, .gym:
+            let r = rules(id)
             let goal = Int(r.dailyGoal)
             let done = Int(r.total(on: now, data: data))
             return GoalText(done: "\(min(done, goal))", rest: "of \(goal) min")
-        case .gym:
-            let r = rules(.gym)
-            let goal = Int(r.dailyGoal)
-            let done = Int(r.total(on: now, data: data))
-            return GoalText(done: "\(min(done, goal))", rest: "of \(goal) workouts")
         }
     }
 

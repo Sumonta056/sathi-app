@@ -17,10 +17,6 @@ struct GymCopyTests {
         #expect(p.strictness(.gym) == .strict)
     }
 
-    @Test func inviteHintNamesWorkoutAndMinutes() {
-        #expect(Copywriter.gymInviteHint(GymWorkout(name: "Short walk", minutes: 5)) == "Short walk · 5 min")
-    }
-
     @Test(arguments: [Level.nudge, .persist])
     func gymCopyHasNudgeAndPersistLines(_ level: Level) {
         let copies = (0 ..< 80).map { _ in Copywriter.pick(.gym, level, name: "Asha") }

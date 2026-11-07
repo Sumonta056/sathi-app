@@ -33,9 +33,10 @@ struct ReminderIntervalTests {
         #expect(try decode(MeditationPrefs.self, #"{"intervalMinutes":\#(row.0)}"#).intervalMinutes == row.1)
     }
 
-    @Test(arguments: [(180, 120), (10, 15), (45, 45), (53, 60)])
-    func gymLoadsTheNearestChip(_ row: (Int, Int)) throws {
-        #expect(try decode(GymPrefs.self, #"{"intervalMinutes":\#(row.0)}"#).intervalMinutes == row.1)
+    @Test func gymHasNoIntervalAndIgnoresTheOldKey() throws {
+        let g = try decode(GymPrefs.self, #"{"intervalMinutes":180}"#)
+        #expect(g.sessionsPerDay == 4)
+        #expect(g.sessionMinutes == 5)
     }
 
     @Test func anOffListIntervalKeepsTheOtherSettings() throws {
@@ -43,7 +44,7 @@ struct ReminderIntervalTests {
         let p = try decode(Prefs.self, json)
         #expect(p.water.intervalMinutes == 120)
         #expect(p.water.dailyGoalGlasses == 10)
-        #expect(p.gym.intervalMinutes == 15)
+        #expect(p.gym.sessionsPerDay == 4)
         #expect(p.gym.enabled)
         #expect(p.general.name == "Asha")
     }
@@ -52,7 +53,6 @@ struct ReminderIntervalTests {
         var p = Prefs()
         p.water.intervalMinutes = 75
         p.meditation.intervalMinutes = 15
-        p.gym.intervalMinutes = 105
         #expect(try JSONDecoder().decode(Prefs.self, from: JSONEncoder().encode(p)) == p)
     }
 }

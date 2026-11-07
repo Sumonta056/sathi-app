@@ -72,7 +72,7 @@ struct EngineGymSnoozeTests {
     }
 
     @Test func snoozeSurvivesASettingsChange() {
-        let h = gymAtTen { $0.events = [.done(.gym, 1, at: day(2026, 3, 4, 8, 59))] }
+        let h = gymAtTen()
         #expect(h.engine.phase(.gym) == .bubble(.nudge))
         h.engine.snooze(.gym)
         let shows = h.presenter.calls.count { $0 == .showBubble(.gym, .nudge) }
@@ -86,12 +86,32 @@ struct EngineGymSnoozeTests {
         #expect(h.engine.phase(.gym) == .bubble(.nudge))
     }
 
+    @Test func anotherHabitsChangeNeverMovesTheGymReminder() {
+        let h = gymHarness(at: day(2026, 3, 4, 9))
+        let due = h.engine.state(.gym).nextDue
+        h.advance(minutes: 50)
+        h.engine.data.prefs.water.intervalMinutes = 90
+        h.engine.tick()
+        #expect(h.engine.state(.gym).nextDue == due)
+    }
+
+    @Test func aGymScheduleChangeClearsTheSnoozeAndReSpreads() {
+        let h = gymAtTen()
+        h.engine.snooze(.gym)
+        h.advance(minutes: 1)
+        h.engine.data.prefs.gym.sessionsPerDay = 2
+        h.engine.tick()
+        #expect(h.engine.state(.gym).snoozedUntil == nil)
+        #expect(h.engine.state(.gym).snoozes == 0)
+        #expect(h.engine.state(.gym).nextDue == day(2026, 3, 4, 11))
+    }
+
     @Test func snoozeForgetsTheShownIdea() {
         let h = gymAtTen()
         h.engine.nextGymIdea()
         h.engine.snooze(.gym)
         #expect(h.engine.gymIdea == 0)
-        #expect(h.engine.gymWorkout.name == "Neck and shoulder stretch")
+        #expect(h.engine.gymIdeaText == "Neck and shoulder stretch")
     }
 
     @Test func ignoreForgetsTheShownIdea() {
@@ -108,6 +128,6 @@ struct EngineGymSnoozeTests {
         h.engine.startSession(.gym)
         h.engine.stopSession(.gym)
         #expect(h.engine.gymIdea == 0)
-        #expect(h.engine.gymWorkout == h.engine.data.prefs.gym.workout(at: 0))
+        #expect(h.engine.gymIdeaText == h.engine.data.prefs.gym.idea(at: 0))
     }
 }

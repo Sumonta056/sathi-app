@@ -8,9 +8,8 @@ import Testing
 struct EngineNoReminderTests {
     private func neverDue(water: Bool = false) -> EngineHarness {
         gymHarness(at: day(2026, 3, 4, 9)) {
-            $0.prefs.gym.startMinutes = 15 * 60
-            $0.prefs.gym.endMinutes = 16 * 60
-            $0.prefs.gym.intervalMinutes = 60
+            $0.prefs.gym.startMinutes = 16 * 60
+            $0.prefs.gym.endMinutes = 15 * 60
             $0.prefs.water.enabled = water
         }
     }
