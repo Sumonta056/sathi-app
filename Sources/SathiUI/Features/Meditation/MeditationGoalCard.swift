@@ -26,9 +26,6 @@ struct MeditationGoalCard: View {
                     label: { "\($0) min" }
                 )
             }
-            SettingRow(label: "Soft chime at the end") {
-                BuddySwitch(isOn: $e.data.prefs.meditation.chime, accent: Night.calm, label: "Chime")
-            }
         }
     }
 

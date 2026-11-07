@@ -18,6 +18,7 @@ struct MeditationSettingsTab: View {
             SettingsSection("Rhythm") { MeditationRhythmCard() }
             DaysOffCard(habit: .meditation)
             SettingsSection("Breathing pattern") { BreathingPatternCards() }
+            SettingsSection("Sound") { MeditationSoundCard() }
             SettingsSection("If I ignore Shanti") {
                 StrictnessCards(
                     options: Strictness.allCases,

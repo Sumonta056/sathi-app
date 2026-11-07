@@ -14,6 +14,7 @@ extension UIMetrics {
     static let chipBorder: CGFloat = 1.5
     static let chipFillOpacity: Double = 0.15
     static let intervalChipWidth: CGFloat = 78
+    static let volumeSliderWidth: CGFloat = 140
     static let intervalChipsPerRow = 4
 
     static let optionFillOpacity: Double = 0.10
