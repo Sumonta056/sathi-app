@@ -11,6 +11,7 @@ package final class Engine: ObservableObject {
                 reschedule(turnedOff: turnedOffToday(from: oldValue.prefs))
             }
             daySummaryPrefsChanged(from: oldValue.prefs.general)
+            breathSoundChanged(from: oldValue.prefs.general)
             if oldValue.prefs.general.snoozeLimit != data.prefs.general.snoozeLimit { refreshIgnoreDeadlines() }
             if oldValue.prefs.timeBlock.display != data.prefs.timeBlock.display { blockDisplayChanged() }
             if oldValue.prefs != data.prefs { store.savePrefs(data.prefs) }

@@ -23,10 +23,15 @@ extension Engine {
         switch id {
         case .water, .reading, .gym: return
         case .meditation:
-            guard soundOn else { return }
             audio.silenceVoice()
             audio.pauseMusic()
         }
+    }
+
+    func breathSoundChanged(from old: GeneralPrefs) {
+        guard old.soundOn, !soundOn, session(.meditation) != nil else { return }
+        audio.silenceVoice()
+        audio.pauseMusic()
     }
 
     func sessionResumed(_ id: HabitID) {
@@ -42,7 +47,7 @@ extension Engine {
         switch id {
         case .water, .reading, .gym: return
         case .meditation:
-            guard soundOn else { return }
+            guard soundOn, let s = session(id), clock.now.timeIntervalSince(s.end) <= Timing.cueLateLimit else { return }
             audio.silenceVoice()
             if breath.voiceOn { audio.speak(.wellDone, volume: breath.voiceVolume) }
             if breath.chime { audio.play(.bell, volume: Limits.bellVolume) }

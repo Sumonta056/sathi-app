@@ -41,7 +41,7 @@ struct EngineBreathAudioRestoreTests {
         let h = harness { $0.live.meditationSession = saved }
         h.engine.start()
         h.engine.stop()
-        #expect(h.audio.calls.first == .startMusic(0.5))
+        #expect(h.audio.calls == [.startMusic(0.5)])
     }
 
     @Test func restoreOfAPausedSessionPlaysNothing() {
