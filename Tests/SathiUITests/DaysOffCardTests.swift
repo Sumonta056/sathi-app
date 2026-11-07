@@ -33,10 +33,11 @@ struct DaysOffCardTests {
     }
 
     @Test(arguments: HabitID.allCases)
-    func cardHasAPickerAndAnAddButton(_ id: HabitID) throws {
+    func cardHasAPickADateChipAndNoStepperOrAddButton(_ id: HabitID) throws {
         let sut = try card(id, harness(id))
-        #expect(throws: Never.self) { try sut.find(ViewType.DatePicker.self) }
-        #expect(throws: Never.self) { try sut.find(button: "Add") }
+        #expect(throws: Never.self) { try sut.find(button: "Pick a date") }
+        #expect((try? sut.find(ViewType.DatePicker.self)) == nil)
+        #expect((try? sut.find(button: "Add")) == nil)
     }
 
     @Test(arguments: HabitID.allCases)

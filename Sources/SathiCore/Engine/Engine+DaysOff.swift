@@ -11,14 +11,18 @@ extension Engine {
 
     package var timeZone: TimeZone { calendar.timeZone }
 
-    package var dayOffRange: ClosedRange<Date> {
-        HabitDays.dayOffRange(now: clock.now, calendar: calendar)
-    }
-
     package func addDayOff(_ id: HabitID, _ date: Date) {
         let d = data.prefs.days(id)
         let next = d.addingDayOff(date, now: clock.now, calendar: calendar)
         if next != d { data.prefs.setDays(id, next) }
+    }
+
+    package func dayOffMonth(_ id: HabitID, offset: Int) -> DayOffMonth {
+        data.prefs.days(id).month(offset: offset, now: clock.now, calendar: calendar)
+    }
+
+    package func addDayOff(_ id: HabitID, key: DayKey) {
+        addDayOff(id, key.start(in: calendar))
     }
 
     package func removeDayOff(_ id: HabitID, _ key: DayKey) {

@@ -4,7 +4,6 @@ import SwiftUI
 struct DaysOffCard: View {
     let habit: HabitID
     @EnvironmentObject var e: Engine
-    @State private var picked: Date?
 
     static let emptyText = "No days off planned."
 
@@ -14,23 +13,12 @@ struct DaysOffCard: View {
 
     var body: some View {
         let engine = e
-        let range = engine.dayOffRange
         let accent = Night.accent(habit)
         let upcoming = engine.upcomingDaysOff(habit)
         SettingsSection("Days off") {
             SettingsCard {
                 SettingRow(label: "Add a day off", hint: Self.hint(habit), showsDivider: false) {
-                    HStack(spacing: UIMetrics.chipSpacing) {
-                        DatePicker("Day off", selection: date(in: range), in: range, displayedComponents: .date)
-                            .labelsHidden()
-                            .datePickerStyle(.compact)
-                            .environment(\.timeZone, engine.timeZone)
-                            .environment(\.calendar, Calendar.gregorian(in: engine.timeZone))
-                        Button { add(engine) } label: {
-                            Text(verbatim: "Add")
-                        }
-                        .buttonStyle(GhostButton(accent: accent, height: UIMetrics.chipHeight))
-                    }
+                    DayOffPicker(habit: habit, accent: accent)
                 }
                 if upcoming.isEmpty {
                     emptyLine
@@ -41,15 +29,6 @@ struct DaysOffCard: View {
                 }
             }
         }
-    }
-
-    private func add(_ engine: Engine) {
-        let r = engine.dayOffRange
-        engine.addDayOff(habit, (picked ?? r.lowerBound).clamped(to: r))
-    }
-
-    private func date(in range: ClosedRange<Date>) -> Binding<Date> {
-        Binding(get: { (picked ?? range.lowerBound).clamped(to: range) }, set: { picked = $0 })
     }
 
     private var emptyLine: some View {
@@ -63,11 +42,5 @@ struct DaysOffCard: View {
                     .fill(Night.divider)
                     .frame(height: UIMetrics.dividerHeight)
             }
-    }
-}
-
-private extension Date {
-    func clamped(to range: ClosedRange<Date>) -> Date {
-        min(max(self, range.lowerBound), range.upperBound)
     }
 }

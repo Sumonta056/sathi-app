@@ -8,6 +8,7 @@ package enum Limits {
     package static let reportDayBucketHours = 2
     package static let hoursPerDay = 24
     package static let daysPerWeek = 7
+    package static let monthsPerYear = 12
     package static let weekStartWeekday = 2
     package static let fullPercent = 100
     package static let headlineGreatPercent = 100

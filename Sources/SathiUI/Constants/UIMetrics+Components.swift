@@ -16,6 +16,8 @@ extension UIMetrics {
     static let intervalChipWidth: CGFloat = 78
     static let volumeSliderWidth: CGFloat = 140
     static let intervalChipsPerRow = 4
+    static let dayChipSize: CGFloat = 30
+    static let calendarSpacing: CGFloat = 6
 
     static let optionFillOpacity: Double = 0.10
     static let optionGlowOpacity: Double = 0.2
