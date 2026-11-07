@@ -79,6 +79,27 @@ struct MeditationSettingsTabTests {
         }
     }
 
+    @Test func fourPatternCardsAreOffered() throws {
+        let sut = try tab(harness())
+        for title in ["Calm", "Box", "Wind down", "Even"] {
+            #expect(throws: Never.self) { try Find.button(sut, holding: title) }
+        }
+        #expect(throws: Never.self) { try sut.find(text: "Long, slow out-breath.") }
+        #expect(throws: Never.self) { try sut.find(text: "4·6") }
+    }
+
+    @Test func calmIsSelectedByDefault() throws {
+        let sut = try tab(harness())
+        #expect(try A11y.isSelected(Find.button(sut, holding: "Calm")))
+        #expect(try !A11y.isSelected(Find.button(sut, holding: "Box")))
+    }
+
+    @Test func boxCardSetsBox() throws {
+        let h = harness()
+        try Find.button(tab(h), holding: "Box").tap()
+        #expect(h.engine.data.prefs.meditation.style == .box)
+    }
+
     @Test func boxBeatsAreShown() throws {
         #expect(throws: Never.self) { try tab(harness()).find(text: "4·4·4·4") }
     }

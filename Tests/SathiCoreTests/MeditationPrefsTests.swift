@@ -24,7 +24,7 @@ struct MeditationPrefsTests {
         #expect(m.intervalMinutes == 60)
         #expect(m.startMinutes == 9 * 60)
         #expect(m.endMinutes == 21 * 60)
-        #expect(m.style == .box)
+        #expect(m.style == .calm)
         #expect(m.chime)
         #expect(m.strictness == .friendly)
         #expect(Prefs().meditation == m)
@@ -32,7 +32,12 @@ struct MeditationPrefsTests {
     }
 
     @Test func rawValuesAreStable() {
-        #expect(BreathingStyle.allCases.map(\.rawValue) == ["box", "relax", "even"])
+        #expect(BreathingStyle.allCases.map(\.rawValue) == ["calm", "box", "relax", "even"])
+    }
+
+    @Test func aSavedBoxStyleStaysBox() throws {
+        let m = try JSONDecoder().decode(MeditationPrefs.self, from: Data(#"{"style":"box"}"#.utf8))
+        #expect(m.style == .box)
     }
 
     @Test func lengthsGoalsAndIntervals() {

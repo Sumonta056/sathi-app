@@ -19,6 +19,8 @@ package struct BreathStep: Equatable, Sendable {
 package enum BreathingPattern {
     package static func steps(_ style: BreathingStyle) -> [(BreathPhase, TimeInterval)] {
         switch style {
+        case .calm:
+            return [(.inhale, Timing.breathCalmIn), (.exhale, Timing.breathCalmOut)]
         case .box:
             return [(.inhale, Timing.breathBox), (.hold, Timing.breathBox), (.exhale, Timing.breathBox), (.rest, Timing.breathBox)]
         case .relax:

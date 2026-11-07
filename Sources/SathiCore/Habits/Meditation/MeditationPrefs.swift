@@ -1,7 +1,7 @@
 import Foundation
 
 package enum BreathingStyle: String, Codable, CaseIterable, Sendable {
-    case box, relax, even
+    case calm, box, relax, even
 }
 
 package struct MeditationPrefs: Codable, Equatable, Sendable {
@@ -11,7 +11,7 @@ package struct MeditationPrefs: Codable, Equatable, Sendable {
     package var intervalMinutes = 60
     package var startMinutes = Limits.meditationStartMinutes
     package var endMinutes = Limits.meditationEndMinutes
-    package var style: BreathingStyle = .box
+    package var style: BreathingStyle = .calm
     package var chime = true
     package var strictness: Strictness = .friendly
     package var weekdays: Set<Weekday> = Set(Weekday.allCases)
