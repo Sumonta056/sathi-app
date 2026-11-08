@@ -14,10 +14,12 @@ package struct ReadingRules: HabitRules {
 
     private var days: HabitDays { prefs.days(id) }
 
-    package func nextDue(now: Date, lastDone _: Date?, doneToday: Double, skipToday: Bool) -> Date {
-        let today = clock.calendar.startOfDay(for: now)
-        let start = skipToday || doneToday >= dailyGoal ? dayAfter(today) : today
-        return days.firstReminder(onOrAfter: start, calendar: clock.calendar, at: slot)
+    package func scheduledDue(now: Date, lastDone _: Date?, doneToday _: Double) -> Date {
+        days.firstReminder(onOrAfter: clock.calendar.startOfDay(for: now), calendar: clock.calendar, at: slot)
+    }
+
+    package func firstDue(onDayAfter date: Date) -> Date {
+        days.firstReminder(onOrAfter: dayAfter(clock.calendar.startOfDay(for: date)), calendar: clock.calendar, at: slot)
     }
 
     package func isActiveTime(_ date: Date) -> Bool {

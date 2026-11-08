@@ -14,8 +14,12 @@ package struct WaterRules: HabitRules {
 
     private var days: HabitDays { prefs.days(id) }
 
-    package func nextDue(now: Date, lastDone: Date?, doneToday _: Double, skipToday _: Bool) -> Date {
+    package func scheduledDue(now: Date, lastDone: Date?, doneToday _: Double) -> Date {
         days.moveOffDay(dueByHours(now: now, lastDone: lastDone), calendar: clock.calendar, at: start)
+    }
+
+    package func firstDue(onDayAfter date: Date) -> Date {
+        days.firstReminder(onOrAfter: dayAfter(date), calendar: clock.calendar, at: start)
     }
 
     package func isActiveTime(_ date: Date) -> Bool {

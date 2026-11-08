@@ -44,14 +44,14 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 
 | Habit | Schedule | Done when |
 |---|---|---|
-| Water | Every `intervalMinutes`, only between start and end time | The user logs an amount (minimum `Limits.minimumLog`) |
+| Water | Every `intervalMinutes`, only between start and end time, until today's glasses meet `dailyGoalGlasses` (rule 3) | The user logs an amount (minimum `Limits.minimumLog`) |
 | Reading | Once a day at a set time, on the selected weekdays | A session of `sessionMinutes` ends |
 | Meditation | Every `intervalMinutes`, only between start and end time, until today's minutes meet `dailyGoalMinutes`. Then the next reminder is at tomorrow's start time. | A breathing session of `sessionMinutes` ends |
 | Gym | On the selected days (all 7 by default). Sessions left = ⌈(goal − today's minutes) ÷ `sessionMinutes`⌉. With no gym done today at or after work start: due = start + (end − start) ÷ (2 × sessions left), so 4 sessions in 9:00–17:00 start at 10:00. After the last gym done today (time d, at or after work start): due = d + the larger of (end − d) ÷ (sessions left + 0.5) and `sessionMinutes`. So sessions done on time give 10:00, 12:00, 14:00, 16:00, and a late session re-spreads the rest. The due time never depends on "now": a missed reminder stays due, and snooze handles the delay. Now or a due time at or after the end, a met goal, a skip, or a day off gives the first reminder of the next day that is on: start + (end − start) ÷ (2 × `sessionsPerDay`). | A gym session ends, or the user taps Done during it. Done early logs the real minutes (rounded, at least 1). |
 
 1. After "done", the next due time starts from the done time, not from the old due time.
 2. A due time outside active hours moves to the next start of active hours.
-3. Reading, Meditation, and Gym are skipped for the rest of the day when today's minutes already meet the goal.
+3. Core rule, for every habit: when today's total meets the goal (rule 7), or the user skipped today, the habit has no more reminders today. Its next reminder is the first reminder of the next day that is on (rule 11). `HabitRules.nextDue` owns this check in one place; a habit's rules give only `scheduledDue` and `firstDue(onDayAfter:)`. Raising the goal above today's total brings today's reminders back; a due time already past shows at once (rule 5). A rules type never defines its own `nextDue`, because calls through `any HabitRules` would skip it.
 4. Clock times are wall-clock times. On a DST day, 8:00 is 8:00 local time. Settings and the Quick add popup pick clock times with the same chip grid (`TimeMenu`) in 5-minute steps (`Limits.scheduleSlotMinutes`).
 5. A settings change never fires a past slot. At launch, a missed slot is still due now. Water and Meditation have no slots: when a settings change moves their due time into the past, the reminder shows at once.
 6. A session started when nothing is due and stopped early does nothing: no snooze, no event, the next due time stays.
@@ -126,6 +126,7 @@ These rules define what Sathi does. Code and tests must agree with them. If a re
 10. The Day range has no goal line, because the goal is per day and the bars are 2-hour buckets.
 11. The streak calendar shows the current month. A day's shade comes from its total divided by the goal: none, under half, under the goal, goal met. A day off without the goal met has its own "off" style and no shade.
 12. The menu card says "Day off" when today is a day off for that habit and nothing of that habit is active.
+13. The menu card says "✓ Goal met" when today's goal is met (Schedules rule 3), nothing of that habit is active or snoozed, the app is not paused, and today is not a day off. Its progress ring shows a check badge. The action button stays, so the user can log more.
 
 ## Day summary
 

@@ -16,13 +16,13 @@ package struct GymRules: HabitRules {
 
     package var dailyGoal: Double { Double(gym.dailyGoalMinutes) }
 
-    package func nextDue(now: Date, lastDone: Date?, doneToday: Double, skipToday: Bool) -> Date {
+    package func scheduledDue(now: Date, lastDone: Date?, doneToday: Double) -> Date {
         guard gym.startMinutes < gym.endMinutes else { return .distantFuture }
         let left = sessionsLeft(doneToday)
         let start = clock.at(gym.startMinutes, on: now)
         let end = end(of: now)
-        let tomorrow = firstReminder(onOrAfter: day(after: now, by: 1))
-        guard !skipToday, left > 0, days.isOn(now, calendar: clock.calendar), now < end else { return tomorrow }
+        let tomorrow = firstDue(onDayAfter: now)
+        guard left > 0, days.isOn(now, calendar: clock.calendar), now < end else { return tomorrow }
         guard let d = lastDone, d >= start, d < end else {
             return start.addingTimeInterval(end.timeIntervalSince(start) / Double(2 * left))
         }
@@ -55,8 +55,9 @@ package struct GymRules: HabitRules {
         Stats(calendar: clock.calendar).total(id, on: day, in: data.events)
     }
 
-    private func firstReminder(onOrAfter date: Date) -> Date {
-        days.firstReminder(onOrAfter: date, calendar: clock.calendar, at: firstOf)
+    package func firstDue(onDayAfter date: Date) -> Date {
+        guard gym.startMinutes < gym.endMinutes else { return .distantFuture }
+        return days.firstReminder(onOrAfter: day(after: date, by: 1), calendar: clock.calendar, at: firstOf)
     }
 
     private func firstOf(_ date: Date) -> Date {
