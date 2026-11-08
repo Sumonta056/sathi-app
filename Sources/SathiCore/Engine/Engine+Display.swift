@@ -62,6 +62,7 @@ extension Engine {
         if isActive(id) { return phase(id) == .session ? Self.sessionPill(id) : "Due now" }
         if pausedUntil != nil { return "Paused" }
         if isOffToday(id) { return "Day off" }
+        if goalMet(id), state(id).snoozedUntil == nil { return "✓ Goal met" }
         if !hasReminder(id) { return "No reminder" }
         let r = remaining(id)
         if state(id).snoozedUntil != nil { return "Snoozed · " + Fmt.short(r) }
@@ -69,6 +70,11 @@ extension Engine {
             return "at " + now.addingTimeInterval(r).formatted(date: .omitted, time: .shortened)
         }
         return "in " + Fmt.short(r)
+    }
+
+    package func goalMet(_ id: HabitID) -> Bool {
+        let r = rules(id)
+        return r.isGoalMet(r.total(on: now, data: data))
     }
 
     package func progress(_ id: HabitID) -> Double {

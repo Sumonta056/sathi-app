@@ -37,9 +37,28 @@ struct WaterRulesTests {
         #expect(next == day(2026, 3, 4, 12))
     }
 
-    @Test func nextDueIgnoresDoneTodayAndSkip() {
-        let next = rules.nextDue(now: day(2026, 3, 4, 10), lastDone: nil, doneToday: 20, skipToday: true)
-        #expect(next == day(2026, 3, 4, 12))
+    private var lateWater: WaterRules {
+        var prefs = Prefs()
+        prefs.water.intervalMinutes = 30
+        prefs.water.endMinutes = 20 * 60
+        return WaterRules(prefs: prefs)
+    }
+
+    @Test func goalMetWaitsUntilTomorrowsStart() {
+        let at = day(2026, 3, 4, 18)
+        let next = lateWater.nextDue(now: at, lastDone: at, doneToday: 8, skipToday: false)
+        #expect(next == day(2026, 3, 5, 9, 30))
+    }
+
+    @Test func oneGlassShortKeepsTheInterval() {
+        let at = day(2026, 3, 4, 18)
+        let next = lateWater.nextDue(now: at, lastDone: at, doneToday: 7, skipToday: false)
+        #expect(next == day(2026, 3, 4, 18, 30))
+    }
+
+    @Test func skipTodayWaitsUntilTomorrowsStart() {
+        let next = rules.nextDue(now: day(2026, 3, 4, 10), lastDone: nil, doneToday: 0, skipToday: true)
+        #expect(next == day(2026, 3, 5, 9, 30))
     }
 
     @Test func nextDueFollowsTheInterval() {

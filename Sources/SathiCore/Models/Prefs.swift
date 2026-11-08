@@ -17,7 +17,9 @@ package struct Prefs: Codable, Equatable, Sendable {
 
     package func scheduleKey(_ id: HabitID) -> String {
         let values: [String] = switch id {
-        case .water: ["\(water.enabled)", "\(water.intervalMinutes)", "\(water.startMinutes)", "\(water.endMinutes)"]
+        case .water: [
+                "\(water.enabled)", "\(water.dailyGoalGlasses)", "\(water.intervalMinutes)", "\(water.startMinutes)", "\(water.endMinutes)"
+            ]
         case .reading: ["\(reading.enabled)", "\(reading.timeMinutes)", "\(reading.sessionMinutes)"]
         case .meditation: [
                 "\(meditation.enabled)", "\(meditation.dailyGoalMinutes)", "\(meditation.sessionMinutes)",

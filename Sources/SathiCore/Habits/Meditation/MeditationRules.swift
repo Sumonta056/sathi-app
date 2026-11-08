@@ -16,11 +16,12 @@ package struct MeditationRules: HabitRules {
 
     package var dailyGoal: Double { Double(med.dailyGoalMinutes) }
 
-    package func nextDue(now: Date, lastDone: Date?, doneToday: Double, skipToday: Bool) -> Date {
-        if skipToday || (dailyGoal > 0 && doneToday >= dailyGoal) {
-            return days.firstReminder(onOrAfter: dayAfter(now), calendar: clock.calendar, at: start)
-        }
-        return days.moveOffDay(dueByHours(now: now, lastDone: lastDone), calendar: clock.calendar, at: start)
+    package func scheduledDue(now: Date, lastDone: Date?, doneToday _: Double) -> Date {
+        days.moveOffDay(dueByHours(now: now, lastDone: lastDone), calendar: clock.calendar, at: start)
+    }
+
+    package func firstDue(onDayAfter date: Date) -> Date {
+        days.firstReminder(onOrAfter: dayAfter(date), calendar: clock.calendar, at: start)
     }
 
     package func isActiveTime(_ date: Date) -> Bool {

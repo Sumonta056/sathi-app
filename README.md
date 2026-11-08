@@ -37,7 +37,9 @@ To see a reminder right away, open Settings, pick a buddy, and click **Show a re
 
 ## The buddies
 
-- **Fota** (water): a reminder every 2 hours between 9:30 and 18:30. Log a few sips, half, or a full glass, or drag the line on your sip bottle. The daily goal is 8 glasses.
+Every buddy stops for the rest of the day when you meet its daily goal. The menu then shows "✓ Goal met" and a check mark on its ring.
+
+- **Fota** (water): a reminder every 2 hours between 9:30 and 18:30. Log a few sips, half, or a full glass, or drag the line on your sip bottle. The daily goal is 8 glasses. Fota stops for the day when you reach it.
 - **Boi** (reading): a small popup in the top-right corner at 22:00. It never takes focus from your work. Start a 15-minute timer, and Boi counts the minutes. Pick the days of the week. Keep a reading list of links: "Start reading" opens today's pick.
 - **Shanti** (meditation, off by default): short guided breathing sessions (Calm 4·6 by default, or box, relax, or even). You can pause a session. A voice guide and soft background music are optional. Pick a daily goal of 5, 10, or 20 minutes. Shanti reminds you every hour between 9:00 and 21:00 and stops for the day when you reach the goal.
 - **Shokti** (gym, off by default): you set a daily goal as sessions a day × session length (4 × 5 min by default). A small popup in the top-right corner comes at even times between 9:00 and 17:00 on the days you pick (10:00, 12:00, 14:00, 16:00 by default), and spreads the rest again after a late session. It says "Try 10 squats" with an idea from your list of 1 to 8 workout names, and shows a progress bar for today. The shuffle button shows the next idea. Start a timer, and "Done" saves the real minutes. Shokti stops for the day when the goal is met. The close button and "In 5 min" snooze it.

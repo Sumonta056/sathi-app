@@ -13,6 +13,7 @@ struct HabitCard: View {
                 .accessibilityLabel("\(id.name) progress")
                 .accessibilityValue(ProgressRing.percent(progress))
                 .overlay(StaticBuddy(habit: id, size: UIMetrics.ringBuddySize))
+                .overlay(alignment: .bottomTrailing) { if e.goalMet(id) { GoalMetBadge() } }
             VStack(alignment: .leading, spacing: UIMetrics.textSpacing) {
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: UIMetrics.chipSpacing) { title; pill }

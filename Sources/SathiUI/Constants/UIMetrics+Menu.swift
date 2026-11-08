@@ -9,6 +9,9 @@ extension UIMetrics {
     static let ringLine: CGFloat = 4
     static let habitRingSize: CGFloat = 40
     static let ringBuddySize: CGFloat = 22
+    static let goalBadgeSize: CGFloat = 15
+    static let goalBadgeIcon: CGFloat = 8
+    static let goalBadgeRim: CGFloat = 2
     static let ringStartAngle: Double = -90
     static let actionHeight: CGFloat = 34
     static let menuActionWidth: CGFloat = 84
