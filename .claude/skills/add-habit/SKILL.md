@@ -21,7 +21,7 @@ Ask the user with AskUserQuestion. Each kind has a model habit. Copy the model i
 
 | Kind | Example | Model | Core model code |
 |---|---|---|---|
-| A. Interval, done by a tap | stretch, eye break | Water | `Habits/Water/WaterRules.swift` (`nextDue`, `isActiveTime`), `logWater` in `Engine/Engine+Actions.swift` |
+| A. Interval, done by a tap | stretch, eye break | Water | `Habits/Water/WaterRules.swift` (`scheduledDue`, `firstDue`, `isActiveTime`), `logWater` in `Engine/Engine+Actions.swift` |
 | B. Once a day, timed session | walk, journal | Reading | `Habits/Reading/ReadingRules.swift`, `startSession` and `finishSession` in `Engine/Engine+Session.swift` |
 | C. Time slots, timed session | posture check | Meditation | `Habits/Meditation/MeditationRules.swift`, `Engine/Engine+Session.swift` |
 
@@ -65,6 +65,7 @@ Tests: copy `Tests/SathiCoreTests/MeditationPrefsTests.swift` (suite "Meditation
 1. Add `Habits/<Name>/<Name>Rules.swift`. Copy the model rules of your kind. Conform to `HabitRules`.
 2. Use `DayClock` for wall-clock times. Read the calendar from the init. Never use `Date()`.
 3. Set `dailyGoal`. Kind A copies `WaterRules.dailyGoal`. Kinds B and C use session minutes.
+   Return only the normal schedule from `scheduledDue`. `HabitRules.nextDue` stops every habit for the day when its goal is met.
 4. Put helper types in the same folder (like `Habits/Meditation/BreathingPattern.swift`).
 5. Register the rules in `HabitID.rules(_:calendar:)` in `Habits/HabitRules.swift`.
 

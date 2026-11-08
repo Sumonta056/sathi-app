@@ -8,7 +8,7 @@ Sathi is a macOS menu bar app (macOS 13+, Swift 5.9 tools, SwiftUI + AppKit). Fo
 |---|---|
 | Build (debug) | `swift build` |
 | Run all tests | `./scripts/test.sh` |
-| Run one target or suite | `./scripts/test.sh SathiCoreTests` or `./scripts/test.sh "Engine flows"` |
+| Run one target or suite | `./scripts/test.sh SathiCoreTests` or `./scripts/test.sh EngineFlowTests` (type name, not the `@Suite` title) |
 | Lint and file-size check | `./scripts/lint.sh` (add `--fix` to auto-format) |
 | Build, install, open | `./build.sh --install` |
 | Performance budget | `./scripts/perf.sh` (needs the app running) |

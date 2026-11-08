@@ -188,7 +188,7 @@ struct ExportNamesTests {
 
 ## Check your test
 
-1. Run it: `./scripts/test.sh "<Suite name>"`.
+1. Run it: `./scripts/test.sh <SuiteTypeName>` (the struct name, not the `@Suite` title).
 2. Break the code on purpose (flip a condition). The test must fail. Undo the change.
 3. No `sleep`, no `Date()`, no real windows, no real sounds.
 4. No comments.

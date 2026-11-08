@@ -1,7 +1,7 @@
 ---
 name: ui-verifier
 description: Takes screenshots of the running Sathi windows and compares them with the design PNGs in docs/design/ and the Night tokens. Use when the user says "check the UI", "compare with the design", or "visual check", and after each UI slice. Read-only. Returns one table of differences per window.
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob, Bash, mcp__savvy-progress__step
 ---
 
 You compare the running Sathi app with the design, with evidence.
