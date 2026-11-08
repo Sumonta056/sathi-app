@@ -31,7 +31,7 @@ Ask for approval with AskUserQuestion: "Approve", "Change the plan", "Stop". Wri
 ## 3. Red: failing tests first
 
 1. Spawn the `test-writer` agent with the approved plan and the test paths. Tell it the code does not exist yet.
-2. Run the new tests: `./scripts/test.sh "<Suite name>"`.
+2. Run the new tests: `./scripts/test.sh <SuiteTypeName>` (the struct name, not the `@Suite` title).
 3. Check that each test fails for the right reason (missing behavior or wrong value). A compile error in the test file is not red. Send it back.
 
 ## 4. Green: implement

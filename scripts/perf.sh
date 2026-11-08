@@ -8,6 +8,7 @@ SECONDS_TO_SAMPLE="${SECONDS_TO_SAMPLE:-30}"
 MAX_WINDOW_FOOTPRINT_MB="${MAX_WINDOW_FOOTPRINT_MB:-50}"
 MAX_LEAK_MB="${MAX_LEAK_MB:-3}"
 SETTLE_SECONDS="${SETTLE_SECONDS:-5}"
+MIN_WINDOW_HEIGHT="${MIN_WINDOW_HEIGHT:-40}"
 
 USAGE="Usage: $0 [--windows]"
 
@@ -43,7 +44,29 @@ at_least() {
   awk -v a="$1" -v b="$2" 'BEGIN { exit !(a >= b) }'
 }
 
+open_windows() {
+  swift - "$1" "$MIN_WINDOW_HEIGHT" <<'EOF'
+import CoreGraphics
+let pid = Int(CommandLine.arguments[1])!
+let minHeight = Double(CommandLine.arguments[2])!
+let list = CGWindowListCopyWindowInfo([.optionOnScreenOnly], kCGNullWindowID) as? [[String: Any]] ?? []
+let open = list.filter { w in
+  guard (w[kCGWindowOwnerPID as String] as? Int) == pid,
+        let b = w[kCGWindowBounds as String] as? [String: Double] else { return false }
+  return (b["Height"] ?? 0) > minHeight
+}
+print(open.count)
+EOF
+}
+
 run_idle() {
+  local windows
+  windows="$(open_windows "$PID")"
+  if [[ "$windows" -gt 0 ]]; then
+    echo "NOT IDLE: $windows Sathi window(s) open (popup, menu, or lock)."
+    echo "Pause Sathi from the menu (no snooze is saved), close the menu, then run again."
+    exit 3
+  fi
   echo "Sampling Sathi (pid $PID) for ${SECONDS_TO_SAMPLE}s…"
   local line cpu wakeups wakeups_per_min footprint rss
   line="$(top -l 2 -s "$SECONDS_TO_SAMPLE" -pid "$PID" -stats pid,cpu,idlew 2>/dev/null | tail -1)"
