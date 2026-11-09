@@ -49,20 +49,20 @@ Base branch: `feat/activity-tracker` (local; not pushed). Track branches and wor
 | Wave | Track | Branch | Status |
 |---|---|---|---|
 | — | Design and docs | `feat/activity-tracker` | done |
-| 0 | Contracts | `feat/activity-tracker` | not started |
-| 1 | T1 Engine flow | `feat/tracker-t1-engine` | waits for wave 0 |
-| 1 | T2 Storage | `feat/tracker-t2-storage` | waits for wave 0 |
-| 1 | T3 Mac platform | `feat/tracker-t3-platform` | waits for wave 0 |
-| 1 | T4 Prompt views | `feat/tracker-t4-prompts` | waits for wave 0 |
-| 1 | T5 Reports and end of day | `feat/tracker-t5-reports` | waits for wave 0 |
-| 1 | T6 Settings and menu views | `feat/tracker-t6-settings` | waits for wave 0 |
+| 0 | Contracts | `feat/activity-tracker` | done (`2381f1f`) |
+| 1 | T1 Engine flow | `feat/tracker-t1-engine` | not started |
+| 1 | T2 Storage | `feat/tracker-t2-storage` | not started |
+| 1 | T3 Mac platform | `feat/tracker-t3-platform` | not started |
+| 1 | T4 Prompt views | `feat/tracker-t4-prompts` | not started |
+| 1 | T5 Reports and end of day | `feat/tracker-t5-reports` | not started |
+| 1 | T6 Settings and menu views | `feat/tracker-t6-settings` | not started |
 | 2 | C Calendar engine | `feat/tracker-c-calendar` | waits for wave 1 |
 | 2 | I Integration | `feat/tracker-i-integration` | waits for wave 1 |
 | 3 | Finish | `feat/activity-tracker` | waits for wave 2 |
 
 ## Next step
 
-Wave 0. Prompt: `Read PROGRESS.md. Do wave 0.`
+Wave 1 (6 tracks in parallel). Contracts for the tracks: `docs/tracker-progress/CONTRACTS.md`. Prompt: `Read PROGRESS.md. Run the next wave with parallel subagents in worktrees, then merge.` or 1 track per session.
 
 ## Key decisions (full list in the design page, Decisions tab)
 
@@ -92,7 +92,14 @@ Wave 0. Prompt: `Read PROGRESS.md. Do wave 0.`
 | Date | Session | Done | Commit |
 |---|---|---|---|
 | 2026-11-09 | Design (local) | Grill, design page, spec, plan, goals, test notes, this file. This file replaces the old Sathi 2.0 handover (in git history before `5dfff66`). | `5dfff66` + this file |
+| 2026-11-09 | Wave 0 (local, subagents) | Contracts: tracker types, Prefs/LiveState fields, ports, test support, engine stubs and hooks, constants, copy, metrics, colors, track files, CONTRACTS.md. Old engine enum `Activity` is now `HabitActivity`. Review clean after 1 fix round. 1492 + 764 tests pass, lint OK. | `2381f1f` |
 
 ## Open items
 
 - None in the design. Add problems found during coding here.
+- Wave 0 minor findings, deferred to wave 2 track I or wave 3:
+  - The backup always writes `"activities": []`.
+  - The copy says "Yes, log it", but the spec says "Yes". "1 min" is hard-coded in the copy.
+  - `usualLength` and the start/end minutes are not fully checked on decode.
+  - The Meeting category color is the same as the Meditation buddy color. Meditation uses A99CF5, but the design page has C9B8FF.
+  - `spaceKeyName` is in `Limits`.
