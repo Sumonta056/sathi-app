@@ -8,4 +8,6 @@ package enum SoundName: String, Sendable {
     case hero = "Hero"
     case tink = "Tink"
     case pop = "Pop"
+
+    package static let trackerPrompt: SoundName = .tink
 }

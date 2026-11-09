@@ -117,6 +117,7 @@ extension Engine {
         case .session:
             presenter.closeSession(id)
             sessionClosed(id)
+            trackerSessionEnded(id)
         case nil: return
         }
         activities[id] = nil

@@ -6,13 +6,22 @@ package struct ExportJob: Sendable {
     package var live: LiveState
     package var exportedAt: Date
     package var timeZone: TimeZone
+    package var activities: ActivityStore?
 
-    package init(history: HistoryStore, prefs: Prefs, live: LiveState, exportedAt: Date, timeZone: TimeZone) {
+    package init(
+        history: HistoryStore,
+        prefs: Prefs,
+        live: LiveState,
+        exportedAt: Date,
+        timeZone: TimeZone,
+        activities: ActivityStore? = nil
+    ) {
         self.history = history
         self.prefs = prefs
         self.live = live
         self.exportedAt = exportedAt
         self.timeZone = timeZone
+        self.activities = activities
     }
 
     package nonisolated func write(_ format: ExportFormat, to url: URL) -> ExportOutcome {
@@ -21,7 +30,13 @@ package struct ExportJob: Sendable {
         case .csv:
             data = Data(CSVExporter.csv(history.allEvents(), timeZone: timeZone).utf8)
         case .json:
-            data = JSONExporter.backup(prefs: prefs, live: live, events: history.allEvents(), exportedAt: exportedAt)
+            data = JSONExporter.backup(
+                prefs: prefs,
+                live: live,
+                events: history.allEvents(),
+                activities: activities?.allActivities() ?? [],
+                exportedAt: exportedAt
+            )
         case .pdf:
             return .failed
         }

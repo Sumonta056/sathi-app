@@ -32,4 +32,10 @@ package protocol ReminderPresenter: AnyObject {
     func closeBlockCheckIn()
     func showBlockCalendarGone()
     func closeBlockCalendarGone()
+    func showTrackerPrompt(_ kind: PromptKind)
+    func closeTrackerPrompt(_ kind: PromptKind)
+    func showTrackerNote(_ note: TrackerNote)
+    func closeTrackerNote()
+    func showTrackerEndOfDay()
+    func closeTrackerEndOfDay()
 }

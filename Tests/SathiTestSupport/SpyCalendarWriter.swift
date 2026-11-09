@@ -24,6 +24,11 @@ package final class SpyCalendarWriter: CalendarWriter {
     package private(set) var saved: [CalendarEventDraft] = []
     package private(set) var updated: [(String, CalendarEventDraft)] = []
     package private(set) var requestCount = 0
+    package var readable: [CalendarChoice]?
+    package var eventsValue: [CalendarEventInfo] = []
+    package var nextDeleteResult = true
+    package private(set) var deleted: [String] = []
+    package private(set) var eventReads: [DateInterval] = []
 
     package init() {}
 
@@ -48,5 +53,20 @@ package final class SpyCalendarWriter: CalendarWriter {
     package func update(eventID: String, draft: CalendarEventDraft) -> CalendarSaveResult {
         updated.append((eventID, draft))
         return nextUpdateResult ?? .saved(eventID: eventID)
+    }
+
+    @discardableResult
+    package func delete(eventID: String) -> Bool {
+        deleted.append(eventID)
+        return nextDeleteResult
+    }
+
+    package func readableCalendars() -> [CalendarChoice] { readable ?? choices }
+
+    package func events(from start: Date, to end: Date, calendarIDs: [String]) -> [CalendarEventInfo] {
+        eventReads.append(DateInterval(start: start, end: max(start, end)))
+        return eventsValue
+            .filter { calendarIDs.contains($0.calendarID) && $0.start < end && $0.end > start }
+            .sorted { $0.start < $1.start }
     }
 }

@@ -9,6 +9,7 @@ package struct LiveState: Codable, Equatable, Sendable {
     package var timeBlock: TimeBlock?
     package var meditationSession: Session?
     package var gymMinutesSince: Date?
+    package var tracker = TrackerLiveState()
 
     package init() {}
 }
@@ -25,5 +26,6 @@ extension LiveState {
         timeBlock = c.lenient(.timeBlock, or: d.timeBlock)
         meditationSession = c.lenient(.meditationSession, or: d.meditationSession)
         gymMinutesSince = (c.lenient(.gymMinutesSince, or: nil) as Date?)?.wholeSecond
+        tracker = c.lenient(.tracker, or: d.tracker)
     }
 }

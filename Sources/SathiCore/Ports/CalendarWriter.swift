@@ -48,4 +48,8 @@ package protocol CalendarWriter: AnyObject {
     func defaultCalendarID() -> String?
     func save(_ draft: CalendarEventDraft) -> CalendarSaveResult
     func update(eventID: String, draft: CalendarEventDraft) -> CalendarSaveResult
+    @discardableResult
+    func delete(eventID: String) -> Bool
+    func readableCalendars() -> [CalendarChoice]
+    func events(from start: Date, to end: Date, calendarIDs: [String]) -> [CalendarEventInfo]
 }

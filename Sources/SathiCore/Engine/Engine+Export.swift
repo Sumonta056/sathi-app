@@ -20,7 +20,8 @@ extension Engine {
                 prefs: data.prefs,
                 live: data.live,
                 exportedAt: clock.now.wholeSecond,
-                timeZone: calendar.timeZone
+                timeZone: calendar.timeZone,
+                activities: activityStore
             )
             return await Task.detached { job.write(format, to: url) }.value
         }

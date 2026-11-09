@@ -28,6 +28,7 @@ extension Engine {
         activities[id] = .session(Session(start: n.wholeSecond, end: end, fromReminder: fromReminder, workout: workout, readingItem: readingItem))
         presenter.showSession(id)
         sessionStarted(id)
+        trackerSessionStarted(id)
         if let sound = startSound(id) { play(sound) }
         requestTick()
     }

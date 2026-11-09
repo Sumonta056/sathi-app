@@ -15,14 +15,17 @@ package final class Engine: ObservableObject {
             breathSoundChanged(from: oldValue.prefs.general)
             if oldValue.prefs.general.snoozeLimit != data.prefs.general.snoozeLimit { refreshIgnoreDeadlines() }
             if oldValue.prefs.timeBlock.display != data.prefs.timeBlock.display { blockDisplayChanged() }
+            if oldValue.prefs.tracker != data.prefs.tracker { trackerPrefsChanged(from: oldValue.prefs.tracker) }
             if oldValue.prefs != data.prefs { store.savePrefs(data.prefs) }
             if oldValue.live != data.live { store.saveLive(data.live) }
         }
     }
     @Published package var now: Date
-    @Published package var pausedUntil: Date?
+    @Published package var pausedUntil: Date? {
+        didSet { if oldValue != pausedUntil { trackerBreakChanged(from: oldValue) } }
+    }
     @Published package internal(set) var habits: [HabitID: HabitState]
-    @Published package internal(set) var activities: [HabitID: Activity] = [:] {
+    @Published package internal(set) var activities: [HabitID: HabitActivity] = [:] {
         didSet { if oldValue[.meditation] != activities[.meditation] { syncMeditationSession() } }
     }
     @Published package internal(set) var quickActivities: [UUID: QuickActivity] = [:]
@@ -43,6 +46,9 @@ package final class Engine: ObservableObject {
     let links: LinkOpener
     let calendarWriter: CalendarWriter
     let audio: SessionAudio
+    let activityStore: ActivityStore
+    let presence: PresenceMonitor
+    let hotkeys: HotkeyRegistrar
     let calendar: Calendar
 
     var timer: Timer?
@@ -57,6 +63,8 @@ package final class Engine: ObservableObject {
     var reportCache: ReportScreenCache?
     var breathCueMark: Date?
     var minuteTickMark: Date?
+    var trackerRuntime = TrackerRuntime()
+    var trackerCalendarRuntime = TrackerCalendarRuntime()
 
     package init(
         store: StateStore,
@@ -67,7 +75,10 @@ package final class Engine: ObservableObject {
         links: LinkOpener,
         calendar: Calendar = .current,
         calendarWriter: CalendarWriter,
-        audio: SessionAudio = SilentSessionAudio()
+        audio: SessionAudio = SilentSessionAudio(),
+        activityStore: ActivityStore = NoActivityStore(),
+        presence: PresenceMonitor = NoPresenceMonitor(),
+        hotkeys: HotkeyRegistrar = NoHotkeyRegistrar()
     ) {
         let n = clock.now
         var loaded = Persisted()
@@ -88,6 +99,9 @@ package final class Engine: ObservableObject {
         self.calendar = calendar
         self.calendarWriter = calendarWriter
         self.audio = audio
+        self.activityStore = activityStore
+        self.presence = presence
+        self.hotkeys = hotkeys
         calendarAccess = calendarWriter.access
         data = loaded
         now = n

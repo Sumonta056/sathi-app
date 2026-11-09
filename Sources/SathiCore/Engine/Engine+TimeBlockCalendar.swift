@@ -43,6 +43,7 @@ extension Engine {
             return
         }
         data.live.timeBlock = nil
+        trackerBlockSaved(b, end: end)
         waitingCalendarPick = nil
         presenter.closeBlockCalendarGone()
         requestTick()
@@ -56,6 +57,7 @@ extension Engine {
             return false
         }
         data.live.timeBlock = nil
+        trackerBlockSaved(b, end: end)
         return true
     }
 
