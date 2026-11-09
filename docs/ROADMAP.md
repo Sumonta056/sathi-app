@@ -151,6 +151,22 @@ Spec: `docs/specs/phase-15-breathing.md`
 - [x] Docs
 - Open: perf.sh, perf.sh --windows, ui-verifier, website.
 
+## Phase 17: Daily activity tracker
+
+Spec: `docs/specs/phase-17-activity-tracker.md`
+Plan: `docs/specs/phase-17-plan.md` (5 subplans, 1 commit each)
+Test notes: `docs/specs/phase-17-test-notes.md`
+Progress and start-here: `progress.md`
+ADR: `docs/adr/0001-activity-tracker-replaces-time-blocks.md`
+
+- [x] Design, glossary, spec, plan, goals, test notes
+- [ ] Subplan 1: Core and engine (17a, 17b, 17k engine part)
+- [ ] Subplan 2: Mac and prompts (17c, 17d, 17l)
+- [ ] Subplan 3: Calendar (17e, 17j)
+- [ ] Subplan 4: Reports and end of day (17f, 17g)
+- [ ] Subplan 5: Settings, menu, and release (17h, 17i)
+- Later: Week view, remove time blocks.
+
 ## Later
 
 - Days off: a lock or Nudgy bubble that shows at 23:58 stays after midnight into a day off (only a settings change closes it, rule 11). Close it at the first tick of a new day if users notice
@@ -215,4 +231,5 @@ Spec: `docs/specs/phase-15-breathing.md`
 | 2026-10-25 | 5g: calendar and facts follow the selected tile; off habits show a dimmed "Off" tile; PDF in 5g and names the habit; a cancel keeps the old export note; save panel is a sheet; old `Palette` removal moves to slice 5g2. |
 | 2026-10-25 | 5h: the Reports Export menu is removed (save panel wakeups). Memory budget: < 40 MB fresh idle, < 50 MB after a window. Swift Charts stays. |
 | 2026-10-25 | Fix: on macOS 27 every reminder panel was 0×0 (`NSHostingView.fittingSize` after `sizingOptions = []`), so no reminder was visible. Buddies are now independent: each has its own reminder, snooze, ignore timer, and session; no queue. Corner panels stack top-right on the display with the mouse. |
+| 2026-11-09 | Daily activity tracker (phase 17): separate from time blocks first, replaces them later (ADR 0001). Off by default. Prompts never go away by themselves. Scheduled prompts sit in the corner and never take the keyboard; the center panel opens only from the shortcut, the menu, or after Away. Raw activities are saved per month; reports are built on demand. |
 | 2026-10-24 | Phase 1 fix: a schedule change just after midnight counts the new day, not yesterday. |
