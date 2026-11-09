@@ -1,6 +1,6 @@
 # Phase 17 test notes
 
-Manual checks for each subplan. Run them after the automated tests pass. Write the result (pass, fail, and a note) in `progress.md`.
+Manual checks for each subplan. Run them after the automated tests pass. Write the result (pass, fail, and a note) in `PROGRESS.md`.
 
 Before you start: turn the tracker on, set tracker hours to include now, and set the Away limit to 10 min to test faster.
 

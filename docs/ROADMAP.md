@@ -156,7 +156,7 @@ Spec: `docs/specs/phase-15-breathing.md`
 Spec: `docs/specs/phase-17-activity-tracker.md`
 Plan: `docs/specs/phase-17-plan.md` (5 subplans, 1 commit each)
 Test notes: `docs/specs/phase-17-test-notes.md`
-Progress and start-here: `progress.md`
+Progress and start-here: `PROGRESS.md`
 ADR: `docs/adr/0001-activity-tracker-replaces-time-blocks.md`
 
 - [x] Design, glossary, spec, plan, goals, test notes

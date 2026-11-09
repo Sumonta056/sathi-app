@@ -1,6 +1,6 @@
 # Phase 17 plan: Daily activity tracker
 
-Spec (rules and goals): `docs/specs/phase-17-activity-tracker.md`. Test notes: `docs/specs/phase-17-test-notes.md`. Progress and start-here file: `progress.md`.
+Spec (rules and goals): `docs/specs/phase-17-activity-tracker.md`. Test notes: `docs/specs/phase-17-test-notes.md`. Progress and start-here file: `PROGRESS.md`.
 Design page (Demo, Flow, Goals, Decisions, Plan, Test notes, screens): https://claude.ai/artifact/YHqbbEbFiGvqgdGVHSzMjU
 
 Branch: `feat/activity-tracker`. Each subplan runs the `/feature` loop (plan → approval → failing tests → code → checks → review) and ends with **1 commit** on the branch. Push and merge to `main` only when the user says so.
