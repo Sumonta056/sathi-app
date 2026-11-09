@@ -154,17 +154,16 @@ Spec: `docs/specs/phase-15-breathing.md`
 ## Phase 17: Daily activity tracker
 
 Spec: `docs/specs/phase-17-activity-tracker.md`
-Plan: `docs/specs/phase-17-plan.md` (5 subplans, 1 commit each)
+Plan: `docs/specs/phase-17-plan.md` (4 waves, 9 parallel tracks, worktrees, merge rules)
 Test notes: `docs/specs/phase-17-test-notes.md`
 Progress and start-here: `PROGRESS.md`
 ADR: `docs/adr/0001-activity-tracker-replaces-time-blocks.md`
 
 - [x] Design, glossary, spec, plan, goals, test notes
-- [ ] Subplan 1: Core and engine (17a, 17b, 17k engine part)
-- [ ] Subplan 2: Mac and prompts (17c, 17d, 17l)
-- [ ] Subplan 3: Calendar (17e, 17j)
-- [ ] Subplan 4: Reports and end of day (17f, 17g)
-- [ ] Subplan 5: Settings, menu, and release (17h, 17i)
+- [ ] Wave 0: contracts
+- [ ] Wave 1: T1 Engine flow · T2 Storage · T3 Mac platform · T4 Prompt views · T5 Reports and end of day · T6 Settings and menu views (parallel)
+- [ ] Wave 2: C Calendar engine · I Integration (parallel)
+- [ ] Wave 3: finish, review, perf, docs, website
 - Later: Week view, remove time blocks.
 
 ## Later

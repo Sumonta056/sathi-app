@@ -1,10 +1,10 @@
 # Phase 17 test notes
 
-Manual checks for each subplan. Run them after the automated tests pass. Write the result (pass, fail, and a note) in `PROGRESS.md`.
+Manual checks for each wave. Run them after the automated tests pass. Write the result (pass, fail, and a note) in `PROGRESS.md`.
 
 Before you start: turn the tracker on, set tracker hours to include now, and set the Away limit to 10 min to test faster.
 
-## Subplan 1: Core and engine
+## After wave 1: core (T1, T2)
 
 1. Run `./scripts/test.sh TrackerTests` and `./scripts/test.sh EngineTrackerFlowTests`. Every Flow-tab step has 1 test. All pass.
 2. Load an old `prefs.json` and `state.json` (fixtures): the app starts, the tracker is off, nothing is lost.
@@ -12,7 +12,7 @@ Before you start: turn the tracker on, set tracker hours to include now, and set
 
 Goals checked by hand here: 
 
-## Subplan 2: Mac and prompts
+## After wave 2: Mac and prompts (T3, T4, I)
 
 1. Turn the tracker on. At the start of hours, A shows in the corner. Keep typing in your editor: the keys stay in the editor.
 2. Click a recent chip, Enter. Wait for C. Try Yes, 5 min, 30 min, Skip, Done. After Done, pick an earlier Started chip and check the log times.
@@ -25,10 +25,10 @@ Goals checked by hand here:
 
 Goals checked by hand here: P1, G14, G22, G25, G64
 
-## Subplan 3: Calendar
+## After wave 2: calendar (C)
 
 1. Tick Add to calendar on an activity, end it: 1 event with the real start and end shows in the Calendar app.
-2. Edit that activity in the report (later subplan) or by the debug path: the event moves. Delete it: the event goes.
+2. Edit that activity in the Activities report: the event moves. Delete it: the event goes.
 3. Turn on calendar reading and tick 1 calendar. Make a test event 2 min ahead (mark it Free): at its start, note F shows and the activity switches.
 4. Set "Ask me first": the prompt shows and stays. Answer late: the activity starts at the event start.
 5. Lock the Mac across an event: on unlock, D lists it.
@@ -37,7 +37,7 @@ Goals checked by hand here: P1, G14, G22, G25, G64
 
 Goals checked by hand here: P5, G27
 
-## Subplan 4: Reports and end of day
+## After wave 2: reports and end of day (T5, I)
 
 1. Open Reports → Activities. Step back with ‹ and open a day from the date picker. Days with data show a dot.
 2. Check that Real work + Away + Not logged = the tracked span.
@@ -49,7 +49,7 @@ Goals checked by hand here: P5, G27
 
 Goals checked by hand here: P2, P3, P4, G44, G45, G53
 
-## Subplan 5: Settings, menu, and release
+## Wave 3: settings, menu, and release (T6, I, finish)
 
 1. Open Settings → My day → Activity tracker. Change every row and check that the next ask uses it.
 2. Add, rename, and delete a category. Old activities keep the deleted name.

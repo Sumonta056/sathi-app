@@ -4,21 +4,38 @@ Give this file to a new session first. It says where the work is and what to rea
 
 ## Start here (new session)
 
+The user gives a short prompt that names a role: **wave 0**, a **track** (T1–T6, C, I), **merge**, or **wave 3**. Then:
+
 1. Read `CLAUDE.md` (project rules, commands, Definition of done).
 2. Read this file to the end.
-3. Read `docs/specs/phase-17-plan.md` and find the first subplan that is not done.
-4. Read only the spec rules and goals that subplan lists, in `docs/specs/phase-17-activity-tracker.md`.
-5. Check out the branch `feat/activity-tracker`. Run `./scripts/test.sh` to confirm a green start.
-6. Run the `/feature` loop for that subplan: plan → user approval → failing tests → code → checks → review against the goal IDs → 1 commit.
-7. Update this file: tick the subplan, add a session log row with the commit hash, and write the next step.
+3. Read `docs/specs/phase-17-plan.md`: the section "Merge conflict rules" and the section of your role. Read nothing else of the plan.
+4. Read only the spec rules and goals that your section names, in `docs/specs/phase-17-activity-tracker.md`.
+5. A track: make your worktree and branch as your section says, then read your track file `docs/tracker-progress/<track>.md`. Resume from it if it has progress.
+6. Work test-first (`/feature` loop). Write your plan into your track file first. You may go on without waiting for the user, because the design is approved. Stop and ask only for a merge to `main`, a push, a merge conflict, or a contract defect.
+7. Edit only the files your section owns (rule 2). Update only your own track file, never this file (rule 6).
+8. When done (rule 7): 1 commit on your branch, set your track file status to "done, ready to merge", and report the goal IDs met.
+
+**Merge role:** merge every track whose file says "ready to merge", in the order of rule 8, run the tests after each, then update the Status table below and add a session log row.
+
+## Roles and short prompts
+
+| Role | Prompt to give |
+|---|---|
+| Wave 0 | `Read PROGRESS.md. Do wave 0.` |
+| A wave 1 track | `Read PROGRESS.md. Do track T1.` (or T2 … T6) |
+| A wave 2 track | `Read PROGRESS.md. Do track C.` (or I) |
+| Merge | `Read PROGRESS.md. Merge the ready tracks.` |
+| Wave 3 | `Read PROGRESS.md. Do wave 3.` |
+| All in this local session, with subagents | `Read PROGRESS.md. Run the next wave with parallel subagents in worktrees, then merge.` |
 
 ## Documents
 
 | What | Where |
 |---|---|
 | Spec: 64 rules, storage, ports, 70 goals | `docs/specs/phase-17-activity-tracker.md` |
-| Plan: 5 subplans, their goals, exit checks, commit messages | `docs/specs/phase-17-plan.md` |
-| Manual test notes per subplan | `docs/specs/phase-17-test-notes.md` |
+| Plan: 4 waves, 9 tracks, file ownership, merge conflict rules, goals per track | `docs/specs/phase-17-plan.md` |
+| Status of each track (written by that track only) | `docs/tracker-progress/<track>.md` (wave 0 creates them) |
+| Manual test notes per wave | `docs/specs/phase-17-test-notes.md` |
 | Why the tracker replaces time blocks later | `docs/adr/0001-activity-tracker-replaces-time-blocks.md` |
 | Words (Activity, Away, Switch time, …) | `GLOSSARY.md` |
 | Short business rules | `.claude/rules/business-logic.md`, section "Activity tracker" |
@@ -27,18 +44,25 @@ Give this file to a new session first. It says where the work is and what to rea
 
 ## Status
 
-Branch: `feat/activity-tracker` (from local `main`). Nothing is pushed.
+Base branch: `feat/activity-tracker` (local; not pushed). Track branches and worktrees: see the plan.
 
-- [x] Design and docs (grill session, 50 questions, 2026-11-09)
-- [ ] Subplan 1: Core and engine (17a, 17b, 17k engine part): 24 goals
-- [ ] Subplan 2: Mac and prompts (17c, 17d, 17l): 16 goals
-- [ ] Subplan 3: Calendar (17e, 17j): 14 goals
-- [ ] Subplan 4: Reports and end of day (17f, 17g): 11 goals
-- [ ] Subplan 5: Settings, menu, and release (17h, 17i): 5 goals
+| Wave | Track | Branch | Status |
+|---|---|---|---|
+| — | Design and docs | `feat/activity-tracker` | done |
+| 0 | Contracts | `feat/activity-tracker` | not started |
+| 1 | T1 Engine flow | `feat/tracker-t1-engine` | waits for wave 0 |
+| 1 | T2 Storage | `feat/tracker-t2-storage` | waits for wave 0 |
+| 1 | T3 Mac platform | `feat/tracker-t3-platform` | waits for wave 0 |
+| 1 | T4 Prompt views | `feat/tracker-t4-prompts` | waits for wave 0 |
+| 1 | T5 Reports and end of day | `feat/tracker-t5-reports` | waits for wave 0 |
+| 1 | T6 Settings and menu views | `feat/tracker-t6-settings` | waits for wave 0 |
+| 2 | C Calendar engine | `feat/tracker-c-calendar` | waits for wave 1 |
+| 2 | I Integration | `feat/tracker-i-integration` | waits for wave 1 |
+| 3 | Finish | `feat/activity-tracker` | waits for wave 2 |
 
 ## Next step
 
-Subplan 1, slice 17a: show the user the 17a plan (files, types, tests) before any code.
+Wave 0. Prompt: `Read PROGRESS.md. Do wave 0.`
 
 ## Key decisions (full list in the design page, Decisions tab)
 
@@ -59,7 +83,7 @@ Subplan 1, slice 17a: show the user the 17a plan (files, types, tests) before an
 - No repeating timers. Every wait goes through `upcomingDeadlines()`.
 - Tests first, with `EngineHarness` and fakes. No real waits.
 - Saved data changes follow `.claude/rules/storage.md` and `/data-migration`.
-- Commit on the branch at the end of each subplan. Ask before any push or merge to `main`.
+- 1 commit at the end of each wave 0 / track / wave 3 on its own branch. Ask before any push or merge to `main`.
 - `Feature.md` is the user's own notes. Never commit or delete it.
 - `/perf-check` installs the release build and runs it on the user's real data. Ask the user first.
 
