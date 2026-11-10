@@ -14,7 +14,7 @@ package enum ActivityMonthExporter {
                 item.kind.rawValue,
                 field(item.category ?? ""),
                 field(item.text),
-                item.awayPlace?.rawValue ?? ""
+                field(item.awayPlaceName ?? item.awayPlace?.rawValue ?? "")
             ].joined(separator: ",")
         }
         return ([header] + rows).map { $0 + "\n" }.joined()

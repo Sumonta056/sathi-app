@@ -91,10 +91,6 @@ extension Engine {
         requestTick()
     }
 
-    package func setAwayPlace(_ place: AwayPlace) {
-        pickAwayPlace(place)
-    }
-
     package func closeTrackerPrompt() {
         guard data.live.tracker.prompt != nil else { return }
         if let done = pendingDoneAt { endRunningActivity(at: done) }

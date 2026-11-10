@@ -20,11 +20,13 @@ extension Engine {
         s.defaultCalendarID = trackerDefaultCalendarID
         s.calendar = calendar
         s.askEveryMinutes = trackerPrefs.askEveryMinutes
+        s.shortcut = trackerPrefs.shortcut
         if let from = p.switchFrom { s.switchTimes = SwitchTimes.chips(from: from, to: n, calendar: calendar) }
         if kind == .stillOnIt { s.waitedMinutes = AskTime.waitedMinutes(shownAt: p.shownAt, now: n) }
         if kind == .welcomeBack {
             s.away = trackerRuntime.lastAway
             s.loggedWhileAway = trackerRuntime.loggedWhileAway
+            s.places = awayPlaces
         }
         if kind == .whatNow || kind == .center { s.runningEvent = unloggedRunningEvent() }
         fillEventAsk(&s)
@@ -70,6 +72,8 @@ extension Engine {
         a.backToLast = { [weak self] in self?.backToLastActivity() }
         a.iWasHere = { [weak self] in self?.iWasHere() }
         a.pickPlace = { [weak self] place in self?.setAwayPlace(place) }
+        a.pickPlaceName = { [weak self] name in self?.setAwayPlace(named: name) }
+        a.addPlace = { [weak self] name in self?.addAwayPlace(name) }
         a.notAttending = { [weak self] id in self?.notAttendingEvent(id) }
         a.answerEvent = { [weak self] yes in self?.answerEventAsk(yes) }
         a.pickEventCategory = { [weak self] name in self?.setEventCategory(name) }

@@ -5,7 +5,6 @@ struct WhatNowPopup: View {
     let state: TrackerPromptState
     @ObservedObject private var form: TrackerDraftForm
     @State private var picked: Date?
-    @State private var optionsOpen = false
 
     init(state: TrackerPromptState, form: TrackerDraftForm? = nil) {
         self.state = state
@@ -14,7 +13,8 @@ struct WhatNowPopup: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: UIMetrics.trackerPopupSpacing) {
+        let size = TrackerSize.corner
+        VStack(alignment: .leading, spacing: size.spacing) {
             TrackerHeader(icon: "pencil", eyebrow: eyebrow, title: Copywriter.trackerWhatAreYouDoingNow, detail: endsLine)
             if let resume = state.resume {
                 TrackerPrimaryButton(label: Copywriter.trackerContinue(resume.text), id: "tracker.continue") {
@@ -25,24 +25,17 @@ struct WhatNowPopup: View {
             LazyTextField(placeholder: Copywriter.trackerFieldPlaceholder, text: $form.draft.text, startsEditing: true, onSubmit: submit)
                 .modifier(QuickTextLimit(text: $form.draft.text, limit: Limits.activityTextMax))
                 .trackerField()
-            TrackerRecentChips(state: state, draft: form.draft, limit: Limits.recentInCorner) { state.actions.start($0, picked) }
-            TrackerForRow(draft: $form.draft)
-            TrackerCalendarRow(draft: $form.draft, calendars: state.calendars, defaultID: state.defaultCalendarID)
-            TrackerQuietRow(draft: $form.draft)
+            TrackerRecentMenu(state: state, draft: form.draft, compact: true) { state.actions.start($0, picked) }
+            TrackerOptionsBox(draft: $form.draft, state: state, compact: true)
             if state.showsSwitchRow {
                 TrackerSwitchRow(times: state.switchTimes, picked: $picked, calendar: state.calendar)
             }
-            TrackerSummaryLine(draft: form.draft, categories: state.categories, open: $optionsOpen)
-            if optionsOpen { TrackerOptionsPanel(draft: $form.draft, categories: state.categories) }
-            HStack(spacing: UIMetrics.trackerButtonSpacing) {
+            HStack(spacing: size.buttonGap) {
                 TrackerPrimaryButton(label: Copywriter.trackerStart, id: "tracker.start", action: start)
                 TrackerSecondaryButton(
-                    label: Copywriter.trackerSkip, id: "tracker.skip", width: UIMetrics.trackerSkipWidth
+                    label: Copywriter.trackerSkip, id: "tracker.skip", width: size.sideButton
                 ) { state.actions.skip(picked) }
             }
-            Text(verbatim: [Copywriter.trackerKeysOptions, Copywriter.trackerKeysStart, Copywriter.trackerKeysSkip].joined(separator: "   "))
-                .font(Typography.hint)
-                .foregroundStyle(Night.faint)
         }
         .trackerCornerCard()
         .onExitCommand { state.actions.skip(picked) }

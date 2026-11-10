@@ -10,6 +10,8 @@ package struct TrackerPromptActions {
     package var backToLast: @MainActor () -> Void = {}
     package var iWasHere: @MainActor () -> Void = {}
     package var pickPlace: @MainActor (AwayPlace) -> Void = { _ in }
+    package var pickPlaceName: @MainActor (String) -> Void = { _ in }
+    package var addPlace: @MainActor (String) -> Void = { _ in }
     package var notAttending: @MainActor (String) -> Void = { _ in }
     package var answerEvent: @MainActor (Bool) -> Void = { _ in }
     package var pickEventCategory: @MainActor (String) -> Void = { _ in }

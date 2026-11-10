@@ -70,9 +70,26 @@ struct TrackerRulesTests {
         #expect(got.first?.length == 20 * Timing.minute)
     }
 
-    @Test func recentsStopAtTheMax() {
-        let items = (0 ..< 8).map { Activity(text: "T\($0)", start: wed(9, $0 * 5), end: wed(9, $0 * 5 + 2)) }
-        #expect(RecentList.recents(items).count == Limits.recentMax)
+    @Test func theRecentMaxIsTen() {
+        #expect(Limits.recentMax == 10)
+    }
+
+    @Test func recentsStopAtTenAndKeepTheNewest() {
+        let items = (0 ..< 12).map { Activity(text: "T\($0)", start: wed(9, $0 * 5), end: wed(9, $0 * 5 + 2)) }
+        let got = RecentList.recents(items)
+        #expect(got.count == 10)
+        #expect(got.map(\.text) == ["T11", "T10", "T9", "T8", "T7", "T6", "T5", "T4", "T3", "T2"])
+    }
+
+    @Test func theSameTextWithAnotherCategoryIsASecondRecent() {
+        let items = [
+            Activity(text: "A", category: "Coding", start: wed(9), end: wed(9, 30)),
+            Activity(text: "A", category: "Review", start: wed(10), end: wed(10, 30)),
+            Activity(text: "A", category: "Coding", start: wed(11), end: wed(11, 30))
+        ]
+        let got = RecentList.recents(items)
+        #expect(got.map(\.text) == ["A", "A"])
+        #expect(got.map(\.category) == ["Coding", "Review"])
     }
 
     @Test func editCheckRefusesEmptyShortAndOverlap() {

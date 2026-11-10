@@ -17,6 +17,7 @@ struct TrackerMoreCard: View {
                     BuddySwitch(isOn: engine.trackerSound, accent: Night.tracker, label: Copywriter.trackerSoundLabel)
                         .accessibilityIdentifier("settings.tracker.sound")
                 }
+                TrackerPlacesRow()
             }
         }
     }

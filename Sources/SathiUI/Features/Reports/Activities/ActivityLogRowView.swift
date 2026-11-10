@@ -29,7 +29,7 @@ struct ActivityLogRowView: View {
             Circle()
                 .fill(isAway ? Night.trackerAway : ActivityColors.color(a.category, in: categories))
                 .frame(width: UIMetrics.dotSize, height: UIMetrics.dotSize)
-            Text(verbatim: isAway ? Copywriter.trackerAwayText(a.awayPlace) : a.text)
+            Text(verbatim: isAway ? a.awayText : a.text)
                 .font(Typography.rowLabel)
                 .foregroundStyle(isAway ? Night.muted : Night.text)
                 .lineLimit(1)

@@ -78,9 +78,9 @@ struct ActivityDatePicker: View {
                 VStack(spacing: 0) {
                     Text(verbatim: "\(number)")
                         .font(Typography.chip)
-                        .foregroundStyle(on ? Night.onAccent : Night.text)
+                        .foregroundStyle(on ? Night.trackerOnAccent : Night.text)
                     Circle()
-                        .fill(dotted.contains(key) ? (on ? Night.onAccent : Night.tracker) : .clear)
+                        .fill(dotted.contains(key) ? (on ? Night.trackerOnAccent : Night.tracker) : .clear)
                         .frame(width: UIMetrics.trackerPickerDot, height: UIMetrics.trackerPickerDot)
                 }
                 .frame(width: UIMetrics.trackerPickerCell, height: UIMetrics.trackerPickerCell)

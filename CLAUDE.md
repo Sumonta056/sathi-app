@@ -26,7 +26,7 @@ Sources/
     Habits/        HabitRules, HabitDays, DayClock, DayOffMonth, one folder per habit: Water/, Reading/, Meditation/, Gym/ (prefs, rules, helpers such as Weekday, BreathingPattern, BreathCue, BreathCues, GymIdeas, GymProgress)
     Quick/         QuickReminder, QuickPrefs, QuickTime, QuickActivity
     TimeBlock/     TimeBlock, TimeBlockLength, TimeBlockPrefs
-    Tracker/       Activity, ActivityKind, ActivityCategory(+List), ActivityDraft, ActivityEdit, ActivityDay, ActivityMonth, RunningActivity, AwayPlace, AwaySpan, TrackerPrefs(+Hours), TrackerLiveState, PromptKind, PromptState, TrackerPromptState, TrackerNote(+State), TrackerEndOfDayState, EventMode, KeyShortcut, MonthKey, Rules/ (AskTime, SwitchTimes, TrackerHours, RecentList, ActivityEditCheck), Calendar/ (EventRules, EventCategoryRule, SpanCut)
+    Tracker/       Activity, ActivityKind, ActivityCategory(+List), ActivityDraft, ActivityEdit, ActivityDay, AwayPlaceList, ActivityMonth, RunningActivity, AwayPlace, AwaySpan, TrackerPrefs(+Hours), TrackerLiveState, PromptKind, PromptState, TrackerPromptState, TrackerNote(+State), TrackerEndOfDayState, EventMode, KeyShortcut, MonthKey, Rules/ (AskTime, SwitchTimes, TrackerHours, RecentList, ActivityEditCheck), Calendar/ (EventRules, EventCategoryRule, SpanCut)
     Constants/     Timing, Limits, StorageKeys, SoundName
     Scheduling/    EscalationPolicy (bubble/lock), TickPlanner (timer delay)
     Stats/         Stats (daily totals), GymLegacyMinutes, StreakCalculator, ReportBuilder + Report, ReportScreen + ReportScreenInput, ReportScreenBuilder (+Tiles, +Chart, +Calendar, +Text), DaySummary
@@ -34,7 +34,7 @@ Sources/
     Formatting/    Fmt, Copywriter (+Reading, +Meditation, +Gym, +DaySummary, +Quick, +TimeBlock, +TimeBlockPopups, +TimeBlockSettings, +TimeBlockView)
     Ports/         Clock, StateStore, HistoryStore, SoundPlayer, SessionAudio, ReminderPresenter, FileExporter, SummaryRenderer, CalendarWriter (+CalendarEventInfo, event read), LinkOpener, ActivityStore, PresenceMonitor, HotkeyRegistrar
     Storage/       JSONFiles, FileSlot, FileStateStore, FileHistoryStore, FileActivityStore, MonthEvents, MonthActivities, RawJSON, LegacyMigrator, Legacy/ (v1 shapes)
-    Engine/        Engine (+Loop, +Actions, +Session, +SessionPause, +SessionRestore, +Breath, +Corner, +Display, +Menu, +History, +Reports, +Export, +DaySummary, +Quick, +QuickLoop, +TimeBlock, +TimeBlockLoop, +TimeBlockCalendar, +TimeBlockDisplay, +TimeBlockMenu, +Tracker* (API, Loop, Log, Away, Hooks, Runtime, PromptState, Categories, ReportAPI, Export, Calendar, CalendarRead, CalendarTick, CalendarWrite, CalendarAway, CalendarRuntime)), StatusModel
+    Engine/        Engine (+Loop, +Actions, +Session, +SessionPause, +SessionRestore, +Breath, +Corner, +Display, +Menu, +History, +Reports, +Export, +DaySummary, +Quick, +QuickLoop, +TimeBlock, +TimeBlockLoop, +TimeBlockCalendar, +TimeBlockDisplay, +TimeBlockMenu, +Tracker* (API, Loop, Log, Away, Places, Hooks, Runtime, PromptState, Categories, ReportAPI, Export, Calendar, CalendarRead, CalendarTick, CalendarWrite, CalendarAway, CalendarRuntime)), StatusModel
   SathiUI/       SwiftUI + AppKit. Views and windows only.
     Constants/     UIMetrics (+Bubble, +Components, +Corner, +Lock, +Meditation, +Breath, +Menu, +Quick, +Reports, +Settings, +TimeBlock, +TimeBlockSettings), TimeSlots
     Theme/         NightPalette (Night tokens), Typography, ButtonStyles, GhostButton, ProgressBar, Shake, ShakeSound, Color+Hex, BreathFont, RGB

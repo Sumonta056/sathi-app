@@ -32,14 +32,17 @@ struct CopywriterTrackerTests {
     @Test func askOffsetLabels() {
         #expect(Copywriter.trackerAskOffsetLabel(0) == "When it ends")
         #expect(Copywriter.trackerAskOffsetLabel(5) == "5 min after")
-        #expect(Copywriter.trackerSummary(category: "Coding", askOffsetMinutes: 0) == "Coding · ask when it ends")
-        #expect(Copywriter.trackerSummary(category: nil, askOffsetMinutes: 15) == "No category · ask 15 min after")
+        #expect(Copywriter.trackerAskOffsetLabel(15) == "15 min after")
+    }
+
+    @Test(arguments: [(0, "When it ends"), (5, "+5 min"), (15, "+15 min")])
+    func shortAskOffsetLabels(minutes: Int, text: String) {
+        #expect(Copywriter.trackerAskOffsetShort(minutes) == text)
     }
 
     @Test func promptLines() {
         #expect(Copywriter.trackerYesMore(15) == "Yes, 15 min more")
         #expect(Copywriter.trackerWaited(50) == "This question waited 50 min.")
-        #expect(Copywriter.trackerBackTo("Code review") == "Back to Code review")
         #expect(Copywriter.trackerContinue("Client work") == "Continue Client work")
         #expect(Copywriter.trackerEventAsk("Client meeting") == "Client meeting started. Log it?")
         #expect(Copywriter.trackerAlsoNow("Retro") == "Also now: Retro")
@@ -50,6 +53,7 @@ struct CopywriterTrackerTests {
         #expect(Copywriter.trackerShortcut(s) == "⌥⌘Space")
         let all = KeyShortcut(keyCode: 40, modifiers: Set(KeyModifier.allCases), keyName: "K")
         #expect(Copywriter.trackerShortcut(all) == "⌃⌥⇧⌘K")
+        #expect(Copywriter.trackerShortcut(.trackerDefault) == "⌃⌥⌘Space")
     }
 
     @Test func standupAndMonthLines() {

@@ -13,15 +13,23 @@ extension Copywriter {
     package static let trackerStart = "Start"
     package static let trackerSkip = "Skip"
     package static let trackerCalendarNote = "Birthdays, Holidays, and subscribed calendars are not shown."
-    package static let trackerKeysOptions = "⇥ options"
-    package static let trackerKeysStart = "⏎ start"
-    package static let trackerKeysSkip = "esc skip"
-    package static let trackerOrAskIn = "or ask in"
-    package static let trackerDone = "Done"
+    package static let trackerRecent = "Recent"
+    package static let trackerCheck = "✓"
+    package static let trackerEnterKey = "↵"
+    package static let trackerRecentHint = "Pick from your last \(Limits.recentMax)"
+    package static let trackerRecentHeader = "Last \(Limits.recentMax) · newest first"
+    package static let trackerOrMore = "Or more"
+    package static let trackerWelcomeKeys = "↵ continue · esc keep as Away"
+    package static let trackerWelcomeEsc = "esc keep as Away"
+    package static let trackerNoteCloses = "Logged now · this note closes in \(Int(Timing.eventNoteShow / Timing.minute)) min"
     package static let trackerStillOnIt = "Still on it"
     package static let trackerDonePick = "Done · pick when you switched"
-    package static let trackerWelcomeBack = "Welcome back. What now?"
-    package static let trackerSomethingNew = "Something new"
+    package static let trackerWelcomeBack = "Welcome back. Where were you?"
+    package static let trackerWhatNow = "What now?"
+    package static let trackerStartSomethingNew = "Start something new"
+    package static let trackerAddPlace = "Add"
+    package static let trackerNewPlace = "New place"
+    package static let trackerPlaceKept = "Sathi keeps this place as a chip. Remove it in Settings → Activity tracker."
     package static let trackerIWasHere = "I was here"
     package static let trackerWhereWereYou = "Where were you?"
     package static let trackerWhileAway = "WHILE YOU WERE AWAY"
@@ -48,8 +56,16 @@ extension Copywriter {
         text + " ends at " + trackerClock(time, calendar: calendar) + (isNow ? " (now)." : ".")
     }
 
-    package static func trackerQuietUntil(_ time: Date, calendar: Calendar) -> String {
-        "quiet until " + trackerClock(time, calendar: calendar)
+    package static func trackerUntil(_ time: Date, calendar: Calendar) -> String {
+        "until " + trackerClock(time, calendar: calendar)
+    }
+
+    package static func trackerCenterKeys(_ shortcut: String?) -> String {
+        "↵ start · esc close" + (shortcut.map { " · " + $0 + " from anywhere" } ?? "")
+    }
+
+    package static func trackerStillSoFarEyebrow(_ minutes: Int) -> String {
+        "STILL ON IT? · \(minutes) MIN SO FAR"
     }
 
     package static func trackerContinue(_ text: String) -> String { "Continue " + text }
@@ -69,10 +85,12 @@ extension Copywriter {
 
     package static func trackerAwayEyebrow(_ start: Date, _ end: Date, calendar: Calendar) -> String {
         let minutes = trackerDuration(end.timeIntervalSince(start)).uppercased()
-        return "AWAY · " + trackerSpan(start, end, calendar: calendar) + " · " + minutes
+        return "AWAY " + trackerSpan(start, end, calendar: calendar) + " · " + minutes
     }
 
-    package static func trackerBackTo(_ text: String) -> String { "Back to " + text }
+    package static func trackerAwaySaved(_ start: Date, _ end: Date, place: String?, calendar: Calendar) -> String {
+        "Sathi saves " + trackerSpan(start, end, calendar: calendar) + " as " + trackerAway + (place.map { " · " + $0 } ?? "")
+    }
 
     package static func trackerFromCalendar(_ time: Date, calendar: Calendar) -> String {
         "FROM YOUR CALENDAR · " + trackerClock(time, calendar: calendar)

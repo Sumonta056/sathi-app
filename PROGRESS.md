@@ -62,7 +62,7 @@ Base branch: `feat/activity-tracker` (local; not pushed). Track branches and wor
 
 ## Next step
 
-**Popup redesign (next session):** follow `docs/specs/phase-17-popup-redesign.md` (light red, every option visible, Recent and Category dropdowns with 10 items). Prompt: `Read PROGRESS.md and docs/specs/phase-17-popup-redesign.md. Do the popup redesign.`
+**Popup redesign: done** (branch `feat/tracker-popup-redesign`, merged). Light red accent, Recent and Category dropdowns, every option visible, new Welcome back popup (reason first, user-made places). Open: hand test of the 2 dropdowns in the corner popups with another app in front and in light mode (they use a SwiftUI popover inside a non-activating panel).
 
 Wave 3 code, docs, and website are done. The user does these steps before the merge to `main`:
 1. `./build.sh --install`, then `./scripts/perf.sh` and `./scripts/perf.sh --windows` in Terminal (G53). They use the real data.
@@ -101,9 +101,11 @@ Wave 3 code, docs, and website are done. The user does these steps before the me
 | 2026-11-10 | Wave 1 (local, 6 parallel subagents in worktrees) | T1–T6 built test-first, each reviewed; fix rounds: T1 2, T3 1, T4 1, T5 1, T6 1. Merged in order T2 → T1 → T3 → T4 → T5 → T6 with `--no-ff`, no conflict; tests and lint after each merge. 1648 + 898 tests pass, lint OK, release build OK. Worktrees and track branches removed. | `b9896a8` |
 | 2026-11-10 | Wave 2 (local, 2 parallel subagents in worktrees) | C and I built test-first, each reviewed; 1 fix round each (C: 2 Important, 3 Minor; I: 5 Important, 3 Minor). Merged C → I with `--no-ff`, no conflict. At merge: `fillEventAsk` and `closeEventNote` wired with `TrackerCalendarWiringTests`. 1721 + 921 tests pass, lint OK, release build OK. Worktrees and track branches removed. | `e238fcf` |
 | 2026-11-10 | Wave 3 (local, subagents) | Goal review of all 70 goals (2 reviewers). User decisions: an event activity runs through Away (rule 22a), Away rows get Edit/Delete (33a), edits across midnight are refused (33b), Meeting color C9B8FF, all other wave 1–2 calls accepted and the spec reworded. 3 parallel fix tracks (W3-A Away and Done incl. the Done-time data-loss blocker, W3-B prompts and calendar incl. late C, W3-C report), merged A → B → C with no conflict, then 1 review fix round (2 Important, 4 Minor). CLAUDE.md, README, website (4 tracker screenshots), "never reads your events" removed. 1781 + 937 tests pass, lint OK, release build OK. | this commit |
+| 2026-11-10 | Popup redesign (local, subagents) | Spec `phase-17-popup-redesign.md`: tracker accent `#FF8A80`, `Limits.recentMax` 10, Recent and Category dropdowns, options box in A and B, new C, F, ask-first. Then by user request: Welcome back v2 (step 1 "Where were you?", step 2 "What now?"), the place chip defect (a pick now shows and is saved also with no stored Away item), user-made Away places (`TrackerPrefs.awayPlaces`, `Activity.awayPlaceName`, Settings row "Away places"). 1 review round (no blocker). Website: 4 tracker screenshots, `--tracker` color. 1891 + 1044 tests pass, lint OK, release build OK. | this commit |
 
 ## Open items
 
 - User checks before the merge (see Next step).
+- Popup redesign follow-ups: hand test of the dropdown popovers; the B key hint shows the saved shortcut also when macOS refused to register it; "until" and "min so far" texts do not update while a popup stays open; a category named "menu" or "none" shares an accessibility identifier with the dropdown.
 - Still deferred (tracker phase 2): the backup leaves out activity items that this version cannot decode; the global shortcut stays active while the user records a new one; no "input again" presence event, so D can show up to 60 s late after an idle Away; duplicate ids in 1 month file share extra keys; turning on a break during an Away that keeps an event does not end the event.
 - Google Search Console: submit `sitemap.xml` again after the site deploys.
