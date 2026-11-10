@@ -6,4 +6,11 @@ struct TrackerRuntime: Equatable {
     var presenceStarted = false
     var registeredShortcut: KeyShortcut?
     var reportDay: DayKey?
+    var whatNowAt: Date?
+    var screenLocked = false
+    var asleep = false
+    var lastAway: AwaySpan?
+    var awayItems: [ActivityID] = []
+    var endedByAway: RunningActivity?
+    var loggedWhileAway: [Activity] = []
 }
