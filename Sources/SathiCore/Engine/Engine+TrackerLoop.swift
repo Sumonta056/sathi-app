@@ -97,21 +97,28 @@ extension Engine {
         let midnight = calendar.nextDay(after: r.start)
         guard n >= midnight else { return }
         endRunningOnInterrupt(at: min(r.confirmedUntil, midnight), interrupt: midnight)
-        if trackerHours.isTrackerDay(r.start) { trackerRuntime.endOfDayDue = DayKey(r.start, calendar: calendar) }
+        if trackerPrefs.endOfDayOn, trackerHours.isTrackerDay(r.start) { trackerRuntime.endOfDayDue = DayKey(r.start, calendar: calendar) }
         if data.live.tracker.prompt?.kind == .stillOnIt || data.live.tracker.prompt?.switchFrom != nil { clearTrackerPrompt() }
     }
 
     private func showTrackerEndOfDayIfDue(_ n: Date) {
+        let today = DayKey(n, calendar: calendar)
+        dropStaleEndOfDay(n)
         guard trackerPrefs.endOfDayOn, !trackerRuntime.endOfDayShowing, data.live.tracker.running == nil,
               !isAnyLockShowing else { return }
         if let due = trackerRuntime.endOfDayDue {
             trackerRuntime.endOfDayDue = nil
             if data.live.tracker.lastEndOfDay != due { return showTrackerEndOfDay(for: due) }
         }
-        let today = DayKey(n, calendar: calendar)
         guard trackerHours.isTrackerDay(n), data.live.tracker.lastEndOfDay != today,
               n >= trackerHours.hours(on: n).end else { return }
         showTrackerEndOfDay(for: today)
+    }
+
+    private func dropStaleEndOfDay(_ n: Date) {
+        let oldest = DayKey(calendar.previousDay(before: n), calendar: calendar)
+        guard let due = trackerRuntime.endOfDayDue, !trackerPrefs.endOfDayOn || due < oldest else { return }
+        trackerRuntime.endOfDayDue = nil
     }
 
     private func showTrackerEndOfDay(for day: DayKey) {

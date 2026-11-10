@@ -47,24 +47,6 @@ extension Engine {
         return true
     }
 
-    func makeRoomForEvent(_ e: CalendarEventInfo) {
-        let span = DateInterval(start: e.start, end: max(e.start, min(e.end, clock.now)))
-        for item in storedActivities(on: e.start) where item.start < span.end && item.end > span.start {
-            if item.kind == .away {
-                trackerRuntime.awayItems.removeAll { $0 == item.id }
-                removeStoredActivity(item.id)
-                for piece in SpanCut.cut(item.interval, removing: [span]) {
-                    storeActivity(Activity(kind: .away, text: item.text, start: piece.start, end: piece.end, awayPlace: item.awayPlace))
-                }
-            } else if item.kind == .work, item.start < span.start {
-                var trimmed = item
-                trimmed.end = span.start
-                removeStoredActivity(item.id)
-                storeActivity(calendarActivityEdited(from: item, to: trimmed))
-            }
-        }
-    }
-
     private func logAwayEvent(_ e: CalendarEventInfo, until end: Date, final: Bool) -> Activity {
         if trackerRuntime.endedByAway?.sourceEventID == e.id { trackerRuntime.endedByAway = nil }
         let pick = eventCategory(e)

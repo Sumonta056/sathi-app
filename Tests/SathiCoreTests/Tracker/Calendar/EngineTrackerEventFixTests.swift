@@ -25,8 +25,8 @@ struct EngineTrackerEventFixTests {
         h.engine.tick()
         #expect(h.promptKind == .eventAsk)
         h.engine.answerEventAsk(true)
-        #expect(h.running?.sourceEventID == "m1")
-        #expect(h.running?.start == wed(10, 30))
+        #expect(h.running == nil)
+        #expect(h.eventItems.map { [$0.start, $0.end] } == [[wed(10, 30), wed(11)]])
         #expect(h.saved.first { $0.text == "Spec" }?.end == wed(10, 30))
         #expect(awayItems(h) == [[wed(11), wed(11, 15)]])
     }

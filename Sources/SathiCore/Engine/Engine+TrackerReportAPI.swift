@@ -35,6 +35,7 @@ extension Engine {
         guard let old = storedActivity(id), old.kind != .timeBlock else { return .notFound }
         let edit = old.kind == .away ? awayEdit(edit.wholeSeconds) : edit.wholeSeconds
         if let problem = ActivityEditCheck.problem(edit, others: busySpans(near: edit, except: id), calendar: calendar) { return problem }
+        if edit.end > clock.now { return .inFuture }
         var new = old
         new.text = ActivityText.clean(edit.text) ?? old.text
         new.start = edit.start

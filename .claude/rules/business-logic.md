@@ -191,7 +191,7 @@ Full rules are in `docs/specs/phase-17-activity-tracker.md`.
 2. It asks only inside tracker hours, on tracker days, with no break, no time block, and no full-screen lock showing.
 3. Prompts A (corner, What now?), C (corner, Still on it?), B (center, shortcut or menu), D (center, after Away). None goes away by itself. A and C never take the keyboard unless the user clicks in them.
 4. Done in C opens A with a "Started" row (switch time): 5-minute chips from the last answer time to now, default Now. The picked time ends the old activity and starts the new one. Unconfirmed time is never added to an activity.
-5. Away (lock, sleep, lid, idle limit) ends the activity. An activity from a calendar event runs on through Away to the earlier of the event end and the return. Not logged is never stored.
+5. Away (lock, sleep, lid, idle limit) ends the activity. An activity from a calendar event runs on through Away to the earlier of the event end and the return. A buddy session activity runs on through Away while its session exists (no D during the session). Not logged is never stored.
 6. Activities never cross midnight. The end-of-day popup shows 1 time a day.
 7. Calendar events (opt-in, ticked calendars only): at an event start Sathi logs it and shows a 1-min note (or asks first, by setting). While away it logs it with no question and shows it in D. It skips all-day, declined, and Sathi-written events; Free events count. Category: the last pick for that event title, else the calendar's category (default: the calendar name).
 8. Buddy sessions (reading, breathing, gym) end the running activity and log their own. No prompt asks during a session. When a session ends, A asks with a "Continue {last activity}" button. Water and quick reminders make no activity.

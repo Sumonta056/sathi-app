@@ -11,6 +11,7 @@ struct TrackerRuntime: Equatable {
     var promptByUser = false
     var sessionTimedOut = false
     var whatNowAt: Date?
+    var lateShownFor: Date?
     var screenLocked = false
     var asleep = false
     var away = TrackerAwayDetails()

@@ -62,7 +62,7 @@ struct EngineTrackerReportEditTests {
     }
 
     @Test func anEditThatEndsAtMidnightIsSaved() {
-        let h = harness()
+        let h = EngineHarness.tracker(at: day(2026, 3, 5, 9), activities: [work, away, block])
         let edit = ActivityEdit(text: "Spec", category: nil, start: wed(23), end: day(2026, 3, 5))
         #expect(h.engine.editActivity(work.id, edit) == .saved(work.id))
     }

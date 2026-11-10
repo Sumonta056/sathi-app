@@ -11,8 +11,14 @@ extension Engine {
         beginBuddyActivity(id, at: n)
     }
 
+    func trackerSessionResumed() {
+        guard trackerPrefs.isOn, data.live.tracker.awayCause == .idle else { return }
+        returnFromAway(at: clock.now)
+    }
+
     func trackerSessionEnded(_ id: HabitID) {
         guard trackerPrefs.isOn else { return }
+        trackerSessionResumed()
         let n = clock.now
         data.live.tracker.lastInput = n.wholeSecond
         let other = HabitID.allCases.first { $0 != id && session($0) != nil }
