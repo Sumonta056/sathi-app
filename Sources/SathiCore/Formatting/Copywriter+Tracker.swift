@@ -54,8 +54,8 @@ extension Copywriter {
         }
     }
 
-    package static func trackerAwayText(_ place: AwayPlace?) -> String {
-        place.map { trackerAway + " · " + trackerAwayPlace($0) } ?? trackerAway
+    package static func trackerAwayText(_ place: AwayPlace?, name: String? = nil) -> String {
+        (name ?? place.map(trackerAwayPlace)).map { trackerAway + " · " + $0 } ?? trackerAway
     }
 
     package static func trackerBuddyText(_ id: HabitID, detail: String?) -> String {

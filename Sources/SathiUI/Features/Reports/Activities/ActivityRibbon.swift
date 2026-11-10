@@ -77,7 +77,7 @@ struct ActivityRibbon: View {
     private func label(_ segment: ActivitySegment) -> String {
         switch segment.kind {
         case .work: return segment.activity?.text ?? ""
-        case .away: return Copywriter.trackerAwayText(segment.activity?.awayPlace)
+        case .away: return segment.activity?.awayText ?? Copywriter.trackerAway
         case .notLogged: return Copywriter.trackerNotLogged
         }
     }

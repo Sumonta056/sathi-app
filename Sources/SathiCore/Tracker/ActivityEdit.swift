@@ -6,13 +6,15 @@ package struct ActivityEdit: Equatable, Sendable {
     package var start: Date
     package var end: Date
     package var awayPlace: AwayPlace?
+    package var awayPlaceName: String?
 
-    package init(text: String, category: String?, start: Date, end: Date, awayPlace: AwayPlace? = nil) {
+    package init(text: String, category: String?, start: Date, end: Date, awayPlace: AwayPlace? = nil, awayPlaceName: String? = nil) {
         self.text = text
         self.category = category
         self.start = start
         self.end = end
         self.awayPlace = awayPlace
+        self.awayPlaceName = awayPlace == .other ? awayPlaceName : nil
     }
 
     var wholeSeconds: ActivityEdit {

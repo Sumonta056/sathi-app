@@ -90,7 +90,7 @@ struct TrackerMenuCard: View {
                     pencil
                     Text(verbatim: Copywriter.trackerLogActivity).font(Typography.chip)
                 }
-                .foregroundStyle(Night.onAccent)
+                .foregroundStyle(Night.trackerOnAccent)
                 .padding(.horizontal, UIMetrics.chipPadding)
                 .frame(height: UIMetrics.trackerMenuDoneHeight)
                 .background(Pill().fill(Night.tracker))

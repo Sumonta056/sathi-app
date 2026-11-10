@@ -43,7 +43,6 @@ struct CopywriterTrackerTests {
     @Test func promptLines() {
         #expect(Copywriter.trackerYesMore(15) == "Yes, 15 min more")
         #expect(Copywriter.trackerWaited(50) == "This question waited 50 min.")
-        #expect(Copywriter.trackerBackTo("Code review") == "Back to Code review")
         #expect(Copywriter.trackerContinue("Client work") == "Continue Client work")
         #expect(Copywriter.trackerEventAsk("Client meeting") == "Client meeting started. Log it?")
         #expect(Copywriter.trackerAlsoNow("Retro") == "Also now: Retro")

@@ -71,7 +71,7 @@ struct WelcomeBackRedesignTests {
         let sut = try WelcomeBackView(state: state()).inspect()
         let span = Copywriter.trackerSpan(start, Prompt.now, calendar: Prompt.calendar)
         #expect(Prompt.hasText(sut, "AWAY " + span + " · 45 MIN"))
-        #expect(Prompt.hasText(sut, "Welcome back. What now?"))
+        #expect(Prompt.hasText(sut, "Welcome back. Where were you?"))
     }
 
     @Test func somethingNewAndIWasHereShareOneRowAfterIdle() throws {
@@ -84,17 +84,17 @@ struct WelcomeBackRedesignTests {
             == ["tracker.back", "tracker.new", "tracker.here"])
     }
 
-    @Test func whereWereYouIsMarkedOptional() throws {
+    @Test func whereWereYouIsAStepAndIsNotMarkedOptional() throws {
         let sut = try WelcomeBackView(state: state()).inspect()
         #expect(Prompt.hasText(sut, "Where were you?"))
-        #expect(Prompt.hasText(sut, "· optional"))
+        #expect(!Prompt.texts(sut).contains { $0.localizedCaseInsensitiveContains("optional") })
         for place in AwayPlace.choices {
             #expect(Prompt.has(sut, "tracker.place." + place.rawValue))
         }
     }
 
-    @Test func theKeyHintNamesEnterAndEsc() throws {
+    @Test func theKeyHintNamesContinueAndEsc() throws {
         let sut = try WelcomeBackView(state: state()).inspect()
-        #expect(Prompt.hasText(sut, "↵ back to it · esc keep as Away"))
+        #expect(Prompt.hasText(sut, "↵ continue · esc keep as Away"))
     }
 }

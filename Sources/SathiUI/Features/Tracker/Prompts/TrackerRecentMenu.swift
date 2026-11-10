@@ -36,6 +36,7 @@ struct TrackerRecentMenu: View {
         .buttonStyle(TrackerPressStyle())
         .opacity(isEmpty ? UIMetrics.trackerDisabledOpacity : 1)
         .allowsHitTesting(!isEmpty)
+        .disabled(isEmpty)
         .popover(isPresented: $isOpen, arrowEdge: .bottom) { list }
     }
 

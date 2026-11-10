@@ -42,6 +42,7 @@ extension Engine {
         new.end = edit.end
         if old.kind == .away {
             new.awayPlace = edit.awayPlace
+            new.awayPlaceName = edit.awayPlaceName
         } else {
             new.category = edit.category
             new = calendarActivityEdited(from: old, to: new)
@@ -62,7 +63,10 @@ extension Engine {
     }
 
     private func awayEdit(_ edit: ActivityEdit) -> ActivityEdit {
-        ActivityEdit(text: Copywriter.trackerAwayText(edit.awayPlace), category: nil, start: edit.start, end: edit.end, awayPlace: edit.awayPlace)
+        ActivityEdit(
+            text: Copywriter.trackerAwayText(edit.awayPlace, name: edit.awayPlaceName), category: nil,
+            start: edit.start, end: edit.end, awayPlace: edit.awayPlace, awayPlaceName: edit.awayPlaceName
+        )
     }
 
     package func deleteActivity(_ id: ActivityID) {

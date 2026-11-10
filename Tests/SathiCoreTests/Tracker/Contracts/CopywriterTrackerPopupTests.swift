@@ -16,7 +16,6 @@ struct CopywriterTrackerPopupTests {
     @Test func shortLabels() {
         #expect(Copywriter.trackerOrMore == "Or more")
         #expect(Copywriter.trackerNoCategory == "No category")
-        #expect(Copywriter.trackerOptional == "· optional")
         #expect(Copywriter.trackerDonePick == "Done · pick when you switched")
     }
 
@@ -65,6 +64,6 @@ struct CopywriterTrackerPopupTests {
     }
 
     @Test func welcomeKeys() {
-        #expect(Copywriter.trackerWelcomeKeys == "↵ back to it · esc keep as Away")
+        #expect(Copywriter.trackerWelcomeKeys == "↵ continue · esc keep as Away")
     }
 }

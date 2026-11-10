@@ -21,13 +21,14 @@ package struct TrackerPrefs: Codable, Equatable, Sendable {
     package var eventMode: EventMode = .logAndTell
     package var categoryByCalendar: [String: String] = [:]
     package var eventCategoryByTitle: [String: String] = [:]
+    package var awayPlaces: [String] = []
 
     package init() {}
 
     enum CodingKeys: String, CodingKey {
         case isOn, startMinutes, endMinutes, weekdays, daysOff, askEveryMinutes, usualLength, idleMinutes, categories
         case calendarOnByDefault, defaultCalendarID, shortcut, endOfDayOn, playsSound, readsEvents, quietByDefault
-        case readCalendarIDs, eventMode, categoryByCalendar, eventCategoryByTitle
+        case readCalendarIDs, eventMode, categoryByCalendar, eventCategoryByTitle, awayPlaces
     }
 
     package var days: HabitDays { HabitDays(weekdays: weekdays, daysOff: daysOff) }
@@ -61,6 +62,7 @@ extension TrackerPrefs {
         eventMode = (try? c.known(.eventMode, or: d.eventMode)) ?? d.eventMode
         categoryByCalendar = c.lenient(.categoryByCalendar, or: d.categoryByCalendar)
         eventCategoryByTitle = c.lenient(.eventCategoryByTitle, or: d.eventCategoryByTitle)
+        awayPlaces = AwayPlaceList.clean(c.lenientArray(.awayPlaces))
     }
 
     package func encode(to encoder: Encoder) throws {
@@ -85,6 +87,7 @@ extension TrackerPrefs {
         try c.encode(eventMode, forKey: .eventMode)
         try c.encode(categoryByCalendar, forKey: .categoryByCalendar)
         try c.encode(eventCategoryByTitle, forKey: .eventCategoryByTitle)
+        try c.encode(awayPlaces, forKey: .awayPlaces)
     }
 
     private static func validTime(_ minutes: Int, or fallback: Int) -> Int {

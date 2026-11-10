@@ -11,6 +11,7 @@ package struct Activity: Codable, Equatable, Identifiable, Sendable {
     package var calendarID: String?
     package var eventID: String?
     package var sourceEventID: String?
+    package var awayPlaceName: String?
 
     package init(
         id: ActivityID = ActivityID(),
@@ -22,7 +23,8 @@ package struct Activity: Codable, Equatable, Identifiable, Sendable {
         awayPlace: AwayPlace? = nil,
         calendarID: String? = nil,
         eventID: String? = nil,
-        sourceEventID: String? = nil
+        sourceEventID: String? = nil,
+        awayPlaceName: String? = nil
     ) {
         self.id = id
         self.kind = kind
@@ -34,10 +36,12 @@ package struct Activity: Codable, Equatable, Identifiable, Sendable {
         self.calendarID = calendarID
         self.eventID = eventID
         self.sourceEventID = sourceEventID
+        self.awayPlaceName = awayPlaceName
     }
 
     package var length: TimeInterval { end.timeIntervalSince(start) }
     package var interval: DateInterval { DateInterval(start: start, end: max(start, end)) }
+    package var awayText: String { Copywriter.trackerAwayText(awayPlace, name: awayPlaceName) }
 }
 
 extension Activity {
@@ -53,5 +57,6 @@ extension Activity {
         calendarID = c.lenient(.calendarID, or: String?.none)
         eventID = c.lenient(.eventID, or: String?.none)
         sourceEventID = c.lenient(.sourceEventID, or: String?.none)
+        awayPlaceName = c.lenient(.awayPlaceName, or: String?.none)
     }
 }

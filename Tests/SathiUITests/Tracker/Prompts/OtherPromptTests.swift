@@ -104,7 +104,7 @@ struct WelcomeBackViewTests {
     @Test func backToLastAndPlaceChips() throws {
         let calls = PromptCalls()
         let sut = try WelcomeBackView(state: state(calls)).inspect()
-        #expect(throws: Never.self) { try sut.find(text: "Back to Coding") }
+        #expect(throws: Never.self) { try sut.find(text: "Continue Coding") }
         try Prompt.tap(sut, "tracker.back")
         try Prompt.tap(sut, "tracker.place.lunch")
         #expect(calls.calls == ["back"])

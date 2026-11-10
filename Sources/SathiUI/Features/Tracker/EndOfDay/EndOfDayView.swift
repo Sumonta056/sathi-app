@@ -43,7 +43,7 @@ struct EndOfDayView: View {
                 copy(ActivityStandupText.make(state.day, calendar: state.calendar))
                 copied = true
             }
-            .buttonStyle(AccentButton(accent: Night.tracker))
+            .buttonStyle(AccentButton(accent: Night.tracker, text: Night.trackerOnAccent))
             Button(Copywriter.trackerOpenFullReport) { state.openReport() }.buttonStyle(GhostButton(accent: Night.tracker))
             Button(Copywriter.trackerPlayAgain) { playID += 1 }.buttonStyle(GhostButton(accent: Night.muted))
             Spacer(minLength: 0)

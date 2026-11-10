@@ -68,7 +68,6 @@ struct TrackerSize {
     )
 
     var chipFont: CGFloat { label }
-    var hint: CGFloat { UIMetrics.trackerHintFont }
 }
 
 extension UIMetrics {
@@ -113,4 +112,9 @@ extension UIMetrics {
     static let trackerNoteButtonRadius: CGFloat = 10
     static let trackerNoteRowGap: CGFloat = 8
     static let trackerPressedOpacity: Double = 0.85
+    static let trackerPlaceFieldHeight: CGFloat = 34
+    static let trackerPlaceFieldRadius: CGFloat = 10
+    static let trackerPlaceSaveWidth: CGFloat = 64
+    static let trackerRemoveIcon: CGFloat = 9
+    static let trackerAddDash: [CGFloat] = [3, 3]
 }

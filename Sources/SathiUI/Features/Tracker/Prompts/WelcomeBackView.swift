@@ -3,11 +3,13 @@ import SwiftUI
 
 struct WelcomeBackView: View {
     let state: TrackerPromptState
+    @ObservedObject private var form: WelcomeForm
     @State private var draft: ActivityDraft
     @State private var somethingNew = false
 
-    init(state: TrackerPromptState) {
+    init(state: TrackerPromptState, form: WelcomeForm? = nil) {
         self.state = state
+        self.form = form ?? WelcomeForm(state)
         _draft = State(initialValue: state.draft)
     }
 
@@ -15,9 +17,11 @@ struct WelcomeBackView: View {
         let size = TrackerSize.center
         VStack(alignment: .leading, spacing: UIMetrics.trackerWelcomeSpacing) {
             TrackerHeader(icon: "house", eyebrow: eyebrow, title: Copywriter.trackerWelcomeBack, compact: false)
+            WelcomePlaces(state: state, form: form)
+            WelcomeStep(number: 2, text: Copywriter.trackerWhatNow)
             if let last = state.lastActivity {
                 TrackerPrimaryButton(
-                    label: Copywriter.trackerBackTo(last.text), id: "tracker.back", height: size.buttonHeight,
+                    label: Copywriter.trackerContinue(last.text), id: "tracker.back", height: size.buttonHeight,
                     radius: size.buttonRadius, font: size.button, dot: true, key: Copywriter.trackerEnterKey
                 ) { state.actions.backToLast() }
                     .keyboardShortcut(.defaultAction)
@@ -28,15 +32,14 @@ struct WelcomeBackView: View {
                         .modifier(QuickTextLimit(text: $draft.text, limit: Limits.activityTextMax))
                         .trackerField()
                 } else {
-                    row(Copywriter.trackerSomethingNew, "tracker.new") { somethingNew = true }
+                    row(Copywriter.trackerStartSomethingNew, "tracker.new") { somethingNew = true }
                 }
                 if state.away?.fromIdle == true {
                     row(Copywriter.trackerIWasHere, "tracker.here") { state.actions.iWasHere() }
                 }
             }
-            WelcomePlaces(state: state)
             if !state.loggedWhileAway.isEmpty { WelcomeWhileAway(state: state) }
-            TrackerHint(text: Copywriter.trackerWelcomeKeys)
+            TrackerHint(text: state.lastActivity == nil ? Copywriter.trackerWelcomeEsc : Copywriter.trackerWelcomeKeys)
         }
         .trackerCenterCard(width: UIMetrics.trackerWelcomeCard)
         .onExitCommand { state.actions.close() }
@@ -57,5 +60,20 @@ struct WelcomeBackView: View {
     private func start() {
         guard let committed = draft.committed else { return }
         state.actions.start(committed, nil)
+    }
+}
+
+struct WelcomeStep: View {
+    let number: Int
+    let text: String
+
+    var body: some View {
+        HStack(spacing: UIMetrics.trackerChipSpacing) {
+            Text(verbatim: "\(number)").foregroundStyle(Night.tracker)
+            Text(verbatim: "·").foregroundStyle(Night.label)
+            Text(verbatim: text).foregroundStyle(Night.label)
+        }
+        .font(Typography.tracker(UIMetrics.trackerPillFont, .bold))
+        .accessibilityElement(children: .combine)
     }
 }

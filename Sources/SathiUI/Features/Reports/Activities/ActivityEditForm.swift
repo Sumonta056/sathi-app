@@ -31,7 +31,7 @@ struct ActivityEditForm: View {
                 Button(Copywriter.trackerCancel) { close() }
                     .buttonStyle(GhostButton(accent: Night.muted, height: UIMetrics.trackerMiniButton))
                 Button(Copywriter.trackerSave) { submit() }
-                    .buttonStyle(AccentButton(accent: Night.tracker, height: UIMetrics.trackerMiniButton))
+                    .buttonStyle(AccentButton(accent: Night.tracker, height: UIMetrics.trackerMiniButton, text: Night.trackerOnAccent))
             }
             if let message {
                 Text(verbatim: message).font(Typography.hint).foregroundStyle(Night.cheek)
@@ -44,11 +44,16 @@ struct ActivityEditForm: View {
     private var places: some View {
         HStack(spacing: UIMetrics.trackerChipSpacing) {
             ForEach(AwayPlace.allCases, id: \.self) { place in
-                TrackerChip(label: Copywriter.trackerAwayPlace(place), on: draft.awayPlace == place, id: "report.place." + place.rawValue) {
+                TrackerChip(label: placeLabel(place), on: draft.awayPlace == place, id: "report.place." + place.rawValue) {
                     draft.awayPlace = place
+                    draft.awayPlaceName = nil
                 }
             }
         }
+    }
+
+    private func placeLabel(_ place: AwayPlace) -> String {
+        place == .other ? draft.awayPlaceName ?? Copywriter.trackerAwayPlace(place) : Copywriter.trackerAwayPlace(place)
     }
 
     private var categoryMenu: some View {

@@ -7,6 +7,7 @@ struct ActivityEditDraft: Equatable {
     var startMinutes: Int
     var endMinutes: Int
     var awayPlace: AwayPlace?
+    var awayPlaceName: String?
     let isAway: Bool
     private let originalStart: Date
     private let originalEnd: Date
@@ -31,6 +32,7 @@ struct ActivityEditDraft: Equatable {
             text: activity.text, category: activity.category, start: activity.start, end: activity.end, calendar: calendar,
             isAway: activity.kind == .away, awayPlace: activity.awayPlace
         )
+        awayPlaceName = activity.awayPlaceName
     }
 
     func edit(dayStart: Date, calendar: Calendar) -> ActivityEdit {
@@ -41,7 +43,7 @@ struct ActivityEditDraft: Equatable {
         if endMinutes != originalEndMinutes, endMinutes == 0, end <= start {
             end = Self.date(Limits.minutesPerDay, dayStart: dayStart, calendar: calendar)
         }
-        return ActivityEdit(text: text, category: category, start: start, end: end, awayPlace: awayPlace)
+        return ActivityEdit(text: text, category: category, start: start, end: end, awayPlace: awayPlace, awayPlaceName: awayPlaceName)
     }
 
     static func minutes(_ date: Date, calendar: Calendar) -> Int {

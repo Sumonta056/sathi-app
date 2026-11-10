@@ -114,17 +114,6 @@ extension Engine {
         trackerRuntime.endedByAway = nil
     }
 
-    func pickAwayPlace(_ place: AwayPlace) {
-        guard !trackerRuntime.awayItems.isEmpty else { return }
-        for id in trackerRuntime.awayItems {
-            guard var item = removeStoredActivity(id) else { continue }
-            item.awayPlace = place
-            item.text = Copywriter.trackerAwayText(place)
-            storeActivity(item)
-        }
-        trackerRuntime.lastAway?.place = place
-    }
-
     var trackerActiveSessionRuns: Bool { HabitID.allCases.contains { session($0).map { !$0.isPaused } ?? false } }
 
     var idleSince: Date? {

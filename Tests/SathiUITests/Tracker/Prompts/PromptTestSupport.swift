@@ -10,6 +10,8 @@ final class PromptCalls {
     var stillOn: [Int?] = []
     var calls: [String] = []
     var places: [AwayPlace] = []
+    var placeNames: [String] = []
+    var addedPlaces: [String] = []
     var notAttending: [String] = []
     var answers: [Bool] = []
     var continued: [Date?] = []
@@ -44,6 +46,8 @@ enum Prompt {
         s.actions.backToLast = { calls.calls.append("back") }
         s.actions.iWasHere = { calls.calls.append("here") }
         s.actions.pickPlace = { calls.places.append($0) }
+        s.actions.pickPlaceName = { calls.placeNames.append($0) }
+        s.actions.addPlace = { calls.addedPlaces.append($0) }
         s.actions.notAttending = { calls.notAttending.append($0) }
         s.actions.answerEvent = { calls.answers.append($0) }
         s.actions.close = { calls.calls.append("close") }
@@ -61,6 +65,16 @@ enum Prompt {
 
     static func has(_ view: InspectableView<some BaseViewType>, _ id: String) -> Bool {
         (try? view.find(viewWithAccessibilityIdentifier: id)) != nil
+    }
+
+    static func chipIsOn(_ view: InspectableView<some BaseViewType>, _ id: String) throws -> Bool {
+        let chips = view.findAll(TrackerChip.self).compactMap { try? $0.actualView() }
+        guard let chip = chips.first(where: { $0.id == id }) else { throw PromptRowMissing(id: id, row: 0, count: 0) }
+        return chip.on
+    }
+
+    static func buttonText(_ view: InspectableView<some BaseViewType>, _ id: String) throws -> [String] {
+        try texts(view.find(viewWithAccessibilityIdentifier: id).find(ViewType.Button.self, relation: .parent))
     }
 
     static func ids(_ view: InspectableView<some BaseViewType>, prefix: String) -> [String] {

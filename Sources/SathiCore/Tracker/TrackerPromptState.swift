@@ -21,6 +21,7 @@ package struct TrackerPromptState {
     package var calendar: Calendar = .current
     package var askEveryMinutes = Limits.trackerAskEveryDefault
     package var shortcut: KeyShortcut?
+    package var places: [String] = []
     package var actions = TrackerPromptActions()
 
     package init(kind: PromptKind, shownAt: Date, now: Date, draft: ActivityDraft) {

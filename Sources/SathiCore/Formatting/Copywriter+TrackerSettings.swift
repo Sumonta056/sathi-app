@@ -1,6 +1,11 @@
 import Foundation
 
 extension Copywriter {
+    package static let trackerPlacesLabel = "Away places"
+    package static let trackerPlacesHint = "Your own answers for \"Where were you?\""
+    package static let trackerPlacesEmpty = "Add a place in the Welcome back popup."
+
+    package static func trackerRemovePlace(_ name: String) -> String { "Remove " + name }
     package static let daysOffTitle = "Days off"
     package static let daysOffAdd = "Add a day off"
     package static let daysOffPick = "Pick a date"
