@@ -67,6 +67,24 @@ struct NightPaletteTests {
         #expect(RGB(Night.heroBorder(id)).matches(RGB(hex: border)))
     }
 
+    @Test func trackerAccentIsLightRed() {
+        #expect(RGB(Night.tracker).matches(RGB(hex: 0xFF8A80)))
+        #expect(RGB(Night.trackerFill).matches(RGB(hex: 0x2E1A1C)))
+        #expect(RGB(Night.trackerOnAccent).matches(RGB(hex: 0x2A0E0C)))
+        #expect(RGB(Night.trackerSelectedText).matches(RGB(hex: 0xFFB3AB)))
+    }
+
+    @Test func sparkStaysYellow() {
+        #expect(RGB(Night.spark).matches(RGB(hex: 0xFFC94A)))
+        #expect(!RGB(Night.tracker).matches(RGB(Night.spark)))
+    }
+
+    @Test func trackerColorsRead() {
+        expectReadable(Night.trackerOnAccent, on: Night.tracker, "trackerOnAccent on tracker")
+        expectReadable(Night.tracker, on: Night.card, "tracker on card")
+        expectReadable(Night.trackerSelectedText, on: Night.card, "trackerSelectedText on card")
+    }
+
     @Test func accentsAreTheNamedHabitColors() {
         #expect(RGB(Night.accent(.water)).matches(RGB(Night.water)))
         #expect(RGB(Night.accent(.reading)).matches(RGB(Night.reading)))

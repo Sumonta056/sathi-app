@@ -62,4 +62,50 @@ enum Prompt {
     static func has(_ view: InspectableView<some BaseViewType>, _ id: String) -> Bool {
         (try? view.find(viewWithAccessibilityIdentifier: id)) != nil
     }
+
+    static func ids(_ view: InspectableView<some BaseViewType>, prefix: String) -> [String] {
+        view.findAll(where: { (try? $0.accessibilityIdentifier())?.hasPrefix(prefix) == true })
+            .compactMap { try? $0.accessibilityIdentifier() }
+    }
+
+    static func texts(_ view: InspectableView<some BaseViewType>) -> [String] {
+        view.findAll(ViewType.Text.self).compactMap { try? $0.string() }
+    }
+
+    static func hasText(_ view: InspectableView<some BaseViewType>, _ text: String) -> Bool {
+        texts(view).contains(text)
+    }
+
+    static func tap(_ view: InspectableView<some BaseViewType>, _ id: String, row: Int) throws {
+        let rows = view.findAll(where: { (try? $0.accessibilityIdentifier()) == id })
+        guard rows.indices.contains(row) else { throw PromptRowMissing(id: id, row: row, count: rows.count) }
+        try rows[row].find(ViewType.Button.self, relation: .parent).tap()
+    }
+
+    static func recentList(_ view: InspectableView<some BaseViewType>) throws -> InspectableView<ViewType.ClassifiedView> {
+        try view.find(TrackerRecentMenu.self).actualView().list.inspect()
+    }
+
+    static func categoryList(_ view: InspectableView<some BaseViewType>) throws -> InspectableView<ViewType.ClassifiedView> {
+        try view.find(TrackerCategoryMenu.self).actualView().list.inspect()
+    }
+
+    static func recents(_ count: Int) -> [RecentActivity] {
+        (0 ..< count).map { RecentActivity(text: "Task \($0)", category: $0 == 3 ? "Review" : "Coding", length: 1800) }
+    }
+
+    static func popup(
+        _ kind: PromptKind,
+        _ state: TrackerPromptState,
+        form: TrackerDraftForm? = nil
+    ) throws -> InspectableView<ViewType.ClassifiedView> {
+        let view = kind == .center ? AnyView(CenterPromptView(state: state, form: form)) : AnyView(WhatNowPopup(state: state, form: form))
+        return try view.inspect()
+    }
+}
+
+struct PromptRowMissing: Error {
+    let id: String
+    let row: Int
+    let count: Int
 }

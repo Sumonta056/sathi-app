@@ -25,7 +25,7 @@ struct TrackerNoteViewTests {
         #expect(throws: Never.self) { try sut.find(text: "Standup") }
         try Prompt.tap(sut, "tracker.note.undo")
         try Prompt.tap(sut, "tracker.note.notAttending")
-        try Prompt.tap(sut, "tracker.note.category.Review")
+        try Prompt.tap(Prompt.categoryList(sut), "tracker.note.category.Review")
         #expect(log.calls == ["undo", "notAttending", "cat:Review"])
     }
 

@@ -1,59 +1,13 @@
 import SwiftUI
 
 extension UIMetrics {
-    static let trackerCategoriesPerRow = 3
-    static let trackerCornerWidth: CGFloat = 400
-    static let trackerPopupPadding: CGFloat = 18
-    static let trackerPopupRadius: CGFloat = 22
-    static let trackerPopupSpacing: CGFloat = 14
-    static let trackerNoteSpacing: CGFloat = 10
-    static let trackerHeaderSpacing: CGFloat = 12
-    static let trackerIconTile: CGFloat = 40
-    static let trackerIconRadius: CGFloat = 12
-    static let trackerIcon: CGFloat = 22
-    static let trackerEyebrowTracking: CGFloat = 1
-    static let trackerFieldHeight: CGFloat = 46
-    static let trackerFieldRadius: CGFloat = 14
     static let trackerFieldBorder: CGFloat = 1.5
     static let trackerFieldPadding: CGFloat = 12
     static let trackerChipSpacing: CGFloat = 6
-    static let trackerChipPadding = EdgeInsets(top: 6, leading: 11, bottom: 6, trailing: 11)
     static let trackerChipBorder: CGFloat = 1
     static let trackerChipSelectedBorder: CGFloat = 1.5
     static let trackerDot: CGFloat = 8
-    static let trackerDotLarge: CGFloat = 10
-    static let trackerRowLabelWidth: CGFloat = 40
-    static let trackerStartedLabelWidth: CGFloat = 60
-    static let trackerOptionLabelWidth: CGFloat = 80
     static let trackerOptionRowSpacing: CGFloat = 10
-    static let trackerCheckBox: CGFloat = 20
-    static let trackerCheckRadius: CGFloat = 6
-    static let trackerCheckMark: CGFloat = 12
     static let trackerDisabledOpacity: Double = 0.45
-    static let trackerSummaryPadding = EdgeInsets(top: 9, leading: 12, bottom: 9, trailing: 12)
-    static let trackerSummaryRadius: CGFloat = 12
-    static let trackerInsetPadding = EdgeInsets(top: 10, leading: 12, bottom: 10, trailing: 12)
-    static let trackerInsetRadius: CGFloat = 12
-    static let trackerButtonHeight: CGFloat = 44
-    static let trackerSmallButtonHeight: CGFloat = 38
-    static let trackerNoteButtonHeight: CGFloat = 36
-    static let trackerButtonRadius: CGFloat = 13
-    static let trackerSkipWidth: CGFloat = 90
     static let trackerButtonSpacing: CGFloat = 8
-    static let trackerCalendarMenuWidth: CGFloat = 250
-    static let trackerCalendarMenuPadding: CGFloat = 8
-    static let trackerCalendarMenuRadius: CGFloat = 14
-    static let trackerCalendarButtonRadius: CGFloat = 10
-    static let trackerKeyPadding = EdgeInsets(top: 2, leading: 6, bottom: 2, trailing: 6)
-    static let trackerKeyRadius: CGFloat = 6
-    static let trackerSwitchGridColumns = 4
-
-    static let trackerCenterWidth: CGFloat = 640
-    static let trackerCenterFieldHeight: CGFloat = 54
-    static let trackerCenterListPadding: CGFloat = 8
-    static let trackerCenterRowPadding = EdgeInsets(top: 11, leading: 12, bottom: 11, trailing: 12)
-    static let trackerCenterRowRadius: CGFloat = 12
-    static let trackerCenterBarPadding = EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16)
-    static let trackerCenterKeyWidth: CGFloat = 30
-    static let trackerWelcomeWidth: CGFloat = 400
 }

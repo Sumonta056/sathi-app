@@ -13,10 +13,15 @@ extension Copywriter {
     package static let trackerStart = "Start"
     package static let trackerSkip = "Skip"
     package static let trackerCalendarNote = "Birthdays, Holidays, and subscribed calendars are not shown."
-    package static let trackerKeysOptions = "⇥ options"
-    package static let trackerKeysStart = "⏎ start"
-    package static let trackerKeysSkip = "esc skip"
-    package static let trackerOrAskIn = "or ask in"
+    package static let trackerRecent = "Recent"
+    package static let trackerCheck = "✓"
+    package static let trackerEnterKey = "↵"
+    package static let trackerRecentHint = "Pick from your last \(Limits.recentMax)"
+    package static let trackerRecentHeader = "Last \(Limits.recentMax) · newest first"
+    package static let trackerOrMore = "Or more"
+    package static let trackerOptional = "· optional"
+    package static let trackerWelcomeKeys = "↵ back to it · esc keep as Away"
+    package static let trackerNoteCloses = "Logged now · this note closes in \(Int(Timing.eventNoteShow / Timing.minute)) min"
     package static let trackerDone = "Done"
     package static let trackerStillOnIt = "Still on it"
     package static let trackerDonePick = "Done · pick when you switched"
@@ -48,8 +53,16 @@ extension Copywriter {
         text + " ends at " + trackerClock(time, calendar: calendar) + (isNow ? " (now)." : ".")
     }
 
-    package static func trackerQuietUntil(_ time: Date, calendar: Calendar) -> String {
-        "quiet until " + trackerClock(time, calendar: calendar)
+    package static func trackerUntil(_ time: Date, calendar: Calendar) -> String {
+        "until " + trackerClock(time, calendar: calendar)
+    }
+
+    package static func trackerCenterKeys(_ shortcut: String?) -> String {
+        "↵ start · esc close" + (shortcut.map { " · " + $0 + " from anywhere" } ?? "")
+    }
+
+    package static func trackerStillSoFarEyebrow(_ minutes: Int) -> String {
+        "STILL ON IT? · \(minutes) MIN SO FAR"
     }
 
     package static func trackerContinue(_ text: String) -> String { "Continue " + text }
@@ -69,7 +82,7 @@ extension Copywriter {
 
     package static func trackerAwayEyebrow(_ start: Date, _ end: Date, calendar: Calendar) -> String {
         let minutes = trackerDuration(end.timeIntervalSince(start)).uppercased()
-        return "AWAY · " + trackerSpan(start, end, calendar: calendar) + " · " + minutes
+        return "AWAY " + trackerSpan(start, end, calendar: calendar) + " · " + minutes
     }
 
     package static func trackerBackTo(_ text: String) -> String { "Back to " + text }

@@ -53,21 +53,20 @@ struct PromptFixRoundTests {
         let form = TrackerDraftForm(s.draft)
         let forTap = "tracker.for.1 h"
         try Prompt.tap(WhatNowPopup(state: s, form: form).inspect(), forTap)
-        try Prompt.tap(WhatNowPopup(state: s, form: form).inspect(), "tracker.recent.chip")
+        try Prompt.tap(Prompt.recentList(WhatNowPopup(state: s, form: form).inspect()), "tracker.recent.chip")
         #expect(calls.started.first?.0.length == .minutes(60))
         #expect(calls.started.first?.0.text == "Review PR")
     }
 
-    @Test func manyCategoriesWrapInRowsOfThree() throws {
+    @Test func manyCategoriesEachGetARowInTheDropdown() throws {
         let many = (0 ..< 12).map { ActivityCategory(name: "C\($0)", colorHex: 0x4CC3F5) }
         var s = TrackerNoteState(note: .event(Prompt.event()), calendarTitle: "Work", category: nil)
         s.categories = many
         s.calendar = Prompt.calendar
-        let sut = try TrackerNoteView(state: s).inspect()
-        let rows = try sut.find(TrackerCategoryRows.self).vStack().forEach(0)
-        #expect(rows.count == 4)
+        let rows = try Prompt.ids(Prompt.categoryList(TrackerNoteView(state: s).inspect()), prefix: "tracker.note.category.")
+        #expect(rows.count == 12)
         let ask = Prompt.state(.eventAsk) { $0.event = Prompt.event(); $0.categories = many }
-        let askRows = try EventAskPopup(state: ask).inspect().find(TrackerCategoryRows.self).vStack().forEach(0)
-        #expect(askRows.count == 4)
+        let askRows = try Prompt.ids(Prompt.categoryList(EventAskPopup(state: ask).inspect()), prefix: "tracker.eventCategory.")
+        #expect(askRows.count == 12)
     }
 }

@@ -15,7 +15,7 @@ Goals checked by hand here:
 ## After wave 2: Mac and prompts (T3, T4, I)
 
 1. Turn the tracker on. At the start of hours, A shows in the corner. Keep typing in your editor: the keys stay in the editor.
-2. Click a recent chip, Enter. Wait for C. Try Yes, 5 min, 30 min, Skip, Done. After Done, pick an earlier Started chip and check the log times.
+2. Open the Recent dropdown and click a row. Wait for C. Try Yes, 5 min, 30 min, Skip, Done. After Done, pick an earlier Started chip and check the log times.
 3. Leave C open for 6 min, then answer: the late form shows.
 4. Lock the Mac for 2 min, unlock: D shows. Leave the Mac idle past the Away limit (set 10 min to test): D shows "I was here".
 5. Press ⌃⌥⌘Space in another app: B opens with the keyboard.

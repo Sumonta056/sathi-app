@@ -71,9 +71,7 @@ package enum Limits {
     package static let activityTextMax = 80
     package static let activityLengths = [15, 30, 60]
     package static let askOffsets = [0, 5, 15]
-    package static let recentMax = 5
-    package static let recentInCorner = 3
-    package static let recentInCenter = 4
+    package static let recentMax = 10
     package static let trackerAskChips = [10, 15, 20, 30, 60]
     package static let idleChips = [10, 20, 30, 60]
     package static let categoryMax = 12

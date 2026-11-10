@@ -39,30 +39,29 @@ struct WhatNowPopupTests {
         let s = Prompt.state(.whatNow, calls: calls) {
             $0.recents = [RecentActivity(text: "Review PR", category: "Review", length: 1800)]
         }
-        try Prompt.tap(WhatNowPopup(state: s).inspect(), "tracker.recent.chip")
+        try Prompt.tap(Prompt.recentList(WhatNowPopup(state: s).inspect()), "tracker.recent.chip")
         let draft = try #require(calls.started.first?.0)
         #expect(draft.text == "Review PR")
         #expect(draft.category == "Review")
     }
 
-    @Test func showsOnlyThreeRecents() throws {
-        let recents = (0 ..< 5).map { RecentActivity(text: "R\($0)", category: nil, length: 60) }
+    @Test func listsEveryRecentInTheDropdown() throws {
+        let recents = (0 ..< 10).map { RecentActivity(text: "R\($0)", category: nil, length: 60) }
         let s = Prompt.state(.whatNow) { $0.recents = recents }
-        let sut = try WhatNowPopup(state: s).inspect()
-        #expect(["R0", "R1", "R2"].allSatisfy { (try? sut.find(text: $0)) != nil })
-        #expect((try? sut.find(text: "R3")) == nil)
+        let list = try Prompt.recentList(WhatNowPopup(state: s).inspect())
+        #expect(Prompt.texts(list).filter { $0.hasPrefix("R") } == (0 ..< 10).map { "R\($0)" })
+        #expect(Prompt.ids(list, prefix: "tracker.recent.chip").count == 10)
     }
 
-    @Test func runningEventIsTheFirstChip() throws {
+    @Test func runningEventIsTheFirstRowOfTheDropdown() throws {
         let calls = PromptCalls()
         let s = Prompt.state(.whatNow, calls: calls) {
             $0.runningEvent = Prompt.event()
             $0.recents = [RecentActivity(text: "R0", category: nil, length: 60)]
         }
-        let sut = try WhatNowPopup(state: s).inspect()
-        let chips = sut.findAll(TrackerChip.self)
-        #expect(try chips.first?.actualView().label == "Standup")
-        try Prompt.tap(sut, "tracker.event.chip")
+        let list = try Prompt.recentList(WhatNowPopup(state: s).inspect())
+        #expect(Prompt.ids(list, prefix: "tracker.").first { $0.hasSuffix(".chip") } == "tracker.event.chip")
+        try Prompt.tap(list, "tracker.event.chip")
         #expect(calls.started.first?.0.sourceEventID == "e1")
         #expect(calls.started.first?.0.text == "Standup")
     }
@@ -77,9 +76,12 @@ struct WhatNowPopupTests {
         #expect(Prompt.has(sut, "tracker.quiet"))
     }
 
-    @Test func summaryLineShowsCategoryAndAsk() throws {
+    @Test func categoryAndAskShowAsTheirOwnRows() throws {
         let sut = try WhatNowPopup(state: Prompt.state(.whatNow)).inspect()
-        #expect(throws: Never.self) { try sut.find(text: "Coding · ask when it ends") }
+        #expect(try sut.find(TrackerCategoryMenu.self).actualView().selected == "Coding")
+        #expect(try A11y.isSelected(sut.find(viewWithAccessibilityIdentifier: "tracker.ask.0").find(ViewType.Button.self, relation: .parent)))
+        #expect(try !A11y.isSelected(sut.find(viewWithAccessibilityIdentifier: "tracker.ask.5").find(ViewType.Button.self, relation: .parent)))
+        #expect(!Prompt.has(sut, "tracker.summary"))
     }
 
     @Test func skipPassesNoSwitchTimeWithoutTheRow() throws {

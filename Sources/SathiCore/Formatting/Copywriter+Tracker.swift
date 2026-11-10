@@ -31,8 +31,8 @@ extension Copywriter {
         minutes == 0 ? "When it ends" : "\(minutes) min after"
     }
 
-    package static func trackerSummary(category: String?, askOffsetMinutes: Int) -> String {
-        (category ?? trackerNoCategory) + " · ask " + trackerAskOffsetLabel(askOffsetMinutes).lowercased()
+    package static func trackerAskOffsetShort(_ minutes: Int) -> String {
+        minutes == 0 ? trackerAskOffsetLabel(minutes) : "+\(minutes) min"
     }
 
     package static func trackerClock(_ date: Date, calendar: Calendar) -> String {

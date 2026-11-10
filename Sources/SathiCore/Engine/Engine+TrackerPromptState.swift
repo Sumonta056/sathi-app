@@ -20,6 +20,7 @@ extension Engine {
         s.defaultCalendarID = trackerDefaultCalendarID
         s.calendar = calendar
         s.askEveryMinutes = trackerPrefs.askEveryMinutes
+        s.shortcut = trackerPrefs.shortcut
         if let from = p.switchFrom { s.switchTimes = SwitchTimes.chips(from: from, to: n, calendar: calendar) }
         if kind == .stillOnIt { s.waitedMinutes = AskTime.waitedMinutes(shownAt: p.shownAt, now: n) }
         if kind == .welcomeBack {

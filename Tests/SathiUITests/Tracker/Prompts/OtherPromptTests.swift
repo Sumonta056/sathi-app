@@ -8,18 +8,26 @@ import ViewInspector
 @MainActor
 @Suite("Center prompt")
 struct CenterPromptTests {
-    @Test func showsFourRecents() throws {
-        let recents = (0 ..< 5).map { RecentActivity(text: "R\($0)", category: nil, length: 60) }
+    @Test func listsEveryRecentInTheDropdown() throws {
+        let recents = (0 ..< 10).map { RecentActivity(text: "R\($0)", category: nil, length: 60) }
         let s = Prompt.state(.center) { $0.recents = recents }
-        let sut = try CenterPromptView(state: s).inspect()
-        #expect(["R0", "R1", "R2", "R3"].allSatisfy { (try? sut.find(text: $0)) != nil })
-        #expect((try? sut.find(text: "R4")) == nil)
+        let list = try Prompt.recentList(CenterPromptView(state: s).inspect())
+        #expect(Prompt.texts(list).filter { $0.hasPrefix("R") } == (0 ..< 10).map { "R\($0)" })
+        #expect(Prompt.ids(list, prefix: "tracker.recent.chip").count == 10)
     }
 
-    @Test func runningEventIsTheFirstChip() throws {
-        let s = Prompt.state(.center) { $0.runningEvent = Prompt.event() }
-        let sut = try CenterPromptView(state: s).inspect()
-        #expect(try sut.findAll(TrackerChip.self).first?.actualView().label == "Standup")
+    @Test func runningEventIsTheFirstRowOfTheDropdown() throws {
+        let calls = PromptCalls()
+        let s = Prompt.state(.center, calls: calls) {
+            $0.runningEvent = Prompt.event()
+            $0.recents = [RecentActivity(text: "R0", category: nil, length: 60)]
+        }
+        let list = try Prompt.recentList(CenterPromptView(state: s).inspect())
+        #expect(Prompt.ids(list, prefix: "tracker.").first { $0.hasSuffix(".chip") } == "tracker.event.chip")
+        try Prompt.tap(list, "tracker.event.chip")
+        #expect(calls.started.first?.0.text == "Standup")
+        #expect(calls.started.first?.0.sourceEventID == "e1")
+        #expect(calls.started.map { $0.1 == nil } == [true])
     }
 
     @Test func alwaysShowsForCalendarAndQuiet() throws {

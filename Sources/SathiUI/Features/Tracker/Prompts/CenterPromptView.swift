@@ -4,7 +4,6 @@ import SwiftUI
 struct CenterPromptView: View {
     let state: TrackerPromptState
     @ObservedObject private var form: TrackerDraftForm
-    @State private var optionsOpen = false
 
     init(state: TrackerPromptState, form: TrackerDraftForm? = nil) {
         self.state = state
@@ -12,35 +11,32 @@ struct CenterPromptView: View {
     }
 
     var body: some View {
-        let shape = RoundedRectangle(cornerRadius: UIMetrics.trackerPopupRadius, style: .continuous)
-        VStack(alignment: .leading, spacing: UIMetrics.trackerPopupSpacing) {
+        let size = TrackerSize.center
+        VStack(alignment: .leading, spacing: size.spacing) {
             TrackerHeader(
                 icon: "pencil",
                 eyebrow: Copywriter.trackerLogEyebrow(state.now, calendar: state.calendar),
                 title: Copywriter.trackerWhatAreYouDoingNow,
-                detail: nil
+                compact: false
             )
             LazyTextField(placeholder: Copywriter.trackerFieldPlaceholder, text: $form.draft.text, startsEditing: true, onSubmit: start)
                 .modifier(QuickTextLimit(text: $form.draft.text, limit: Limits.activityTextMax))
-                .trackerField(height: UIMetrics.trackerCenterFieldHeight)
-            TrackerRecentChips(state: state, draft: form.draft, limit: Limits.recentInCenter) { state.actions.start($0, nil) }
-            TrackerForRow(draft: $form.draft)
-            TrackerCalendarRow(draft: $form.draft, calendars: state.calendars, defaultID: state.defaultCalendarID)
-            TrackerQuietRow(draft: $form.draft)
-            TrackerSummaryLine(draft: form.draft, categories: state.categories, open: $optionsOpen)
-            if optionsOpen { TrackerOptionsPanel(draft: $form.draft, categories: state.categories) }
-            HStack(spacing: UIMetrics.trackerButtonSpacing) {
-                TrackerPrimaryButton(label: Copywriter.trackerStart, id: "tracker.start", action: start)
+                .trackerField(compact: false)
+            TrackerRecentMenu(state: state, draft: form.draft) { state.actions.start($0, nil) }
+            TrackerOptionsBox(draft: $form.draft, state: state)
+            HStack(spacing: size.buttonGap) {
+                TrackerPrimaryButton(
+                    label: Copywriter.trackerStart, id: "tracker.start",
+                    height: size.buttonHeight, radius: size.buttonRadius, font: size.button, action: start
+                )
                 TrackerSecondaryButton(
-                    label: Copywriter.trackerClose, id: "tracker.close", width: UIMetrics.trackerSkipWidth
+                    label: Copywriter.trackerClose, id: "tracker.close", height: size.buttonHeight,
+                    width: size.sideButton, radius: size.buttonRadius, font: size.button
                 ) { state.actions.close() }
             }
+            TrackerHint(text: Copywriter.trackerCenterKeys(state.shortcut.map(Copywriter.trackerShortcut)))
         }
-        .padding(UIMetrics.trackerPopupPadding)
-        .frame(width: UIMetrics.trackerCenterWidth)
-        .background(shape.fill(Night.card))
-        .overlay(shape.strokeBorder(Night.border, lineWidth: UIMetrics.cardBorder))
-        .environment(\.colorScheme, .dark)
+        .trackerCenterCard()
         .onExitCommand { state.actions.close() }
     }
 

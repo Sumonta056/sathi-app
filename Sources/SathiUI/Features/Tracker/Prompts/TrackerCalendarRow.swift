@@ -5,13 +5,14 @@ struct TrackerCalendarRow: View {
     @Binding var draft: ActivityDraft
     let calendars: [CalendarChoice]
     let defaultID: String?
+    var size = TrackerSize.corner
 
     var body: some View {
-        HStack(spacing: UIMetrics.trackerOptionRowSpacing) {
+        HStack(spacing: size.toggleGap) {
             checkBox
             Text(verbatim: Copywriter.trackerAddToCalendar)
-                .font(Typography.hint)
-                .foregroundStyle(Night.chipText)
+                .font(Typography.tracker(size.body, .semibold))
+                .foregroundStyle(Night.text)
             Spacer(minLength: 0)
             menu
         }
@@ -26,18 +27,18 @@ struct TrackerCalendarRow: View {
     }
 
     private var checkBox: some View {
-        let shape = RoundedRectangle(cornerRadius: UIMetrics.trackerCheckRadius, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: size.checkRadius, style: .continuous)
         return Button { draft.calendarID = isOn ? nil : defaultChoice?.id } label: {
             ZStack {
                 shape.fill(isOn ? Night.tracker : Color.clear)
                 shape.strokeBorder(isOn ? Night.tracker : Night.fieldBorder, lineWidth: UIMetrics.trackerChipSelectedBorder)
                 if isOn {
                     Image(systemName: "checkmark")
-                        .font(.system(size: UIMetrics.trackerCheckMark, weight: .black))
-                        .foregroundStyle(Night.onAccent)
+                        .font(.system(size: size.checkMark, weight: .black))
+                        .foregroundStyle(Night.trackerOnAccent)
                 }
             }
-            .frame(width: UIMetrics.trackerCheckBox, height: UIMetrics.trackerCheckBox)
+            .frame(width: size.check, height: size.check)
             .contentShape(shape)
             .accessibilityIdentifier("tracker.calendar.check")
         }
@@ -48,6 +49,7 @@ struct TrackerCalendarRow: View {
 
     private var menu: some View {
         let chosen = calendars.first { $0.id == draft.calendarID } ?? defaultChoice
+        let shape = RoundedRectangle(cornerRadius: size.dropRadius, style: .continuous)
         return Menu {
             ForEach(accounts, id: \.self) { account in
                 Section {
@@ -57,18 +59,20 @@ struct TrackerCalendarRow: View {
                 }
             }
         } label: {
-            HStack(spacing: UIMetrics.trackerChipSpacing) {
+            HStack(spacing: size.dropGap) {
                 if let chosen {
-                    CalendarDot(hex: chosen.colorHex)
+                    CalendarDot(hex: chosen.colorHex, size: size.dot)
                     Text(verbatim: chosen.title)
-                        .font(Typography.hint)
+                        .font(Typography.tracker(size.label, .semibold))
                         .foregroundStyle(Night.chipText)
                         .lineLimit(1)
                 }
-                Image(systemName: "chevron.down")
-                    .font(.system(size: UIMetrics.blockChevron, weight: .heavy))
-                    .foregroundStyle(Night.muted)
+                TrackerChevron(size: size.chevron)
             }
+            .padding(.horizontal, size.dropPadding)
+            .frame(height: size.chipHeight)
+            .background(shape.fill(Night.card))
+            .overlay(shape.strokeBorder(Night.fieldBorder, lineWidth: UIMetrics.cardBorder))
         }
         .menuStyle(.button)
         .buttonStyle(.plain)
