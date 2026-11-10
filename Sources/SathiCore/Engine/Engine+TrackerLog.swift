@@ -33,12 +33,12 @@ extension Engine {
     var pendingDoneAt: Date? {
         guard data.live.tracker.running != nil, let p = data.live.tracker.prompt,
               p.kind == .whatNow, p.resume == nil else { return nil }
-        return p.switchFrom
+        return p.doneAt ?? p.switchFrom
     }
 
     @discardableResult
-    func endRunningOnInterrupt(at end: Date) -> Activity? {
-        endRunningActivity(at: pendingDoneAt.map { min($0, end) } ?? end)
+    func endRunningOnInterrupt(at end: Date, interrupt: Date? = nil) -> Activity? {
+        endRunningActivity(at: pendingDoneAt.map { min($0, interrupt ?? end) } ?? end)
     }
 
     @discardableResult

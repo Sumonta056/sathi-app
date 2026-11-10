@@ -1,6 +1,6 @@
 import Foundation
 
-package struct AwaySpan: Equatable, Sendable {
+package struct AwaySpan: Codable, Equatable, Sendable {
     package var start: Date
     package var end: Date
     package var cause: AwayCause

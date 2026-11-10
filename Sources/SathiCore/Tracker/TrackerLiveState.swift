@@ -9,6 +9,7 @@ package struct TrackerLiveState: Codable, Equatable, Sendable {
     package var lastEndOfDay: DayKey?
     package var lastActivity: ActivityDraft?
     package var beforeSession: ActivityDraft?
+    package var away = TrackerAwayDetails()
 
     package init() {}
 }
@@ -24,5 +25,6 @@ extension TrackerLiveState {
         lastEndOfDay = c.lenient(.lastEndOfDay, or: DayKey?.none)
         lastActivity = c.lenient(.lastActivity, or: ActivityDraft?.none)
         beforeSession = c.lenient(.beforeSession, or: ActivityDraft?.none)
+        away = c.lenient(.away, or: TrackerAwayDetails())
     }
 }

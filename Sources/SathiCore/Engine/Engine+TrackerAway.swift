@@ -10,10 +10,12 @@ extension Engine {
         let at = start.wholeSecond
         data.live.tracker.awaySince = at
         data.live.tracker.awayCause = cause
-        trackerRuntime.endedByAway = pendingDoneAt == nil ? data.live.tracker.running : nil
-        if let r = data.live.tracker.running {
+        let r = data.live.tracker.running
+        let keeps = r.map { keepsEventThroughAway($0, cause: cause, at: at) } ?? false
+        trackerRuntime.endedByAway = pendingDoneAt == nil && !keeps ? r : nil
+        if let r, !keeps {
             let end = cause == .onBreak ? at : AskTime.awayEnd(start: r.start, confirmedUntil: r.confirmedUntil, awayStart: at)
-            endRunningOnInterrupt(at: end)
+            endRunningOnInterrupt(at: end, interrupt: at)
         }
         clearTrackerPrompt()
         requestTick()
@@ -27,9 +29,16 @@ extension Engine {
         data.live.tracker.awaySince = nil
         data.live.tracker.awayCause = nil
         data.live.tracker.lastInput = back
-        let items = trackerHours.clip(DateInterval(start: since, end: back)).map {
-            Activity(kind: .away, text: Copywriter.trackerAwayText(place), start: $0.start, end: $0.end, awayPlace: place)
-        }.filter { $0.length >= Timing.activityMinimum }
+        var eventSpan: DateInterval?
+        if let r = data.live.tracker.running, r.kind == .event {
+            guard back >= r.confirmedUntil else { return requestTick() }
+            eventSpan = DateInterval(start: r.start, end: max(r.start, r.confirmedUntil))
+            endRunningActivity(at: r.confirmedUntil)
+        }
+        let items = trackerHours.clip(DateInterval(start: since, end: back))
+            .flatMap { SpanCut.cut($0, removing: eventSpan.map { [$0] } ?? []) }
+            .map { Activity(kind: .away, text: Copywriter.trackerAwayText(place), start: $0.start, end: $0.end, awayPlace: place) }
+            .filter { $0.length >= Timing.activityMinimum }
         items.forEach(storeActivity)
         trackerRuntime.awayItems = items.map(\.id)
         trackerRuntime.lastAway = AwaySpan(start: since, end: back, cause: cause, place: place)
@@ -50,14 +59,14 @@ extension Engine {
 
     func checkIdle(_ n: Date) {
         let t = data.live.tracker
-        guard !trackerSessionRuns else { return }
+        guard !trackerActiveSessionRuns else { return }
         if let since = t.awaySince {
             guard t.awayCause == .idle else { return }
             let input = n.addingTimeInterval(-presence.secondsSinceLastInput()).wholeSecond
             if input > since { returnFromAway(at: input) }
             return
         }
-        guard let last = t.lastInput else {
+        guard let last = idleSince else {
             data.live.tracker.lastInput = n.wholeSecond
             return
         }
@@ -65,7 +74,7 @@ extension Engine {
         let idle = presence.secondsSinceLastInput()
         let input = n.addingTimeInterval(-idle).wholeSecond
         if idle >= idleLimit {
-            beginAway(at: input, cause: .idle)
+            beginAway(at: max(input, last), cause: .idle)
         } else {
             data.live.tracker.lastInput = input
         }
@@ -113,5 +122,17 @@ extension Engine {
             storeActivity(item)
         }
         trackerRuntime.lastAway?.place = place
+    }
+
+    var trackerActiveSessionRuns: Bool { HabitID.allCases.contains { session($0).map { !$0.isPaused } ?? false } }
+
+    var idleSince: Date? {
+        let paused = HabitID.allCases.compactMap { session($0)?.pausedAt }.max()
+        guard let last = data.live.tracker.lastInput else { return paused }
+        return max(last, paused ?? last)
+    }
+
+    private func keepsEventThroughAway(_ r: RunningActivity, cause: AwayCause, at: Date) -> Bool {
+        cause != .onBreak && r.kind == .event && pendingDoneAt == nil && at < r.confirmedUntil
     }
 }

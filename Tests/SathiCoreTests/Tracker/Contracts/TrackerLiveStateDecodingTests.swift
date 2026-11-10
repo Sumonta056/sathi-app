@@ -39,6 +39,30 @@ struct TrackerLiveStateDecodingTests {
         #expect(l.tracker.lastEndOfDay?.raw == "2026-11-09")
     }
 
+    @Test func oldTrackerStateWithoutAwayDetailsLoadsEmptyDetails() throws {
+        let l = try live(#"{"tracker":{"lastEndOfDay":"2026-11-09"}}"#)
+        #expect(l.tracker.away == TrackerAwayDetails())
+        #expect(l.tracker.prompt?.doneAt == nil)
+    }
+
+    @Test func badAwayDetailsKeepTheRest() throws {
+        let l = try live(#"{"tracker":{"away":{"awayItems":[42],"lastAway":7},"lastEndOfDay":"2026-11-09"}}"#)
+        #expect(l.tracker.away.awayItems.isEmpty)
+        #expect(l.tracker.away.lastAway == nil)
+        #expect(l.tracker.lastEndOfDay?.raw == "2026-11-09")
+    }
+
+    @Test func awayDetailsAndTheDoneTimeRoundTrip() throws {
+        let start = day(2026, 11, 9, 9)
+        var l = LiveState()
+        l.tracker.prompt = PromptState(kind: .whatNow, shownAt: start, askTime: start, switchFrom: start, doneAt: start)
+        l.tracker.away.lastAway = AwaySpan(start: start, end: start.addingTimeInterval(600), cause: .idle, place: .lunch)
+        l.tracker.away.awayItems = [ActivityID()]
+        l.tracker.away.loggedWhileAway = [Activity(kind: .event, text: "Standup", start: start, end: start.addingTimeInterval(600))]
+        l.tracker.away.endedByAway = RunningActivity(text: "Spec", start: start, expectedLength: .minutes(30), askAt: start)
+        #expect(try roundTrip(l).tracker == l.tracker)
+    }
+
     @Test func anUnknownPromptKindIsDropped() throws {
         let l = try live(#"{"tracker":{"prompt":{"kind":"zzz","shownAt":"2026-11-09T09:00:00Z","askTime":"2026-11-09T09:00:00Z"}}}"#)
         #expect(l.tracker.prompt == nil)
