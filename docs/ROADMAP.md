@@ -160,10 +160,11 @@ Progress and start-here: `PROGRESS.md`
 ADR: `docs/adr/0001-activity-tracker-replaces-time-blocks.md`
 
 - [x] Design, glossary, spec, plan, goals, test notes
-- [ ] Wave 0: contracts
-- [ ] Wave 1: T1 Engine flow · T2 Storage · T3 Mac platform · T4 Prompt views · T5 Reports and end of day · T6 Settings and menu views (parallel)
-- [ ] Wave 2: C Calendar engine · I Integration (parallel)
-- [ ] Wave 3: finish, review, perf, docs, website
+- [x] Wave 0: contracts
+- [x] Wave 1: T1 Engine flow · T2 Storage · T3 Mac platform · T4 Prompt views · T5 Reports and end of day · T6 Settings and menu views (parallel)
+- [x] Wave 2: C Calendar engine · I Integration (parallel)
+- [x] Wave 3: finish, review, fixes, docs, website
+- [ ] User: perf (`perf.sh`, `--windows`), hand tests, merge to `main`, push
 - Later: Week view, remove time blocks.
 
 ## Later

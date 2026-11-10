@@ -58,11 +58,14 @@ Base branch: `feat/activity-tracker` (local; not pushed). Track branches and wor
 | 1 | T6 Settings and menu views | `feat/tracker-t6-settings` | done, merged (`7e6513d`) |
 | 2 | C Calendar engine | `feat/tracker-c-calendar` | done, merged (`4634669`) |
 | 2 | I Integration | `feat/tracker-i-integration` | done, merged (`31267e1`) |
-| 3 | Finish | `feat/activity-tracker` | next |
+| 3 | Finish | `feat/activity-tracker` | code done; user checks open |
 
 ## Next step
 
-Wave 3 (Finish), 1 session plus the user. Prompt: `Read PROGRESS.md. Do wave 3.` First ask the user before `./build.sh --install` and `/perf-check` (they use the real data). Read the decisions lists in `docs/tracker-progress/C.md` and `I.md` with the user.
+Wave 3 code, docs, and website are done. The user does these steps before the merge to `main`:
+1. `./build.sh --install`, then `./scripts/perf.sh` and `./scripts/perf.sh --windows` in Terminal (G53). They use the real data.
+2. The hand tests in `docs/specs/phase-17-test-notes.md` (P1–P5, G14, G22, G25, G27, G44, G64).
+3. Then: merge `feat/activity-tracker` into `main` and push, only when the user says so.
 
 ## Key decisions (full list in the design page, Decisions tab)
 
@@ -95,36 +98,10 @@ Wave 3 (Finish), 1 session plus the user. Prompt: `Read PROGRESS.md. Do wave 3.`
 | 2026-11-09 | Wave 0 (local, subagents) | Contracts: tracker types, Prefs/LiveState fields, ports, test support, engine stubs and hooks, constants, copy, metrics, colors, track files, CONTRACTS.md. Old engine enum `Activity` is now `HabitActivity`. Review clean after 1 fix round. 1492 + 764 tests pass, lint OK. | `2381f1f` |
 | 2026-11-10 | Wave 1 (local, 6 parallel subagents in worktrees) | T1–T6 built test-first, each reviewed; fix rounds: T1 2, T3 1, T4 1, T5 1, T6 1. Merged in order T2 → T1 → T3 → T4 → T5 → T6 with `--no-ff`, no conflict; tests and lint after each merge. 1648 + 898 tests pass, lint OK, release build OK. Worktrees and track branches removed. | `b9896a8` |
 | 2026-11-10 | Wave 2 (local, 2 parallel subagents in worktrees) | C and I built test-first, each reviewed; 1 fix round each (C: 2 Important, 3 Minor; I: 5 Important, 3 Minor). Merged C → I with `--no-ff`, no conflict. At merge: `fillEventAsk` and `closeEventNote` wired with `TrackerCalendarWiringTests`. 1721 + 921 tests pass, lint OK, release build OK. Worktrees and track branches removed. | `e238fcf` |
+| 2026-11-10 | Wave 3 (local, subagents) | Goal review of all 70 goals (2 reviewers). User decisions: an event activity runs through Away (rule 22a), Away rows get Edit/Delete (33a), edits across midnight are refused (33b), Meeting color C9B8FF, all other wave 1–2 calls accepted and the spec reworded. 3 parallel fix tracks (W3-A Away and Done incl. the Done-time data-loss blocker, W3-B prompts and calendar incl. late C, W3-C report), merged A → B → C with no conflict, then 1 review fix round (2 Important, 4 Minor). CLAUDE.md, README, website (4 tracker screenshots), "never reads your events" removed. 1781 + 937 tests pass, lint OK, release build OK. | this commit |
 
 ## Open items
 
-- None in the design. Add problems found during coding here.
-- Wave 0 minor findings, deferred to wave 2 track I or wave 3:
-  - The backup always writes `"activities": []`.
-  - The copy says "Yes, log it", but the spec says "Yes". "1 min" is hard-coded in the copy.
-  - `usualLength` and the start/end minutes are not fully checked on decode.
-  - The Meeting category color is the same as the Meditation buddy color. Meditation uses A99CF5, but the design page has C9B8FF.
-  - `spaceKeyName` is in `Limits`.
-- Wave 1 decisions (need the user's eye, change in wave 3 if wrong):
-  - Done opens A with the Started row; the old activity ends only on Start or Skip in A. Spec rule 15 ("Done ends the activity now") must be reworded.
-  - C still asks after tracker hours on a tracker day (rule 25), but never on a non-tracker day or a day off (G2).
-  - A late "Still on it" confirms the activity only up to now (rule 22).
-  - A recent chip starts the activity at once (P1), with that chip's text and category.
-  - The activity month file uses `{"schemaVersion":1,"value":[...]}` (storage rule 2). The spec Storage line says "items"; fix the spec.
-- Wave 1 items for track I (beyond the "Needs" lists in the track files):
-  - Add `askEveryMinutes` to `TrackerPromptState`; C's "Yes, N min more" shows 15 until then.
-  - The backup encodes `[Activity]`, so items and fields that the store keeps but cannot decode are not in the backup.
-  - Away rows in the report have no Edit and no Delete.
-  - Move the private copy strings and constants of T4, T5, T6 into `Copywriter` / `UIMetrics` / `Limits` (key codes in `ShortcutCapture`, `perRow` 3, bar widths, "1 days").
-  - `TrackerDaysOffCard` copies `DayOffCalendar` (about 60 lines). Give the shared days-off card an accent and closure API, then delete the copy.
-  - The global hotkey stays active while the user records a new shortcut.
-- Wave 1 items for track C: recurring events share one `eventIdentifier` (dedupe by id + start); keep each `events()` read to 1 day; a deleted category falls back to the calendar name.
-- Hand test (user, wave 3): lock, sleep, lid, ⌥⌘Space steps in `docs/tracker-progress/T3.md`. A closed lid with an external display may not post sleep; Away then starts at the idle deadline.
-- Wave 1 minors (wave 3): a paused session turns off the idle check until midnight; D loses its Away details after a restart; the end-of-day popup does not show for a day whose activity ended at midnight; turning the tracker off ends the activity at now, not at confirmed-until; duplicate ids in one month file share extra keys; CSV defuse misses a leading tab.
-- Wave 2 decisions (need the user's eye, change in wave 3 if wrong):
-  - Away in the middle of a meeting: rule 22 cuts the event at the lock or the last input, so a 1-min lock logs 1 min of meeting. Should an `.event` activity run to `min(event end, back)`? This conflicts with P5.
-  - Track C: an event that is already running when reading starts or the app restarts is not logged; it is offered as the first chip. Quiet time: ask-first waits; log-and-tell logs with no note. An event activity never ends by itself; at the event end A opens with the Started row. Full list in `docs/tracker-progress/C.md`.
-  - Track C: a pending ask-first comes back after D, B, a session, or a time block, the same day, until answered. A late Yes trims the old activity and the Away around the event.
-  - Track I: NEW badge removed from "Activity tracker" (sidebar width). "MY DAY" sits above "Time blocks". "Log activity" is a full-width row below the tool row (rule 41 says inside the tool row). Reports window 620 → 664 pt. A timed-out buddy session does not give A the keyboard (`promptByUser`).
-- Wave 2 deferred (track I, reasons in `docs/tracker-progress/I.md`): the backup leaves out undecodable activity items; Away rows have no Edit/Delete or place change; report edits across midnight are not refused; the global shortcut stays active while recording a new one; no "input again" presence event, so D can show up to 60 s late after an idle Away.
-- Hand tests for wave 3: keyboard focus of every prompt (G64), panel resize, 1 real Gmail event (G27), P5.
+- User checks before the merge (see Next step).
+- Still deferred (tracker phase 2): the backup leaves out activity items that this version cannot decode; the global shortcut stays active while the user records a new one; no "input again" presence event, so D can show up to 60 s late after an idle Away; duplicate ids in 1 month file share extra keys; turning on a break during an Away that keeps an event does not end the event.
+- Google Search Console: submit `sitemap.xml` again after the site deploys.
