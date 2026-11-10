@@ -62,6 +62,8 @@ Base branch: `feat/activity-tracker` (local; not pushed). Track branches and wor
 
 ## Next step
 
+**Popup redesign (next session):** follow `docs/specs/phase-17-popup-redesign.md` (light red, every option visible, Recent and Category dropdowns with 10 items). Prompt: `Read PROGRESS.md and docs/specs/phase-17-popup-redesign.md. Do the popup redesign.`
+
 Wave 3 code, docs, and website are done. The user does these steps before the merge to `main`:
 1. `./build.sh --install`, then `./scripts/perf.sh` and `./scripts/perf.sh --windows` in Terminal (G53). They use the real data.
 2. The hand tests in `docs/specs/phase-17-test-notes.md` (P1–P5, G14, G22, G25, G27, G44, G64).
