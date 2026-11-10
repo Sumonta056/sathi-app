@@ -45,17 +45,11 @@ extension Engine {
 
     @discardableResult
     func renameTrackerCategory(_ old: String, to name: String) -> Bool {
-        guard renameActivityCategory(old, to: name) else { return false }
-        let new = activityCategories.first { $0.name.caseInsensitiveCompare(name) == .orderedSame }?.name ?? name
-        data.prefs.tracker.categoryByCalendar = data.prefs.tracker.categoryByCalendar.mapValues { $0 == old ? new : $0 }
-        data.prefs.tracker.eventCategoryByTitle = data.prefs.tracker.eventCategoryByTitle.mapValues { $0 == old ? new : $0 }
-        return true
+        renameActivityCategory(old, to: name)
     }
 
     func removeTrackerCategory(_ name: String) {
         deleteActivityCategory(name)
-        data.prefs.tracker.categoryByCalendar = data.prefs.tracker.categoryByCalendar.filter { $0.value != name }
-        data.prefs.tracker.eventCategoryByTitle = data.prefs.tracker.eventCategoryByTitle.filter { $0.value != name }
     }
 
     func nextCategoryColor() -> UInt32 {

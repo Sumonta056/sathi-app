@@ -29,7 +29,8 @@ struct ActivityLogView: View {
                 } else {
                     ActivityLogRowView(
                         row: row, categories: categories, calendar: calendar,
-                        onEdit: { editing = row.id }, onFill: { adding = .gap($0) }, onSaveToCalendar: actions.saveToCalendar
+                        onEdit: { editing = row.id }, onDelete: actions.delete, onFill: { adding = .gap($0) },
+                        onSaveToCalendar: actions.saveToCalendar
                     )
                 }
                 Divider().overlay(Night.divider)
