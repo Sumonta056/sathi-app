@@ -13,12 +13,16 @@ struct ActivityEditForm: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: UIMetrics.sectionSpacing) {
-            LazyTextField(placeholder: Copywriter.trackerFieldPlaceholder, text: $draft.text, startsEditing: draft.text.isEmpty)
+            if draft.isAway {
+                places
+            } else {
+                LazyTextField(placeholder: Copywriter.trackerFieldPlaceholder, text: $draft.text, startsEditing: draft.text.isEmpty)
+            }
             HStack(spacing: UIMetrics.sectionSpacing) {
                 TimeMenu(minutes: $draft.startMinutes, accent: Night.tracker)
                 Text(verbatim: "–").foregroundStyle(Night.muted)
                 TimeMenu(minutes: $draft.endMinutes, accent: Night.tracker)
-                categoryMenu
+                if !draft.isAway { categoryMenu }
                 Spacer(minLength: 0)
                 if let delete {
                     Button(Copywriter.trackerDelete) { delete() }
@@ -35,6 +39,16 @@ struct ActivityEditForm: View {
         }
         .padding(UIMetrics.trackerLogRowPadding)
         .background(RoundedRectangle(cornerRadius: UIMetrics.trackerMiniRadius, style: .continuous).fill(Night.trackerRowSelected))
+    }
+
+    private var places: some View {
+        HStack(spacing: UIMetrics.trackerChipSpacing) {
+            ForEach(AwayPlace.allCases, id: \.self) { place in
+                TrackerChip(label: Copywriter.trackerAwayPlace(place), on: draft.awayPlace == place, id: "report.place." + place.rawValue) {
+                    draft.awayPlace = place
+                }
+            }
+        }
     }
 
     private var categoryMenu: some View {

@@ -6,14 +6,18 @@ struct ActivityEditDraft: Equatable {
     var category: String?
     var startMinutes: Int
     var endMinutes: Int
+    var awayPlace: AwayPlace?
+    let isAway: Bool
     private let originalStart: Date
     private let originalEnd: Date
     private let originalStartMinutes: Int
     private let originalEndMinutes: Int
 
-    init(text: String = "", category: String? = nil, start: Date, end: Date, calendar: Calendar) {
+    init(text: String = "", category: String? = nil, start: Date, end: Date, calendar: Calendar, isAway: Bool = false, awayPlace: AwayPlace? = nil) {
         self.text = text
         self.category = category
+        self.isAway = isAway
+        self.awayPlace = awayPlace
         originalStart = start
         originalEnd = end
         originalStartMinutes = Self.minutes(start, calendar: calendar)
@@ -23,7 +27,10 @@ struct ActivityEditDraft: Equatable {
     }
 
     init(_ activity: Activity, calendar: Calendar) {
-        self.init(text: activity.text, category: activity.category, start: activity.start, end: activity.end, calendar: calendar)
+        self.init(
+            text: activity.text, category: activity.category, start: activity.start, end: activity.end, calendar: calendar,
+            isAway: activity.kind == .away, awayPlace: activity.awayPlace
+        )
     }
 
     func edit(dayStart: Date, calendar: Calendar) -> ActivityEdit {
@@ -34,7 +41,7 @@ struct ActivityEditDraft: Equatable {
         if endMinutes != originalEndMinutes, endMinutes == 0, end <= start {
             end = Self.date(Limits.minutesPerDay, dayStart: dayStart, calendar: calendar)
         }
-        return ActivityEdit(text: text, category: category, start: start, end: end)
+        return ActivityEdit(text: text, category: category, start: start, end: end, awayPlace: awayPlace)
     }
 
     static func minutes(_ date: Date, calendar: Calendar) -> Int {
@@ -51,6 +58,8 @@ struct ActivityEditDraft: Equatable {
         case .emptyText: return Copywriter.trackerEditEmpty
         case .tooShort: return Copywriter.trackerEditTooShort
         case .overlap: return Copywriter.trackerEditOverlap
+        case .crossesMidnight: return Copywriter.trackerEditCrossesMidnight
+        case .inFuture: return Copywriter.trackerEditInFuture
         case .saved, .notFound: return nil
         }
     }

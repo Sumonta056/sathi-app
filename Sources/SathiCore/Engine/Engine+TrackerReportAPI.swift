@@ -32,14 +32,19 @@ extension Engine {
 
     @discardableResult
     package func editActivity(_ id: ActivityID, _ edit: ActivityEdit) -> ActivityEditResult {
-        guard let old = storedActivity(id) else { return .notFound }
-        if let problem = ActivityEditCheck.problem(edit, others: busySpans(near: edit, except: id)) { return problem }
+        guard let old = storedActivity(id), old.kind != .timeBlock else { return .notFound }
+        let edit = old.kind == .away ? awayEdit(edit.wholeSeconds) : edit.wholeSeconds
+        if let problem = ActivityEditCheck.problem(edit, others: busySpans(near: edit, except: id), calendar: calendar) { return problem }
         var new = old
         new.text = ActivityText.clean(edit.text) ?? old.text
-        new.category = edit.category
-        new.start = edit.start.wholeSecond
-        new.end = edit.end.wholeSecond
-        new = calendarActivityEdited(from: old, to: new)
+        new.start = edit.start
+        new.end = edit.end
+        if old.kind == .away {
+            new.awayPlace = edit.awayPlace
+        } else {
+            new.category = edit.category
+            new = calendarActivityEdited(from: old, to: new)
+        }
         removeStoredActivity(id)
         storeActivity(new)
         return .saved(id)
@@ -47,10 +52,16 @@ extension Engine {
 
     @discardableResult
     package func addPastActivity(_ edit: ActivityEdit) -> ActivityEditResult {
-        if let problem = ActivityEditCheck.problem(edit, others: busySpans(near: edit, except: nil)) { return problem }
+        let edit = edit.wholeSeconds
+        if let problem = ActivityEditCheck.problem(edit, others: busySpans(near: edit, except: nil), calendar: calendar) { return problem }
+        if edit.end > clock.now { return .inFuture }
         let item = Activity(text: ActivityText.clean(edit.text) ?? edit.text, category: edit.category, start: edit.start, end: edit.end)
         storeActivity(item)
         return .saved(item.id)
+    }
+
+    private func awayEdit(_ edit: ActivityEdit) -> ActivityEdit {
+        ActivityEdit(text: Copywriter.trackerAwayText(edit.awayPlace), category: nil, start: edit.start, end: edit.end, awayPlace: edit.awayPlace)
     }
 
     package func deleteActivity(_ id: ActivityID) {

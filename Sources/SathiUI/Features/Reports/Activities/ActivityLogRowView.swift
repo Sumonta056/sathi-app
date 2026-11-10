@@ -6,6 +6,7 @@ struct ActivityLogRowView: View {
     let categories: [ActivityCategory]
     let calendar: Calendar
     let onEdit: () -> Void
+    var onDelete: (ActivityID) -> Void = { _ in }
     let onFill: (DateInterval) -> Void
     let onSaveToCalendar: (ActivityID) -> Void
 
@@ -45,9 +46,12 @@ struct ActivityLogRowView: View {
             Text(verbatim: Copywriter.trackerDuration(a.length))
                 .font(Typography.hint).foregroundStyle(Night.muted)
                 .frame(width: UIMetrics.trackerLogLengthWidth, alignment: .trailing)
-            if !isAway {
+            if Self.canEdit(a, running: running) {
                 Button(Copywriter.trackerEdit) { onEdit() }
                     .buttonStyle(GhostButton(accent: Night.tracker, height: UIMetrics.trackerMiniButton))
+            } else if a.kind == .timeBlock {
+                Button(Copywriter.trackerDelete) { onDelete(a.id) }
+                    .buttonStyle(GhostButton(accent: Night.cheek, height: UIMetrics.trackerMiniButton))
             }
         }
     }
@@ -65,6 +69,10 @@ struct ActivityLogRowView: View {
             .frame(width: UIMetrics.trackerLogLengthWidth, alignment: .trailing)
         Button(Copywriter.trackerFill) { onFill(interval) }
             .buttonStyle(GhostButton(accent: Night.tracker, height: UIMetrics.trackerMiniButton))
+    }
+
+    static func canEdit(_ a: Activity, running: Bool) -> Bool {
+        !running && a.kind != .timeBlock
     }
 
     private func span(_ start: Date, _ end: Date?) -> String {

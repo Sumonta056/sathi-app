@@ -2,7 +2,7 @@ import Foundation
 
 package enum ActivityMonthExporter {
     static let header = "start,end,minutes,kind,category,text,place"
-    private static let formulaStarts: Set<Character> = ["=", "+", "-", "@"]
+    private static let formulaStarts: Set<Character> = ["=", "+", "-", "@", "\t", "\r", "\r\n"]
 
     package static func csv(_ month: ActivityMonth, timeZone: TimeZone) -> String {
         let formatter = timestampFormatter(timeZone)
@@ -40,7 +40,8 @@ package enum ActivityMonthExporter {
 
     private static func field(_ text: String) -> String {
         let flat = text.replacingOccurrences(of: "\r", with: " ").replacingOccurrences(of: "\n", with: " ")
-        let safe = flat.first.map { formulaStarts.contains($0) } == true ? "'" + flat : flat
+        let risky = [text.first, flat.first].contains { $0.map(formulaStarts.contains) == true }
+        let safe = risky ? "'" + flat : flat
         guard safe.contains(",") || safe.contains("\"") else { return safe }
         return "\"" + safe.replacingOccurrences(of: "\"", with: "\"\"") + "\""
     }

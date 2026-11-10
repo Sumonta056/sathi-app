@@ -48,6 +48,14 @@ struct ActivityMonthExporterTests {
         #expect(lines[1].contains(",'+x,'=SUM(A1),"))
     }
 
+    @Test(arguments: ["\t=1+2", "\r=1+2", "\r\n=1+2"])
+    func csvDefusesALeadingTabOrCarriageReturn(_ text: String) {
+        let lines = csv([item(text, hour: 9)])
+        #expect(lines.count == 2)
+        let cell = lines[1].split(separator: ",", omittingEmptySubsequences: false)[5]
+        #expect(cell.hasPrefix("'"))
+    }
+
     @Test func csvShowsKindAndPlaceForAway() {
         let lines = csv([item("Lunch", hour: 12, category: nil, place: .lunch)])
         #expect(lines[1].hasSuffix(",away,,Lunch,lunch"))
