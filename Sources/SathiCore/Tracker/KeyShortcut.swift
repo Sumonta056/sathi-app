@@ -21,7 +21,7 @@ package struct KeyShortcut: Codable, Equatable, Hashable, Sendable {
     package static let trackerDefault = KeyShortcut(
         keyCode: Limits.spaceKeyCode,
         modifiers: [.option, .command],
-        keyName: Limits.spaceKeyName
+        keyName: Copywriter.trackerSpaceKeyName
     )
 
     package var orderedModifiers: [KeyModifier] { KeyModifier.allCases.filter(modifiers.contains) }

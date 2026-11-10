@@ -40,12 +40,14 @@ extension TrackerPrefs {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         let d = TrackerPrefs()
         isOn = c.lenient(.isOn, or: d.isOn)
-        startMinutes = Self.validTime(c.lenient(.startMinutes, or: d.startMinutes), or: d.startMinutes)
-        endMinutes = Self.validTime(c.lenient(.endMinutes, or: d.endMinutes), or: d.endMinutes)
+        let start = Self.validTime(c.lenient(.startMinutes, or: d.startMinutes), or: d.startMinutes)
+        let end = Self.validTime(c.lenient(.endMinutes, or: d.endMinutes), or: d.endMinutes)
+        (startMinutes, endMinutes) = Self.ordered(start: start, end: end)
         weekdays = (try? c.knownSet(.weekdays, or: d.weekdays, keepsEmpty: false)) ?? d.weekdays
         daysOff = c.lenientSet(.daysOff, or: d.daysOff)
         askEveryMinutes = Self.chip(c.lenient(.askEveryMinutes, or: d.askEveryMinutes), in: Limits.trackerAskChips, or: d.askEveryMinutes)
-        usualLength = c.lenient(.usualLength, or: d.usualLength)
+        let length = c.lenient(.usualLength, or: d.usualLength)
+        usualLength = ActivityLength.choices.contains(length) ? length : d.usualLength
         idleMinutes = Self.chip(c.lenient(.idleMinutes, or: d.idleMinutes), in: Limits.idleChips, or: d.idleMinutes)
         categories = c.contains(.categories) ? Array((c.lenientArray(.categories) as [ActivityCategory]).prefix(Limits.categoryMax)) : d.categories
         calendarOnByDefault = c.lenient(.calendarOnByDefault, or: d.calendarOnByDefault)

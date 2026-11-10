@@ -12,7 +12,7 @@ struct ShortcutCaptureTests {
 
     @Test func spaceHasItsName() {
         let s = ShortcutCapture.shortcut(keyCode: 49, flags: [.control], characters: " ")
-        #expect(s?.keyName == Limits.spaceKeyName)
+        #expect(s?.keyName == Copywriter.trackerSpaceKeyName)
     }
 
     @Test func noModifierIsRejected() {

@@ -2,14 +2,14 @@ import SathiCore
 import SwiftUI
 
 struct DayOffPicker: View {
-    let habit: HabitID
+    let make: @MainActor (Engine) -> DaysOffSource
     let accent: Color
     @State private var isOpen = false
     @State private var offset = 0
 
     var body: some View {
         Button { isOpen.toggle() } label: {
-            Text(verbatim: "Pick a date")
+            Text(verbatim: Copywriter.daysOffPick)
                 .font(Typography.chip)
                 .foregroundStyle(Night.text)
                 .fixedSize()
@@ -24,7 +24,7 @@ struct DayOffPicker: View {
         .buttonStyle(.plain)
         .fixedSize()
         .popover(isPresented: $isOpen, arrowEdge: .bottom) {
-            DayOffCalendar(habit: habit, accent: accent, offset: $offset)
+            DayOffCalendar(make: make, accent: accent, offset: $offset)
         }
     }
 }

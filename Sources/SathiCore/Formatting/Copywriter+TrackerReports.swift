@@ -1,6 +1,10 @@
 import Foundation
 
 extension Copywriter {
+    package static let trackerNoValue = "–"
+
+    package static func trackerDaysTracked(_ n: Int) -> String { n == 1 ? "1 day" : "\(n) days" }
+
     package static let trackerTabHabits = "Habits"
     package static let trackerTabActivities = "Activities"
     package static let trackerRangeDay = "Day"

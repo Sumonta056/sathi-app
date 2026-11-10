@@ -7,6 +7,7 @@ struct MenuCards: View {
         CappedHeight(maxHeight: UIMetrics.menuCardsMaxHeight) {
             ScrollView {
                 VStack(alignment: .leading, spacing: UIMetrics.menuSpacing) {
+                    TrackerMenuSlot()
                     HabitList()
                     ForEach(HabitID.allCases.filter { !e.enabled($0) }) { id in
                         SleepingRow(id: id)
@@ -14,6 +15,7 @@ struct MenuCards: View {
                     QuickListCard()
                     TimeBlockCard()
                     ToolRow()
+                    if e.data.prefs.tracker.isOn { TrackerLogActivityButton() }
                 }
             }
         }

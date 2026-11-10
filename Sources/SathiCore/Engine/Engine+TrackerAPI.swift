@@ -67,7 +67,7 @@ extension Engine {
         guard let r = data.live.tracker.running else { return }
         let n = clock.now.wholeSecond
         data.live.tracker.running?.quietUntil = nil
-        setTrackerPrompt(PromptState(kind: .whatNow, shownAt: n, askTime: n, switchFrom: r.lastAnswer))
+        setTrackerPrompt(PromptState(kind: .whatNow, shownAt: n, askTime: n, switchFrom: r.lastAnswer), byUser: true)
         requestTick()
     }
 
@@ -108,7 +108,7 @@ extension Engine {
         let n = clock.now.wholeSecond
         if let done = pendingDoneAt { endRunningActivity(at: done) }
         if data.live.tracker.awaySince != nil { returnFromAway(at: n, welcomes: false) }
-        setTrackerPrompt(PromptState(kind: .center, shownAt: n, askTime: n))
+        setTrackerPrompt(PromptState(kind: .center, shownAt: n, askTime: n), byUser: true)
     }
 
     package func trackerShortcutPressed() {

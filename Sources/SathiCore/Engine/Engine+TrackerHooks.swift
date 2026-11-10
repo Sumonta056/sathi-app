@@ -29,6 +29,7 @@ extension Engine {
         if old.isOn && !new.isOn {
             if let r = data.live.tracker.running { endRunningOnInterrupt(at: min(r.confirmedUntil, clock.now)) }
             clearTrackerPrompt()
+            closeEventNote()
             closeTrackerEndOfDay()
             data.live.tracker.awaySince = nil
             data.live.tracker.awayCause = nil
@@ -79,7 +80,10 @@ extension Engine {
         endRunningActivity(at: n)
         if let before = data.live.tracker.beforeSession {
             data.live.tracker.beforeSession = nil
-            setTrackerPrompt(PromptState(kind: .whatNow, shownAt: n, askTime: n, switchFrom: n, resume: before))
+            setTrackerPrompt(
+                PromptState(kind: .whatNow, shownAt: n, askTime: n, switchFrom: n, resume: before),
+                byUser: !trackerRuntime.sessionTimedOut
+            )
         }
         requestTick()
     }

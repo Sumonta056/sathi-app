@@ -1,7 +1,7 @@
 import SwiftUI
 
 extension UIMetrics {
-    static let reportsSize = CGSize(width: 860, height: 620)
+    static let reportsSize = CGSize(width: 860, height: 664)
     static let reportsPadding = EdgeInsets(top: 22, leading: 28, bottom: 22, trailing: 28)
     static let reportsGap: CGFloat = 16
     static let tileGap: CGFloat = 12

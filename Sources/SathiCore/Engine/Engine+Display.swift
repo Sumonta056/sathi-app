@@ -107,6 +107,7 @@ extension Engine {
         let ids = HabitID.allCases
         if ids.contains(where: { phase($0) == .lock }) { return "Locked" }
         if let block = blockStatusText { return block }
+        if trackerIsQuiet, let until = trackerQuietUntil { return Copywriter.trackerQuietUntilMenu(until, calendar: calendar) }
         if let id = ids.first(where: showsBubble) { return Self.callToAction(id) }
         if let left = ids.compactMap({ session($0)?.left(at: now) }).min() { return Fmt.clock(left) }
         if isCelebrating { return "Done" }

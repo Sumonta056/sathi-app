@@ -28,7 +28,7 @@ struct TrackerHeader: View {
                 }
             }
             Spacer(minLength: 0)
-            if let onClose { CornerCloseButton(label: "Close", action: onClose) }
+            if let onClose { CornerCloseButton(label: Copywriter.trackerClose, action: onClose) }
         }
     }
 

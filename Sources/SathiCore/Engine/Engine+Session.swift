@@ -40,7 +40,9 @@ extension Engine {
         record(.done(id, amount, at: n))
         habits[id] = HabitState(nextDue: freshDue(id, lastDone: n))
         sessionFinishing(id)
+        trackerRuntime.sessionTimedOut = timedOut
         close(id)
+        trackerRuntime.sessionTimedOut = false
         if resetsIdea(id) { gymIdea = 0 }
         celebrate(id, amount, readingAsk: timedOut && id == .reading && usesCorner(.reading) ? unreadItem(s)?.id : nil)
     }

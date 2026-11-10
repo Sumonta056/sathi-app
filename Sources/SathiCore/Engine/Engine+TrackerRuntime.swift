@@ -6,6 +6,8 @@ struct TrackerRuntime: Equatable {
     var presenceStarted = false
     var registeredShortcut: KeyShortcut?
     var reportDay: DayKey?
+    var promptByUser = false
+    var sessionTimedOut = false
     var whatNowAt: Date?
     var screenLocked = false
     var asleep = false

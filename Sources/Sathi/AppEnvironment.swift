@@ -10,6 +10,7 @@ enum AppEnvironment {
         .appendingPathComponent(StorageKeys.appFolder)
     static let stateStore = FileStateStore(base: base)
     static let historyStore = FileHistoryStore(base: base, calendar: .current)
+    static let activityStore = FileActivityStore(base: base)
 
     static let engine: Engine = {
         LegacyMigrator.migrateIfNeeded(
@@ -26,7 +27,10 @@ enum AppEnvironment {
             presenter: presenter,
             links: WorkspaceLinkOpener(),
             calendarWriter: EventKitCalendarWriter(),
-            audio: BreathAudioPlayer()
+            audio: BreathAudioPlayer(),
+            activityStore: activityStore,
+            presence: SystemPresenceMonitor(),
+            hotkeys: CarbonHotkeyRegistrar()
         )
         presenter.engine = engine
         return engine
