@@ -15,6 +15,7 @@
   --gym: #cdef5a;
   --quick: #ff9fb8;
   --block: #5ed6c4;
+  --tracker: #ffc94a;
   --on-accent: #0d1220;
   --radius: 16px;
   --font: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -193,6 +194,11 @@ p {
 
 .c-block {
   color: var(--block);
+  font-weight: 800;
+}
+
+.c-tracker {
+  color: var(--tracker);
   font-weight: 800;
 }
 
@@ -642,6 +648,10 @@ section {
 
 .dot.block {
   background: var(--block);
+}
+
+.dot.tracker {
+  background: var(--tracker);
 }
 
 .checks {
