@@ -6,7 +6,7 @@ extension Engine {
     var trackerEventDeadlines: [Date] {
         let n = clock.now
         let rt = trackerCalendarRuntime
-        var list = [rt.noteUntil].compactMap { $0 }
+        var list = [rt.noteUntil, lateStillOnItAt].compactMap { $0 }
         if readsCalendarEvents {
             let after = max(n, rt.checkedUntil ?? n)
             if let next = rt.events

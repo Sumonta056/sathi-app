@@ -27,7 +27,7 @@ struct WhatNowPopup: View {
                 .trackerField()
             TrackerRecentChips(state: state, draft: form.draft, limit: Limits.recentInCorner) { state.actions.start($0, picked) }
             TrackerForRow(draft: $form.draft)
-            TrackerCalendarRow(draft: $form.draft, calendars: state.calendars)
+            TrackerCalendarRow(draft: $form.draft, calendars: state.calendars, defaultID: state.defaultCalendarID)
             TrackerQuietRow(draft: $form.draft)
             if state.showsSwitchRow {
                 TrackerSwitchRow(times: state.switchTimes, picked: $picked, calendar: state.calendar)

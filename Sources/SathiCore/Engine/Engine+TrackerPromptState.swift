@@ -17,6 +17,7 @@ extension Engine {
         s.recents = recentActivities
         s.categories = activityCategories
         s.calendars = calendarChoices()
+        s.defaultCalendarID = trackerDefaultCalendarID
         s.calendar = calendar
         s.askEveryMinutes = trackerPrefs.askEveryMinutes
         if let from = p.switchFrom { s.switchTimes = SwitchTimes.chips(from: from, to: n, calendar: calendar) }
@@ -47,9 +48,15 @@ extension Engine {
             text: "",
             category: p.defaultCategory,
             length: p.usualLength,
-            calendarID: p.calendarOnByDefault ? p.defaultCalendarID : nil,
+            calendarID: p.calendarOnByDefault ? trackerDefaultCalendarID : nil,
             quiet: p.quietByDefault && p.usualLength.interval != nil
         )
+    }
+
+    var trackerDefaultCalendarID: String? {
+        let ids = calendarChoices().map(\.id)
+        let candidates = [trackerPrefs.defaultCalendarID, calendarWriter.defaultCalendarID()]
+        return candidates.compactMap { $0 }.first(where: ids.contains) ?? ids.first
     }
 
     private func promptActions() -> TrackerPromptActions {

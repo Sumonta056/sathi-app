@@ -8,6 +8,7 @@ extension Engine {
         if readsCalendarEvents { handleEventStarts(n) }
         askPendingEventAgain(n)
         openWhatNowAtEventEnd(n)
+        showStillOnItLate(n)
     }
 
     func logEvent(_ e: CalendarEventInfo, at start: Date) {
@@ -72,7 +73,7 @@ extension Engine {
     private func handleEventStart(_ e: CalendarEventInfo) {
         if let r = data.live.tracker.running, let source = r.sourceEventID {
             guard source != e.id, runningEventEnd(r) <= e.start else {
-                if source != e.id { showEventNote(.alsoNow(e)) }
+                if source != e.id, !trackerIsQuiet { showEventNote(.alsoNow(e)) }
                 return
             }
         }
