@@ -5,7 +5,8 @@ import Testing
 struct CopywriterBlockSettingsTests {
     @Test func fixedLines() {
         #expect(Copywriter.blockSettingsTitle == "Time blocks")
-        #expect(Copywriter.blockSettingsSubtitle == "Sathi writes 1 event when a time block ends. It never reads your events.")
+        #expect(Copywriter.blockSettingsSubtitle == "Sathi writes 1 event when a time block ends.")
+        #expect(!Copywriter.blockSettingsSubtitle.contains("never reads"))
         #expect(Copywriter.blockSettingsAllowed == "Allowed")
         #expect(Copywriter.blockSettingsNotAllowed == "Not allowed")
         #expect(Copywriter.blockSettingsNotAsked == "Not asked yet")

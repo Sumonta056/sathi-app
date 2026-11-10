@@ -2,7 +2,7 @@ import Foundation
 
 extension Copywriter {
     package static let blockSettingsTitle = "Time blocks"
-    package static let blockSettingsSubtitle = "Sathi writes 1 event when a time block ends. It never reads your events."
+    package static let blockSettingsSubtitle = "Sathi writes 1 event when a time block ends."
     package static let blockSettingsAccess = "Calendar access"
     package static let blockSettingsAllowed = "Allowed"
     package static let blockSettingsNotAllowed = "Not allowed"

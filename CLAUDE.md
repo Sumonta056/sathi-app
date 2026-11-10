@@ -1,6 +1,6 @@
 # Sathi
 
-Sathi is a macOS menu bar app (macOS 13+, Swift 5.9 tools, SwiftUI + AppKit). Four buddies remind the user: Fota (water), Boi (reading), Shanti (meditation, off by default), and Shokti (gym, off by default). An ignored reminder escalates: bubble → persistent bubble → full-screen lock (any buddy, at Strict). Each buddy has its own level (Gentle, Nudgy, Strict) and its own close-button switch. Every buddy stops for the rest of the day when its daily goal is met (one core rule in `HabitRules.nextDue`); its menu card then shows "✓ Goal met" and a check badge. A breathing session (Calm 4·6 by default) can be paused and resumed, and has an optional voice guide and background music, set in the Sound card. Shokti has a daily goal in minutes (sessions a day × session length), spreads its popups evenly over work hours on the days you pick, stops for the day when the goal is met, and suggests ideas from a list of 1 to 8 workout names. Reading, meditation, and gym use a calm corner popup that never takes focus. Each buddy has its own weekdays and single days off; a day off keeps that buddy quiet and never breaks its streak. Every evening (default 10 PM) a calm corner popup shows the day summary of the 4 buddies and congratulates the user when every goal is met. A quick reminder is a one-off note the user writes for a set time; a calm corner popup shows it until the user taps Done. A time block is a work timer: the user starts it from the menu, and its end writes 1 event to a macOS calendar that the user picks (EventKit).
+Sathi is a macOS menu bar app (macOS 13+, Swift 5.9 tools, SwiftUI + AppKit). Four buddies remind the user: Fota (water), Boi (reading), Shanti (meditation, off by default), and Shokti (gym, off by default). An ignored reminder escalates: bubble → persistent bubble → full-screen lock (any buddy, at Strict). Each buddy has its own level (Gentle, Nudgy, Strict) and its own close-button switch. Every buddy stops for the rest of the day when its daily goal is met (one core rule in `HabitRules.nextDue`); its menu card then shows "✓ Goal met" and a check badge. A breathing session (Calm 4·6 by default) can be paused and resumed, and has an optional voice guide and background music, set in the Sound card. Shokti has a daily goal in minutes (sessions a day × session length), spreads its popups evenly over work hours on the days you pick, stops for the day when the goal is met, and suggests ideas from a list of 1 to 8 workout names. Reading, meditation, and gym use a calm corner popup that never takes focus. Each buddy has its own weekdays and single days off; a day off keeps that buddy quiet and never breaks its streak. Every evening (default 10 PM) a calm corner popup shows the day summary of the 4 buddies and congratulates the user when every goal is met. A quick reminder is a one-off note the user writes for a set time; a calm corner popup shows it until the user taps Done. A time block is a work timer: the user starts it from the menu, and its end writes 1 event to a macOS calendar that the user picks (EventKit). The activity tracker (off by default) asks "What now?" and "Still on it?" in calm corner popups inside tracker hours, notices Away (lock, sleep, idle), can log events from ticked calendars and write activities to a calendar, and shows an Activities report (day, month, standup text, export) and an end-of-day popup.
 
 ## Commands
 
@@ -26,27 +26,28 @@ Sources/
     Habits/        HabitRules, HabitDays, DayClock, DayOffMonth, one folder per habit: Water/, Reading/, Meditation/, Gym/ (prefs, rules, helpers such as Weekday, BreathingPattern, BreathCue, BreathCues, GymIdeas, GymProgress)
     Quick/         QuickReminder, QuickPrefs, QuickTime, QuickActivity
     TimeBlock/     TimeBlock, TimeBlockLength, TimeBlockPrefs
+    Tracker/       Activity, ActivityKind, ActivityCategory(+List), ActivityDraft, ActivityEdit, ActivityDay, ActivityMonth, RunningActivity, AwayPlace, AwaySpan, TrackerPrefs(+Hours), TrackerLiveState, PromptKind, PromptState, TrackerPromptState, TrackerNote(+State), TrackerEndOfDayState, EventMode, KeyShortcut, MonthKey, Rules/ (AskTime, SwitchTimes, TrackerHours, RecentList, ActivityEditCheck), Calendar/ (EventRules, EventCategoryRule, SpanCut)
     Constants/     Timing, Limits, StorageKeys, SoundName
     Scheduling/    EscalationPolicy (bubble/lock), TickPlanner (timer delay)
     Stats/         Stats (daily totals), GymLegacyMinutes, StreakCalculator, ReportBuilder + Report, ReportScreen + ReportScreenInput, ReportScreenBuilder (+Tiles, +Chart, +Calendar, +Text), DaySummary
-    Export/        CSVExporter, JSONExporter (backup), ExportNames, ExportFormat, ExportJob, ExportOutcome
+    Export/        CSVExporter, JSONExporter (backup), ExportNames, ExportFormat, ExportJob, ExportOutcome, ActivityMonthExporter
     Formatting/    Fmt, Copywriter (+Reading, +Meditation, +Gym, +DaySummary, +Quick, +TimeBlock, +TimeBlockPopups, +TimeBlockSettings, +TimeBlockView)
-    Ports/         Clock, StateStore, HistoryStore, SoundPlayer, SessionAudio, ReminderPresenter, FileExporter, SummaryRenderer, CalendarWriter, LinkOpener
-    Storage/       JSONFiles, FileSlot, FileStateStore, FileHistoryStore, MonthEvents, RawJSON, LegacyMigrator, Legacy/ (v1 shapes)
-    Engine/        Engine (+Loop, +Actions, +Session, +SessionPause, +SessionRestore, +Breath, +Corner, +Display, +Menu, +History, +Reports, +Export, +DaySummary, +Quick, +QuickLoop, +TimeBlock, +TimeBlockLoop, +TimeBlockCalendar, +TimeBlockDisplay, +TimeBlockMenu), StatusModel
+    Ports/         Clock, StateStore, HistoryStore, SoundPlayer, SessionAudio, ReminderPresenter, FileExporter, SummaryRenderer, CalendarWriter (+CalendarEventInfo, event read), LinkOpener, ActivityStore, PresenceMonitor, HotkeyRegistrar
+    Storage/       JSONFiles, FileSlot, FileStateStore, FileHistoryStore, FileActivityStore, MonthEvents, MonthActivities, RawJSON, LegacyMigrator, Legacy/ (v1 shapes)
+    Engine/        Engine (+Loop, +Actions, +Session, +SessionPause, +SessionRestore, +Breath, +Corner, +Display, +Menu, +History, +Reports, +Export, +DaySummary, +Quick, +QuickLoop, +TimeBlock, +TimeBlockLoop, +TimeBlockCalendar, +TimeBlockDisplay, +TimeBlockMenu, +Tracker* (API, Loop, Log, Away, Hooks, Runtime, PromptState, Categories, ReportAPI, Export, Calendar, CalendarRead, CalendarTick, CalendarWrite, CalendarAway, CalendarRuntime)), StatusModel
   SathiUI/       SwiftUI + AppKit. Views and windows only.
     Constants/     UIMetrics (+Bubble, +Components, +Corner, +Lock, +Meditation, +Breath, +Menu, +Quick, +Reports, +Settings, +TimeBlock, +TimeBlockSettings), TimeSlots
     Theme/         NightPalette (Night tokens), Typography, ButtonStyles, GhostButton, ProgressBar, Shake, ShakeSound, Color+Hex, BreathFont, RGB
     Components/    HeroCard, SettingsCard, SettingRow, OptionCard, ChipRow, SectionLabel, BuddySwitch, WeekdayRow, DaysOffCard, DaysOffRow, DayOffPicker, DayOffCalendar, DayOffCellButton, VolumeSlider, TimeMenu + TimePickerGrid + TimeParts (the 5-minute time chip grid)
     Buddy/         BuddyView, BuddyCanvas (+Pebble, +Kettlebell), BuddyKind, BuddyInk, WaterInk, BuddyPaths, BobbingBuddy, GlassIcon, BottleView
-    Features/      MenuBar/, Bubble/, Water/, Reading/, Meditation/ (BreatheView, BreathFrame, BreathOrb, BreathRing, BreathMotion, BreathMood, BlobShape, MeditationSoundCard), Gym/, Session/, Celebrate/, Lock/, Settings/, Reports/, DaySummary/, Quick/, TimeBlock/
-    Windows/       UIController (+Corner, +Placement, +Quick, +TimeBlock; ReminderPresenter impl), MenuWindowFit, CornerLayout, PanelFactory, CornerToast, SettingsWindow, ReportsWindow, LockScreen, PanelWindows, WindowCloseWatcher
-    Platform/      SystemSoundPlayer, EventKitCalendarWriter, CalendarMapping, WorkspaceLinkOpener, BreathAudioPlayer, BreathVoice, PreviewHandoff, VoicePicker, AudioFiles, SathiResources
+    Features/      MenuBar/, Bubble/, Water/, Reading/, Meditation/ (BreatheView, BreathFrame, BreathOrb, BreathRing, BreathMotion, BreathMood, BlobShape, MeditationSoundCard), Gym/, Session/, Celebrate/, Lock/, Settings/, Reports/, DaySummary/, Quick/, TimeBlock/, Tracker/ (Prompts/ A B C D F and ask-first, EndOfDay/), Reports/Activities/, Settings/Tracker/
+    Windows/       UIController (+Corner, +Placement, +Quick, +TimeBlock, +Tracker, +TrackerPanels; ReminderPresenter impl), MenuWindowFit, CornerLayout, PanelFactory, CornerToast, SettingsWindow, ReportsWindow, LockScreen, PanelWindows, WindowCloseWatcher
+    Platform/      SystemSoundPlayer, EventKitCalendarWriter, EventKitCalendarReader(+Mapping), CalendarMapping, PresenceSystemMonitor, PresenceIdleReader, HotkeyCarbonRegistrar (+CarbonAPI, +Modifiers), WorkspaceLinkOpener, BreathAudioPlayer, BreathVoice, PreviewHandoff, VoicePicker, AudioFiles, SathiResources
   SathiUI/Resources/  Fonts (Figtree-Variable.ttf + OFL.txt), Audio (optional MP3 clips, AUDIO.txt)
   Sathi/         Executable. SathiApp, AppDelegate, AppEnvironment (composition root).
 Resources/        Info.plist (version), AppIcon.icns (app icon), AppIcon.png (1024 px preview)
 Tests/
-  SathiTestSupport/  FakeClock, InMemoryStateStore, InMemoryHistoryStore, SpySoundPlayer, SpyPresenter, SpySessionAudio, SpyFileExporter, SpySummaryRenderer, ThreadSpyHistoryStore, DecodedBackup, FixedZone, EngineHarness, TestFiles, day()
+  SathiTestSupport/  FakeClock, InMemoryStateStore, InMemoryHistoryStore, SpySoundPlayer, SpyPresenter, SpySessionAudio, SpyFileExporter, SpySummaryRenderer, ThreadSpyHistoryStore, DecodedBackup, FixedZone, EngineHarness (+TimeBlock, +Tracker), InMemoryActivityStore, SpyCalendarWriter, SpyPresenter+Tracker, TrackerFakes, TestFiles, day()
   SathiCoreTests/    Swift Testing unit tests for every Core module
   SathiUITests/      ViewInspector tests for views + engine interaction
 docs/             ROADMAP.md, specs/ (one spec per phase), design/ (design reference PNGs)
@@ -54,7 +55,7 @@ site/             GitHub Pages website: index.html, site.css, screenshots/, og.p
 .github/          workflows/ ci.yml (lint, test, site check), pages.yml (deploy site/), release.yml (tag → DMG on GitHub Release)
 ```
 
-Data lives in `~/Library/Application Support/Sathi/`: `prefs.json`, `state.json`, `history/YYYY-MM.json`.
+Data lives in `~/Library/Application Support/Sathi/`: `prefs.json`, `state.json`, `history/YYYY-MM.json`, `activities/YYYY-MM.json`.
 
 Dependency direction: `Sathi → SathiUI → SathiCore`. Never the other way.
 
