@@ -11,7 +11,7 @@ extension Engine {
         data.live.tracker.awaySince = at
         data.live.tracker.awayCause = cause
         let r = data.live.tracker.running
-        let keeps = r.map { keepsEventThroughAway($0, cause: cause, at: at) } ?? false
+        let keeps = r.map { keepsThroughAway($0, cause: cause, at: at) } ?? false
         trackerRuntime.endedByAway = pendingDoneAt == nil && !keeps ? r : nil
         if let r, !keeps {
             let end = cause == .onBreak ? at : AskTime.awayEnd(start: r.start, confirmedUntil: r.confirmedUntil, awayStart: at)
@@ -30,13 +30,14 @@ extension Engine {
         data.live.tracker.awayCause = nil
         data.live.tracker.lastInput = back
         var eventSpan: DateInterval?
+        if let r = data.live.tracker.running, r.kind == .buddy, trackerSessionRuns { return requestTick() }
         if let r = data.live.tracker.running, r.kind == .event {
             guard back >= r.confirmedUntil else { return requestTick() }
             eventSpan = DateInterval(start: r.start, end: max(r.start, r.confirmedUntil))
             endRunningActivity(at: r.confirmedUntil)
         }
         let items = trackerHours.clip(DateInterval(start: since, end: back))
-            .flatMap { SpanCut.cut($0, removing: eventSpan.map { [$0] } ?? []) }
+            .flatMap { SpanCut.cut($0, removing: (eventSpan.map { [$0] } ?? []) + loggedSpans(from: since, to: back)) }
             .map { Activity(kind: .away, text: Copywriter.trackerAwayText(place), start: $0.start, end: $0.end, awayPlace: place) }
             .filter { $0.length >= Timing.activityMinimum }
         items.forEach(storeActivity)
@@ -132,7 +133,15 @@ extension Engine {
         return max(last, paused ?? last)
     }
 
-    private func keepsEventThroughAway(_ r: RunningActivity, cause: AwayCause, at: Date) -> Bool {
-        cause != .onBreak && r.kind == .event && pendingDoneAt == nil && at < r.confirmedUntil
+    private func keepsThroughAway(_ r: RunningActivity, cause: AwayCause, at: Date) -> Bool {
+        guard cause != .onBreak, pendingDoneAt == nil else { return false }
+        if r.kind == .buddy { return trackerSessionRuns }
+        return r.kind == .event && at < r.confirmedUntil
+    }
+
+    private func loggedSpans(from since: Date, to back: Date) -> [DateInterval] {
+        var items = storedActivities(on: since)
+        if !calendar.isDate(since, inSameDayAs: back) { items += storedActivities(on: back) }
+        return items.filter { $0.kind != .away && $0.start < back && $0.end > since }.map(\.interval)
     }
 }
