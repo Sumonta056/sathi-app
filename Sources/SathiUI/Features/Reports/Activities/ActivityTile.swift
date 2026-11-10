@@ -19,7 +19,7 @@ struct ActivityTile: View {
                 .font(.system(size: UIMetrics.trackerTileValueFont, weight: .black, design: .rounded))
                 .foregroundStyle(Night.text)
                 .lineLimit(1)
-                .minimumScaleFactor(0.6)
+                .minimumScaleFactor(UIMetrics.trackerTileMinScale)
             Text(verbatim: note)
                 .font(Typography.hint)
                 .foregroundStyle(Night.muted)

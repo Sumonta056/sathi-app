@@ -2,13 +2,23 @@ import SathiCore
 import SwiftUI
 
 struct DayOffCalendar: View {
-    let habit: HabitID
+    let make: @MainActor (Engine) -> DaysOffSource
     let accent: Color
     @Binding var offset: Int
     @EnvironmentObject var e: Engine
 
+    init(make: @escaping @MainActor (Engine) -> DaysOffSource, accent: Color, offset: Binding<Int>) {
+        self.make = make
+        self.accent = accent
+        _offset = offset
+    }
+
+    init(habit: HabitID, accent: Color, offset: Binding<Int>) {
+        self.init(make: { DaysOffSource.habit(habit, $0) }, accent: accent, offset: offset)
+    }
+
     var body: some View {
-        let month = e.dayOffMonth(habit, offset: offset)
+        let month = make(e).month(offset)
         VStack(spacing: UIMetrics.calendarSpacing) {
             header(month)
             weekdayRow
@@ -65,7 +75,7 @@ struct DayOffCalendar: View {
     private func slot(_ cell: DayOffCell?) -> some View {
         if let cell {
             DayOffCellButton(cell: cell, accent: accent) {
-                e.addDayOff(habit, key: cell.key)
+                make(e).add(cell.key)
             }
         } else {
             Color.clear.frame(width: UIMetrics.dayChipSize, height: UIMetrics.dayChipSize)

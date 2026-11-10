@@ -1,6 +1,7 @@
 import SwiftUI
 
 extension UIMetrics {
+    static let trackerCategoriesPerRow = 3
     static let trackerCornerWidth: CGFloat = 400
     static let trackerPopupPadding: CGFloat = 18
     static let trackerPopupRadius: CGFloat = 22

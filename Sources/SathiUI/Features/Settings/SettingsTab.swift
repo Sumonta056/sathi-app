@@ -4,5 +4,6 @@ enum SettingsTab: Hashable {
     case general
     case habit(HabitID)
     case timeBlocks
+    case tracker
     case addBuddy
 }

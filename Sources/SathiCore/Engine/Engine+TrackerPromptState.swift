@@ -18,6 +18,7 @@ extension Engine {
         s.categories = activityCategories
         s.calendars = calendarChoices()
         s.calendar = calendar
+        s.askEveryMinutes = trackerPrefs.askEveryMinutes
         if let from = p.switchFrom { s.switchTimes = SwitchTimes.chips(from: from, to: n, calendar: calendar) }
         if kind == .stillOnIt { s.waitedMinutes = AskTime.waitedMinutes(shownAt: p.shownAt, now: n) }
         if kind == .welcomeBack {
@@ -25,6 +26,7 @@ extension Engine {
             s.loggedWhileAway = trackerRuntime.loggedWhileAway
         }
         if kind == .whatNow || kind == .center { s.runningEvent = unloggedRunningEvent() }
+        fillEventAsk(&s)
         s.actions = promptActions()
         return s
     }

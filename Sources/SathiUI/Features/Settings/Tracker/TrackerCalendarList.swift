@@ -7,7 +7,7 @@ struct TrackerCalendarList: View {
     let onTap: (String) -> Void
     let identifier: String
 
-    static let emptyText = "No calendars found on this Mac."
+    static let emptyText = Copywriter.trackerNoCalendars
 
     var body: some View {
         VStack(alignment: .leading, spacing: UIMetrics.blockListSpacing) {

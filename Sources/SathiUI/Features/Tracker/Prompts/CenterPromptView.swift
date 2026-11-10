@@ -27,7 +27,7 @@ struct CenterPromptView: View {
             HStack(spacing: UIMetrics.trackerButtonSpacing) {
                 TrackerPrimaryButton(label: Copywriter.trackerStart, id: "tracker.start", action: start)
                 TrackerSecondaryButton(
-                    label: "Close", id: "tracker.close", width: UIMetrics.trackerSkipWidth
+                    label: Copywriter.trackerClose, id: "tracker.close", width: UIMetrics.trackerSkipWidth
                 ) { state.actions.close() }
             }
         }

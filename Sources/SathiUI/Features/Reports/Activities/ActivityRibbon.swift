@@ -41,7 +41,7 @@ struct ActivityRibbon: View {
         let revealed = reveal?.revealed ?? true
         return segmentBody(segment)
             .frame(width: w, height: height - UIMetrics.trackerSegmentInset * 2)
-            .scaleEffect(x: revealed ? 1 : 0.001, anchor: .leading)
+            .scaleEffect(x: revealed ? 1 : UIMetrics.trackerRibbonHiddenScale, anchor: .leading)
             .animation(animation(index), value: revealed)
             .offset(x: CGFloat(f.start) * width)
             .accessibilityLabel(Text(verbatim: label(segment)))

@@ -17,7 +17,7 @@ struct TrackerSettingsPage: View {
             }
             VStack(alignment: .leading, spacing: UIMetrics.pageSpacing) {
                 TrackerWhenCard()
-                TrackerDaysOffCard()
+                DaysOffCard { DaysOffSource.tracker($0) }
                 TrackerCategoriesCard()
                 TrackerCalendarCard()
                 TrackerEventsCard()

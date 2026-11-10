@@ -40,6 +40,11 @@ extension UIMetrics {
     static let trackerTextBoxPadding: CGFloat = 14
     static let trackerTextBoxMaxHeight: CGFloat = 340
 
+    static let trackerTileMinScale: CGFloat = 0.6
+    static let trackerBarsNameWidth: CGFloat = trackerLogCategoryWidth * 1.5
+    static let trackerBarsLengthWidth: CGFloat = trackerLogLengthWidth * 1.4
+    static let trackerRibbonHiddenScale: CGFloat = 0.001
+
     static let trackerEndOfDayWidth: CGFloat = 820
     static let trackerEndOfDaySpacing: CGFloat = 16
     static let trackerEndOfDayTitleFont: CGFloat = 26

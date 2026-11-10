@@ -12,7 +12,7 @@ struct ActivityCategoryBars: View {
                     Text(verbatim: row.name)
                         .font(Typography.chip)
                         .foregroundStyle(Night.text)
-                        .frame(width: UIMetrics.trackerLogCategoryWidth * 1.5, alignment: .leading)
+                        .frame(width: UIMetrics.trackerBarsNameWidth, alignment: .leading)
                     ProgressBar(
                         value: Double(row.percent) / Double(Limits.fullPercent),
                         tint: ActivityColors.color(row.isNamed ? row.name : nil, in: categories),
@@ -22,7 +22,7 @@ struct ActivityCategoryBars: View {
                     Text(verbatim: Copywriter.trackerDuration(row.seconds))
                         .font(Typography.hint)
                         .foregroundStyle(Night.muted)
-                        .frame(width: UIMetrics.trackerLogLengthWidth * 1.4, alignment: .trailing)
+                        .frame(width: UIMetrics.trackerBarsLengthWidth, alignment: .trailing)
                 }
             }
         }

@@ -31,6 +31,7 @@ struct SettingsView: View {
         case .general: GeneralTab()
         case let .habit(id): HabitTab(id: id)
         case .timeBlocks: TimeBlockSettingsPage()
+        case .tracker: TrackerSettingsPage()
         case .addBuddy: AddBuddyTab()
         }
     }

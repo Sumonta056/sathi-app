@@ -87,7 +87,15 @@ package enum Limits {
     package static let switchChipsBeforeGrid = 4
     package static let monthlyTopTexts = 3
     package static let spaceKeyCode: UInt32 = 49
-    package static let spaceKeyName = "Space"
+    package static let firstCopyNumber = 2
+    package static let escapeKeyCode: UInt32 = 53
+    package static let returnKeyCode: UInt32 = 36
+    package static let tabKeyCode: UInt32 = 48
+    package static let deleteKeyCode: UInt32 = 51
+    package static let leftKeyCode: UInt32 = 123
+    package static let rightKeyCode: UInt32 = 124
+    package static let downKeyCode: UInt32 = 125
+    package static let upKeyCode: UInt32 = 126
 
     package static let morningStartHour = 5
     package static let afternoonStartHour = 12

@@ -43,7 +43,7 @@ struct TrackerCategoriesCard: View {
 
     static func newName(_ list: [ActivityCategory]) -> String {
         let taken = Set(list.map { $0.name.lowercased() })
-        let base = "New category"
+        let base = Copywriter.trackerNewCategory
         if !taken.contains(base.lowercased()) { return base }
         return (2 ... Limits.categoryMax + 1).map { "\(base) \($0)" }.first { !taken.contains($0.lowercased()) } ?? base
     }

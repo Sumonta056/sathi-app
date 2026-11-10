@@ -7,8 +7,13 @@ extension Engine {
     }
 
     var trackerOn: Binding<Bool> { trackerBinding(\.isOn) }
-    var trackerStartMinutes: Binding<Int> { trackerBinding(\.startMinutes) }
-    var trackerEndMinutes: Binding<Int> { trackerBinding(\.endMinutes) }
+    var trackerStartMinutes: Binding<Int> {
+        Binding(get: { self.data.prefs.tracker.startMinutes }, set: { self.data.prefs.tracker.setStart($0) })
+    }
+
+    var trackerEndMinutes: Binding<Int> {
+        Binding(get: { self.data.prefs.tracker.endMinutes }, set: { self.data.prefs.tracker.setEnd($0) })
+    }
     var trackerWeekdays: Binding<Set<Weekday>> { trackerBinding(\.weekdays) }
     var trackerAskEvery: Binding<Int> { trackerBinding(\.askEveryMinutes) }
     var trackerIdle: Binding<Int> { trackerBinding(\.idleMinutes) }

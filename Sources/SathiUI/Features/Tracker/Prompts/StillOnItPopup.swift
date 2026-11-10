@@ -24,7 +24,7 @@ struct StillOnItPopup: View {
                 }
             } else {
                 TrackerPrimaryButton(
-                    label: Copywriter.trackerYesMore(Limits.trackerAskEveryDefault), id: "tracker.still"
+                    label: Copywriter.trackerYesMore(state.askEveryMinutes), id: "tracker.still"
                 ) { state.actions.stillOn(nil) }
                 HStack(spacing: UIMetrics.trackerChipSpacing) {
                     Text(verbatim: Copywriter.trackerOrAskIn)

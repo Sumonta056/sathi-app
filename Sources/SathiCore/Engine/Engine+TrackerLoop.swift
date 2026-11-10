@@ -39,15 +39,17 @@ extension Engine {
         return list.filter { $0 > n }
     }
 
-    func setTrackerPrompt(_ prompt: PromptState) {
+    func setTrackerPrompt(_ prompt: PromptState, byUser: Bool = false) {
         closeShownTrackerPrompt()
         data.live.tracker.prompt = prompt
+        trackerRuntime.promptByUser = byUser
         presentTrackerPrompt()
     }
 
     func clearTrackerPrompt() {
         closeShownTrackerPrompt()
         data.live.tracker.prompt = nil
+        trackerRuntime.promptByUser = false
     }
 
     func presentTrackerPrompt() {

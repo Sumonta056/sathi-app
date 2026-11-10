@@ -64,12 +64,12 @@ struct ActivityMonthView: View {
             ActivityTile(
                 label: Copywriter.trackerTileRealWork,
                 value: Copywriter.trackerTileDuration(stats.realWork),
-                note: "\(stats.daysTracked) days"
+                note: Copywriter.trackerDaysTracked(stats.daysTracked)
             )
             ActivityTile(label: Copywriter.trackerTileAverageDay, value: Copywriter.trackerTileDuration(stats.averageDay), note: "")
             ActivityTile(
                 label: Copywriter.trackerTileBestDay,
-                value: stats.bestDay.map { Copywriter.trackerTileDuration($0.realWork) } ?? "–",
+                value: stats.bestDay.map { Copywriter.trackerTileDuration($0.realWork) } ?? Copywriter.trackerNoValue,
                 note: stats.bestDay.map { Copywriter.trackerShortDate($0.day.start(in: calendar), calendar: calendar) } ?? "",
                 accent: Night.sprout
             )

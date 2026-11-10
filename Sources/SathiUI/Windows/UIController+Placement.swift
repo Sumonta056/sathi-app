@@ -21,7 +21,11 @@ extension UIController {
 
     func placeTopRight(_ p: NSPanel) -> NSPanel {
         if corner.isEmpty { cornerScreen = activeScreen }
-        corner.append(p)
+        if !isTrackerCorner(p), let i = corner.firstIndex(where: isTrackerCorner) {
+            corner.insert(p, at: i)
+        } else {
+            corner.append(p)
+        }
         restack()
         fadeIn(p)
         return p
@@ -42,7 +46,7 @@ extension UIController {
         restack()
     }
 
-    private func restack() {
+    func restack() {
         guard let vf = (cornerScreen ?? activeScreen)?.visibleFrame else { return }
         let origins = CornerLayout.origins(
             sizes: corner.map(\.frame.size),

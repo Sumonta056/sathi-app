@@ -29,7 +29,7 @@ extension Copywriter {
     package static let trackerLogged = "✓ logged"
     package static let trackerNotAttending = "Not attending"
     package static let trackerUndo = "Undo"
-    package static let trackerYesLogIt = "Yes, log it"
+    package static let trackerYesLogIt = "Yes"
     package static let trackerNo = "No"
     package static let trackerSwitch = "Switch"
 
@@ -85,7 +85,7 @@ extension Copywriter {
     }
 
     package static func trackerEventEnded(_ text: String, at time: Date, calendar: Calendar) -> String {
-        text + " ended at " + trackerClock(time, calendar: calendar) + ". This note closes in 1 min."
+        text + " ended at " + trackerClock(time, calendar: calendar) + ". This note closes in \(Int(Timing.eventNoteShow / Timing.minute)) min."
     }
 
     package static func trackerEventAsk(_ title: String) -> String { title + " started. Log it?" }

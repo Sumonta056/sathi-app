@@ -7,8 +7,6 @@ struct TrackerCategoryRows: View {
     let idPrefix: String
     let onPick: (String) -> Void
 
-    private static let perRow = 3
-
     var body: some View {
         VStack(alignment: .leading, spacing: UIMetrics.trackerChipSpacing) {
             ForEach(Array(rows.enumerated()), id: \.offset) { _, row in
@@ -28,8 +26,8 @@ struct TrackerCategoryRows: View {
     }
 
     private var rows: [[ActivityCategory]] {
-        stride(from: 0, to: categories.count, by: Self.perRow).map {
-            Array(categories[$0 ..< min($0 + Self.perRow, categories.count)])
+        stride(from: 0, to: categories.count, by: UIMetrics.trackerCategoriesPerRow).map {
+            Array(categories[$0 ..< min($0 + UIMetrics.trackerCategoriesPerRow, categories.count)])
         }
     }
 }
