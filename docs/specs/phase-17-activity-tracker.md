@@ -42,9 +42,9 @@ The user does many different things in a work day and keeps notes by hand to tra
 13. A shows when nothing runs and: tracker hours start, `askEvery` (default 15 min) passes after a Skip of A, or a "Done" in C (then A opens at once in the same place and takes the keyboard, because the user just clicked).
 13a. Switch time: when A opens right after Done, it shows a "Started" row that is always open. Its chips are 5 minutes apart, from the last answer time of the old activity (its Start or its last "Yes") up to now. "Now" is the default. With more than 4 chips, the row shows the `TimeMenu` grid. The picked time ends the old activity and starts the new one, so there is no gap and no overlap. Skip in this A ends the old activity at the picked time.
 14. C shows at `start + expected length + ask offset`, then at each time the user picks in C. For an Open activity it shows every `askEvery`.
-15. C on time: "Yes, 15 min more" (big button, uses `askEvery`), links "5 min" and "30 min", "Done", and "Skip". Done ends the activity now. Skip closes C and asks again after `askEvery`, without a change to data.
-16. C late: when the user answers `Timing.lateAnswer` (5 min) or more after C showed, C shows "This question waited {n} min.", "Still on it" (the activity continues to now), and "Done" (opens A with the Started row of rule 13a).
-17. A and B: text field, recent activities (A shows 3, B shows 4, `Limits.recentMax` 5, newest first, the same text and category once). Always visible: the For chips, an "Add to calendar" check box with the calendar menu, and a "No popups until it ends" switch (rule 58). A summary line "{category} · ask {offset}" opens Category and Ask me. Enter starts. A has Start and Skip. B has Esc to close.
+15. C on time: "Yes, 15 min more" (big button, uses `askEvery`), links "5 min" and "30 min", "Done", and "Skip". Done opens A at once with the Started row (rule 13a); the old activity ends at the picked switch time on Start or Skip in A. Skip closes C and asks again after `askEvery`, without a change to data.
+16. C late: when the user answers `Timing.lateAnswer` (5 min) or more after C showed, C shows "This question waited {n} min.", "Still on it" (the activity continues to now), and "Done · pick when you switched" (opens A with the Started row of rule 13a).
+17. A and B: text field, recent activities (A shows 3, B shows 4, `Limits.recentMax` 5, newest first, the same text and category once). Always visible: the For chips, an "Add to calendar" check box with the calendar menu, and a "No popups until it ends" switch (rule 58). A summary line "{category} · ask {offset}" opens Category and Ask me. A click on a recent chip starts that activity at once, with its text and category. Enter starts. A has Start and Skip. B has Esc to close.
 18. D: "Welcome back. What now?", "Back to {last activity}" (Enter), "Something new" (shows the text field in place), and an optional "Where were you?" chip row (Lunch, Meeting, Walk, Commute, Other). "I was here" shows only when Away came from idle; it removes that Away and continues the last activity from its start. Esc keeps the Away.
 19. A prompt and a buddy popup due at the same time both show in the corner column. The tracker prompt goes below the buddy popups.
 20. Sound: 1 soft tap when A or C shows, when `TrackerPrefs.playsSound` (default on) and General sound is on.
@@ -52,15 +52,16 @@ The user does many different things in a work day and keeps notes by hand to tra
 ### Away
 
 21. Away starts when the screen locks, the Mac sleeps, the lid closes, or there is no mouse or key input for `TrackerPrefs.idleMinutes` (default 30). For idle, Away starts at the last input time.
-22. Each running activity has a confirmed-until time: the next ask time after a Start or a "Yes". A skipped or unanswered C does not move it. A late "Still on it" moves it to now. Away ends the activity at the earlier of the Away start and its confirmed-until time. The time between is Not logged.
+22. Each running activity has a confirmed-until time: the next ask time after a Start or a "Yes". A skipped or unanswered C does not move it. A late "Still on it" moves it to now. Away ends the activity at the earlier of the Away start and its confirmed-until time. The time between is Not logged. A late "Still on it" confirms the activity only up to now.
+22a. An activity from a calendar event (kind `event`) does not end at the Away start. It runs to the earlier of the event end and the return, and the Away items are cut around it. When the user returns before the event end, D does not show and the event activity goes on.
 23. Away inside tracker hours is saved as an Away item. Its place is empty until the user picks one in D or in the report.
 24. Away time outside tracker hours is not saved.
 
 ### Day edges
 
-25. At the end of tracker hours no new A shows. A running activity continues, and C still asks.
+25. At the end of tracker hours no new A shows. A running activity continues, and C still asks on a tracker day. C never asks on a non-tracker day or a day off.
 26. The end-of-day popup shows 1 time a day (`LiveState.tracker.lastEndOfDay`), when `TrackerPrefs.endOfDayOn` (default on): at the end of tracker hours if nothing runs, or else right after the running activity ends. It shows the animated timeline (at most 1.5 s, none with Reduce motion), totals, "Copy for standup", "Open full report", and "Close". It is a centered popup that does not take the keyboard.
-27. At midnight a running activity ends at 00:00. An activity never crosses midnight.
+27. At midnight a running activity ends at the earlier of 00:00 and its confirmed-until time (rule 22), because Sathi never adds time that the user did not confirm. An activity never crosses midnight.
 
 ### Calendar
 
@@ -105,6 +106,8 @@ The user does many different things in a work day and keeps notes by hand to tra
 
 32. The Reports window gets 2 top tabs: Habits (the current report) and Activities.
 33. Activities · Day: ‹ › arrows and a date button with a month calendar. Days with activities have a dot. 4 tiles: Real work, Top category, Activities (with "{n} in your calendar"), Away (with Not logged). A timeline of tracker hours, the activity log with Edit and Fill, "+ Add past activity", totals by category, and "Copy as text" (standup text).
+33a. Away rows also have Edit and Delete. The Away edit changes the place, the start, and the end.
+33b. An edit or a past activity whose start and end are on different days is refused with "An activity cannot cross midnight." (rule 27).
 34. Activities · Month: 4 tiles (Real work, Average day, Best day, Away), 1 row per day with a small timeline strip (a click opens that day), totals by category, "Copy monthly report", and "Export month" (JSON and CSV, saved to `~/Downloads` and shown in Finder, so no save panel).
 35. Standup text: "{date} · {real work}", then 1 line per text and category, longest first: "• {text} ({category}) · {length}".
 36. Monthly report text: "{month} · {days} days tracked · {real work}", "Average {length} a day", 1 line per category with %, then 1 line per day: "{date} · {real work} · {top 3 texts}".
@@ -112,13 +115,13 @@ The user does many different things in a work day and keeps notes by hand to tra
 
 ### Settings
 
-38. A new sidebar group "My day" holds "Activity tracker" (new) and "Time blocks".
+38. A new sidebar group "My day" holds "Activity tracker" and, below it, "Time blocks". No NEW badge (it does not fit the sidebar width).
 39. Activity tracker page: on/off, Hours (the `TimeMenu` 5-minute grid), Days and days off (the shared `WeekdayRow` and `DaysOffCard`), Ask every (`Limits.trackerAskChips` 10, 15, 20, 30, 60), Usual length, Away after (`Limits.idleChips` 10, 20, 30, 60), Categories (add, rename, delete, color; at most `Limits.categoryMax` 12), Calendar (access, on by default, default calendar), Keyboard shortcut (default ⌥⌘Space, Change), "Show my day when tracker hours end", and "Sound with each prompt".
 40. A deleted category stays on old activities as text. New activities cannot pick it.
 
 ### Menu
 
-41. The menu tool row gets "Log activity" (opens B). When an activity runs, the menu shows 1 row: dot, text, "since {time}", and "Done".
+41. When the tracker is on, the menu shows "Log activity" (opens B) as a full-width row below the tool row. When an activity runs, the menu shows 1 row: dot, text, "since {time}", and "Done".
 
 ## Goals (acceptance)
 
@@ -200,7 +203,7 @@ Each slice review checks these goals by ID. A goal is met only when its check pa
 
 ## Storage
 
-- New files `activities/YYYY-MM.json`: `schemaVersion`, `items`: `id`, `kind` (`work`, `away`, `timeBlock`, `event`, `buddy`), `text`, `category?`, `start`, `end`, `awayPlace?`, `calendarID?`, `eventID?`, `sourceEventID?`. Whole seconds. Kept forever. An unreadable item is dropped and the others stay. Unknown fields and kinds are kept and written back (History rule 8).
+- New files `activities/YYYY-MM.json`: `schemaVersion`, `value` (the item list, storage rule 2): `id`, `kind` (`work`, `away`, `timeBlock`, `event`, `buddy`), `text`, `category?`, `start`, `end`, `awayPlace?`, `calendarID?`, `eventID?`, `sourceEventID?`. Whole seconds. Kept forever. An unreadable item is dropped and the others stay. Unknown fields and kinds are kept and written back (History rule 8).
 - `LiveState.tracker` in `state.json`: the running activity (`id`, `text`, `category?`, `start`, `expectedLength?`, `askAt`, `calendarID?`, `quietUntil?`), the open prompt (`kind`, `shownAt`, `askTime`), `awaySince?`, `lastInput?`, `lastEndOfDay?`. A missing key loads an empty tracker.
 - `Prefs.tracker: TrackerPrefs`: `isOn` (false), `startMinutes` (540), `endMinutes` (1080), `weekdays` (Mon–Fri), `daysOff`, `askEveryMinutes` (15), `usualLength` (30), `idleMinutes` (30), `categories` (Coding, Meeting, Cefalo Meetings, Review, Learning, Email, each with a color), `calendarOnByDefault` (false), `defaultCalendarID?`, `shortcut` (⌥⌘Space), `endOfDayOn` (true), `playsSound` (true), `readsEvents` (false), `quietByDefault` (false), `readCalendarIDs` ([]), `eventMode` (`.logAndTell`), `categoryByCalendar` ([:], a missing calendar uses its own name), `eventCategoryByTitle` ([:]). Lenient decoding: a missing or unknown value loads the default.
 - The full JSON backup includes the activity months.

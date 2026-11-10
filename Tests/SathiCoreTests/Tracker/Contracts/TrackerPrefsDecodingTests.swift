@@ -40,6 +40,12 @@ struct TrackerPrefsDecodingTests {
         #expect(t.defaultCategory == "Coding")
     }
 
+    @Test func theMeetingColorDiffersFromTheMeditationBuddy() {
+        let meeting = ActivityCategory.defaults.first { $0.name == "Meeting" }
+        #expect(meeting?.colorHex == 0xC9B8FF)
+        #expect(meeting?.colorHex != ActivityCategory.buddy(.meditation).colorHex)
+    }
+
     @Test func aBadTrackerValueKeepsOtherSettings() throws {
         let p = try prefs(#"{"tracker":"oops","water":{"intervalMinutes":45}}"#)
         #expect(p.tracker == TrackerPrefs())

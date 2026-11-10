@@ -13,7 +13,7 @@ package struct ActivityCategory: Codable, Equatable, Hashable, Identifiable, Sen
 
     package static let defaults: [ActivityCategory] = [
         ActivityCategory(name: "Coding", colorHex: 0x4CC3F5),
-        ActivityCategory(name: "Meeting", colorHex: 0xA99CF5),
+        ActivityCategory(name: "Meeting", colorHex: 0xC9B8FF),
         ActivityCategory(name: "Cefalo Meetings", colorHex: 0x7FB8FF),
         ActivityCategory(name: "Review", colorHex: 0xF2A64A),
         ActivityCategory(name: "Learning", colorHex: 0x5FD39A),
