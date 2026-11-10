@@ -9,7 +9,7 @@ struct EngineTrackerNextPopupTests {
     @Test func aRunningActivityIsAskedAtItsAskTime() {
         let h = EngineHarness.tracker(at: wed(10))
         h.start(minutes: 30, offset: 5)
-        #expect(h.engine.trackerNextPopup == wed(10, 35))
+        #expect(h.engine.trackerNextPopup == wed(10, 15))
     }
 
     @Test func anOpenPromptHasNoNextPopup() {

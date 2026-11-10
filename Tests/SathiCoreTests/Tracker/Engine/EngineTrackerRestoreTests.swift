@@ -20,7 +20,7 @@ struct EngineTrackerRestoreTests {
     }
 
     @Test func aRestartOnALaterDayEndsTheOldActivityAtItsConfirmedTime() {
-        let h = EngineHarness.tracker(at: wed(16))
+        let h = EngineHarness.tracker(at: wed(16)) { $0.prefs.tracker.askEveryMinutes = 30 }
         h.start("Spec", minutes: 30)
         let again = EngineHarness.restartedTracker(from: h, at: day(2026, 3, 5, 8))
         again.engine.start()

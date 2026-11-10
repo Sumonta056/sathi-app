@@ -23,7 +23,10 @@ struct EngineTrackerDayEdgeTests {
     }
 
     @Test func anActivityNeverCrossesMidnight() {
-        let h = EngineHarness.tracker(at: wed(23, 30)) { $0.prefs.tracker.endOfDayOn = false }
+        let h = EngineHarness.tracker(at: wed(23, 30)) {
+            $0.prefs.tracker.endOfDayOn = false
+            $0.prefs.tracker.askEveryMinutes = 60
+        }
         h.start(minutes: 60)
         h.advance(minutes: 45)
         #expect(h.running == nil)

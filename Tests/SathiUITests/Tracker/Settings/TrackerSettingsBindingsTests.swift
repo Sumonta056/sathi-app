@@ -23,6 +23,15 @@ struct TrackerSettingsBindingsTests {
         #expect(t.weekdays == [.monday])
     }
 
+    @Test func askEveryChangeMovesTheAskTimeOfTheRunningActivity() {
+        let h = EngineHarness.tracker(at: day(2026, 3, 4, 10))
+        h.engine.startActivity(ActivityDraft(text: "Spec", length: .minutes(30)))
+        h.advance(minutes: 5)
+        h.engine.trackerAskEvery.wrappedValue = 10
+        #expect(h.store.prefs.tracker.askEveryMinutes == 10)
+        #expect(h.engine.runningActivity?.askAt == day(2026, 3, 4, 10, 10))
+    }
+
     @Test func lastWeekdayStays() {
         let h = EngineHarness { $0.prefs.tracker.weekdays = [.friday] }
         h.engine.toggleTrackerWeekday(.friday)

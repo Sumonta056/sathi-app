@@ -11,7 +11,7 @@ struct EngineTrackerEventFixTests {
     }
 
     @Test func anAskFirstPromptLostToALockAsksAgainAfterWelcomeBack() {
-        let h = EngineHarness.tracker(at: wed(10))
+        let h = EngineHarness.tracker(at: wed(10)) { $0.prefs.tracker.askEveryMinutes = 60 }
         h.useEvents([meeting(from: wed(10, 30), to: wed(11))], mode: .askFirst)
         h.start("Spec", minutes: 60)
         h.advance(minutes: 30)

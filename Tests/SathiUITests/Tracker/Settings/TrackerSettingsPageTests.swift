@@ -39,6 +39,14 @@ struct TrackerSettingsPageTests {
         #expect(h.store.prefs.tracker.askEveryMinutes == 30)
     }
 
+    @Test func askEveryChipMovesTheAskTimeOfTheRunningActivity() throws {
+        let h = EngineHarness.tracker(at: day(2026, 3, 4, 10))
+        h.engine.startActivity(ActivityDraft(text: "Spec", length: .minutes(30)))
+        h.advance(minutes: 5)
+        try tap(page(h), "settings.tracker.ask.10")
+        #expect(h.engine.runningActivity?.askAt == day(2026, 3, 4, 10, 10))
+    }
+
     @Test func awayAfterChipSetsPrefs() throws {
         let h = on()
         try tap(page(h), "settings.tracker.idle.60")

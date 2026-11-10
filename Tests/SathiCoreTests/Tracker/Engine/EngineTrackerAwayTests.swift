@@ -7,7 +7,7 @@ import Testing
 @Suite("Engine tracker away")
 struct EngineTrackerAwayTests {
     private func lockedHarness(lockAt minutes: Double, unlockAt back: Double) -> EngineHarness {
-        let h = EngineHarness.tracker(at: wed(10))
+        let h = EngineHarness.tracker(at: wed(10)) { $0.prefs.tracker.askEveryMinutes = 30 }
         h.start("Write spec", minutes: 30)
         h.clock.advance(minutes: minutes)
         h.engine.presenceChanged(.locked)

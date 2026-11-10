@@ -57,7 +57,7 @@ Branch `feat/tracker-t1-engine`, worktree `../Sathi-t1`.
 | G2 | No prompt shows outside tracker hours, on a non-tracker day, on a day off, during a break, or while a time block runs. |
 | G3 | A full-screen lock holds tracker prompts back. They show when it ends. |
 | G4 | At the start of tracker hours with nothing running, A shows in the corner and does not take the keyboard. |
-| G7 | C shows at start + expected length + ask offset. For an Open activity, C shows every askEvery. |
+| G7 | C shows first at the earlier of start + askEvery and start + expected length + ask offset. For an Open activity, C shows every askEvery. A change of Ask every applies at once. |
 | G8 | Yes, 15 min more / 5 min / 30 min set the next ask time to now + that time. |
 | G9 | Skip changes no data and asks again after askEvery. |
 | G10 | No tracker prompt closes by itself. Only note F closes, after 1 min. |

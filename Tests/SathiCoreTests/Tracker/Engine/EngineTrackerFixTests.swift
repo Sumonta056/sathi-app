@@ -43,7 +43,10 @@ struct EngineTrackerFixTests {
     }
 
     @Test func awakeAtMidnightAnUnansweredActivityEndsAtItsConfirmedTime() {
-        let h = EngineHarness.tracker(at: wed(17)) { $0.prefs.tracker.endOfDayOn = false }
+        let h = EngineHarness.tracker(at: wed(17)) {
+            $0.prefs.tracker.endOfDayOn = false
+            $0.prefs.tracker.askEveryMinutes = 30
+        }
         h.start(minutes: 30)
         h.clock.advance(minutes: 7 * 60 - 1)
         h.engine.tick()

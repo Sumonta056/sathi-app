@@ -29,10 +29,10 @@ struct EngineTrackerFlowTests {
         #expect(PromptKind.whatNow.isCorner)
     }
 
-    @Test func stillOnItShowsAtStartPlusLengthPlusOffset() {
+    @Test func stillOnItShowsAtLengthPlusOffsetWhenThatIsEarlierThanAskEvery() {
         let h = EngineHarness.tracker(at: wed(10))
-        h.start(minutes: 30, offset: 5)
-        h.advance(minutes: 34)
+        h.start(minutes: 10, offset: 3)
+        h.advance(minutes: 12)
         #expect(h.promptKind == nil)
         h.advance(minutes: 1)
         #expect(h.promptKind == .stillOnIt)

@@ -40,10 +40,18 @@ struct TrackerRulesTests {
         #expect(SwitchTimes.chips(from: wed(10), to: wed(10), calendar: .current) == [wed(10)])
     }
 
-    @Test(arguments: [(ActivityLength.minutes(30), 0, 30), (.minutes(30), 5, 35), (.minutes(15), 15, 30), (.open, 0, 15), (.open, 5, 15)])
-    func firstAskIsStartPlusLengthPlusOffsetOrAskEveryForOpen(length: ActivityLength, offset: Int, minutes: Int) {
+    @Test(arguments: [
+        (ActivityLength.minutes(30), 0, 15), (.minutes(30), 5, 15), (.minutes(15), 15, 15), (.minutes(10), 0, 10),
+        (.minutes(10), 5, 15), (.open, 0, 15), (.open, 5, 15)
+    ])
+    func firstAskIsTheEarlierOfAskEveryAndLengthPlusOffset(length: ActivityLength, offset: Int, minutes: Int) {
         let got = AskTime.first(start: wed(10), length: length, offsetMinutes: offset, askEveryMinutes: 15)
         #expect(got == wed(10, minutes))
+    }
+
+    @Test func aLengthShorterThanAskEveryAsksAtTheLengthEnd() {
+        let got = AskTime.first(start: wed(10), length: .minutes(15), offsetMinutes: 0, askEveryMinutes: 30)
+        #expect(got == wed(10, 15))
     }
 
     @Test func awayEndIsTheEarlierOfAwayStartAndConfirmedUntil() {

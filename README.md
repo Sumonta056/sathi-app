@@ -97,7 +97,7 @@ See [every reminder on the website](https://sumonta056.github.io/sathi-app/#gall
 
 ## Activity tracker
 
-Keep a log of your work day without a stopwatch. Turn it on in Settings → My day → Activity tracker (it is off by default). Inside your tracker hours a calm corner popup asks **What now?**: type what you do, or pick a recent activity, and pick a length. When the length is up, **Still on it?** asks. Answer Yes, pick more time, or tap Done and pick when you switched. The popups never take the keyboard from the app you type in. Press ⌃⌥⌘Space (or **Log activity** in the menu) to log from anywhere.
+Keep a log of your work day without a stopwatch. Turn it on in Settings → My day → Activity tracker (it is off by default). Inside your tracker hours a calm corner popup asks **What now?**: type what you do, or pick a recent activity, and pick a length. **Still on it?** asks every "Ask every" minutes, or when the length is up if that is sooner. Answer Yes, pick more time, or tap Done and pick when you switched. The popups never take the keyboard from the app you type in. Press ⌃⌥⌘Space (or **Log activity** in the menu) to log from anywhere.
 
 Sathi notices when you are away (screen lock, sleep, or no input for 30 min) and asks **Welcome back** when you return. It never adds time that you did not confirm. With your permission it can write an activity to a calendar, and it can log events from the calendars you tick, so meetings log themselves. Buddy sessions log their own activity. A **No popups until it ends** switch keeps every popup quiet while you focus.
 

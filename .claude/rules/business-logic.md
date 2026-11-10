@@ -190,6 +190,7 @@ Full rules are in `docs/specs/phase-17-activity-tracker.md`.
 1. Not a habit: no streak, goal, `HabitID`, history event, or day summary row. Off by default. Only 1 activity runs; a new one ends the old one now. Shorter than 60 s is not saved.
 2. It asks only inside tracker hours, on tracker days, with no break, no time block, and no full-screen lock showing.
 3. Prompts A (corner, What now?), C (corner, Still on it?), B (center, shortcut or menu), D (center, after Away). None goes away by itself. A and C never take the keyboard unless the user clicks in them.
+3a. C shows every "Ask every" minutes for a work activity: first at the earlier of `start + askEvery` and `start + expected length + ask offset`. A change of "Ask every" applies at once to the pending ask time.
 4. Done in C opens A with a "Started" row (switch time): 5-minute chips from the last answer time to now, default Now. The picked time ends the old activity and starts the new one. Unconfirmed time is never added to an activity.
 5. Away (lock, sleep, lid, idle limit) ends the activity. D asks "Where were you?" first (optional; built-in places and up to 8 user-made places), then what to do next. An activity from a calendar event runs on through Away to the earlier of the event end and the return. A buddy session activity runs on through Away while its session exists (no D during the session). Not logged is never stored.
 6. Activities never cross midnight. The end-of-day popup shows 1 time a day.

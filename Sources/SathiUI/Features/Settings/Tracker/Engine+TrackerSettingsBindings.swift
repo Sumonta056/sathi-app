@@ -15,7 +15,9 @@ extension Engine {
         Binding(get: { self.data.prefs.tracker.endMinutes }, set: { self.data.prefs.tracker.setEnd($0) })
     }
     var trackerWeekdays: Binding<Set<Weekday>> { trackerBinding(\.weekdays) }
-    var trackerAskEvery: Binding<Int> { trackerBinding(\.askEveryMinutes) }
+    var trackerAskEvery: Binding<Int> {
+        Binding(get: { self.data.prefs.tracker.askEveryMinutes }, set: { self.setTrackerAskEvery($0) })
+    }
     var trackerIdle: Binding<Int> { trackerBinding(\.idleMinutes) }
     var trackerUsualLength: Binding<ActivityLength> { trackerBinding(\.usualLength) }
     var trackerCalendarOnByDefault: Binding<Bool> { trackerBinding(\.calendarOnByDefault) }

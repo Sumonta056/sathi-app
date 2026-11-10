@@ -7,12 +7,14 @@ extension Engine {
 
     func beginActivity(_ draft: ActivityDraft, kind: ActivityKind = .work, at start: Date) {
         let n = clock.now
-        let first = AskTime.first(
+        let every = AskTime.first(
             start: start,
             length: draft.length,
             offsetMinutes: draft.askOffsetMinutes,
             askEveryMinutes: trackerPrefs.askEveryMinutes
         )
+        let end = AskTime.lengthEnd(start: start, length: draft.length, offsetMinutes: draft.askOffsetMinutes)
+        let first = kind == .work && !draft.quiet ? every : end ?? every
         var r = RunningActivity(
             kind: kind,
             text: draft.text,

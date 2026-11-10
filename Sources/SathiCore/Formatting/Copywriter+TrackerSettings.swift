@@ -26,7 +26,7 @@ extension Copywriter {
     package static let trackerDays = "Days"
     package static let trackerDaysHint = "Days off keep the tracker quiet."
     package static let trackerAskEvery = "Ask every"
-    package static let trackerAskEveryHint = "When nothing runs, or the activity is Open."
+    package static let trackerAskEveryHint = "How often Sathi asks \"Still on it?\" and \"What now?\"."
     package static let trackerUsualLength = "Usual length"
     package static let trackerUsualLengthHint = "The For chip starts here."
     package static let trackerAwayAfter = "Away after"

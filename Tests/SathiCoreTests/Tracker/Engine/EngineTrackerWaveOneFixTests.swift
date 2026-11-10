@@ -83,7 +83,7 @@ struct EngineTrackerWaveOneFixTests {
     }
 
     @Test func turningTheTrackerOffWhileRunningEndsAtTheConfirmedTimeNotNow() {
-        let h = EngineHarness.tracker(at: wed(10))
+        let h = EngineHarness.tracker(at: wed(10)) { $0.prefs.tracker.askEveryMinutes = 30 }
         h.start(minutes: 30)
         h.clock.advance(minutes: 50)
         h.engine.data.prefs.tracker.isOn = false
