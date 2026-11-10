@@ -50,19 +50,19 @@ Base branch: `feat/activity-tracker` (local; not pushed). Track branches and wor
 |---|---|---|---|
 | — | Design and docs | `feat/activity-tracker` | done |
 | 0 | Contracts | `feat/activity-tracker` | done (`2381f1f`) |
-| 1 | T1 Engine flow | `feat/tracker-t1-engine` | not started |
-| 1 | T2 Storage | `feat/tracker-t2-storage` | not started |
-| 1 | T3 Mac platform | `feat/tracker-t3-platform` | not started |
-| 1 | T4 Prompt views | `feat/tracker-t4-prompts` | not started |
-| 1 | T5 Reports and end of day | `feat/tracker-t5-reports` | not started |
-| 1 | T6 Settings and menu views | `feat/tracker-t6-settings` | not started |
-| 2 | C Calendar engine | `feat/tracker-c-calendar` | waits for wave 1 |
-| 2 | I Integration | `feat/tracker-i-integration` | waits for wave 1 |
+| 1 | T1 Engine flow | `feat/tracker-t1-engine` | done, merged (`11a0f49`) |
+| 1 | T2 Storage | `feat/tracker-t2-storage` | done, merged (`d6c9170`) |
+| 1 | T3 Mac platform | `feat/tracker-t3-platform` | done, merged (`37656b3`) |
+| 1 | T4 Prompt views | `feat/tracker-t4-prompts` | done, merged (`0349591`) |
+| 1 | T5 Reports and end of day | `feat/tracker-t5-reports` | done, merged (`80f11fa`) |
+| 1 | T6 Settings and menu views | `feat/tracker-t6-settings` | done, merged (`7e6513d`) |
+| 2 | C Calendar engine | `feat/tracker-c-calendar` | not started |
+| 2 | I Integration | `feat/tracker-i-integration` | not started |
 | 3 | Finish | `feat/activity-tracker` | waits for wave 2 |
 
 ## Next step
 
-Wave 1 (6 tracks in parallel). Contracts for the tracks: `docs/tracker-progress/CONTRACTS.md`. Prompt: `Read PROGRESS.md. Run the next wave with parallel subagents in worktrees, then merge.` or 1 track per session.
+Wave 2 (2 tracks in parallel: C Calendar engine, I Integration). Read the "Needs" section of every wave 1 track file (`docs/tracker-progress/T1.md` … `T6.md`) first: track I does those shared changes. Prompt: `Read PROGRESS.md. Run the next wave with parallel subagents in worktrees, then merge.` or 1 track per session.
 
 ## Key decisions (full list in the design page, Decisions tab)
 
@@ -93,6 +93,7 @@ Wave 1 (6 tracks in parallel). Contracts for the tracks: `docs/tracker-progress/
 |---|---|---|---|
 | 2026-11-09 | Design (local) | Grill, design page, spec, plan, goals, test notes, this file. This file replaces the old Sathi 2.0 handover (in git history before `5dfff66`). | `5dfff66` + this file |
 | 2026-11-09 | Wave 0 (local, subagents) | Contracts: tracker types, Prefs/LiveState fields, ports, test support, engine stubs and hooks, constants, copy, metrics, colors, track files, CONTRACTS.md. Old engine enum `Activity` is now `HabitActivity`. Review clean after 1 fix round. 1492 + 764 tests pass, lint OK. | `2381f1f` |
+| 2026-11-10 | Wave 1 (local, 6 parallel subagents in worktrees) | T1–T6 built test-first, each reviewed; fix rounds: T1 2, T3 1, T4 1, T5 1, T6 1. Merged in order T2 → T1 → T3 → T4 → T5 → T6 with `--no-ff`, no conflict; tests and lint after each merge. 1648 + 898 tests pass, lint OK, release build OK. Worktrees and track branches removed. | `b9896a8` |
 
 ## Open items
 
@@ -103,3 +104,19 @@ Wave 1 (6 tracks in parallel). Contracts for the tracks: `docs/tracker-progress/
   - `usualLength` and the start/end minutes are not fully checked on decode.
   - The Meeting category color is the same as the Meditation buddy color. Meditation uses A99CF5, but the design page has C9B8FF.
   - `spaceKeyName` is in `Limits`.
+- Wave 1 decisions (need the user's eye, change in wave 3 if wrong):
+  - Done opens A with the Started row; the old activity ends only on Start or Skip in A. Spec rule 15 ("Done ends the activity now") must be reworded.
+  - C still asks after tracker hours on a tracker day (rule 25), but never on a non-tracker day or a day off (G2).
+  - A late "Still on it" confirms the activity only up to now (rule 22).
+  - A recent chip starts the activity at once (P1), with that chip's text and category.
+  - The activity month file uses `{"schemaVersion":1,"value":[...]}` (storage rule 2). The spec Storage line says "items"; fix the spec.
+- Wave 1 items for track I (beyond the "Needs" lists in the track files):
+  - Add `askEveryMinutes` to `TrackerPromptState`; C's "Yes, N min more" shows 15 until then.
+  - The backup encodes `[Activity]`, so items and fields that the store keeps but cannot decode are not in the backup.
+  - Away rows in the report have no Edit and no Delete.
+  - Move the private copy strings and constants of T4, T5, T6 into `Copywriter` / `UIMetrics` / `Limits` (key codes in `ShortcutCapture`, `perRow` 3, bar widths, "1 days").
+  - `TrackerDaysOffCard` copies `DayOffCalendar` (about 60 lines). Give the shared days-off card an accent and closure API, then delete the copy.
+  - The global hotkey stays active while the user records a new shortcut.
+- Wave 1 items for track C: recurring events share one `eventIdentifier` (dedupe by id + start); keep each `events()` read to 1 day; a deleted category falls back to the calendar name.
+- Hand test (user, wave 3): lock, sleep, lid, ⌥⌘Space steps in `docs/tracker-progress/T3.md`. A closed lid with an external display may not post sleep; Away then starts at the idle deadline.
+- Wave 1 minors (wave 3): a paused session turns off the idle check until midnight; D loses its Away details after a restart; the end-of-day popup does not show for a day whose activity ended at midnight; turning the tracker off ends the activity at now, not at confirmed-until; duplicate ids in one month file share extra keys; CSV defuse misses a leading tab.
