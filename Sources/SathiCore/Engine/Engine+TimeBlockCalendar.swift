@@ -2,7 +2,7 @@ import Foundation
 
 extension Engine {
     package func calendarChoices() -> [CalendarChoice] {
-        if let cached = calendarChoicesCache { return cached }
+        if let cached = calendarChoicesCache, !cached.isEmpty { return cached }
         let fresh = calendarWriter.calendars()
         calendarChoicesCache = fresh
         return fresh

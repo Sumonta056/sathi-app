@@ -43,6 +43,7 @@ extension Engine {
         closeShownTrackerPrompt()
         data.live.tracker.prompt = prompt
         trackerRuntime.promptByUser = byUser
+        refreshCalendarChoices()
         presentTrackerPrompt()
     }
 
