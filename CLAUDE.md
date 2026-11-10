@@ -26,7 +26,7 @@ Sources/
     Habits/        HabitRules, HabitDays, DayClock, DayOffMonth, one folder per habit: Water/, Reading/, Meditation/, Gym/ (prefs, rules, helpers such as Weekday, BreathingPattern, BreathCue, BreathCues, GymIdeas, GymProgress)
     Quick/         QuickReminder, QuickPrefs, QuickTime, QuickActivity
     TimeBlock/     TimeBlock, TimeBlockLength, TimeBlockPrefs
-    Tracker/       Activity, ActivityKind, ActivityCategory(+List), ActivityDraft, ActivityEdit, ActivityDay, AwayPlaceList, ActivityMonth, RunningActivity, AwayPlace, AwaySpan, TrackerPrefs(+Hours), TrackerLiveState, PromptKind, PromptState, TrackerPromptState, TrackerNote(+State), TrackerEndOfDayState, EventMode, KeyShortcut, MonthKey, Rules/ (AskTime, SwitchTimes, TrackerHours, RecentList, ActivityEditCheck), Calendar/ (EventRules, EventCategoryRule, SpanCut)
+    Tracker/       Activity, ActivityKind, ActivityCategory(+List), ActivityDraft, ActivityEdit, ActivityDay, AwayPlaceList, ActivityMonth, RunningActivity, AwayPlace, AwaySpan, TrackerPrefs(+Hours), TrackerLiveState, PromptKind, PromptState, TrackerPromptState, TrackerPromptActions, TrackerCalendarInfo, TrackerNote(+State), TrackerEndOfDayState, EventMode, KeyShortcut, MonthKey, Rules/ (AskTime, SwitchTimes, TrackerHours, RecentList, ActivityEditCheck), Calendar/ (EventRules, EventCategoryRule, SpanCut)
     Constants/     Timing, Limits, StorageKeys, SoundName
     Scheduling/    EscalationPolicy (bubble/lock), TickPlanner (timer delay)
     Stats/         Stats (daily totals), GymLegacyMinutes, StreakCalculator, ReportBuilder + Report, ReportScreen + ReportScreenInput, ReportScreenBuilder (+Tiles, +Chart, +Calendar, +Text), DaySummary

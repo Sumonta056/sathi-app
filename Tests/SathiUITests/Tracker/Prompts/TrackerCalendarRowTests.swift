@@ -19,7 +19,14 @@ struct TrackerCalendarRowTests {
 
     private func row(_ box: Box, defaultID: String?) -> TrackerCalendarRow {
         let binding = Binding(get: { box.draft }, set: { box.draft = $0 })
-        return TrackerCalendarRow(draft: binding, calendars: calendars, defaultID: defaultID)
+        return TrackerCalendarRow(
+            draft: binding,
+            calendars: calendars,
+            defaultID: defaultID,
+            access: .allowed,
+            onAllow: {},
+            onOpenSettings: {}
+        )
     }
 
     @Test func tickingPicksTheDefaultCalendar() throws {

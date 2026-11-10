@@ -198,6 +198,7 @@ Full rules are in `docs/specs/phase-17-activity-tracker.md`.
 9. Quiet time ("No popups until it ends"): no tracker or buddy popups until the expected end. Buddy reminders wait and show after it. Quick reminders still show. A and C never take the keyboard.
 10. Storage: `activities/YYYY-MM.json`, kept forever. Reports and copy texts are built from it on demand.
 11. Report: Away rows have Edit (place, start, end) and Delete. An edit or a past activity that crosses midnight is refused.
+12. "Add to calendar" row in A and B, by calendar access. Not asked: the row is active and a tick asks macOS for access; after "Allow" the row ticks the default calendar. Denied: the row shows "Open System Settings" in place of the calendar menu and has no tick. Allowed with no writable calendar: the row is dim, takes no click, and shows "No calendars found on this Mac." Allowed with calendars: a tick picks the default calendar and the menu changes it.
 
 ## Breathing session
 

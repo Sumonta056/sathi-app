@@ -51,6 +51,11 @@ enum Prompt {
         s.actions.notAttending = { calls.notAttending.append($0) }
         s.actions.answerEvent = { calls.answers.append($0) }
         s.actions.close = { calls.calls.append("close") }
+        s.actions.allowCalendar = {
+            calls.calls.append("allowCalendar")
+            return nil
+        }
+        s.actions.openCalendarSettings = { calls.calls.append("openCalendarSettings") }
         configure(&s)
         return s
     }

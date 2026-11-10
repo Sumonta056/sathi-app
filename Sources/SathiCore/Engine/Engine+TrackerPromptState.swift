@@ -18,6 +18,7 @@ extension Engine {
         s.categories = activityCategories
         s.calendars = calendarChoices()
         s.defaultCalendarID = trackerDefaultCalendarID
+        s.calendarAccess = calendarAccess
         s.calendar = calendar
         s.askEveryMinutes = trackerPrefs.askEveryMinutes
         s.shortcut = trackerPrefs.shortcut
@@ -61,6 +62,16 @@ extension Engine {
         return candidates.compactMap { $0 }.first(where: ids.contains) ?? ids.first
     }
 
+    func allowTrackerCalendar() async -> TrackerCalendarInfo {
+        await requestCalendarAccess()
+        let allowed = calendarAccess == .allowed
+        return TrackerCalendarInfo(
+            access: calendarAccess,
+            calendars: allowed ? calendarChoices() : [],
+            defaultID: allowed ? trackerDefaultCalendarID : nil
+        )
+    }
+
     private func promptActions() -> TrackerPromptActions {
         var a = TrackerPromptActions()
         a.start = { [weak self] draft, at in self?.startActivity(draft, switchAt: at) }
@@ -77,6 +88,8 @@ extension Engine {
         a.notAttending = { [weak self] id in self?.notAttendingEvent(id) }
         a.answerEvent = { [weak self] yes in self?.answerEventAsk(yes) }
         a.pickEventCategory = { [weak self] name in self?.setEventCategory(name) }
+        a.allowCalendar = { [weak self] in await self?.allowTrackerCalendar() }
+        a.openCalendarSettings = { [weak self] in self?.openCalendarSettings() }
         a.close = { [weak self] in self?.closeTrackerPrompt() }
         return a
     }

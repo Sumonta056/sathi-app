@@ -15,6 +15,8 @@ package struct TrackerPromptActions {
     package var notAttending: @MainActor (String) -> Void = { _ in }
     package var answerEvent: @MainActor (Bool) -> Void = { _ in }
     package var pickEventCategory: @MainActor (String) -> Void = { _ in }
+    package var allowCalendar: @MainActor () async -> TrackerCalendarInfo? = { nil }
+    package var openCalendarSettings: @MainActor () -> Void = {}
     package var close: @MainActor () -> Void = {}
 
     package init() {}
