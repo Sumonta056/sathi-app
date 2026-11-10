@@ -121,7 +121,7 @@ The user does many different things in a work day and keeps notes by hand to tra
 
 ### Menu
 
-41. When the tracker is on, the menu shows "Log activity" (opens B) as a full-width row below the tool row. When an activity runs, the menu shows 1 row: dot, text, "since {time}", and "Done".
+41. When the tracker is on, the menu shows 1 tracker card at the top. When an activity runs: dot, text, "since {time} · {length}", "Done", then a divider and "Switch activity" (opens B) with the shortcut hint and "Next ask {time}". When nothing runs: "Not tracking now", "Next ask {time}" when known, and "Log activity" (opens B). "Next ask" is the time of the next A or C (the later of the ask time and the quiet end); it is hidden while a prompt shows or the Mac is away.
 
 ## Goals (acceptance)
 

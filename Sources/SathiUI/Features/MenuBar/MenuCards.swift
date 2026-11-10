@@ -15,7 +15,6 @@ struct MenuCards: View {
                     QuickListCard()
                     TimeBlockCard()
                     ToolRow()
-                    if e.data.prefs.tracker.isOn { TrackerLogActivityButton() }
                 }
             }
         }

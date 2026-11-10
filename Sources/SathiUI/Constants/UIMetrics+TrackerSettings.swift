@@ -16,4 +16,7 @@ extension UIMetrics {
     static let trackerMenuRowSpacing: CGFloat = 10
     static let trackerMenuDot: CGFloat = 10
     static let trackerMenuDoneHeight: CGFloat = 28
+    static let trackerMenuCardPadding: CGFloat = 12
+    static let trackerMenuCardSpacing: CGFloat = 10
+    static let trackerMenuIcon: CGFloat = 12
 }
