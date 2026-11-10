@@ -34,7 +34,7 @@ extension Engine {
         if let s = trackerHours.nextStart(after: n) { list.append(s) }
         list.append(trackerHours.hours(on: n).end)
         if t.awaySince == nil {
-            list.append((t.lastInput ?? n).addingTimeInterval(idleLimit))
+            list.append((idleSince ?? n).addingTimeInterval(idleLimit))
         }
         return list.filter { $0 > n }
     }
@@ -96,17 +96,27 @@ extension Engine {
         guard let r = data.live.tracker.running else { return }
         let midnight = calendar.nextDay(after: r.start)
         guard n >= midnight else { return }
-        endRunningOnInterrupt(at: min(r.confirmedUntil, midnight))
+        endRunningOnInterrupt(at: min(r.confirmedUntil, midnight), interrupt: midnight)
+        if trackerHours.isTrackerDay(r.start) { trackerRuntime.endOfDayDue = DayKey(r.start, calendar: calendar) }
         if data.live.tracker.prompt?.kind == .stillOnIt || data.live.tracker.prompt?.switchFrom != nil { clearTrackerPrompt() }
     }
 
     private func showTrackerEndOfDayIfDue(_ n: Date) {
-        let p = trackerPrefs
-        guard p.endOfDayOn, !trackerRuntime.endOfDayShowing, data.live.tracker.running == nil,
-              !isAnyLockShowing, trackerHours.isTrackerDay(n) else { return }
+        guard trackerPrefs.endOfDayOn, !trackerRuntime.endOfDayShowing, data.live.tracker.running == nil,
+              !isAnyLockShowing else { return }
+        if let due = trackerRuntime.endOfDayDue {
+            trackerRuntime.endOfDayDue = nil
+            if data.live.tracker.lastEndOfDay != due { return showTrackerEndOfDay(for: due) }
+        }
         let today = DayKey(n, calendar: calendar)
-        guard data.live.tracker.lastEndOfDay != today, n >= trackerHours.hours(on: n).end else { return }
-        data.live.tracker.lastEndOfDay = today
+        guard trackerHours.isTrackerDay(n), data.live.tracker.lastEndOfDay != today,
+              n >= trackerHours.hours(on: n).end else { return }
+        showTrackerEndOfDay(for: today)
+    }
+
+    private func showTrackerEndOfDay(for day: DayKey) {
+        data.live.tracker.lastEndOfDay = day
+        trackerRuntime.endOfDayDay = day
         trackerRuntime.endOfDayShowing = true
         presenter.showTrackerEndOfDay()
     }

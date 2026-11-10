@@ -67,7 +67,7 @@ extension Engine {
         guard let r = data.live.tracker.running else { return }
         let n = clock.now.wholeSecond
         data.live.tracker.running?.quietUntil = nil
-        setTrackerPrompt(PromptState(kind: .whatNow, shownAt: n, askTime: n, switchFrom: r.lastAnswer), byUser: true)
+        setTrackerPrompt(PromptState(kind: .whatNow, shownAt: n, askTime: n, switchFrom: r.lastAnswer, doneAt: n), byUser: true)
         requestTick()
     }
 

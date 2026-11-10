@@ -33,7 +33,7 @@ extension Engine {
 
     package func trackerEndOfDayState() -> TrackerEndOfDayState? {
         guard trackerRuntime.endOfDayShowing else { return nil }
-        let today = DayKey(clock.now, calendar: calendar)
+        let today = trackerRuntime.endOfDayDay ?? DayKey(clock.now, calendar: calendar)
         var s = TrackerEndOfDayState(day: activityDay(today), categories: activityCategories)
         s.calendar = calendar
         s.openReport = { [weak self] in self?.openActivityReport(today) }

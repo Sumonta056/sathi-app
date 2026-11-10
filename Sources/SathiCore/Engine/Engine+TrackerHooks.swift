@@ -18,6 +18,7 @@ extension Engine {
         }
         if data.live.tracker.awaySince != nil { returnFromAway(at: n) }
         if let p = data.live.tracker.prompt, isStale(p, now: n) { data.live.tracker.prompt = nil }
+        if data.live.tracker.prompt?.kind != .welcomeBack { clearAwayRuntime() }
     }
 
     func stopTracker() {
@@ -27,7 +28,7 @@ extension Engine {
     func trackerPrefsChanged(from old: TrackerPrefs) {
         let new = data.prefs.tracker
         if old.isOn && !new.isOn {
-            if let r = data.live.tracker.running { endRunningOnInterrupt(at: min(r.confirmedUntil, clock.now)) }
+            if let r = data.live.tracker.running { endRunningOnInterrupt(at: min(r.confirmedUntil, clock.now), interrupt: clock.now) }
             clearTrackerPrompt()
             closeEventNote()
             closeTrackerEndOfDay()
@@ -47,45 +48,6 @@ extension Engine {
         } else if old != nil, pausedUntil == nil, data.live.tracker.awayCause == .onBreak {
             endBreakAway(at: clock.now)
         }
-    }
-
-    func trackerSessionStarted(_ id: HabitID) {
-        let n = clock.now
-        guard trackerPrefs.isOn, id != .water, trackerHours.isInside(n) else { return }
-        let r = data.live.tracker.running
-        if r?.kind != .buddy { data.live.tracker.beforeSession = pendingDoneAt == nil ? r.map(draft(of:)) : nil }
-        endRunningOnInterrupt(at: n)
-        clearTrackerPrompt()
-        let category = ActivityCategory.buddy(id)
-        if !activityCategories.contains(where: { $0.name == category.name }) {
-            addActivityCategory(category.name, colorHex: category.colorHex)
-        }
-        let minutes = session(id).map { Int($0.end.timeIntervalSince($0.start) / Timing.minute) } ?? 0
-        let d = ActivityDraft(
-            text: Copywriter.trackerBuddyText(id, detail: buddyDetail(id)),
-            category: category.name,
-            length: minutes > 0 ? .minutes(minutes) : .open
-        )
-        beginActivity(d, kind: .buddy, at: n)
-    }
-
-    func trackerSessionEnded(_ id: HabitID) {
-        guard trackerPrefs.isOn else { return }
-        let n = clock.now
-        data.live.tracker.lastInput = n.wholeSecond
-        guard let r = data.live.tracker.running, r.kind == .buddy, r.category == ActivityCategory.buddy(id).name else {
-            data.live.tracker.beforeSession = nil
-            return
-        }
-        endRunningActivity(at: n)
-        if let before = data.live.tracker.beforeSession {
-            data.live.tracker.beforeSession = nil
-            setTrackerPrompt(
-                PromptState(kind: .whatNow, shownAt: n, askTime: n, switchFrom: n, resume: before),
-                byUser: !trackerRuntime.sessionTimedOut
-            )
-        }
-        requestTick()
     }
 
     func trackerBlockStarted() {
@@ -123,16 +85,6 @@ extension Engine {
             calendarID: r.calendarID,
             sourceEventID: r.sourceEventID
         )
-    }
-
-    private func buddyDetail(_ id: HabitID) -> String? {
-        switch id {
-        case .water, .reading: return nil
-        case .meditation:
-            let style = data.prefs.meditation.style
-            return Copywriter.breathShortName(style) + " " + Copywriter.breathBeats(style)
-        case .gym: return gymIdeaText
-        }
     }
 
     private func startTrackerPlatform() {

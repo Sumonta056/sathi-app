@@ -66,7 +66,7 @@ struct EngineTrackerFixTests {
     @Test func aSessionAfterDoneEndsTheDoneActivityAndOffersNoContinue() {
         let h = doneHarness()
         h.engine.startSession(.reading)
-        #expect(h.saved.first?.end == wed(10, 15))
+        #expect(h.saved.first?.end == wed(10, 27))
         h.clock.advance(minutes: 5)
         h.engine.stopSession(.reading)
         h.engine.tick()
@@ -76,24 +76,24 @@ struct EngineTrackerFixTests {
     @Test func aBlockAfterDoneEndsTheDoneActivityAtTheDoneTime() {
         let h = doneHarness()
         h.startBlock("Plan", .minutes(30))
-        #expect(h.saved.first?.end == wed(10, 15))
+        #expect(h.saved.first?.end == wed(10, 27))
     }
 
     @Test func turningTheTrackerOffAfterDoneEndsAtTheDoneTime() {
         let h = doneHarness()
         h.engine.data.prefs.tracker.isOn = false
-        #expect(h.saved.first?.end == wed(10, 15))
+        #expect(h.saved.first?.end == wed(10, 27))
     }
 
     @Test func escOrTheCenterPanelOverADoneWhatNowEndTheActivity() {
         let esc = doneHarness()
         esc.engine.closeTrackerPrompt()
         #expect(esc.running == nil)
-        #expect(esc.saved.first?.end == wed(10, 15))
+        #expect(esc.saved.first?.end == wed(10, 27))
         let center = doneHarness()
         center.engine.openTrackerPanel()
         #expect(center.running == nil)
-        #expect(center.saved.first?.end == wed(10, 15))
+        #expect(center.saved.first?.end == wed(10, 27))
     }
 
     @Test func turningTheTrackerOffEndsAtTheConfirmedTime() {

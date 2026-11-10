@@ -63,7 +63,9 @@ package final class Engine: ObservableObject {
     var reportCache: ReportScreenCache?
     var breathCueMark: Date?
     var minuteTickMark: Date?
-    var trackerRuntime = TrackerRuntime()
+    var trackerRuntime = TrackerRuntime() {
+        didSet { if oldValue.away != trackerRuntime.away { syncAwayDetails() } }
+    }
     var trackerCalendarRuntime = TrackerCalendarRuntime()
 
     package init(
@@ -115,6 +117,7 @@ package final class Engine: ObservableObject {
             )
             return (id, HabitState(nextDue: due))
         })
+        trackerRuntime.away = loaded.live.tracker.away
     }
 
     var stats: Stats { Stats(calendar: calendar) }
