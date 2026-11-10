@@ -5,4 +5,10 @@ struct TrackerCalendarRuntime: Equatable {
     var readAt: Date?
     var note: TrackerNote?
     var noteUntil: Date?
+    var readKey: [String] = []
+    var calendars: [CalendarChoice] = []
+    var checkedUntil: Date?
+    var dismissed: Set<String> = []
+    var undo: RunningActivity?
+    var pendingAsk: CalendarEventInfo?
 }
