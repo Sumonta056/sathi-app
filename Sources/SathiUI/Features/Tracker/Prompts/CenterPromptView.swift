@@ -14,10 +14,15 @@ struct CenterPromptView: View {
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: UIMetrics.trackerPopupRadius, style: .continuous)
         VStack(alignment: .leading, spacing: UIMetrics.trackerPopupSpacing) {
-            LazyTextField(placeholder: Copywriter.trackerWhatAreYouDoing, text: $form.draft.text, startsEditing: true, onSubmit: start)
+            TrackerHeader(
+                icon: "pencil",
+                eyebrow: Copywriter.trackerLogEyebrow(state.now, calendar: state.calendar),
+                title: Copywriter.trackerWhatAreYouDoingNow,
+                detail: nil
+            )
+            LazyTextField(placeholder: Copywriter.trackerFieldPlaceholder, text: $form.draft.text, startsEditing: true, onSubmit: start)
                 .modifier(QuickTextLimit(text: $form.draft.text, limit: Limits.activityTextMax))
-                .font(.system(size: UIMetrics.trackerCenterInputFont, weight: .semibold, design: .rounded))
-                .padding(UIMetrics.trackerCenterInputPadding)
+                .trackerField(height: UIMetrics.trackerCenterFieldHeight)
             TrackerRecentChips(state: state, draft: form.draft, limit: Limits.recentInCenter) { state.actions.start($0, nil) }
             TrackerForRow(draft: $form.draft)
             TrackerCalendarRow(draft: $form.draft, calendars: state.calendars, defaultID: state.defaultCalendarID)

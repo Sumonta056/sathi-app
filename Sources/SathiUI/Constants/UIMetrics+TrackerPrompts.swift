@@ -49,8 +49,7 @@ extension UIMetrics {
     static let trackerSwitchGridColumns = 4
 
     static let trackerCenterWidth: CGFloat = 640
-    static let trackerCenterInputPadding = EdgeInsets(top: 18, leading: 22, bottom: 18, trailing: 22)
-    static let trackerCenterInputFont: CGFloat = 22
+    static let trackerCenterFieldHeight: CGFloat = 54
     static let trackerCenterListPadding: CGFloat = 8
     static let trackerCenterRowPadding = EdgeInsets(top: 11, leading: 12, bottom: 11, trailing: 12)
     static let trackerCenterRowRadius: CGFloat = 12

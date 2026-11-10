@@ -22,13 +22,13 @@ struct HotkeyRegistrarTests {
         func unregister() { unregisters += 1 }
     }
 
-    @Test("the default shortcut registers key 49 with option and command flags")
+    @Test("the default shortcut registers key 49 with control, option and command flags")
     func defaultShortcut() {
         let api = FakeAPI()
         let registrar = CarbonHotkeyRegistrar(api: api)
         #expect(registrar.register(.trackerDefault) {})
         #expect(api.registered.first?.0 == 49)
-        #expect(api.registered.first?.1 == UInt32(2304))
+        #expect(api.registered.first?.1 == UInt32(6400))
     }
 
     @Test("a press reaches the callback")

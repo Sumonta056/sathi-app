@@ -1,7 +1,6 @@
 import Foundation
 
 extension Copywriter {
-    package static let trackerWhatAreYouDoing = "What are you doing?"
     package static let trackerWhatAreYouDoingNow = "What are you doing now?"
     package static let trackerFieldPlaceholder = "Type, or pick a recent one"
     package static let trackerStarted = "Started"
@@ -32,6 +31,10 @@ extension Copywriter {
     package static let trackerYesLogIt = "Yes"
     package static let trackerNo = "No"
     package static let trackerSwitch = "Switch"
+
+    package static func trackerLogEyebrow(_ time: Date, calendar: Calendar) -> String {
+        "LOG ACTIVITY · " + trackerClock(time, calendar: calendar)
+    }
 
     package static func trackerWhatNowEyebrow(_ time: Date, calendar: Calendar) -> String {
         "WHAT NOW? · " + trackerClock(time, calendar: calendar)

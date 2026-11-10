@@ -96,6 +96,6 @@ extension TrackerPrefs {
     }
 
     private static func validShortcut(_ s: KeyShortcut, or fallback: KeyShortcut) -> KeyShortcut {
-        s.modifiers.isEmpty ? fallback : s
+        s.modifiers.isEmpty || s.sameKeys(as: .finderSearch) ? fallback : s
     }
 }

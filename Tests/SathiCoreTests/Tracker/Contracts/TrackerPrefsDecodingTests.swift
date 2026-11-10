@@ -28,7 +28,7 @@ struct TrackerPrefsDecodingTests {
         #expect(t.categories.map(\.name) == ["Coding", "Meeting", "Cefalo Meetings", "Review", "Learning", "Email"])
         #expect(!t.calendarOnByDefault)
         #expect(t.defaultCalendarID == nil)
-        #expect(t.shortcut == KeyShortcut(keyCode: 49, modifiers: [.option, .command], keyName: "Space"))
+        #expect(t.shortcut == KeyShortcut(keyCode: 49, modifiers: [.control, .option, .command], keyName: "Space"))
         #expect(t.endOfDayOn)
         #expect(t.playsSound)
         #expect(!t.readsEvents)
@@ -38,6 +38,14 @@ struct TrackerPrefsDecodingTests {
         #expect(t.categoryByCalendar.isEmpty)
         #expect(t.eventCategoryByTitle.isEmpty)
         #expect(t.defaultCategory == "Coding")
+    }
+
+    @Test func theDefaultShortcutAvoidsTheFinderSearch() throws {
+        #expect(KeyShortcut.trackerDefault.modifiers == [.control, .option, .command])
+        #expect(KeyShortcut.trackerDefault.keyCode == Limits.spaceKeyCode)
+        let json = #"{"shortcut":{"keyCode":49,"modifiers":["option","command"],"keyName":"Space"}}"#
+        let t = try JSONDecoder().decode(TrackerPrefs.self, from: Data(json.utf8))
+        #expect(t.shortcut == .trackerDefault)
     }
 
     @Test func theMeetingColorDiffersFromTheMeditationBuddy() {

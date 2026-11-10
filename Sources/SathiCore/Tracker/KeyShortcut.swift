@@ -20,9 +20,19 @@ package struct KeyShortcut: Codable, Equatable, Hashable, Sendable {
 
     package static let trackerDefault = KeyShortcut(
         keyCode: Limits.spaceKeyCode,
+        modifiers: [.control, .option, .command],
+        keyName: Copywriter.trackerSpaceKeyName
+    )
+
+    package static let finderSearch = KeyShortcut(
+        keyCode: Limits.spaceKeyCode,
         modifiers: [.option, .command],
         keyName: Copywriter.trackerSpaceKeyName
     )
+
+    package func sameKeys(as other: KeyShortcut) -> Bool {
+        keyCode == other.keyCode && modifiers == other.modifiers
+    }
 
     package var orderedModifiers: [KeyModifier] { KeyModifier.allCases.filter(modifiers.contains) }
 

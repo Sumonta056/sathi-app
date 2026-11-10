@@ -58,7 +58,7 @@ struct TrackerSettingsPageTests {
     }
 
     @Test func shortcutShowsDefault() throws {
-        _ = try page(EngineHarness()).find(text: "⌥⌘Space")
+        _ = try page(EngineHarness()).find(text: "⌃⌥⌘Space")
     }
 
     @Test func calendarRowsRenderWithNoReadableCalendars() throws {

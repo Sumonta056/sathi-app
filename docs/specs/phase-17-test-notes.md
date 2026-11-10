@@ -18,7 +18,7 @@ Goals checked by hand here:
 2. Click a recent chip, Enter. Wait for C. Try Yes, 5 min, 30 min, Skip, Done. After Done, pick an earlier Started chip and check the log times.
 3. Leave C open for 6 min, then answer: the late form shows.
 4. Lock the Mac for 2 min, unlock: D shows. Leave the Mac idle past the Away limit (set 10 min to test): D shows "I was here".
-5. Press ⌥⌘Space in another app: B opens with the keyboard.
+5. Press ⌃⌥⌘Space in another app: B opens with the keyboard.
 6. Tick No popups for 15 min. Make Water due inside it: no popup, then it shows at the end. Add a quick reminder inside it: it shows.
 7. Get a Slack or Mail banner while C shows: C is still there after the banner.
 8. Run `./scripts/perf.sh`: idle CPU under 1%, under 10 wakeups a minute.
