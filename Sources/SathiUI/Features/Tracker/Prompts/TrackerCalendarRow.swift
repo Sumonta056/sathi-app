@@ -4,6 +4,7 @@ import SwiftUI
 struct TrackerCalendarRow: View {
     @Binding var draft: ActivityDraft
     let calendars: [CalendarChoice]
+    let defaultID: String?
 
     var body: some View {
         HStack(spacing: UIMetrics.trackerOptionRowSpacing) {
@@ -20,9 +21,13 @@ struct TrackerCalendarRow: View {
 
     private var isOn: Bool { draft.calendarID != nil }
 
+    private var defaultChoice: CalendarChoice? {
+        calendars.first { $0.id == defaultID } ?? calendars.first
+    }
+
     private var checkBox: some View {
         let shape = RoundedRectangle(cornerRadius: UIMetrics.trackerCheckRadius, style: .continuous)
-        return Button { draft.calendarID = isOn ? nil : calendars.first?.id } label: {
+        return Button { draft.calendarID = isOn ? nil : defaultChoice?.id } label: {
             ZStack {
                 shape.fill(isOn ? Night.tracker : Color.clear)
                 shape.strokeBorder(isOn ? Night.tracker : Night.fieldBorder, lineWidth: UIMetrics.trackerChipSelectedBorder)
@@ -42,7 +47,7 @@ struct TrackerCalendarRow: View {
     }
 
     private var menu: some View {
-        let chosen = calendars.first { $0.id == draft.calendarID } ?? calendars.first
+        let chosen = calendars.first { $0.id == draft.calendarID } ?? defaultChoice
         return Menu {
             ForEach(accounts, id: \.self) { account in
                 Section {

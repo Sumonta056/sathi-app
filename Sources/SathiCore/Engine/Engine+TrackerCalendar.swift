@@ -77,8 +77,7 @@ extension Engine {
         trackerCalendarRuntime.pendingAsk = nil
         if let e {
             if yes {
-                logEvent(e, at: e.start)
-                makeRoomForEvent(e)
+                logAskedEvent(e)
             } else {
                 dismissEvent(e)
             }

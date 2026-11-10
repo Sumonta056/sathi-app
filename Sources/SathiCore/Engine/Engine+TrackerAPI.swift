@@ -44,6 +44,8 @@ extension Engine {
     package func stillOnIt(minutes: Int? = nil) {
         guard data.live.tracker.running != nil else { return }
         let n = clock.now.wholeSecond
+        if let p = data.live.tracker.prompt, p.kind == .stillOnIt,
+           AskTime.waitedMinutes(shownAt: p.shownAt, now: n) != nil { return stillOnItLate() }
         let m = minutes ?? trackerPrefs.askEveryMinutes
         let next = n.addingTimeInterval(TimeInterval(m) * Timing.minute)
         data.live.tracker.running?.askAt = next
@@ -104,6 +106,7 @@ extension Engine {
     }
 
     package func openTrackerPanel() {
+        endQuietTime()
         guard trackerPrefs.isOn, data.live.tracker.prompt?.kind != .center else { return }
         let n = clock.now.wholeSecond
         if let done = pendingDoneAt { endRunningActivity(at: done) }
@@ -112,7 +115,6 @@ extension Engine {
     }
 
     package func trackerShortcutPressed() {
-        endQuietTime()
         openTrackerPanel()
     }
 

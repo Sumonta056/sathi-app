@@ -11,6 +11,7 @@ package struct TrackerPromptState {
     package var recents: [RecentActivity] = []
     package var categories: [ActivityCategory] = []
     package var calendars: [CalendarChoice] = []
+    package var defaultCalendarID: String?
     package var switchTimes: [Date] = []
     package var waitedMinutes: Int?
     package var away: AwaySpan?

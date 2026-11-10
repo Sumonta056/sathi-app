@@ -20,7 +20,7 @@ struct CenterPromptView: View {
                 .padding(UIMetrics.trackerCenterInputPadding)
             TrackerRecentChips(state: state, draft: form.draft, limit: Limits.recentInCenter) { state.actions.start($0, nil) }
             TrackerForRow(draft: $form.draft)
-            TrackerCalendarRow(draft: $form.draft, calendars: state.calendars)
+            TrackerCalendarRow(draft: $form.draft, calendars: state.calendars, defaultID: state.defaultCalendarID)
             TrackerQuietRow(draft: $form.draft)
             TrackerSummaryLine(draft: form.draft, categories: state.categories, open: $optionsOpen)
             if optionsOpen { TrackerOptionsPanel(draft: $form.draft, categories: state.categories) }

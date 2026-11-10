@@ -128,7 +128,7 @@ struct EngineTrackerGateTests {
     @Test func theMenuEndsQuietTime() {
         let h = EngineHarness.tracker(at: wed(10))
         h.start(minutes: 30, quiet: true)
-        h.engine.endQuietTime()
+        h.engine.openTrackerPanel()
         #expect(h.engine.trackerQuietUntil == nil)
         #expect(h.store.live.tracker.running?.quietUntil == nil)
     }
