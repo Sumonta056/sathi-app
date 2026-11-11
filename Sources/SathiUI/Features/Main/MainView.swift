@@ -17,15 +17,9 @@ struct MainView: View {
 
     @ViewBuilder private var page: some View {
         switch route.page {
-<<<<<<< HEAD
         case .today: TodayPage()
-        case .activities: ReportsView(tab: .activities)
-        case .reports: ReportsView(tab: .habits)
-=======
-        case .today: TodayPlaceholder()
         case .activities: ReportsView()
         case .reports: ReportsPage()
->>>>>>> feat/app-window-reports
         case let .settings(page): SettingsPageView(page: page)
         }
     }
