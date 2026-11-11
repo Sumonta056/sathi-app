@@ -10,7 +10,7 @@ extension UIMetrics {
     static let categoryTableRowGap: CGFloat = 8
     static let categoryTableRowPadding: CGFloat = 5
     static let categoryTableColumnGap: CGFloat = 28
-    static let categoryTableHoursWidth: CGFloat = 56
+    static let categoryTableHoursWidth: CGFloat = 72
     static let categoryTablePercentWidth: CGFloat = 34
     static let categoryTableChangeWidth: CGFloat = 60
     static let categoryTableHeaderGap: CGFloat = 8

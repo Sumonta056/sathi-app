@@ -15,7 +15,14 @@ extension Copywriter {
         switch change {
         case .same: return categoryTableNoChange
         case .none: return ""
-        case .up, .down: return rangeDelta(change) { Fmt.short($0) }
+        case .up, .down:
+            let text = rangeDelta(change) { categoryTableHours($0) }
+            return text.dropFirst() == Substring(categoryTableNoChange) ? categoryTableNoChange : text
         }
+    }
+
+    package static func categoryTableHours(_ seconds: TimeInterval) -> String {
+        let minutes = Int(max(0, seconds) / Timing.minute)
+        return minutes == 0 ? categoryTableNoChange : Fmt.short(TimeInterval(minutes) * Timing.minute)
     }
 }

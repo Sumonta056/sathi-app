@@ -49,6 +49,7 @@ struct CategoryTableTests {
         let table = CategoryTable([input("A", 10, before: 10), input("B", 0, before: 12)])
         #expect(table.rows.map(\.name) == ["A", "B"])
         #expect(table.rows[1].percentText == "0%")
+        #expect(table.rows[1].hoursText == "0m")
         #expect(table.rows[1].changeText == "\u{2212}12m")
     }
 
@@ -72,6 +73,18 @@ struct CategoryTableTests {
         let table = CategoryTable([input("A", 5, hex: 0xFF9FB8)])
         #expect(table.rows[0].colorHex == 0xFF9FB8)
         #expect(table.rows[0].seconds == 300)
-        #expect(table.rows[0].id == "A")
+    }
+
+    @Test func changeUnderOneMinuteIsZero() {
+        let table = CategoryTable([
+            CategoryTableInput(name: "A", colorHex: 1, seconds: 3630, previousSeconds: 3600),
+            CategoryTableInput(name: "B", colorHex: 1, seconds: 3570, previousSeconds: 3600)
+        ])
+        #expect(table.rows.map(\.changeText) == ["0m", "0m"])
+    }
+
+    @Test func rowIdsStayUniqueForSameNames() {
+        let table = CategoryTable([input("Away", 10), input("Away", 5)])
+        #expect(Set(table.rows.map(\.id)).count == 2)
     }
 }

@@ -15,6 +15,7 @@ package struct CategoryTableInput: Equatable, Sendable {
 }
 
 package struct CategoryTableRow: Equatable, Identifiable, Sendable {
+    package var id: String
     package var name: String
     package var colorHex: UInt32
     package var seconds: TimeInterval
@@ -22,8 +23,6 @@ package struct CategoryTableRow: Equatable, Identifiable, Sendable {
     package var percentText: String
     package var change: RangeChange
     package var changeText: String
-
-    package var id: String { name }
 }
 
 package struct CategoryTable: Equatable, Sendable {
@@ -38,16 +37,18 @@ package struct CategoryTable: Equatable, Sendable {
         totalSeconds = total
         rows = kept.enumerated()
             .sorted { $0.element.seconds != $1.element.seconds ? $0.element.seconds > $1.element.seconds : $0.offset < $1.offset }
-            .map { Self.row($0.element, total: total) }
+            .enumerated()
+            .map { Self.row($0.element.element, id: "\($0.offset)-\($0.element.element.name)", total: total) }
     }
 
-    private static func row(_ input: CategoryTableInput, total: TimeInterval) -> CategoryTableRow {
+    private static func row(_ input: CategoryTableInput, id: String, total: TimeInterval) -> CategoryTableRow {
         let change = input.previousSeconds.map { RangeChange(current: input.seconds, previous: $0, hasData: true) } ?? .none
         return CategoryTableRow(
+            id: id,
             name: input.name,
             colorHex: input.colorHex,
             seconds: input.seconds,
-            hoursText: Fmt.short(input.seconds),
+            hoursText: Copywriter.categoryTableHours(input.seconds),
             percentText: Copywriter.categoryTablePercent(input.seconds, of: total),
             change: change,
             changeText: Copywriter.categoryTableChange(change)
