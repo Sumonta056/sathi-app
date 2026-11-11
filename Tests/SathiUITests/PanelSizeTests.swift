@@ -63,13 +63,11 @@ struct PanelSizeTests {
         return MenuSize.smallest(MenuPanel(), h)
     }
 
-    @Test func menuHeightIsBoundedByTheVisibleRows() {
+    @Test func menuHeightIgnoresTheQuickReminderCount() {
         let none = menuHeight(0)
-        let four = menuHeight(UIMetrics.quickVisibleRows)
         let full = menuHeight(Limits.quickMax)
         #expect(none > 0)
-        #expect(four > none)
-        #expect(full == four)
+        #expect(full == none)
         #expect(full < UIMetrics.menuMaxHeight)
     }
 
@@ -80,7 +78,7 @@ struct PanelSizeTests {
         #expect(full < UIMetrics.menuMaxHeight)
     }
 
-    @Test(arguments: [0, UIMetrics.quickVisibleRows, Limits.quickMax])
+    @Test(arguments: [0, Limits.quickMax])
     func menuWindowTakesItsNaturalHeight(_ items: Int) {
         let h = Quick.harness(Quick.many(items))
         #expect(MenuSize.smallest(MenuPanel(), h) == MenuSize.ideal(MenuPanel(), h))

@@ -19,7 +19,7 @@ struct BreakMenuTests {
         #expect(throws: Never.self) { try sut.labelView().find(text: "Take a break") }
     }
 
-    @Test func panelFooterHoldsTheBreakMenu() throws {
+    @Test func panelActionRowHoldsTheBreakMenu() throws {
         let sut = try Glance.panel(Glance.harness())
         #expect(sut.findAll(BreakMenu.self).count == 1)
         #expect(Find.lacks(sut, text: "Take a break from reminders"))
@@ -52,9 +52,9 @@ struct BreakMenuTests {
 @MainActor
 @Suite("Version text")
 struct VersionTextTests {
-    @Test func menuFooterHasNoVersionText() throws {
-        let texts = try MenuFind.texts(hosted(MenuFooter(), EngineHarness()).inspect())
-        #expect(!texts.contains { $0 == MenuFooter.versionText || $0.hasPrefix("Sathi ") })
+    @Test func quickPanelHasNoVersionText() throws {
+        let texts = try MenuFind.texts(Glance.panel(EngineHarness()))
+        #expect(!texts.contains { $0.hasPrefix("Sathi ") })
     }
 
     @Test func settingsSidebarShowsTheVersionAtTheBottom() throws {

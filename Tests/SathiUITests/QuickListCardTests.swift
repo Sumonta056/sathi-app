@@ -79,10 +79,4 @@ struct QuickListCardTests {
         let some = try hosted(BreakMenu(), Quick.harness([Quick.item("A", minutes: 5)])).inspect()
         #expect(MenuFind.hasText(some, containing: hint))
     }
-
-    @Test func panelShowsTheCardWithAReminder() throws {
-        let sut = try hosted(MenuPanel(), Quick.harness([Quick.item("A", minutes: 5)])).inspect()
-        #expect(sut.findAll(QuickListCard.self).count == 1)
-        #expect(throws: Never.self) { try sut.find(text: "Quick reminders") }
-    }
 }
