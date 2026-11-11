@@ -11,12 +11,6 @@ struct CopywriterReportsPageTests {
         #expect(Copywriter.reportsAmount(.meditation, 0) == "0m")
     }
 
-    @Test func categoryTitleNamesTheComparedRange() {
-        #expect(Copywriter.reportsCategoryTitle(.week) == "Time by category vs last week")
-        #expect(Copywriter.reportsCategoryTitle(.day) == "Time by category vs yesterday")
-        #expect(Copywriter.reportsCategoryTitle(.month) == "Time by category vs last month")
-    }
-
     @Test func deltaIsTheSignedAmountWithoutTheComparison() {
         let format: (Double) -> String = { "\(Int($0))m" }
         #expect(Copywriter.rangeDelta(.up(20), format: format) == "+20m")

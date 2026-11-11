@@ -6,7 +6,7 @@ struct ActivityTableCard: View {
 
     var body: some View {
         ReportsCard {
-            CategoryTableView(table: table, summary: Copywriter.activitiesTableSummary(table.rows.count), columns: 2, showsChange: false)
+            CategoryTableView(table: table, summary: "logged · " + Copywriter.categoryCount(table.rows.count), columns: 2, showsChange: false)
         }
     }
 

@@ -20,6 +20,5 @@ extension UIMetrics {
 }
 
 extension UIMetrics {
-    static let activitiesSideWidth: CGFloat = 320
     static let activitiesTextLines = 12
 }

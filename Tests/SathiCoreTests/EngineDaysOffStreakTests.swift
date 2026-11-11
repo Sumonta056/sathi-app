@@ -19,16 +19,13 @@ struct EngineDaysOffStreakTests {
             gymDone([2, 3, 4, 5, 6], into: &$0)
         }
         #expect(h.engine.streak(.gym) == 5)
-        #expect(h.engine.longestStreak(.gym) == 5)
     }
 
     @Test func turningWeekdaysOffUpdatesTheShownStreak() {
         let h = EngineHarness(at: day(2026, 3, 9, 10)) { gymDone([2, 3, 4, 5, 6, 9], into: &$0) }
         #expect(h.engine.streak(.gym) == 1)
-        #expect(h.engine.longestStreak(.gym) == 5)
         h.engine.data.prefs.gym.weekdays = workdays
         #expect(h.engine.streak(.gym) == 6)
-        #expect(h.engine.longestStreak(.gym) == 6)
     }
 
     @Test func turningAWeekdayBackOnUpdatesTheShownStreak() {
@@ -46,7 +43,6 @@ struct EngineDaysOffStreakTests {
         #expect(h.engine.streak(.gym) == 2)
         h.engine.data.prefs.gym.daysOff = [DayKey(day(2026, 3, 7), calendar: .current)]
         #expect(h.engine.streak(.gym) == 7)
-        #expect(h.engine.longestStreak(.gym) == 7)
     }
 
     @Test func aDayOffOfAnotherHabitNeverChangesTheStreak() {

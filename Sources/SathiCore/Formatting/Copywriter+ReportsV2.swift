@@ -10,7 +10,6 @@ extension Copywriter {
     package static let reportsStreakLegend = "· green frame = streak day"
     package static let reportsPreviousMonth = "Previous month"
     package static let reportsNextMonth = "Next month"
-    package static let reportsNoValue = "\u{2014}"
     package static let reportsWeekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
     package static func reportsTab(_ id: HabitID, met: Int, days: Int) -> String {
@@ -93,18 +92,14 @@ extension Copywriter {
     }
 
     package static func reportsCategorySummary(_ table: CategoryTable, kind: ReportRange) -> String {
-        let previous = table.rows.compactMap { row -> Double? in
-            switch row.change {
-            case let .up(d): row.seconds - d
-            case let .down(d): row.seconds + d
-            case .same: row.seconds
-            case .none: nil
-            }
-        }
-        guard !previous.isEmpty else { return table.rows.count == 1 ? "logged · 1 category" : "logged · \(table.rows.count) categories" }
+        let previous = table.rows.compactMap(\.previousSeconds)
+        let count = "logged · " + categoryCount(table.rows.count)
+        guard !previous.isEmpty else { return count }
         let change = RangeChange(current: table.totalSeconds, previous: previous.reduce(0, +), hasData: true)
         return rangeChange(change, kind: kind) { categoryTableHours($0) }
     }
+
+    package static func reportsStreakDayLabel(_ day: Int) -> String { "\(day), streak day" }
 
     static func reportsDays(_ count: Int) -> String {
         count == 1 ? "1 day" : "\(count) days"

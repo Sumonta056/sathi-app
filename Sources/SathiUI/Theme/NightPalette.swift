@@ -60,7 +60,6 @@ enum Night {
     static let trackerAway = Color(hex: NightHex.trackerAway)
     static let trackerNotLogged = Color(hex: 0x4A5570)
     static let trackerEvent = Color(hex: NightHex.trackerEvent)
-    static let trackerRowSelected = Color(hex: 0x24304A)
     static let trackerNowBorder = Color(hex: 0x4A2A2C)
     static let trackerStopBorder = Color(hex: 0x5A3436)
     static let trackerNowText = Color(hex: 0xC9B9B9)

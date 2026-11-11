@@ -11,7 +11,6 @@ struct CopywriterMainTests {
         #expect(Copywriter.mainPageToday == "Today")
         #expect(Copywriter.mainPageActivities == "Activities")
         #expect(Copywriter.mainPageReports == "Reports")
-        #expect(Copywriter.mainPageSettings == "Settings")
     }
 
     @Test func settingsPagesHaveTheirSidebarNamesInOrder() {

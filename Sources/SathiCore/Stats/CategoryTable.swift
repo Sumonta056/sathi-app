@@ -19,6 +19,7 @@ package struct CategoryTableRow: Equatable, Identifiable, Sendable {
     package var name: String
     package var colorHex: UInt32
     package var seconds: TimeInterval
+    package var previousSeconds: TimeInterval?
     package var hoursText: String
     package var percentText: String
     package var change: RangeChange
@@ -29,7 +30,7 @@ package struct CategoryTable: Equatable, Sendable {
     package var rows: [CategoryTableRow]
     package var totalSeconds: TimeInterval
 
-    package var totalText: String { totalSeconds > 0 ? Fmt.short(totalSeconds) : Copywriter.categoryTableZeroTotal }
+    package var totalText: String { totalSeconds > 0 ? Copywriter.categoryTableHours(totalSeconds) : Copywriter.categoryTableZeroTotal }
 
     package init(_ inputs: [CategoryTableInput]) {
         let kept = inputs.filter { $0.seconds > 0 || ($0.previousSeconds ?? 0) > 0 }
@@ -48,6 +49,7 @@ package struct CategoryTable: Equatable, Sendable {
             name: input.name,
             colorHex: input.colorHex,
             seconds: input.seconds,
+            previousSeconds: input.previousSeconds,
             hoursText: Copywriter.categoryTableHours(input.seconds),
             percentText: Copywriter.categoryTablePercent(input.seconds, of: total),
             change: change,

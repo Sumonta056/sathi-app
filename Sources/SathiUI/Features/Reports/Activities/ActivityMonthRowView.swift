@@ -14,7 +14,7 @@ struct ActivityMonthRowView: View {
                 Text(verbatim: Copywriter.trackerShortDate(day.start(in: calendar), calendar: calendar))
                     .font(Typography.rowLabel).foregroundStyle(Night.text)
                     .frame(width: UIMetrics.trackerMonthDayWidth, alignment: .leading)
-                Text(verbatim: row.map { Copywriter.trackerTileDuration($0.realWork) } ?? Copywriter.trackerNoValue)
+                Text(verbatim: row.map { Copywriter.categoryTableHours($0.realWork) } ?? Copywriter.noValue)
                     .font(Typography.hint).foregroundStyle(Night.muted)
                     .frame(width: UIMetrics.trackerMonthHoursWidth, alignment: .leading)
                 strip

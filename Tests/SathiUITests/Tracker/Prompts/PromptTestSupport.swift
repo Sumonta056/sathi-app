@@ -80,12 +80,6 @@ enum Prompt {
         (try? view.find(viewWithAccessibilityIdentifier: id)) != nil
     }
 
-    static func chipIsOn(_ view: InspectableView<some BaseViewType>, _ id: String) throws -> Bool {
-        let chips = view.findAll(TrackerChip.self).compactMap { try? $0.actualView() }
-        guard let chip = chips.first(where: { $0.id == id }) else { throw PromptRowMissing(id: id, row: 0, count: 0) }
-        return chip.on
-    }
-
     static func buttonText(_ view: InspectableView<some BaseViewType>, _ id: String) throws -> [String] {
         try texts(view.find(viewWithAccessibilityIdentifier: id).find(ViewType.Button.self, relation: .parent))
     }

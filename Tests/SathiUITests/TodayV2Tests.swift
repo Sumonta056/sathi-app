@@ -38,6 +38,13 @@ struct TodayV2Tests {
         #expect(Find.lacks(sut, text: "Breakdown"))
     }
 
+    @Test func soFarCardShowsZeroMinutesWhenNothingIsLogged() throws {
+        let empty = TodaySoFar(isOn: true, hours: hours, segments: [], logged: 0, categories: [])
+        let sut = try hosted(TodaySoFarCard(sofar: empty, categories: [], calendar: cal, now: now), EngineHarness()).inspect()
+        #expect(throws: Never.self) { try sut.find(text: "0m") }
+        #expect(Find.lacks(sut, text: "now"))
+    }
+
     @Test func soFarCardOffShowsHint() throws {
         let h = EngineHarness()
         let sut = try hosted(TodaySoFarCard(sofar: .off, categories: [], calendar: cal, now: now), h).inspect()

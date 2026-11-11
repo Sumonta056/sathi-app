@@ -12,10 +12,6 @@ extension Copywriter {
         return minutes <= 0 ? "0m" : Fmt.short(TimeInterval(minutes) * Timing.minute)
     }
 
-    package static func reportsCategoryTitle(_ kind: ReportRange) -> String {
-        "Time by category vs " + rangeBefore(kind)
-    }
-
     package static func rangeDelta(_ change: RangeChange, format: (Double) -> String) -> String {
         switch change {
         case let .up(amount): return "+" + format(amount)

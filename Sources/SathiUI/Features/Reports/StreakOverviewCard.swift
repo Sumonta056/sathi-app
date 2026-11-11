@@ -76,7 +76,7 @@ struct OverviewDayCell: View {
         .background(shape.fill(fill))
         .overlay(shape.strokeBorder(border, lineWidth: day.isToday ? UIMetrics.reportsTodayLine : UIMetrics.reportsCellLine))
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(day.isStreakDay ? "\(day.day), streak day" : "\(day.day)")
+        .accessibilityLabel(day.isStreakDay ? Copywriter.reportsStreakDayLabel(day.day) : "\(day.day)")
     }
 
     private var fill: Color {

@@ -11,16 +11,6 @@ extension Engine {
         return value
     }
 
-    package func longestStreak(_ id: HabitID) -> Int {
-        refreshStreakDay()
-        if let cached = longestCache[id] { return cached }
-        let value = streaks.longest(
-            id, goal: rules(id).dailyGoal, reset: streakReset(id), now: clock.now, isOn: isOn(id), load: loadStreakMonth
-        )
-        longestCache[id] = value
-        return value
-    }
-
     package func report(_ range: ReportRange) -> Report {
         let n = clock.now
         let builder = ReportBuilder(calendar: calendar)
@@ -40,7 +30,6 @@ extension Engine {
 
     func clearStreakCache() {
         streakCache.removeAll()
-        longestCache.removeAll()
         allStreakCache = nil
     }
 

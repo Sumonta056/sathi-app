@@ -58,7 +58,6 @@ package final class Engine: ObservableObject {
     var forced: Set<HabitID> = []
     var celebrateToken = UUID()
     var streakCache: [HabitID: Int] = [:]
-    var longestCache: [HabitID: Int] = [:]
     var streakCacheDay: Date?
     var allStreakCache: AllStreakCache?
     var breathCueMark: Date?

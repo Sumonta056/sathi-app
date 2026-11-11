@@ -19,7 +19,7 @@ struct ActivityDayView: View {
                     ActivityDayTiles(overview: overview)
                 }
                 ActivityTimelineCard(
-                    day: day, gaps: overview.gapSpans, categories: categories, calendar: calendar, calendars: calendars,
+                    day: day, count: overview.count, gaps: overview.gapSpans, categories: categories, calendar: calendar, calendars: calendars,
                     calendarNames: calendarNames, actions: actions, editing: editing
                 )
                 .id(day.day)

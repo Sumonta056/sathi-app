@@ -63,7 +63,7 @@ package struct BuddyTabBuilder: Sendable {
 
     private func bestDay(_ id: HabitID, days: [Date], judge: BuddyDayJudge, kind: ReportRange) -> String {
         let best = days.max { judge.total(id, on: $0) < judge.total(id, on: $1) }
-        guard let best, judge.total(id, on: best) > 0 else { return Copywriter.reportsNoValue }
+        guard let best, judge.total(id, on: best) > 0 else { return Copywriter.noValue }
         let pattern = kind == .week ? "EEE" : "d MMM"
         return Copywriter.rangeDate(best, pattern, calendar.timeZone) + " · " + Copywriter.reportsShortAmount(id, judge.total(id, on: best))
     }

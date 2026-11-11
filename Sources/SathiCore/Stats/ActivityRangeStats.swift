@@ -15,6 +15,15 @@ package struct ActivityRangeTotal: Equatable, Identifiable, Sendable {
     package var change: RangeChange
 
     package var id: String { kind == .category ? name : "\(kind)" }
+
+    package var previousSeconds: TimeInterval? {
+        switch change {
+        case let .up(amount): seconds - amount
+        case let .down(amount): seconds + amount
+        case .same: seconds
+        case .none: nil
+        }
+    }
 }
 
 package struct ActivityRangeStats: Equatable, Sendable {

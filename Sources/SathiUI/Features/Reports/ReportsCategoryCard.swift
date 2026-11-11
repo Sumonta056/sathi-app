@@ -28,7 +28,7 @@ struct ReportsCategoryCard: View {
                 name: row.name,
                 colorHex: color(row, categories: categories),
                 seconds: row.seconds,
-                previousSeconds: previous(row)
+                previousSeconds: row.previousSeconds
             )
         }
     }
@@ -37,16 +37,7 @@ struct ReportsCategoryCard: View {
         switch row.kind {
         case .away: NightHex.trackerAway
         case .events: NightHex.trackerEvent
-        case .category: row.isNamed ? categories.first { $0.name == row.name }?.colorHex ?? NightHex.trackerCoral : NightHex.trackerCoral
-        }
-    }
-
-    private static func previous(_ row: ActivityRangeTotal) -> TimeInterval? {
-        switch row.change {
-        case let .up(amount): row.seconds - amount
-        case let .down(amount): row.seconds + amount
-        case .same: row.seconds
-        case .none: nil
+        case .category: ActivityColors.hex(row.isNamed ? row.name : nil, in: categories)
         }
     }
 }

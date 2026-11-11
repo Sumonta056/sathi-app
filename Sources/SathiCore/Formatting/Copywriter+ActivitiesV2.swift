@@ -1,7 +1,6 @@
 import Foundation
 
 extension Copywriter {
-    package static let activitiesNoData = "\u{2014}"
     package static let activitiesTileLogged = "Total logged"
     package static let activitiesTileFocus = "Focus work"
     package static let activitiesTileAway = "Away"
@@ -22,21 +21,12 @@ extension Copywriter {
     package static let activitiesNoCalendar = "Do not add"
     package static let activitiesClose = "Close"
     package static let activitiesFillGap = "Fill this gap"
+    package static let activitiesCalendarUnchanged = "Saved, but the calendar did not change. Check calendar access."
     package static let activitiesCalendarFailed = "Saved, but the old calendar event could not be removed. Check calendar access."
     package static let activitiesCurrentCalendar = "Current calendar"
     package static let activitiesDeleteFailed = "Sathi could not delete the calendar event, so the activity stays. Try again."
 
-    package static func activitiesLength(_ seconds: TimeInterval) -> String {
-        let total = max(0, Int(seconds / Timing.minute))
-        let h = total / Limits.minutesPerHour
-        let m = total % Limits.minutesPerHour
-        if h == 0 { return "\(m)m" }
-        return m == 0 ? "\(h)h" : "\(h)h \(m)m"
-    }
-
-    package static func activitiesTableSummary(_ categories: Int) -> String {
-        "logged · \(categories) " + (categories == 1 ? "category" : "categories")
-    }
+    package static func activitiesLength(_ seconds: TimeInterval) -> String { categoryTableHours(seconds) }
 
     package static func activitiesLoggedNote(_ change: RangeChange, kind: ReportRange) -> String {
         rangeChange(change, kind: kind) { activitiesLength($0) }

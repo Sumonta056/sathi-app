@@ -53,4 +53,37 @@ struct AllBuddiesStreakTests {
         h.clock.now = day(2026, 11, 12, 9)
         #expect(h.engine.allBuddiesStreak() == 2)
     }
+
+    private func cached(_ h: EngineHarness) {
+        _ = h.engine.allBuddiesStreak()
+        h.engine.allStreakCache?.value = 99
+    }
+
+    @Test func aNewDoneEventRebuildsTheCache() {
+        let h = waterOnly(at: day(2026, 11, 11, 20)) {
+            $0.events = [10, 11].map { .done(.water, 8, at: day(2026, 11, $0, 9)) }
+        }
+        cached(h)
+        #expect(h.engine.allBuddiesStreak() == 99)
+        h.engine.data.events.append(.done(.water, 1, at: day(2026, 11, 11, 19)))
+        #expect(h.engine.allBuddiesStreak() == 2)
+    }
+
+    @Test func aGoalChangeRebuildsTheCache() {
+        let h = waterOnly(at: day(2026, 11, 11, 20)) {
+            $0.events = [10, 11].map { .done(.water, 8, at: day(2026, 11, $0, 9)) }
+        }
+        cached(h)
+        h.engine.data.prefs.water.dailyGoalGlasses = 9
+        #expect(h.engine.allBuddiesStreak() == 0)
+    }
+
+    @Test func aNewDayRebuildsTheCache() {
+        let h = waterOnly(at: day(2026, 11, 11, 20)) {
+            $0.events = [10, 11].map { .done(.water, 8, at: day(2026, 11, $0, 9)) }
+        }
+        cached(h)
+        h.clock.now = day(2026, 11, 12, 9)
+        #expect(h.engine.allBuddiesStreak() == 2)
+    }
 }

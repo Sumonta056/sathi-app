@@ -12,20 +12,20 @@ extension Engine {
 
     func calendarActivityEdited(
         from old: Activity, to new: Activity, choice: ActivityCalendarChoice
-    ) -> (activity: Activity, calendarOK: Bool) {
-        guard old.kind == .work, old.sourceEventID == nil else { return (calendarActivityEdited(from: old, to: new), true) }
+    ) -> (activity: Activity, outcome: CalendarEditOutcome) {
+        guard old.kind == .work, old.sourceEventID == nil else { return (calendarActivityEdited(from: old, to: new), .ok) }
         let oldEvent = old.eventID.flatMap { $0.isEmpty ? nil : $0 }
         switch choice {
         case .keep:
-            return (calendarActivityEdited(from: old, to: new), true)
+            return (calendarActivityEdited(from: old, to: new), .ok)
         case .none:
-            if let oldEvent, !calendarWriter.delete(eventID: oldEvent) { return (calendarActivityEdited(from: old, to: new), false) }
+            if let oldEvent, !calendarWriter.delete(eventID: oldEvent) { return (calendarActivityEdited(from: old, to: new), .unchanged) }
             var a = new
             a.calendarID = nil
             a.eventID = nil
-            return (a, true)
+            return (a, .ok)
         case let .calendar(id) where id == old.calendarID && oldEvent != nil:
-            return (calendarActivityEdited(from: old, to: new), true)
+            return (calendarActivityEdited(from: old, to: new), .ok)
         case let .calendar(id):
             return movedToCalendar(id, from: old, to: new, oldEvent: oldEvent)
         }
@@ -33,16 +33,18 @@ extension Engine {
 
     private func movedToCalendar(
         _ id: String, from old: Activity, to new: Activity, oldEvent: String?
-    ) -> (activity: Activity, calendarOK: Bool) {
+    ) -> (activity: Activity, outcome: CalendarEditOutcome) {
         var a = new
         a.calendarID = id
         a.eventID = nil
         a = savingToCalendar(a)
-        guard let oldEvent else { return (a, true) }
-        guard let written = a.eventID else { return (calendarActivityEdited(from: old, to: new), true) }
-        if calendarWriter.delete(eventID: oldEvent) { return (a, true) }
-        guard calendarWriter.delete(eventID: written) else { return (a, false) }
-        return (calendarActivityEdited(from: old, to: new), true)
+        guard let written = a.eventID else {
+            return (oldEvent == nil ? a : calendarActivityEdited(from: old, to: new), .unchanged)
+        }
+        guard let oldEvent else { return (a, .ok) }
+        if calendarWriter.delete(eventID: oldEvent) { return (a, .ok) }
+        guard calendarWriter.delete(eventID: written) else { return (a, .oldEventKept) }
+        return (calendarActivityEdited(from: old, to: new), .unchanged)
     }
 
     func calendarActivityEdited(from old: Activity, to new: Activity) -> Activity {

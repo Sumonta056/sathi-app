@@ -31,29 +31,12 @@ struct EngineStreakCacheTests {
         #expect(h.history.ranges.allSatisfy { $0.end <= windowStart })
     }
 
-    @Test func longestStreakLoadsOnlyMonthsOlderThanTheWindow() {
-        let h = harness(70)
-        #expect(h.engine.longestStreak(.water) == 70)
-        #expect(h.history.ranges.allSatisfy { $0.end <= windowStart })
-    }
-
     @Test func changingTheNameKeepsTheCache() {
         let h = harness(70)
         _ = h.engine.streak(.water)
-        _ = h.engine.longestStreak(.water)
         h.history.clearRanges()
         h.engine.data.prefs.general.name = "Asha"
         #expect(h.engine.streak(.water) == 70)
-        #expect(h.engine.longestStreak(.water) == 70)
-        #expect(h.history.ranges.isEmpty)
-    }
-
-    @Test func longestStreakIsCachedForTheDay() {
-        let h = harness(70)
-        _ = h.engine.longestStreak(.water)
-        h.history.clearRanges()
-        h.advance(minutes: 60)
-        #expect(h.engine.longestStreak(.water) == 70)
         #expect(h.history.ranges.isEmpty)
     }
 
@@ -76,10 +59,8 @@ struct EngineStreakCacheTests {
     @Test func changingTheGoalClearsTheCache() {
         let h = harness(3)
         #expect(h.engine.streak(.water) == 3)
-        #expect(h.engine.longestStreak(.water) == 3)
         h.engine.data.prefs.water.dailyGoalGlasses = 9
         #expect(h.engine.streak(.water) == 0)
-        #expect(h.engine.longestStreak(.water) == 0)
     }
 
     @Test func aStreakResetClearsTheCache() {

@@ -89,7 +89,6 @@ extension UIMetrics {
     static let trackerDashedDot: [CGFloat] = [2, 2]
     static let trackerPillHeight: CGFloat = 30
     static let trackerPillPadding: CGFloat = 12
-    static let trackerPillFont: CGFloat = 12
     static let trackerPlaceFont: CGFloat = 13
     static let trackerOutlineFont: CGFloat = 13
     static let trackerPlaceBoxSpacing: CGFloat = 9

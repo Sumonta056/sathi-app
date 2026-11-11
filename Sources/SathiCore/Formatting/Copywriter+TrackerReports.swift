@@ -1,17 +1,13 @@
 import Foundation
 
 extension Copywriter {
-    package static let trackerNoValue = "–"
-
     package static func trackerDaysTracked(_ n: Int) -> String { n == 1 ? "1 day" : "\(n) days" }
 
     package static let trackerTileRealWork = "REAL WORK"
     package static let trackerTileAway = "AWAY"
     package static let trackerTileAverageDay = "AVERAGE DAY"
     package static let trackerTileBestDay = "BEST DAY"
-    package static let trackerAddPast = "+ Add past activity"
     package static let trackerFill = "Fill"
-    package static let trackerEdit = "Edit"
     package static let trackerDelete = "Delete"
     package static let trackerSave = "Save"
     package static let trackerCancel = "Cancel"

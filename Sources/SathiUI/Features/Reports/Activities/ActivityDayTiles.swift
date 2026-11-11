@@ -19,7 +19,7 @@ struct ActivityDayTiles: View {
                     note: Copywriter.activitiesAwayNote(overview.awayCount, place: overview.topPlace)
                 )
                 ActivityDayTile(
-                    label: Copywriter.activitiesTileCount, value: overview.count == .zero ? Copywriter.activitiesNoData : "\(overview.count)",
+                    label: Copywriter.activitiesTileCount, value: overview.count == .zero ? Copywriter.noValue : "\(overview.count)",
                     note: Copywriter.activitiesTopNote(overview.topCategory)
                 )
             }
@@ -27,7 +27,7 @@ struct ActivityDayTiles: View {
     }
 
     private func duration(_ seconds: TimeInterval) -> String {
-        seconds >= Timing.minute ? Copywriter.activitiesLength(seconds) : Copywriter.activitiesNoData
+        seconds >= Timing.minute ? Copywriter.activitiesLength(seconds) : Copywriter.noValue
     }
 
     private var loggedNote: String { Copywriter.activitiesLoggedNote(overview.loggedChange, kind: .day) }

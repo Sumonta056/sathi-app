@@ -73,7 +73,7 @@ struct ActivitiesPageTests {
 
     @Test func weekTilesShowTheChangeAgainstLastWeek() throws {
         let (sut, _) = try page(range: .week)
-        #expect(MenuFind.texts(sut).contains("+2 h vs last week"))
+        #expect(MenuFind.texts(sut).contains("+2h 0m vs last week"))
     }
 
     @Test func weekShowsTheCategoryTableAndTheCopyCard() throws {

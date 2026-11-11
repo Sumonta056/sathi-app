@@ -13,7 +13,8 @@ final class ActivityTimelineEditTests {
     private func content(_ actions: ActivityDayActions = ActivityDayActions()) -> ActivityTimelineContent {
         let day = Fix.day()
         return ActivityTimelineContent(
-            day: day, gaps: ActivityGaps.spans(day, now: .distantFuture, isTrackerDay: true), categories: ActivityCategory.defaults,
+            day: day, count: ActivityDayStats(day).count, gaps: ActivityGaps.spans(day, now: .distantFuture, isTrackerDay: true),
+            categories: ActivityCategory.defaults,
             calendar: Fix.calendar, calendars: Fix.calendars, calendarNames: [:], actions: actions,
             editing: Binding(get: { self.editing }, set: { self.editing = $0 })
         )

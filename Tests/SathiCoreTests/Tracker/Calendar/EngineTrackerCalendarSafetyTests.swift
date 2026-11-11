@@ -29,7 +29,7 @@ struct EngineTrackerCalendarSafetyTests {
         let h = EngineHarness.tracker(at: wed(12))
         h.calendarWriter.nextSaveResult = .failed
         let a = stored(h)
-        #expect(h.engine.editActivity(a.id, edit(.calendar("home"))) == .saved(a.id))
+        #expect(h.engine.editActivity(a.id, edit(.calendar("home"))) == .calendarUnchanged(a.id))
         #expect(h.calendarWriter.deleted.isEmpty)
         #expect(h.saved.first?.calendarID == "work")
         #expect(h.saved.first?.eventID == "ev9")
@@ -40,7 +40,7 @@ struct EngineTrackerCalendarSafetyTests {
         let h = EngineHarness.tracker(at: wed(12))
         h.calendarWriter.deleteResults = ["ev9": false]
         let a = stored(h)
-        #expect(h.engine.editActivity(a.id, edit(.calendar("home"))) == .saved(a.id))
+        #expect(h.engine.editActivity(a.id, edit(.calendar("home"))) == .calendarUnchanged(a.id))
         #expect(h.calendarWriter.saved.map(\.calendarID) == ["home"])
         #expect(h.calendarWriter.deleted == ["ev9", "e1"])
         #expect(h.saved.first?.calendarID == "work")
@@ -67,7 +67,7 @@ struct EngineTrackerCalendarSafetyTests {
         let h = EngineHarness.tracker(at: wed(12))
         h.calendarWriter.nextSaveResult = .failed
         let a = stored(h, calendarID: nil, eventID: nil)
-        h.engine.editActivity(a.id, edit(.calendar("home")))
+        #expect(h.engine.editActivity(a.id, edit(.calendar("home"))) == .calendarUnchanged(a.id))
         #expect(h.saved.first?.calendarID == "home")
         #expect(h.saved.first?.eventID == nil)
     }
@@ -76,7 +76,7 @@ struct EngineTrackerCalendarSafetyTests {
         let h = EngineHarness.tracker(at: wed(12))
         h.calendarWriter.nextDeleteResult = false
         let a = stored(h)
-        #expect(h.engine.editActivity(a.id, edit(.none)) == .calendarFailed(a.id))
+        #expect(h.engine.editActivity(a.id, edit(.none)) == .calendarUnchanged(a.id))
         #expect(h.saved.first?.calendarID == "work")
         #expect(h.saved.first?.eventID == "ev9")
         #expect(h.saved.first?.text == "Spec v2")

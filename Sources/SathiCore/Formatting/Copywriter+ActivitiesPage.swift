@@ -3,7 +3,6 @@ import Foundation
 extension Copywriter {
     package static let activitiesExport = "Export"
     package static let activitiesCopy = "Copy"
-    package static let activitiesTotalsTitle = "Totals"
     package static let activitiesStandupTitle = "Standup text"
     package static let activitiesRangeTextTitle = "Report text"
     package static let activitiesTrackerOff = "The activity tracker is off."

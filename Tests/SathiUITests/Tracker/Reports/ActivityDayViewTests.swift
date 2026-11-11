@@ -32,7 +32,7 @@ struct ActivityDayViewTests {
 
     @Test func theTopRowShowsTheTableAndTheFourTiles() throws {
         let sut = try view().inspect()
-        #expect(throws: Never.self) { try sut.find(text: "2h") }
+        #expect(throws: Never.self) { try sut.find(text: "2h 0m") }
         #expect(throws: Never.self) { try sut.find(text: "logged · 2 categories") }
         for label in ["Total logged", "Focus work", "Away", "Activities"] {
             #expect(throws: Never.self) { try sut.find(text: label) }

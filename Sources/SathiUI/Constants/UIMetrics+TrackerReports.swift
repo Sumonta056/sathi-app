@@ -19,10 +19,8 @@ extension UIMetrics {
     static let trackerBarRadius: CGFloat = 4
     static let trackerBarsSpacing: CGFloat = 12
     static let trackerLogRowPadding: CGFloat = 10
-    static let trackerLogTimeWidth: CGFloat = 112
     static let trackerLogCategoryWidth: CGFloat = 74
     static let trackerLogLengthWidth: CGFloat = 62
-    static let trackerLogIcon: CGFloat = 15
     static let trackerMiniButton: CGFloat = 30
     static let trackerMiniRadius: CGFloat = 8
     static let trackerMonthDayWidth: CGFloat = 90

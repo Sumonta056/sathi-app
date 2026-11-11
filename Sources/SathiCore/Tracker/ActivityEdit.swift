@@ -39,10 +39,17 @@ package enum ActivityCalendarChoice: Equatable, Sendable {
 package enum ActivityEditResult: Equatable, Sendable {
     case saved(ActivityID)
     case calendarFailed(ActivityID)
+    case calendarUnchanged(ActivityID)
     case emptyText
     case tooShort
     case overlap
     case crossesMidnight
     case inFuture
     case notFound
+}
+
+package enum CalendarEditOutcome: Equatable, Sendable {
+    case ok
+    case unchanged
+    case oldEventKept
 }

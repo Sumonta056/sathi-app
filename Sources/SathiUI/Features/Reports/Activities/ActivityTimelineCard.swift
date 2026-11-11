@@ -3,6 +3,7 @@ import SwiftUI
 
 struct ActivityTimelineCard: View {
     let day: ActivityDay
+    let count: Int
     let gaps: [DateInterval]
     let categories: [ActivityCategory]
     let calendar: Calendar
@@ -13,7 +14,7 @@ struct ActivityTimelineCard: View {
 
     var body: some View {
         ActivityTimelineContent(
-            day: day, gaps: gaps, categories: categories, calendar: calendar, calendars: calendars,
+            day: day, count: count, gaps: gaps, categories: categories, calendar: calendar, calendars: calendars,
             calendarNames: calendarNames, actions: actions, editing: $editing
         )
     }
@@ -21,6 +22,7 @@ struct ActivityTimelineCard: View {
 
 struct ActivityTimelineContent: View {
     let day: ActivityDay
+    let count: Int
     let gaps: [DateInterval]
     let categories: [ActivityCategory]
     let calendar: Calendar
@@ -65,7 +67,7 @@ struct ActivityTimelineContent: View {
                 .foregroundStyle(Night.text)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Text(verbatim: Copywriter.activitiesCountLine(
-                ActivityDayStats(day).count, gaps: rows.filter { !ActivityTimelineList.isActivity($0) }.count
+                count, gaps: rows.filter { !ActivityTimelineList.isActivity($0) }.count
             ))
             .font(Typography.hint)
             .foregroundStyle(Night.muted)

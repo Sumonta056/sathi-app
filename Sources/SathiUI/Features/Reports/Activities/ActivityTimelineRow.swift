@@ -41,7 +41,7 @@ struct ActivityTimelineRow: View {
         if a.kind == .away { return UIMetrics.activitiesRowAway }
         let hour = TimeInterval(Limits.minutesPerHour) * Timing.minute
         if a.length < hour { return UIMetrics.activitiesRowShort }
-        return a.length <= hour * 2 ? UIMetrics.activitiesRowMedium : UIMetrics.activitiesRowLong
+        return a.length <= hour * TimeInterval(Limits.activityMediumRowHours) ? UIMetrics.activitiesRowMedium : UIMetrics.activitiesRowLong
     }
 
     static func canEdit(_ a: Activity, running: Bool) -> Bool {

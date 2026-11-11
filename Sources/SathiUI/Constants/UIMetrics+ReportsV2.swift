@@ -30,7 +30,6 @@ extension UIMetrics {
     static let reportsGridMinScale: CGFloat = 0.6
     static let reportsDashedLine: CGFloat = 1
     static let reportsDash: [CGFloat] = [3, 3]
-    static let reportsDimTint: Double = 0.16
     static let reportsCalendarWidth: CGFloat = 440
     static let reportsMonthArrow: CGFloat = 24
     static let reportsMonthGap: CGFloat = 8

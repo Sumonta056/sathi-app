@@ -2,7 +2,13 @@ import Foundation
 
 extension Copywriter {
     package static let categoryTableTinyPercent = "<1%"
+    package static let noValue = "\u{2014}"
     package static let categoryTableNoChange = "0m"
+
+    package static func categoryCount(_ n: Int) -> String {
+        n == 1 ? "1 category" : "\(n) categories"
+    }
+
     package static let categoryTableZeroTotal = "0m"
 
     package static func categoryTablePercent(_ seconds: TimeInterval, of total: TimeInterval) -> String {

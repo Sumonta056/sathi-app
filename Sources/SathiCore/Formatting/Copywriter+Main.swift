@@ -5,7 +5,6 @@ extension Copywriter {
     package static let mainAppName = "Sathi"
     package static let mainPageActivities = "Activities"
     package static let mainPageReports = "Reports"
-    package static let mainPageSettings = "Settings"
     package static let mainTrackerOn = "TRACKER ON"
     package static let mainTrackerOff = "TRACKER OFF"
     package static let mainMenuFile = "File"

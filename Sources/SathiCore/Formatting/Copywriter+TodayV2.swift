@@ -24,8 +24,4 @@ extension Copywriter {
         if seconds >= Timing.hour { return "in " + Fmt.short(seconds) }
         return "in \(Int((seconds / Timing.minute).rounded(.up))) min"
     }
-
-    package static func todayCategoryCount(_ n: Int) -> String {
-        n == 1 ? "1 category" : "\(n) categories"
-    }
 }

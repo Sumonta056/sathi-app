@@ -42,8 +42,8 @@ struct TodayV2CopyTests {
     }
 
     @Test func categoryCount() {
-        #expect(Copywriter.todayCategoryCount(1) == "1 category")
-        #expect(Copywriter.todayCategoryCount(10) == "10 categories")
+        #expect(Copywriter.categoryCount(1) == "1 category")
+        #expect(Copywriter.categoryCount(10) == "10 categories")
     }
 
     @Test func timeAndDetail() {

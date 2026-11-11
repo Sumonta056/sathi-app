@@ -42,27 +42,27 @@ struct ActivityRangeView: View {
     private var tiles: some View {
         HStack(spacing: UIMetrics.trackerTileSpacing) {
             ActivityTile(
-                label: Copywriter.trackerTileRealWork, value: Copywriter.trackerTileDuration(stats.realWork),
+                label: Copywriter.trackerTileRealWork, value: Copywriter.categoryTableHours(stats.realWork),
                 note: Copywriter.trackerDaysTracked(stats.rows.count), change: stats.realWorkChange, changeText: text(stats.realWorkChange)
             )
             ActivityTile(
-                label: Copywriter.trackerTileAverageDay, value: Copywriter.trackerTileDuration(stats.averageDay),
+                label: Copywriter.trackerTileAverageDay, value: Copywriter.categoryTableHours(stats.averageDay),
                 note: "", change: stats.averageDayChange, changeText: text(stats.averageDayChange)
             )
             ActivityTile(
                 label: Copywriter.trackerTileBestDay,
-                value: stats.bestDay.map { Copywriter.trackerTileDuration($0.realWork) } ?? Copywriter.trackerNoValue,
+                value: stats.bestDay.map { Copywriter.categoryTableHours($0.realWork) } ?? Copywriter.noValue,
                 note: stats.bestDay.map { Copywriter.trackerShortDate($0.day.start(in: calendar), calendar: calendar) } ?? "",
                 accent: Night.sprout, change: stats.bestDayChange, changeText: text(stats.bestDayChange)
             )
             ActivityTile(
-                label: Copywriter.trackerTileAway, value: Copywriter.trackerTileDuration(stats.away),
+                label: Copywriter.trackerTileAway, value: Copywriter.categoryTableHours(stats.away),
                 note: "", accent: Night.trackerAway, change: stats.awayChange, changeText: text(stats.awayChange)
             )
         }
     }
 
     private func text(_ change: RangeChange) -> String {
-        Copywriter.rangeChange(change, kind: range.kind) { Copywriter.trackerDuration($0) }
+        Copywriter.rangeChange(change, kind: range.kind) { Copywriter.categoryTableHours($0) }
     }
 }

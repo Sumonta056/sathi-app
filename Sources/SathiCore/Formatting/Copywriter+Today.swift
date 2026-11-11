@@ -31,10 +31,6 @@ extension Copywriter {
         "\(id.buddy) · \(id.name.lowercased())"
     }
 
-    package static func todayLogged(_ seconds: TimeInterval) -> String {
-        trackerDuration(seconds) + " logged"
-    }
-
     package static func todaySnoozed(until time: Date, calendar: Calendar) -> String {
         "Snoozed until " + trackerClock(time, calendar: calendar)
     }

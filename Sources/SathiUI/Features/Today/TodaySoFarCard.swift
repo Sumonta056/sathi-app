@@ -36,7 +36,7 @@ struct TodaySoFarCard: View {
                 .foregroundStyle(Night.text)
             Spacer(minLength: 0)
             if sofar.isOn {
-                Text(verbatim: Fmt.short(sofar.logged))
+                Text(verbatim: Copywriter.categoryTableHours(sofar.logged))
                     .font(Typography.tracker(UIMetrics.todaySoFarTotalFont, .heavy))
                     .foregroundStyle(Night.text)
                 Text(verbatim: Copywriter.todayLoggedSummary(percent: TodayShare.percent(logged: sofar.logged, hours: sofar.hours, now: now)))

@@ -72,7 +72,7 @@ struct ActivityEditCalendarTests {
     }
 
     @Test func theLengthChipsAreFifteenThirtyOneAndTwoHours() throws {
-        #expect(try boxes(section(), "activity.length.").map(\.label) == ["15m", "30m", "1h", "2h"])
+        #expect(try boxes(section(), "activity.length.").map(\.label) == ["15m", "30m", "1h 0m", "2h 0m"])
     }
 
     @Test(arguments: [(15, (9, 15)), (30, (9, 30)), (60, (10, 0)), (120, (11, 0))])
@@ -95,6 +95,8 @@ struct ActivityEditCalendarTests {
         try sut.inspect().find(ViewType.Button.self) { try $0.labelView().find(text: "Save") != nil }.tap()
         #expect(closed == 0)
         #expect(ActivityEditDraft.message(.calendarFailed(ActivityID())) == Copywriter.activitiesCalendarFailed)
+        #expect(ActivityEditDraft.message(.calendarUnchanged(ActivityID())) == Copywriter.activitiesCalendarUnchanged)
+        #expect(Copywriter.activitiesCalendarUnchanged == "Saved, but the calendar did not change. Check calendar access.")
     }
 
     @Test func theSectionShowsTheCalendarErrorLine() throws {

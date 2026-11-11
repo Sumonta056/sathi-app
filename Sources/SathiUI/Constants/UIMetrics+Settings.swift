@@ -8,7 +8,6 @@ extension UIMetrics {
     static let sectionSpacing: CGFloat = 10
     static let pageSpacing: CGFloat = 22
     static let titleBarInset: CGFloat = 28
-    static let navPadding = EdgeInsets(top: 8, leading: 10, bottom: 8, trailing: 10)
     static let logoIconSize: CGFloat = 15
     static let badgePadding = EdgeInsets(top: 2, leading: 6, bottom: 2, trailing: 6)
     static let fontBadge: CGFloat = 9
