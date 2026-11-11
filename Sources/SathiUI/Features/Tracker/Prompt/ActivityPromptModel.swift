@@ -9,6 +9,7 @@ final class ActivityPromptModel: ObservableObject {
     @Published var showsAll = false
     @Published var calendars: TrackerCalendarInfo
     let places: PromptWhereForm
+    private let nowChoice: Date?
     var answered = false
     private var asking = false
 
@@ -16,9 +17,14 @@ final class ActivityPromptModel: ObservableObject {
         var draft = state.draft
         if let event = state.event, state.kind == .eventAsk, draft.text.isEmpty { draft.text = event.title }
         self.draft = draft
-        started = ActivityPromptBuilder.screen(state).startedChoices.last
+        nowChoice = ActivityPromptBuilder.screen(state).startedChoices.last
+        started = nowChoice
         calendars = TrackerCalendarInfo(access: state.calendarAccess, calendars: state.calendars, defaultID: state.defaultCalendarID)
         places = PromptWhereForm(state)
+    }
+
+    var switchAt: Date? {
+        started == nowChoice ? nil : started
     }
 
     func fill(_ recent: RecentActivity) {

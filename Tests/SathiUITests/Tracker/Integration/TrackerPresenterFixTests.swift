@@ -44,7 +44,7 @@ struct TrackerPresenterFixTests {
         let skip = try Prompt.view(s).find(viewWithAccessibilityIdentifier: "tracker.skip").find(ViewType.Button.self, relation: .parent)
         #expect(try skip.modifier(PromptKey.self).actualView().shortcut == .cancelAction)
         try skip.tap()
-        #expect(calls.skipped == [Prompt.now])
+        #expect(calls.skipped == [nil])
     }
 
     @Test func aPromptWatchesItsSizeOnceAcrossReasons() {

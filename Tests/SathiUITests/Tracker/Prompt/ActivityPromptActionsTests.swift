@@ -36,7 +36,7 @@ struct ActivityPromptActionsTests {
         try Prompt.tap(Prompt.view(s, model: model), "prompt.started")
         try Prompt.tap(Prompt.view(s, model: model), "prompt.started.0")
         try Prompt.tap(Prompt.view(s, model: model), "tracker.skip")
-        #expect(calls.started.map(\.1) == [Prompt.now])
+        #expect(calls.started.map(\.1) == [nil])
         #expect(calls.skipped == [earlier])
     }
 

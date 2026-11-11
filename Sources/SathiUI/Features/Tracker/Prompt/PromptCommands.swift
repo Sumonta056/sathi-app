@@ -19,13 +19,13 @@ struct PromptCommands {
         case .ask, .shortcut, .ends, .back:
             guard let draft = model.draft.committed else { return }
             model.answered = true
-            actions.start(draft, model.started)
+            actions.start(draft, model.switchAt)
         }
     }
 
     func keep() {
         switch screen.keep {
-        case .continueLast: actions.continueLast(model.started)
+        case .continueLast: actions.continueLast(model.switchAt)
         case .keep: actions.close()
         case let .keepGoing(minutes): actions.stillOn(minutes)
         case .stillOnLate: actions.stillOnLate()
@@ -36,7 +36,7 @@ struct PromptCommands {
 
     func skip() {
         switch screen.skip {
-        case .skip: actions.skip(screen.reason == .ends ? nil : model.started)
+        case .skip: actions.skip(screen.reason == .ends ? nil : model.switchAt)
         case .close: actions.close()
         case .answerNo: actions.answerEvent(false)
         }
