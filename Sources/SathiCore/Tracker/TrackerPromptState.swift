@@ -8,6 +8,10 @@ package struct TrackerPromptState {
     package var running: RunningActivity?
     package var lastActivity: ActivityDraft?
     package var resume: ActivityDraft?
+    package var doneAt: Date?
+    package var lastEnded: Activity?
+    package var stoppedByAway: String?
+    package var eventCalendarTitle: String?
     package var recents: [RecentActivity] = []
     package var categories: [ActivityCategory] = []
     package var calendars: [CalendarChoice] = []

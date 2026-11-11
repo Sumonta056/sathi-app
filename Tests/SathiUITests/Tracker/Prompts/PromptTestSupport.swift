@@ -49,7 +49,11 @@ enum Prompt {
         s.actions.pickPlaceName = { calls.placeNames.append($0) }
         s.actions.addPlace = { calls.addedPlaces.append($0) }
         s.actions.notAttending = { calls.notAttending.append($0) }
-        s.actions.answerEvent = { calls.answers.append($0) }
+        s.actions.answerEvent = {
+            calls.answers.append($0)
+            calls.calls.append("answer:\($0)")
+        }
+        s.actions.pickEventCategory = { calls.calls.append("category:" + $0) }
         s.actions.close = { calls.calls.append("close") }
         s.actions.allowCalendar = {
             calls.calls.append("allowCalendar")
@@ -101,8 +105,10 @@ enum Prompt {
         try rows[row].find(ViewType.Button.self, relation: .parent).tap()
     }
 
-    static func recentList(_ view: InspectableView<some BaseViewType>) throws -> InspectableView<ViewType.ClassifiedView> {
-        try view.find(TrackerRecentMenu.self).actualView().list.inspect()
+    static func boxIsOn(_ view: InspectableView<some BaseViewType>, _ id: String) throws -> Bool {
+        let boxes = view.findAll(PromptBox.self).compactMap { try? $0.actualView() }
+        guard let box = boxes.first(where: { $0.id == id }) else { throw PromptRowMissing(id: id, row: 0, count: boxes.count) }
+        return box.on
     }
 
     static func categoryList(_ view: InspectableView<some BaseViewType>) throws -> InspectableView<ViewType.ClassifiedView> {
@@ -113,13 +119,11 @@ enum Prompt {
         (0 ..< count).map { RecentActivity(text: "Task \($0)", category: $0 == 3 ? "Review" : "Coding", length: 1800) }
     }
 
-    static func popup(
-        _ kind: PromptKind,
+    static func view(
         _ state: TrackerPromptState,
-        form: TrackerDraftForm? = nil
+        model: ActivityPromptModel? = nil
     ) throws -> InspectableView<ViewType.ClassifiedView> {
-        let view = kind == .center ? AnyView(CenterPromptView(state: state, form: form)) : AnyView(WhatNowPopup(state: state, form: form))
-        return try view.inspect()
+        try ActivityPromptView(state: state, model: model).inspect()
     }
 }
 

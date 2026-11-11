@@ -40,11 +40,11 @@ extension Engine {
     }
 
     func setTrackerPrompt(_ prompt: PromptState, byUser: Bool = false) {
-        closeShownTrackerPrompt()
         data.live.tracker.prompt = prompt
         trackerRuntime.promptByUser = byUser
         refreshCalendarAccess()
-        presentTrackerPrompt()
+        guard canShowTrackerPrompt(prompt) else { return closeShownTrackerPrompt() }
+        showTrackerPromptNow(prompt)
     }
 
     func clearTrackerPrompt() {
@@ -55,7 +55,10 @@ extension Engine {
 
     func presentTrackerPrompt() {
         guard let p = data.live.tracker.prompt, trackerRuntime.shownPrompt != p.kind, canShowTrackerPrompt(p) else { return }
-        closeShownTrackerPrompt()
+        showTrackerPromptNow(p)
+    }
+
+    private func showTrackerPromptNow(_ p: PromptState) {
         presenter.showTrackerPrompt(p.kind)
         trackerRuntime.shownPrompt = p.kind
         if p.kind == .whatNow || p.kind == .stillOnIt, trackerPrefs.playsSound { play(.trackerPrompt) }
@@ -106,7 +109,7 @@ extension Engine {
         let today = DayKey(n, calendar: calendar)
         dropStaleEndOfDay(n)
         guard trackerPrefs.endOfDayOn, !trackerRuntime.endOfDayShowing, data.live.tracker.running == nil,
-              !isAnyLockShowing else { return }
+              data.live.tracker.prompt == nil, !isAnyLockShowing else { return }
         if let due = trackerRuntime.endOfDayDue {
             trackerRuntime.endOfDayDue = nil
             if data.live.tracker.lastEndOfDay != due { return showTrackerEndOfDay(for: due) }

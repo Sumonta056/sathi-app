@@ -2,6 +2,7 @@ import Foundation
 
 extension Engine {
     package var trackerPromptByUser: Bool { trackerRuntime.promptByUser }
+    package var trackerPromptTakesKeyboard: Bool { trackerPrompt != nil && trackerPromptByUser }
 
     package func activityDay(_ day: DayKey) -> ActivityDay {
         let start = day.start(in: calendar)

@@ -2,8 +2,8 @@ import AppKit
 
 extension UIController {
     var activeScreen: NSScreen? {
-        let mouse = NSEvent.mouseLocation
-        return NSScreen.screens.first { NSMouseInRect(mouse, $0.frame, false) } ?? NSScreen.main
+        let frame = CenterStack.mouseScreenFrame(screens: NSScreen.screens.map(\.frame), mouse: NSEvent.mouseLocation)
+        return NSScreen.screens.first { $0.frame == frame } ?? NSScreen.main
     }
 
     func presentCentered(_ content: NSView, level: NSWindow.Level) -> NSPanel {
@@ -21,11 +21,7 @@ extension UIController {
 
     func placeTopRight(_ p: NSPanel) -> NSPanel {
         if corner.isEmpty { cornerScreen = activeScreen }
-        if !isTrackerCorner(p), let i = corner.firstIndex(where: isTrackerCorner) {
-            corner.insert(p, at: i)
-        } else {
-            corner.append(p)
-        }
+        corner.append(p)
         restack()
         fadeIn(p)
         return p
@@ -60,7 +56,7 @@ extension UIController {
         }
     }
 
-    private func fadeIn(_ w: NSWindow) {
+    func fadeIn(_ w: NSWindow) {
         w.alphaValue = 0
         w.orderFrontRegardless()
         NSAnimationContext.runAnimationGroup { ctx in

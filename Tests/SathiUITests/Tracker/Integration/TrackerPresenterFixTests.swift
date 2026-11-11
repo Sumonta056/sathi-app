@@ -18,10 +18,13 @@ struct TrackerPresenterFixTests {
     }
 
     @Test func aResumeWhatNowTheUserDidNotAskForLeavesTheKeyboard() {
+        let (h, ui) = setUp()
         let at = day(2026, 3, 4, 10)
-        let prompt = PromptState(kind: .whatNow, shownAt: at, askTime: at, switchFrom: at, resume: ActivityDraft(text: "Spec"))
-        #expect(!UIController.trackerPromptTakesKeyboard(prompt, byUser: false))
-        #expect(UIController.trackerPromptTakesKeyboard(prompt, byUser: true))
+        h.engine.data.live.tracker.prompt = PromptState(kind: .whatNow, shownAt: at, askTime: at, switchFrom: at, resume: ActivityDraft(text: "Spec"))
+        #expect(!h.engine.trackerPromptTakesKeyboard)
+        ui.showTrackerPrompt(.whatNow)
+        #expect(!ui.trackerPromptHasKeys)
+        ui.closeTrackerPrompt(.whatNow)
     }
 
     @Test func escOnTheWhatNowPanelLeavesTheSkipToThePopup() throws {
@@ -30,6 +33,7 @@ struct TrackerPresenterFixTests {
         let p = try #require(ui.trackerPromptPanel)
         p.cancelOperation(nil)
         #expect(h.engine.trackerPrompt?.kind == .whatNow)
+        #expect(p.isVisible)
         ui.closeTrackerPrompt(.whatNow)
     }
 
@@ -37,15 +41,19 @@ struct TrackerPresenterFixTests {
         let calls = PromptCalls()
         let times = [Prompt.now.addingTimeInterval(-600), Prompt.now]
         let s = Prompt.state(.whatNow, calls: calls) { $0.switchTimes = times }
-        try WhatNowPopup(state: s).inspect().find(ViewType.VStack.self).callOnExitCommand()
+        let skip = try Prompt.view(s).find(viewWithAccessibilityIdentifier: "tracker.skip").find(ViewType.Button.self, relation: .parent)
+        #expect(try skip.modifier(PromptKey.self).actualView().shortcut == .cancelAction)
+        try skip.tap()
         #expect(calls.skipped == [Prompt.now])
     }
 
-    @Test func aCornerPromptWatchesItsSizeOnce() {
+    @Test func aPromptWatchesItsSizeOnceAcrossReasons() {
         let (h, ui) = setUp { $0.engine.tick() }
         ui.showTrackerPrompt(.whatNow)
+        h.engine.data.live.tracker.prompt = PromptState(kind: .stillOnIt, shownAt: h.clock.now, askTime: h.clock.now)
+        ui.showTrackerPrompt(.stillOnIt)
         #expect(ui.trackerResizeTokens.count == 1)
-        ui.closeTrackerPrompt(.whatNow)
+        ui.closeTrackerPrompt(.stillOnIt)
         #expect(ui.trackerResizeTokens.isEmpty)
         withExtendedLifetime(h) {}
     }
