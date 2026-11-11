@@ -18,3 +18,7 @@ package enum StorageKeys {
     package static let corruptSuffix = ".corrupt"
     package static let migrationMarker = "migrated-v1"
 }
+
+extension StorageKeys {
+    package static let sidebarOpen = "sathi.ui.sidebarOpen"
+}

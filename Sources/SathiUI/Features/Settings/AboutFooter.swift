@@ -11,8 +11,12 @@ struct AboutFooter: View {
         }
     }
 
+    static var version: String? {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+    }
+
     static var versionText: String {
-        guard let v = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String else { return "Sathi" }
-        return "Sathi \(v)"
+        guard let version else { return "Sathi" }
+        return "Sathi \(version)"
     }
 }

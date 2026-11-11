@@ -3,10 +3,22 @@ import SwiftUI
 
 struct MainSidebar: View {
     @ObservedObject var route: MainRoute
+    @Binding var isOpen: Bool
 
     var body: some View {
+        Group {
+            if isOpen {
+                openList
+            } else {
+                SidebarRail(route: route) { isOpen = true }
+            }
+        }
+        .animation(.easeInOut(duration: UIMetrics.sidebarAnimation), value: isOpen)
+    }
+
+    private var openList: some View {
         VStack(alignment: .leading, spacing: UIMetrics.mainSidebarSpacing) {
-            MainLogo()
+            MainLogo { isOpen = false }
             MainSidebarItem(title: Copywriter.mainPageToday, icon: "sun.max", isSelected: route.page == .today) {
                 route.page = .today
             }
@@ -16,14 +28,17 @@ struct MainSidebar: View {
             MainSidebarItem(title: Copywriter.mainPageReports, icon: "chart.bar", isSelected: route.page == .reports) {
                 route.page = .reports
             }
-            MainSidebarItem(title: Copywriter.mainPageSettings, icon: "gearshape", isSelected: settingsPage != nil) {
-                if settingsPage == nil { route.page = .settings(.general) }
-            }
-            if let settingsPage {
-                SettingsSubnav(selected: settingsPage) { route.page = .settings($0) }
+            Text(verbatim: Copywriter.sidebarSettingsHeading)
+                .font(Typography.tracker(UIMetrics.sidebarHeadingFont, .heavy))
+                .tracking(UIMetrics.sidebarHeadingTracking)
+                .foregroundStyle(Night.faint)
+                .padding(UIMetrics.sidebarHeadingPadding)
+            ForEach(SettingsPage.all, id: \.self) { page in
+                SidebarSettingsRow(page: page, isSelected: settingsPage == page) { route.page = .settings(page) }
             }
             Spacer(minLength: 0)
             TrackerStatusBlock()
+            SidebarFooter().padding(.top, UIMetrics.sidebarFooterTopGap)
         }
         .padding(UIMetrics.mainSidebarPadding)
         .padding(.top, UIMetrics.mainTitleBarInset)
@@ -47,6 +62,8 @@ struct MainSidebar: View {
 }
 
 struct MainLogo: View {
+    let close: () -> Void
+
     var body: some View {
         HStack(spacing: UIMetrics.mainLogoGap) {
             Image(systemName: "leaf.fill")
@@ -57,7 +74,9 @@ struct MainLogo: View {
             Text(verbatim: Copywriter.mainAppName)
                 .font(Typography.tracker(UIMetrics.mainLogoFont, .heavy))
                 .foregroundStyle(Night.text)
+            Spacer(minLength: 0)
+            SidebarToggleButton(isOpen: true, size: CGSize(width: UIMetrics.sidebarToggleSize, height: UIMetrics.sidebarToggleSize), toggle: close)
         }
-        .padding(UIMetrics.mainLogoPadding)
+        .padding(UIMetrics.sidebarLogoPadding)
     }
 }
