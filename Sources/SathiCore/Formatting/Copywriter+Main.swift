@@ -2,6 +2,7 @@ import Foundation
 
 extension Copywriter {
     package static let mainPageToday = "Today"
+    package static let mainAppName = "Sathi"
     package static let mainPageActivities = "Activities"
     package static let mainPageReports = "Reports"
     package static let mainPageSettings = "Settings"

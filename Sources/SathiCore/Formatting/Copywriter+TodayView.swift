@@ -33,4 +33,6 @@ extension Copywriter {
     package static func todayGoalLine(goal: Int, unit: String) -> String {
         " / \(goal) \(unit)"
     }
+
+    package static func todayBuddyProgress(_ habit: String) -> String { "\(habit) progress" }
 }

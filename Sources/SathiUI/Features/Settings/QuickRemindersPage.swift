@@ -28,7 +28,7 @@ struct QuickRemindersPage: View {
                 .font(Typography.cardTitle)
                 .foregroundStyle(Night.text)
             Spacer(minLength: 0)
-            Text(verbatim: "\(count) of \(Limits.quickMax)")
+            Text(verbatim: Copywriter.settingsQuickCount(count, of: Limits.quickMax))
                 .font(Typography.pill)
                 .foregroundStyle(Night.quick)
                 .padding(UIMetrics.quickBadgePadding)

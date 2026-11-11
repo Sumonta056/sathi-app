@@ -17,5 +17,7 @@ extension Copywriter {
         }
     }
 
+    package static func settingsQuickCount(_ count: Int, of max: Int) -> String { "\(count) of \(max)" }
+
     package static func settingsOnLabel(_ id: HabitID) -> String { "\(id.name) reminders" }
 }

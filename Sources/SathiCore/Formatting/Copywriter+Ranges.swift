@@ -1,6 +1,9 @@
 import Foundation
 
 extension Copywriter {
+    package static let rangePrevious = "Previous"
+    package static let rangeNext = "Next"
+
     package static func rangeSegment(_ kind: ReportRange) -> String {
         switch kind {
         case .day: "Day"

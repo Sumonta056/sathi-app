@@ -47,7 +47,7 @@ struct TodayBuddyCard: View {
         }
         .frame(height: UIMetrics.todayBarHeight)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(buddy.habit.name) progress")
+        .accessibilityLabel(Copywriter.todayBuddyProgress(buddy.habit.name))
         .accessibilityValue(ProgressRing.percent(buddy.progress))
     }
 

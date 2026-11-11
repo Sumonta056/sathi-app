@@ -54,7 +54,7 @@ struct MainLogo: View {
                 .foregroundStyle(Night.onAccent)
                 .frame(width: UIMetrics.mainLogoSize, height: UIMetrics.mainLogoSize)
                 .background(RoundedRectangle(cornerRadius: UIMetrics.mainLogoRadius, style: .continuous).fill(Night.water))
-            Text(verbatim: "Sathi")
+            Text(verbatim: Copywriter.mainAppName)
                 .font(Typography.tracker(UIMetrics.mainLogoFont, .heavy))
                 .foregroundStyle(Night.text)
         }
