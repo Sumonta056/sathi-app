@@ -11,13 +11,15 @@ package struct ComingUpItem: Equatable, Identifiable, Sendable {
     package var kind: ComingUpKind
     package var title: String
     package var time: Date
+    package var detail: String?
 
     package var id: String { "\(kind)-\(time.timeIntervalSince1970)" }
 
-    package init(kind: ComingUpKind, title: String, time: Date) {
+    package init(kind: ComingUpKind, title: String, time: Date, detail: String? = nil) {
         self.kind = kind
         self.title = title
         self.time = time
+        self.detail = detail
     }
 }
 

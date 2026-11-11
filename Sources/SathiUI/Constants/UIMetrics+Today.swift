@@ -42,9 +42,4 @@ extension UIMetrics {
     static let todayPanelNoteFont: CGFloat = 13
     static let todayRibbonHeight: CGFloat = 28
     static let todayRibbonRadius: CGFloat = 8
-    static let todayLegendGap: CGFloat = 10
-    static let todayLegendDot: CGFloat = 8
-    static let todayLegendFont: CGFloat = 13
-    static let todayComingGap: CGFloat = 12
-    static let todayComingTimeWidth: CGFloat = 44
 }

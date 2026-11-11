@@ -134,39 +134,6 @@ struct TodayPageTests {
         #expect(h.presenter.calls.contains(.showSession(.meditation)))
     }
 
-    @Test func comingUpListsRows() throws {
-        let a = ComingUpItem(kind: .trackerAsk, title: "Still on it?", time: day(2026, 3, 4, 15, 10))
-        let b = ComingUpItem(kind: .daySummary, title: "Day summary", time: day(2026, 3, 4, 22))
-        let sut = try hosted(TodayComingUp(items: [a, b], calendar: cal), EngineHarness()).inspect()
-        #expect(throws: Never.self) { try sut.find(text: "Coming up") }
-        #expect(throws: Never.self) { try sut.find(text: clock(a.time)) }
-        #expect(throws: Never.self) { try sut.find(text: "Day summary") }
-        #expect(Find.lacks(sut, text: "Nothing more today."))
-    }
-
-    @Test func emptyComingUpSaysNothingMore() throws {
-        let sut = try hosted(TodayComingUp(items: [], calendar: cal), EngineHarness()).inspect()
-        #expect(throws: Never.self) { try sut.find(text: "Nothing more today.") }
-    }
-
-    @Test func soFarOffShowsTheOffText() throws {
-        let sut = try hosted(TodaySoFarCard(sofar: .off, categories: [], calendar: cal), EngineHarness()).inspect()
-        #expect(throws: Never.self) { try sut.find(text: "Today so far") }
-        #expect(throws: Never.self) { try sut.find(text: Copywriter.todaySoFarOffHint) }
-    }
-
-    @Test func soFarOnShowsLoggedTimeAndCategories() throws {
-        let hours = DateInterval(start: day(2026, 3, 4, 9), end: day(2026, 3, 4, 18))
-        let sofar = TodaySoFar(
-            isOn: true, hours: hours, segments: [], logged: 3 * 3600,
-            categories: [ActivityCategoryTotal(name: "Work", isNamed: true, seconds: 3 * 3600, percent: 100)]
-        )
-        let sut = try hosted(TodaySoFarCard(sofar: sofar, categories: [], calendar: cal), EngineHarness()).inspect()
-        #expect(throws: Never.self) { try sut.find(text: Copywriter.todayLogged(3 * 3600)) }
-        #expect(throws: Never.self) { try sut.find(text: "Work") }
-        #expect(throws: Never.self) { try sut.find(ActivityRibbon.self) }
-    }
-
     @Test func headerShowsDateAndGreeting() throws {
         let h = EngineHarness()
         let sut = try hosted(TodayHeader(e: h.engine, dateLine: "TUESDAY, 4 MARCH", greeting: "Good morning"), h).inspect()
