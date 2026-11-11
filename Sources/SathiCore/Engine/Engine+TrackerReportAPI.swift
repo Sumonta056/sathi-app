@@ -32,6 +32,7 @@ extension Engine {
         if let problem = ActivityEditCheck.problem(edit, others: busySpans(near: edit, except: id), calendar: calendar) { return problem }
         if edit.end > clock.now { return .inFuture }
         var new = old
+        var calendarOK = true
         new.text = ActivityText.clean(edit.text) ?? old.text
         new.start = edit.start
         new.end = edit.end
@@ -40,11 +41,13 @@ extension Engine {
             new.awayPlaceName = edit.awayPlaceName
         } else {
             new.category = edit.category
-            new = calendarActivityEdited(from: old, to: new)
+            let moved = calendarActivityEdited(from: old, to: new, choice: edit.calendar)
+            new = moved.activity
+            calendarOK = moved.calendarOK
         }
         removeStoredActivity(id)
         storeActivity(new)
-        return .saved(id)
+        return calendarOK ? .saved(id) : .calendarFailed(id)
     }
 
     @discardableResult
@@ -52,7 +55,11 @@ extension Engine {
         let edit = edit.wholeSeconds
         if let problem = ActivityEditCheck.problem(edit, others: busySpans(near: edit, except: nil), calendar: calendar) { return problem }
         if edit.end > clock.now { return .inFuture }
-        let item = Activity(text: ActivityText.clean(edit.text) ?? edit.text, category: edit.category, start: edit.start, end: edit.end)
+        var item = Activity(text: ActivityText.clean(edit.text) ?? edit.text, category: edit.category, start: edit.start, end: edit.end)
+        if case let .calendar(id) = edit.calendar {
+            item.calendarID = id
+            item = savingToCalendar(item)
+        }
         storeActivity(item)
         return .saved(item.id)
     }
@@ -64,9 +71,11 @@ extension Engine {
         )
     }
 
-    package func deleteActivity(_ id: ActivityID) {
-        guard let old = removeStoredActivity(id) else { return }
-        calendarActivityDeleted(old)
+    @discardableResult
+    package func deleteActivity(_ id: ActivityID) -> Bool {
+        guard let old = storedActivity(id), calendarActivityDeleted(old) else { return false }
+        removeStoredActivity(id)
+        return true
     }
 
     private func busySpans(near edit: ActivityEdit, except id: ActivityID?) -> [DateInterval] {

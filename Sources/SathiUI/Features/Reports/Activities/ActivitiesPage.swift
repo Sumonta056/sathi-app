@@ -6,6 +6,7 @@ struct ActivitiesPage: View {
     let day: DayKey?
     @State private var picked: StatsRange?
     @State private var memo = RangeMemo<StatsRange, ActivitiesPageData>()
+    @State private var overviewMemo = RangeMemo<StatsRange, ActivityDayOverview>()
 
     init(day: DayKey? = nil, range: StatsRange? = nil) {
         self.day = day
@@ -50,7 +51,11 @@ struct ActivitiesPage: View {
         if !e.data.prefs.tracker.isOn && page.days.isEmpty {
             trackerOff
         } else if let day = page.day {
-            ActivityDayView(day: day, categories: e.activityCategories, calendar: calendar, actions: dayActions)
+            ActivityDayView(
+                day: day, overview: overviewMemo.value(range, range: range, engine: e) { $0.activityDayOverview($1) },
+                categories: e.activityCategories, calendar: calendar, calendars: e.calendarChoices(),
+                calendarNames: e.activityCalendarTitles, actions: dayActions
+            )
         } else if let stats = page.stats {
             ActivityRangeView(
                 range: range, days: page.days, stats: stats, categories: e.activityCategories,
@@ -75,7 +80,6 @@ struct ActivitiesPage: View {
         a.edit = { engine.editActivity($0, $1) }
         a.add = { engine.addPastActivity($0) }
         a.delete = { engine.deleteActivity($0) }
-        a.saveToCalendar = { engine.saveActivityToCalendar($0) }
         return a
     }
 

@@ -13,6 +13,7 @@ struct ActivityRangeView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: UIMetrics.reportsGap) {
+                ActivityTableCard(table: ActivityTableCard.range(stats.categories, categories: categories))
                 tiles
                 ReportsCard {
                     ForEach(keys, id: \.self) { key in
@@ -22,14 +23,11 @@ struct ActivityRangeView: View {
                         Divider().overlay(Night.divider)
                     }
                 }
-                HStack(alignment: .top, spacing: UIMetrics.tileGap) {
-                    CategoryTimeCard(stats: stats, kind: range.kind, categories: categories)
-                    ActivityTextCard(
-                        title: Copywriter.activitiesRangeTextTitle,
-                        text: ActivityRangeText.make(days, title: Copywriter.rangeTitle(range, now: now, calendar: calendar), calendar: calendar),
-                        copy: actions.copy
-                    )
-                }
+                ActivityTextCard(
+                    title: Copywriter.activitiesRangeTextTitle,
+                    text: ActivityRangeText.make(days, title: Copywriter.rangeTitle(range, now: now, calendar: calendar), calendar: calendar),
+                    copy: actions.copy
+                )
             }
             .padding(.bottom, UIMetrics.reportsGap)
         }

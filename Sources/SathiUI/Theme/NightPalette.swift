@@ -12,6 +12,8 @@ enum NightHex {
     static let muted: UInt32 = 0x9AA6BF
     static let sprout: UInt32 = 0x5FD39A
     static let border: UInt32 = 0x263049
+    static let trackerEvent: UInt32 = 0x7FB8FF
+    static let trackerAway: UInt32 = 0x3A4458
 }
 
 enum Night {
@@ -93,7 +95,3 @@ enum Night {
     }
 }
 
-extension NightHex {
-    static let trackerAway: UInt32 = 0x3A4458
-    static let trackerEvent: UInt32 = 0x7FB8FF
-}

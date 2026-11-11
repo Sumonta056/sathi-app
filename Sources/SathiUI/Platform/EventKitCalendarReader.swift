@@ -4,8 +4,8 @@ import SathiCore
 extension EventKitCalendarWriter {
     @discardableResult
     package func delete(eventID: String) -> Bool {
-        guard !eventID.isEmpty, access == .allowed,
-              let event = store.event(withIdentifier: eventID) else { return false }
+        guard !eventID.isEmpty, access == .allowed else { return false }
+        guard let event = store.event(withIdentifier: eventID) else { return true }
         do {
             try store.remove(event, span: .thisEvent, commit: true)
         } catch {
