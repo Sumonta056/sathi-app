@@ -114,7 +114,7 @@ struct TrackerPresenterTests {
         h.engine.data.live.tracker.prompt = PromptState(kind: .stillOnIt, shownAt: h.clock.now, askTime: h.clock.now)
         ui.showTrackerPrompt(.stillOnIt)
         #expect(ui.trackerPromptModel !== model)
-        #expect(ui.trackerPromptModel?.draft.text != "Typed by hand")
+        #expect(ui.trackerPromptModel?.draft.text == "Typed by hand")
         ui.closeTrackerPrompt(.stillOnIt)
     }
 

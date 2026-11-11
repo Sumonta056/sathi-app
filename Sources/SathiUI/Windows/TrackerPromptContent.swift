@@ -7,5 +7,6 @@ struct TrackerPromptContent: View {
 
     var body: some View {
         ActivityPromptView(state: state, model: model)
+            .id(ObjectIdentifier(model))
     }
 }

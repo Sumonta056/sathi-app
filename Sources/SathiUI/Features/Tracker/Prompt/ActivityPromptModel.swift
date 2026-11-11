@@ -27,6 +27,11 @@ final class ActivityPromptModel: ObservableObject {
         started == nowChoice ? nil : started
     }
 
+    func carry(from old: ActivityPromptModel) {
+        draft.text = old.draft.text
+        draft.category = old.draft.category
+    }
+
     func fill(_ recent: RecentActivity) {
         draft = draft.filled(from: recent)
     }

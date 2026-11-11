@@ -6,7 +6,7 @@ extension UIController {
     package func showTrackerPrompt(_ kind: PromptKind) {
         guard let engine, let state = engine.trackerPromptState(kind) else { return }
         let prompt = engine.trackerPrompt
-        let model = keptPromptModel(for: prompt) ?? ActivityPromptModel(state)
+        let model = keptPromptModel(for: prompt) ?? newPromptModel(state)
         let content = TrackerPromptContent(state: state, model: model)
         guard let p = replacePromptContent(content) ?? trackerHosting(content).map(presentTrackerCentered) else { return }
         trackerPromptPanel = p
@@ -22,6 +22,14 @@ extension UIController {
     private func keptPromptModel(for prompt: PromptState?) -> ActivityPromptModel? {
         guard trackerPromptPanel != nil, prompt != nil, prompt == trackerPromptShown,
               let model = trackerPromptModel, !model.answered else { return nil }
+        return model
+    }
+
+    private func newPromptModel(_ state: TrackerPromptState) -> ActivityPromptModel {
+        let model = ActivityPromptModel(state)
+        guard trackerPromptPanel != nil, let old = trackerPromptModel, !old.answered,
+              state.kind != .eventAsk, trackerPromptKind != .eventAsk else { return model }
+        model.carry(from: old)
         return model
     }
 
