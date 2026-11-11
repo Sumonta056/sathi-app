@@ -25,7 +25,7 @@ extension Engine {
         if let kind = data.live.tracker.prompt?.kind, kind == .whatNow || kind == .stillOnIt || kind == .eventAsk {
             clearTrackerPrompt()
         }
-        objectWillChange.send()
+        storesChanged()
     }
 
     func eventDraft(_ e: CalendarEventInfo, category: String?, from start: Date) -> ActivityDraft {
@@ -43,7 +43,7 @@ extension Engine {
         trackerCalendarRuntime.note = note
         trackerCalendarRuntime.noteUntil = clock.now.wholeSecond.addingTimeInterval(Timing.eventNoteShow)
         presenter.showTrackerNote(note)
-        objectWillChange.send()
+        storesChanged()
     }
 
     func closeEventNote() {
@@ -52,7 +52,7 @@ extension Engine {
         trackerCalendarRuntime.note = nil
         trackerCalendarRuntime.noteUntil = nil
         trackerCalendarRuntime.undo = nil
-        objectWillChange.send()
+        storesChanged()
     }
 
     private func handleEventStarts(_ n: Date) {

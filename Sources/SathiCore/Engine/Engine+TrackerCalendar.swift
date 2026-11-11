@@ -33,7 +33,7 @@ extension Engine {
             data.live.tracker.running = old
             data.live.tracker.lastActivity = draft(of: old)
         }
-        objectWillChange.send()
+        storesChanged()
         requestTick()
     }
 
@@ -58,7 +58,7 @@ extension Engine {
             data.live.tracker.running = nil
             setTrackerPrompt(PromptState(kind: .whatNow, shownAt: n, askTime: n, switchFrom: r.start))
         }
-        objectWillChange.send()
+        storesChanged()
         requestTick()
     }
 
@@ -67,7 +67,7 @@ extension Engine {
               let e = trackerCalendarRuntime.note?.event ?? eventAskEvent() else { return }
         data.prefs.tracker.eventCategoryByTitle[e.title] = category
         if data.live.tracker.running?.sourceEventID == e.id { data.live.tracker.running?.category = category }
-        objectWillChange.send()
+        storesChanged()
     }
 
     package func answerEventAsk(_ yes: Bool) {

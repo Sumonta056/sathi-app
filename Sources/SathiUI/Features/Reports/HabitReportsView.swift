@@ -5,9 +5,11 @@ struct HabitReportsView: View {
     @EnvironmentObject var e: Engine
     let range: StatsRange
     let selected: HabitID
+    @State private var memo = RangeMemo<HabitReportRequest, ReportScreen>()
 
     var body: some View {
-        let screen = e.reportScreen(range, selected: selected)
+        let request = HabitReportRequest(range: range, selected: selected)
+        let screen = memo.value(request, range: range, engine: e) { $0.reportScreen($1.range, selected: $1.selected) }
         HStack(alignment: .top, spacing: UIMetrics.tileGap) {
             ReportsCard {
                 Text(verbatim: screen.chart.title)
@@ -24,4 +26,9 @@ struct HabitReportsView: View {
         }
         .frame(height: UIMetrics.reportsDetailHeight)
     }
+}
+
+struct HabitReportRequest: Equatable {
+    let range: StatsRange
+    let selected: HabitID
 }

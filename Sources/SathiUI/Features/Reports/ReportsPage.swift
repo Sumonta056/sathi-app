@@ -5,6 +5,7 @@ struct ReportsPage: View {
     @EnvironmentObject var e: Engine
     @State private var picked: StatsRange?
     @State private var selected: HabitID?
+    @State private var memo = RangeMemo<StatsRange, ReportsPageData>()
 
     init(range: StatsRange? = nil, selected: HabitID? = nil) {
         _picked = State(initialValue: range)
@@ -13,14 +14,14 @@ struct ReportsPage: View {
 
     var body: some View {
         let range = picked ?? e.currentRange(.week)
-        let buddy = e.buddyRange(range)
+        let page = memo.value(range, range: range, engine: e) { $0.reportsPage($1) }
         ScrollView {
             VStack(alignment: .leading, spacing: UIMetrics.reportsPageGap) {
                 header(range)
-                BuddyTotalsRow(totals: buddy.totals, kind: range.kind, selected: $selected)
+                BuddyTotalsRow(totals: page.totals, kind: range.kind, selected: $selected)
                 HStack(alignment: .top, spacing: UIMetrics.tileGap) {
-                    GoalDaysChart(bars: buddy.bars, kind: range.kind, calendar: e.rangeCalendar, now: e.now)
-                    CategoryTimeCard(stats: e.activityRange(range), kind: range.kind, categories: e.activityCategories)
+                    GoalDaysChart(bars: page.bars, kind: range.kind, calendar: e.rangeCalendar, now: e.now)
+                    CategoryTimeCard(stats: page.stats, kind: range.kind, categories: e.activityCategories)
                 }
                 .frame(height: UIMetrics.reportsCardsHeight)
                 if let selected {

@@ -63,6 +63,7 @@ package final class Engine: ObservableObject {
     var reportCache: ReportScreenCache?
     var breathCueMark: Date?
     var minuteTickMark: Date?
+    var storeRevision = 0
     var trackerRuntime = TrackerRuntime() {
         didSet { if oldValue.away != trackerRuntime.away { syncAwayDetails() } }
     }
@@ -147,4 +148,9 @@ package final class Engine: ObservableObject {
 
     package func phase(_ id: HabitID) -> Phase { activities[id]?.phase ?? .idle }
     package func isActive(_ id: HabitID) -> Bool { activities[id] != nil }
+
+    func storesChanged() {
+        storeRevision += 1
+        objectWillChange.send()
+    }
 }

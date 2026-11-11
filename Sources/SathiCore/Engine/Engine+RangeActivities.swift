@@ -6,8 +6,12 @@ extension Engine {
     }
 
     package func activityRange(_ range: StatsRange) -> ActivityRangeStats {
+        activityRange(range, days: activityDays(in: range))
+    }
+
+    func activityRange(_ range: StatsRange, days: [ActivityDay]) -> ActivityRangeStats {
         let compare = range.comparable(now: clock.now, calendar: calendar)
-        return ActivityRangeStats(activityDays(in: range), compare: activityDays(overlapping: compare))
+        return ActivityRangeStats(days, compare: activityDays(overlapping: compare))
     }
 
     package func exportActivities(_ range: StatsRange, to folder: URL) -> URL? {

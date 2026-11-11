@@ -12,7 +12,7 @@ extension Engine {
     func refreshCalendarChoices() -> Bool {
         let fresh = calendarWriter.calendars()
         guard fresh != calendarChoicesCache else { return false }
-        objectWillChange.send()
+        storesChanged()
         calendarChoicesCache = fresh
         return true
     }

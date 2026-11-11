@@ -43,7 +43,7 @@ extension Engine {
             if away.length >= Timing.activityMinimum { trackerRuntime.awayItems.append(away.id) }
         }
         trackerRuntime.loggedWhileAway.removeAll { $0.sourceEventID == id }
-        objectWillChange.send()
+        storesChanged()
         return true
     }
 

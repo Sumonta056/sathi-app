@@ -62,7 +62,7 @@ extension Engine {
         month.items.append(item)
         month.items.sort { $0.start < $1.start }
         activityStore.save(month)
-        objectWillChange.send()
+        storesChanged()
     }
 
     @discardableResult
@@ -72,7 +72,7 @@ extension Engine {
             guard let i = month.items.firstIndex(where: { $0.id == id }) else { continue }
             let item = month.items.remove(at: i)
             activityStore.save(month)
-            objectWillChange.send()
+            storesChanged()
             return item
         }
         return nil

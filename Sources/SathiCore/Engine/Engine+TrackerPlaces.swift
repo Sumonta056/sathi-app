@@ -33,6 +33,6 @@ extension Engine {
         }
         trackerRuntime.lastAway?.place = place
         trackerRuntime.lastAway?.placeName = name
-        objectWillChange.send()
+        storesChanged()
     }
 }

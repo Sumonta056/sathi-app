@@ -5,6 +5,7 @@ struct ActivitiesPage: View {
     @EnvironmentObject var e: Engine
     let day: DayKey?
     @State private var picked: StatsRange?
+    @State private var memo = RangeMemo<StatsRange, ActivitiesPageData>()
 
     init(day: DayKey? = nil, range: StatsRange? = nil) {
         self.day = day
@@ -44,18 +45,15 @@ struct ActivitiesPage: View {
     }
 
     @ViewBuilder private func content(_ range: StatsRange) -> some View {
-        let days = e.activityDays(in: range)
+        let page = memo.value(range, range: range, engine: e) { $0.activitiesPage($1) }
         let calendar = e.rangeCalendar
-        if !e.data.prefs.tracker.isOn && days.isEmpty {
+        if !e.data.prefs.tracker.isOn && page.days.isEmpty {
             trackerOff
-        } else if range.kind == .day {
-            ActivityDayView(
-                day: e.activityDay(DayKey(range.interval.start, calendar: calendar)),
-                categories: e.activityCategories, calendar: calendar, actions: dayActions
-            )
-        } else {
+        } else if let day = page.day {
+            ActivityDayView(day: day, categories: e.activityCategories, calendar: calendar, actions: dayActions)
+        } else if let stats = page.stats {
             ActivityRangeView(
-                range: range, days: days, stats: e.activityRange(range), categories: e.activityCategories,
+                range: range, days: page.days, stats: stats, categories: e.activityCategories,
                 calendar: calendar, now: e.now, actions: rangeActions
             )
         }
