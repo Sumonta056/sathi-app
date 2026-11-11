@@ -31,14 +31,12 @@ package final class UIController: ReminderPresenter {
     var trackerCorner: [NSPanel] = []
     var trackerResizeTokens: [ObjectIdentifier: NSObjectProtocol] = [:]
     private var locks: [NSWindow] = []
-    private var settings: NSWindow?
-    private let settingsCloseWatcher = WindowCloseWatcher()
-    private var reports: NSWindow?
-    private let reportsCloseWatcher = WindowCloseWatcher()
+    var mainWindow: NSWindow?
+    var mainRoute: MainRoute?
+    let mainCloseWatcher = WindowCloseWatcher()
 
     package init() {
-        settingsCloseWatcher.onClose = { [weak self] in self?.settingsWillClose() }
-        reportsCloseWatcher.onClose = { [weak self] in self?.reportsWillClose() }
+        mainCloseWatcher.onClose = { [weak self] in self?.mainWillClose() }
     }
 
     package func showBubble(_ id: HabitID, _ level: Level) {
@@ -124,43 +122,6 @@ package final class UIController: ReminderPresenter {
         locks.forEach { $0.orderOut(nil) }
         locks.removeAll()
         NSApp.presentationOptions = []
-    }
-
-    package func showMain(_ page: MainPage) {
-        if case let .settings(target) = page {
-            presentSettings(SettingsTab(target))
-        } else {
-            presentReports()
-        }
-    }
-
-    private func presentSettings(_ tab: SettingsTab) {
-        guard let engine else { return }
-        if let settings {
-            settings.contentView = SettingsWindow.content(engine: engine, tab: tab)
-        } else {
-            settings = SettingsWindow.make(engine: engine, tab: tab, closeWatcher: settingsCloseWatcher)
-        }
-        NSApp.activate(ignoringOtherApps: true)
-        settings?.makeKeyAndOrderFront(nil)
-    }
-
-    private func settingsWillClose() {
-        settings?.contentView = nil
-        settings = nil
-    }
-
-    private func presentReports() {
-        if reports == nil, let engine {
-            reports = ReportsWindow.make(engine: engine, closeWatcher: reportsCloseWatcher)
-        }
-        NSApp.activate(ignoringOtherApps: true)
-        reports?.makeKeyAndOrderFront(nil)
-    }
-
-    private func reportsWillClose() {
-        reports?.contentView = nil
-        reports = nil
     }
 
     func hosting(_ view: some View) -> FirstClickHostingView<AnyView>? {
