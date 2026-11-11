@@ -1,5 +1,7 @@
 # Phase 17: Daily activity tracker
 
+Phase 18 replaces the prompt layouts (rules 12, 13, 15–19, 44 places, 47 chips) with the one activity prompt: `docs/specs/phase-18-app-window.md` rules 41–54.
+
 Sathi asks the user at set times what they are doing now. One answer is 1 click or a short text. Sathi keeps the answers for each day, shows the day and the month in Reports, and can write each activity to a calendar. In the long term the tracker replaces time blocks (`docs/adr/0001-activity-tracker-replaces-time-blocks.md`).
 
 Design (screens and flow): https://claude.ai/artifact/YHqbbEbFiGvqgdGVHSzMjU (tabs Flow, Prompts, End of day, Report · Day, Report · Month, Settings). First canvas: https://claude.ai/artifact/AG2GNswCL7A9nvF3dqimHw.
