@@ -2,6 +2,20 @@
 
 Sathi is a macOS menu bar companion. Buddies remind the user about habits, and the user can track where their time goes.
 
+## App
+
+**Main window**:
+The one window of Sathi, with a sidebar. It holds Today, Activities, Reports, and Settings. Sathi shows in the Dock while it is open.
+_Avoid_: Dashboard, app view, Settings window, Reports window
+
+**Quick panel**:
+The small panel that opens from the menu bar icon. It shows the status of the buddies and the running activity, and it opens the main window.
+_Avoid_: Menu, popover, dropdown
+
+**Range**:
+The span of days that Reports and Activities show: Day, Week, or Month. Each range compares with the range before it.
+_Avoid_: Period, window, timeframe
+
 ## Time tracking
 
 **Time block**:
@@ -49,8 +63,8 @@ The moment the user moved from one activity to the next. The user picks it after
 _Avoid_: Start override, backdate, correction
 
 **Activity prompt**:
-The popup that asks "What are you doing?" or "Still on it?". It stays on screen until the user answers or taps Skip.
-_Avoid_: Check-in, nudge, reminder, bubble
+The one popup at the screen center that asks "What are you doing now?". Its top line tells the reason: time to ask, shortcut, activity ends, back from Away, or a calendar event starts. It stays on screen until the user answers, taps Keep going, or taps Skip.
+_Avoid_: Check-in, nudge, reminder, bubble, corner prompt, center prompt, Still on it popup
 
 ## Breathing
 

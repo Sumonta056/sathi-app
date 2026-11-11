@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sathi · Activities</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1200px; height: 760px; box-sizing: border-box; display: flex; background: #121826; color: #EEF2FA; font-family: Figtree, system-ui, sans-serif; border-radius: 12px; overflow: hidden; border: 1px solid #263049;">
+  <nav aria-label="Sections" style="width: 210px; flex-shrink: 0; background: #0D1220; display: flex; flex-direction: column; padding: 14px 12px; box-sizing: border-box; gap: 4px; border-right: 1px solid #222B40;">
+    <div style="display: flex; gap: 8px; padding: 2px 4px 22px;">
+      <span style="width: 12px; height: 12px; border-radius: 6px; background: #FF5F57;"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #FEBC2E;"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #28C840;"></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 8px 18px;"><span style="width: 28px; height: 28px; border-radius: 9px; background: #4CC3F5; display: block;"></span><span style="font-weight: 800; font-size: 18px;">Sathi</span></div>
+    <a href="Main.dc.html" style="padding: 10px 12px; border-radius: 10px; color: #9AA6BF; text-decoration: none; font-weight: 500; font-size: 14px;">Today</a>
+    <a href="Activities.dc.html" style="padding: 10px 12px; border-radius: 10px; background: #1E2840; color: #EEF2FA; text-decoration: none; font-weight: 600; font-size: 14px;">Activities</a>
+    <a href="Reports.dc.html" style="padding: 10px 12px; border-radius: 10px; color: #9AA6BF; text-decoration: none; font-weight: 500; font-size: 14px;">Reports</a>
+    <a href="Settings.dc.html" style="padding: 10px 12px; border-radius: 10px; color: #9AA6BF; text-decoration: none; font-weight: 500; font-size: 14px;">Settings</a>
+  </nav>
+
+  <main style="flex: 1; min-width: 0; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px;">
+    <header style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+      <h1 style="margin: 0; font-size: 26px; font-weight: 800;">Activities</h1>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div role="group" aria-label="Range" style="display: flex; background: #1A2233; border: 1px solid #263049; border-radius: 10px; padding: 3px;">
+          <button aria-pressed="true" style="font: inherit; font-size: 13px; font-weight: 700; color: #0D1220; background: #EEF2FA; border: 0; border-radius: 8px; padding: 0 14px; height: 30px;">Day</button>
+          <button style="font: inherit; font-size: 13px; color: #9AA6BF; background: transparent; border: 0; border-radius: 8px; padding: 0 14px; height: 30px;">Week</button>
+          <button style="font: inherit; font-size: 13px; color: #9AA6BF; background: transparent; border: 0; border-radius: 8px; padding: 0 14px; height: 30px;">Month</button>
+        </div>
+        <button aria-label="Previous day" style="font: inherit; color: #EEF2FA; background: #1A2233; border: 1px solid #263049; border-radius: 8px; width: 34px; height: 34px;">‹</button>
+        <span style="font-size: 14px; font-weight: 600; min-width: 110px; text-align: center;">Today, 11 Nov</span>
+        <button aria-label="Next day" style="font: inherit; color: #EEF2FA; background: #1A2233; border: 1px solid #263049; border-radius: 8px; width: 34px; height: 34px;">›</button>
+        <button style="font: inherit; font-size: 13px; font-weight: 600; color: #EEF2FA; background: #1A2233; border: 1px solid #263049; border-radius: 10px; padding: 0 14px; height: 34px;">Export</button>
+      </div>
+    </header>
+
+    <div style="display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 14px; flex: 1; min-height: 0;">
+      <section aria-label="Log" style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 8px 0; display: flex; flex-direction: column;">
+        <div style="display: flex; align-items: center; gap: 14px; padding: 12px 20px; border-bottom: 1px solid #222B40; font-size: 14px;"><span style="width: 96px; color: #9AA6BF;">9:00 – 9:50</span><span style="width: 4px; height: 20px; border-radius: 2px; background: #FF8A80;"></span><span style="flex: 1;">Email and Slack</span><span style="font-size: 12px; color: #9AA6BF;">Work</span><span style="width: 52px; text-align: right; color: #9AA6BF;">50m</span></div>
+        <div style="display: flex; align-items: center; gap: 14px; padding: 12px 20px; border-bottom: 1px solid #222B40; font-size: 14px;"><span style="width: 96px; color: #9AA6BF;">9:50 – 10:20</span><span style="width: 4px; height: 20px; border-radius: 2px; background: #C9B8FF;"></span><span style="flex: 1;">Standup</span><span style="font-size: 12px; color: #9AA6BF;">Meeting</span><span style="width: 52px; text-align: right; color: #9AA6BF;">30m</span></div>
+        <div style="display: flex; align-items: center; gap: 14px; padding: 12px 20px; border-bottom: 1px solid #222B40; font-size: 14px;"><span style="width: 96px; color: #9AA6BF;">10:20 – 11:50</span><span style="width: 4px; height: 20px; border-radius: 2px; background: #FF8A80;"></span><span style="flex: 1;">Write tracker spec</span><span style="font-size: 12px; color: #9AA6BF;">Work</span><span style="width: 52px; text-align: right; color: #9AA6BF;">1h 30m</span></div>
+        <div style="display: flex; align-items: center; gap: 14px; padding: 12px 20px; border-bottom: 1px solid #222B40; font-size: 14px;"><span style="width: 96px; color: #9AA6BF;">12:00 – 13:00</span><span style="width: 4px; height: 20px; border-radius: 2px; background: #7FB8FF;"></span><span style="flex: 1;">Design sync <span style="font-size: 12px; color: #7FB8FF;">· calendar</span></span><span style="font-size: 12px; color: #9AA6BF;">Meeting</span><span style="width: 52px; text-align: right; color: #9AA6BF;">1h</span></div>
+        <div style="display: flex; align-items: center; gap: 14px; padding: 12px 20px; border-bottom: 1px solid #222B40; font-size: 14px; color: #9AA6BF;"><span style="width: 96px;">14:05 – 14:40</span><span style="width: 4px; height: 20px; border-radius: 2px; background: #3A4458;"></span><span style="flex: 1;">Away · Lunch</span><span style="font-size: 12px;"></span><span style="width: 52px; text-align: right;">35m</span></div>
+        <div style="display: flex; align-items: center; gap: 14px; padding: 12px 20px; font-size: 14px; background: #24304A;"><span style="width: 96px; color: #FFB3AB;">14:10 – now</span><span style="width: 4px; height: 20px; border-radius: 2px; background: #FF8A80;"></span><span style="flex: 1; font-weight: 700;">Code review · Sathi tracker PR</span><span style="font-size: 12px; color: #9AA6BF;">Work</span><span style="width: 52px; text-align: right; color: #FFB3AB;">42m</span></div>
+        <div style="flex: 1;"></div>
+        <div style="display: flex; gap: 10px; padding: 12px 20px 8px;">
+          <button style="font: inherit; font-size: 13px; font-weight: 600; color: #FFB3AB; background: transparent; border: 1px dashed #5A3436; border-radius: 10px; padding: 0 14px; height: 36px;">+ Add past activity</button>
+        </div>
+      </section>
+      <div style="display: flex; flex-direction: column; gap: 14px; min-height: 0;">
+        <section aria-label="Totals" style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+          <span style="font-weight: 700;">Totals</span>
+          <div style="display: flex; justify-content: space-between; font-size: 13px;"><span>Work</span><span>3h 02m</span></div>
+          <div style="display: flex; justify-content: space-between; font-size: 13px;"><span>Meeting</span><span>1h 30m</span></div>
+          <div style="display: flex; justify-content: space-between; font-size: 13px; color: #9AA6BF;"><span>Away</span><span>35m</span></div>
+        </section>
+        <section aria-label="Standup text" style="flex: 1; background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-weight: 700;">Standup text</span><button style="font: inherit; font-size: 12px; font-weight: 600; color: #EEF2FA; background: #121826; border: 1px solid #2C3650; border-radius: 8px; padding: 0 10px; height: 28px;">Copy</button></div>
+          <div style="font-size: 13px; line-height: 1.6; color: #C9D2E3; background: #121826; border: 1px solid #222B40; border-radius: 10px; padding: 12px; flex: 1; white-space: pre-line;">Yesterday:
+• Write tracker spec (1h 30m)
+• Code review (2h)
+Today:
+• Code review · Sathi tracker PR</div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":760}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

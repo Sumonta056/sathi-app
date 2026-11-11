@@ -167,6 +167,32 @@ ADR: `docs/adr/0001-activity-tracker-replaces-time-blocks.md`
 - [ ] User: perf (`perf.sh`, `--windows`), hand tests, merge to `main`, push
 - Later: Week view, remove time blocks.
 
+## Phase 18: Main window, quick panel, one activity prompt, ranges
+
+Spec: `docs/specs/phase-18-app-window.md`
+Plan: `docs/superpowers/plans/phase-18-app-window.md` (16 tasks)
+Design: `docs/design/phase-18/` (Main, Activities, Reports, Settings, QuickPanel, ActivityPrompt)
+Branch: `feat/app-window` (worktree `../Sathi-app-window`)
+
+- [x] Spec, plan, glossary words, design mockups
+- [ ] 1 Rules and words first
+- [ ] 2 `StatsRange` and the compare words
+- [ ] 3 Buddy totals for a range
+- [ ] 4 Activity stats, text, and CSV export for a range
+- [ ] 5 `MainPage` and one presenter call
+- [ ] 6 Today screen model and `TodayModel`
+- [ ] 7 Activity prompt model and engine changes
+- [ ] 8 Activity prompt view
+- [ ] 9 One centered prompt panel; notes and end of day at center
+- [ ] 10 Main window shell, Dock icon, launch and close
+- [ ] 11 Settings pages in the main window
+- [ ] 12 Today page
+- [ ] 13 Reports page with ranges
+- [ ] 14 Activities page with ranges
+- [ ] 15 Quick panel
+- [ ] 16 Docs, website shots, Definition of done
+- Open questions (defaults in the spec): Q1 time blocks in the quick panel, Q2 "Add a buddy" page, Q3 login-item detection, Q4 Keep going minutes.
+
 ## Later
 
 - Days off: a lock or Nudgy bubble that shows at 23:58 stays after midnight into a day off (only a settings change closes it, rule 11). Close it at the first tick of a new day if users notice
@@ -232,4 +258,5 @@ ADR: `docs/adr/0001-activity-tracker-replaces-time-blocks.md`
 | 2026-10-25 | 5h: the Reports Export menu is removed (save panel wakeups). Memory budget: < 40 MB fresh idle, < 50 MB after a window. Swift Charts stays. |
 | 2026-10-25 | Fix: on macOS 27 every reminder panel was 0×0 (`NSHostingView.fittingSize` after `sizingOptions = []`), so no reminder was visible. Buddies are now independent: each has its own reminder, snooze, ignore timer, and session; no queue. Corner panels stack top-right on the display with the mouse. |
 | 2026-11-09 | Daily activity tracker (phase 17): separate from time blocks first, replaces them later (ADR 0001). Off by default. Prompts never go away by themselves. Scheduled prompts sit in the corner and never take the keyboard; the center panel opens only from the shortcut, the menu, or after Away. Raw activities are saved per month; reports are built on demand. |
+| 2026-11-11 | Phase 18: one main window (Today, Activities, Reports, Settings) replaces the Settings and Reports windows; Dock icon only while it is open; the menu panel becomes a short quick panel; the 5 tracker prompts become 1 activity prompt at the screen center that takes the keyboard only when the user opened it; Reports and Activities get Day / Week / Month ranges with compare. Buddy reminders do not change. No saved-data change. |
 | 2026-10-24 | Phase 1 fix: a schedule change just after midnight counts the new day, not yesterday. |

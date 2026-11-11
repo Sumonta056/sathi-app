@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sathi · Reports</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1200px; height: 760px; box-sizing: border-box; display: flex; background: #121826; color: #EEF2FA; font-family: Figtree, system-ui, sans-serif; border-radius: 12px; overflow: hidden; border: 1px solid #263049;">
+  <nav aria-label="Sections" style="width: 210px; flex-shrink: 0; background: #0D1220; display: flex; flex-direction: column; padding: 14px 12px; box-sizing: border-box; gap: 4px; border-right: 1px solid #222B40;">
+    <div style="display: flex; gap: 8px; padding: 2px 4px 22px;">
+      <span style="width: 12px; height: 12px; border-radius: 6px; background: #FF5F57;"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #FEBC2E;"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #28C840;"></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 8px 18px;"><span style="width: 28px; height: 28px; border-radius: 9px; background: #4CC3F5; display: block;"></span><span style="font-weight: 800; font-size: 18px;">Sathi</span></div>
+    <a href="Main.dc.html" style="padding: 10px 12px; border-radius: 10px; color: #9AA6BF; text-decoration: none; font-weight: 500; font-size: 14px;">Today</a>
+    <a href="Activities.dc.html" style="padding: 10px 12px; border-radius: 10px; color: #9AA6BF; text-decoration: none; font-weight: 500; font-size: 14px;">Activities</a>
+    <a href="Reports.dc.html" style="padding: 10px 12px; border-radius: 10px; background: #1E2840; color: #EEF2FA; text-decoration: none; font-weight: 600; font-size: 14px;">Reports</a>
+    <a href="Settings.dc.html" style="padding: 10px 12px; border-radius: 10px; color: #9AA6BF; text-decoration: none; font-weight: 500; font-size: 14px;">Settings</a>
+  </nav>
+
+  <main style="flex: 1; min-width: 0; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px;">
+    <header style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+      <h1 style="margin: 0; font-size: 26px; font-weight: 800;">Reports</h1>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div role="group" aria-label="Range" style="display: flex; background: #1A2233; border: 1px solid #263049; border-radius: 10px; padding: 3px;">
+          <button style="font: inherit; font-size: 13px; color: #9AA6BF; background: transparent; border: 0; border-radius: 8px; padding: 0 14px; height: 30px;">Day</button>
+          <button aria-pressed="true" style="font: inherit; font-size: 13px; font-weight: 700; color: #0D1220; background: #EEF2FA; border: 0; border-radius: 8px; padding: 0 14px; height: 30px;">Week</button>
+          <button style="font: inherit; font-size: 13px; color: #9AA6BF; background: transparent; border: 0; border-radius: 8px; padding: 0 14px; height: 30px;">Month</button>
+        </div>
+        <button aria-label="Previous week" style="font: inherit; color: #EEF2FA; background: #1A2233; border: 1px solid #263049; border-radius: 8px; width: 34px; height: 34px;">‹</button>
+        <span style="font-size: 14px; font-weight: 600; min-width: 110px; text-align: center;">3 – 9 Nov</span>
+        <button aria-label="Next week" style="font: inherit; color: #EEF2FA; background: #1A2233; border: 1px solid #263049; border-radius: 8px; width: 34px; height: 34px;">›</button>
+        <button style="font: inherit; font-size: 13px; font-weight: 600; color: #EEF2FA; background: #1A2233; border: 1px solid #263049; border-radius: 10px; padding: 0 14px; height: 34px;">Export CSV</button>
+      </div>
+    </header>
+
+    <section aria-label="Buddy totals" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px;">
+      <div style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-size: 13px; color: #4CC3F5; font-weight: 600;">Fota · water</span>
+        <span style="font-size: 24px; font-weight: 800;">49 <span style="font-size: 14px; color: #9AA6BF; font-weight: 600;">glasses</span></span>
+        <span style="font-size: 12px; color: #5FD39A;">+6 vs last week · goal met 5 of 7 days</span>
+      </div>
+      <div style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-size: 13px; color: #F2A64A; font-weight: 600;">Boi · reading</span>
+        <span style="font-size: 24px; font-weight: 800;">2h 20m</span>
+        <span style="font-size: 12px; color: #5FD39A;">+40m vs last week · 7 of 7 days</span>
+      </div>
+      <div style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-size: 13px; color: #A99CF5; font-weight: 600;">Shanti · calm</span>
+        <span style="font-size: 24px; font-weight: 800;">4 <span style="font-size: 14px; color: #9AA6BF; font-weight: 600;">sessions</span></span>
+        <span style="font-size: 12px; color: #FF9FB8;">−1 vs last week · 4 of 7 days</span>
+      </div>
+      <div style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-size: 13px; color: #CDEF5A; font-weight: 600;">Shokti · gym</span>
+        <span style="font-size: 24px; font-weight: 800;">95 <span style="font-size: 14px; color: #9AA6BF; font-weight: 600;">min</span></span>
+        <span style="font-size: 12px; color: #9AA6BF;">same as last week · 4 of 5 days</span>
+      </div>
+    </section>
+
+    <div style="display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 14px; flex: 1; min-height: 0;">
+      <section aria-label="Goal days" style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 18px 20px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; justify-content: space-between;"><span style="font-weight: 700;">Goals met per day</span><span style="font-size: 12px; color: #9AA6BF;">of 4 buddies</span></div>
+        <div style="flex: 1; display: flex; align-items: flex-end; gap: 18px; padding-top: 10px;">
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 100%; height: 180px; background: #5FD39A; border-radius: 6px;"></div><span style="font-size: 12px; color: #9AA6BF;">Mon</span></div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 100%; height: 135px; background: #5FD39A; border-radius: 6px;"></div><span style="font-size: 12px; color: #9AA6BF;">Tue</span></div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 100%; height: 180px; background: #5FD39A; border-radius: 6px;"></div><span style="font-size: 12px; color: #9AA6BF;">Wed</span></div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 100%; height: 90px; background: #5FD39A; border-radius: 6px;"></div><span style="font-size: 12px; color: #9AA6BF;">Thu</span></div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 100%; height: 135px; background: #5FD39A; border-radius: 6px;"></div><span style="font-size: 12px; color: #9AA6BF;">Fri</span></div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 100%; height: 90px; background: #3A4458; border-radius: 6px;"></div><span style="font-size: 12px; color: #9AA6BF;">Sat</span></div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 100%; height: 45px; background: #3A4458; border-radius: 6px;"></div><span style="font-size: 12px; color: #9AA6BF;">Sun</span></div>
+        </div>
+      </section>
+      <section aria-label="Time by category" style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 18px 20px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; justify-content: space-between;"><span style="font-weight: 700;">Time by category</span><span style="font-size: 12px; color: #9AA6BF;">vs last week</span></div>
+        <div style="display: flex; flex-direction: column; gap: 6px;"><div style="display: flex; justify-content: space-between; font-size: 13px;"><span>Work</span><span>28h 10m <span style="color: #5FD39A;">+2h</span></span></div><div style="height: 8px; border-radius: 4px; background: #222B40;"><div style="width: 88%; height: 8px; border-radius: 4px; background: #FF8A80;"></div></div></div>
+        <div style="display: flex; flex-direction: column; gap: 6px;"><div style="display: flex; justify-content: space-between; font-size: 13px;"><span>Calendar events</span><span>6h 30m <span style="color: #9AA6BF;">−20m</span></span></div><div style="height: 8px; border-radius: 4px; background: #222B40;"><div style="width: 22%; height: 8px; border-radius: 4px; background: #7FB8FF;"></div></div></div>
+        <div style="display: flex; flex-direction: column; gap: 6px;"><div style="display: flex; justify-content: space-between; font-size: 13px;"><span>Meeting</span><span>3h 00m</span></div><div style="height: 8px; border-radius: 4px; background: #222B40;"><div style="width: 11%; height: 8px; border-radius: 4px; background: #C9B8FF;"></div></div></div>
+        <div style="display: flex; flex-direction: column; gap: 6px;"><div style="display: flex; justify-content: space-between; font-size: 13px;"><span>Learning</span><span>2h 45m</span></div><div style="height: 8px; border-radius: 4px; background: #222B40;"><div style="width: 10%; height: 8px; border-radius: 4px; background: #F2A64A;"></div></div></div>
+        <div style="display: flex; flex-direction: column; gap: 6px;"><div style="display: flex; justify-content: space-between; font-size: 13px;"><span>Away</span><span>4h 15m</span></div><div style="height: 8px; border-radius: 4px; background: #222B40;"><div style="width: 15%; height: 8px; border-radius: 4px; background: #4A5570;"></div></div></div>
+      </section>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":760}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
