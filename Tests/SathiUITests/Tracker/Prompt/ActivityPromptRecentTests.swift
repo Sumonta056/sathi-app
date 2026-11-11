@@ -91,4 +91,12 @@ struct ActivityPromptRecentTests {
         #expect(model.draft.text == "Design sync")
         #expect(model.draft.sourceEventID == "e1")
     }
+
+    @Test func showAllCountsOnlyTheRecents() throws {
+        let s = Prompt.state(.whatNow) {
+            $0.recents = Prompt.recents(10)
+            $0.runningEvent = Prompt.event("Design sync")
+        }
+        #expect(try Prompt.buttonText(Prompt.view(s), "prompt.showAll") == ["Show all 10"])
+    }
 }

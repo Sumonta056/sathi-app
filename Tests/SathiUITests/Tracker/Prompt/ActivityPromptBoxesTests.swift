@@ -101,4 +101,21 @@ struct ActivityPromptBoxesTests {
             #expect(Prompt.hasText(sut, label))
         }
     }
+
+    @Test func theEventHasNoAskMeAndNoQuietRowAndAFixedField() throws {
+        let sut = try Prompt.view(Reasons.withKeep(.eventAsk))
+        #expect(!Prompt.hasText(sut, "Ask me"))
+        #expect(!Prompt.hasText(sut, "Quiet"))
+        #expect(sut.findAll(BuddySwitch.self).isEmpty)
+        #expect(try sut.find(LazyTextField.self).isDisabled())
+    }
+
+    @Test(arguments: [PromptKind.whatNow, .center, .stillOnIt, .welcomeBack])
+    func theOtherReasonsShowAskMeAndQuiet(_ kind: PromptKind) throws {
+        let sut = try Prompt.view(Reasons.withKeep(kind))
+        #expect(Prompt.hasText(sut, "Ask me"))
+        #expect(Prompt.hasText(sut, "Quiet"))
+        #expect(sut.findAll(BuddySwitch.self).count == 1)
+        #expect(try !sut.find(LazyTextField.self).isDisabled())
+    }
 }

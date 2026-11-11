@@ -25,6 +25,7 @@ extension UIMetrics {
     static let promptWhereHeight: CGFloat = 28
     static let promptWhereFont: CGFloat = 12
     static let promptWherePadding: CGFloat = 10
+    static let promptPlaceFieldWidth: CGFloat = 220
     static let promptPaneWidth: CGFloat = 290
     static let promptPanePadding = EdgeInsets(top: 20, leading: 14, bottom: 20, trailing: 14)
     static let promptPaneGap: CGFloat = 8

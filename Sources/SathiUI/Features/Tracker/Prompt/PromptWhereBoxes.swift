@@ -47,7 +47,7 @@ struct PromptWhereBoxes: View {
         return HStack(spacing: UIMetrics.promptWhereGap) {
             LazyTextField(placeholder: Copywriter.trackerNewPlace, text: $form.newName, startsEditing: true, onSubmit: save)
                 .modifier(QuickTextLimit(text: $form.newName, limit: Limits.awayPlaceNameMax))
-                .frame(width: UIMetrics.promptPaneWidth, height: UIMetrics.promptBoxHeight)
+                .frame(width: UIMetrics.promptPlaceFieldWidth, height: UIMetrics.promptBoxHeight)
                 .background(shape.fill(Night.promptBox))
                 .overlay(shape.strokeBorder(Night.promptBack, lineWidth: UIMetrics.promptBorder))
             box(Copywriter.trackerAddPlace, on: true, id: "tracker.place.save", action: save)

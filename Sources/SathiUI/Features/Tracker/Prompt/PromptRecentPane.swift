@@ -54,7 +54,7 @@ struct PromptRecentPane: View {
     private var showAll: some View {
         let shape = RoundedRectangle(cornerRadius: UIMetrics.promptShowAllRadius, style: .continuous)
         return Button { model.showsAll = true } label: {
-            Text(verbatim: Copywriter.activityPromptShowAll(items.count))
+            Text(verbatim: Copywriter.activityPromptShowAll(min(state.recents.count, Limits.recentMax)))
                 .font(Typography.tracker(UIMetrics.promptRowFont, .medium))
                 .foregroundStyle(Night.promptSecondary)
                 .frame(maxWidth: .infinity)
