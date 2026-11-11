@@ -7,6 +7,13 @@ package struct ActivityCategoryTotal: Equatable, Identifiable, Sendable {
     package var percent: Int
 
     package var id: String { name }
+
+    package init(name: String, isNamed: Bool, seconds: TimeInterval, percent: Int) {
+        self.name = name
+        self.isNamed = isNamed
+        self.seconds = seconds
+        self.percent = percent
+    }
 }
 
 package struct ActivityDayStats: Equatable, Sendable {
