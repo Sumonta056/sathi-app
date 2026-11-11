@@ -19,24 +19,27 @@ struct MainSidebar: View {
     private var openList: some View {
         VStack(alignment: .leading, spacing: UIMetrics.mainSidebarSpacing) {
             MainLogo { isOpen = false }
-            MainSidebarItem(title: Copywriter.mainPageToday, icon: "sun.max", isSelected: route.page == .today) {
-                route.page = .today
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: UIMetrics.mainSidebarSpacing) {
+                    MainSidebarItem(title: Copywriter.mainPageToday, icon: "sun.max", isSelected: route.page == .today) {
+                        route.page = .today
+                    }
+                    MainSidebarItem(title: Copywriter.mainPageActivities, icon: "list.bullet", isSelected: isActivities) {
+                        route.page = .activities(nil)
+                    }
+                    MainSidebarItem(title: Copywriter.mainPageReports, icon: "chart.bar", isSelected: route.page == .reports) {
+                        route.page = .reports
+                    }
+                    Text(verbatim: Copywriter.sidebarSettingsHeading)
+                        .font(Typography.tracker(UIMetrics.sidebarHeadingFont, .heavy))
+                        .tracking(UIMetrics.sidebarHeadingTracking)
+                        .foregroundStyle(Night.faint)
+                        .padding(UIMetrics.sidebarHeadingPadding)
+                    ForEach(SettingsPage.all, id: \.self) { page in
+                        SidebarSettingsRow(page: page, isSelected: settingsPage == page) { route.page = .settings(page) }
+                    }
+                }
             }
-            MainSidebarItem(title: Copywriter.mainPageActivities, icon: "list.bullet", isSelected: isActivities) {
-                route.page = .activities(nil)
-            }
-            MainSidebarItem(title: Copywriter.mainPageReports, icon: "chart.bar", isSelected: route.page == .reports) {
-                route.page = .reports
-            }
-            Text(verbatim: Copywriter.sidebarSettingsHeading)
-                .font(Typography.tracker(UIMetrics.sidebarHeadingFont, .heavy))
-                .tracking(UIMetrics.sidebarHeadingTracking)
-                .foregroundStyle(Night.faint)
-                .padding(UIMetrics.sidebarHeadingPadding)
-            ForEach(SettingsPage.all, id: \.self) { page in
-                SidebarSettingsRow(page: page, isSelected: settingsPage == page) { route.page = .settings(page) }
-            }
-            Spacer(minLength: 0)
             TrackerStatusBlock()
             SidebarFooter().padding(.top, UIMetrics.sidebarFooterTopGap)
         }

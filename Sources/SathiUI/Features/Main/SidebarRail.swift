@@ -11,17 +11,20 @@ struct SidebarRail: View {
             logo
             SidebarToggleButton(isOpen: false, size: UIMetrics.sidebarRailToggleSize, toggle: toggle)
                 .padding(.bottom, UIMetrics.sidebarRailLogoGap)
-            pageButton(Copywriter.mainPageToday, "sun.max", route.page == .today) { route.page = .today }
-            pageButton(Copywriter.mainPageActivities, "list.bullet", isActivities) { route.page = .activities(nil) }
-            pageButton(Copywriter.mainPageReports, "chart.bar", route.page == .reports) { route.page = .reports }
-            Rectangle().fill(Night.border)
-                .frame(width: UIMetrics.sidebarRailDividerWidth, height: UIMetrics.dividerHeight)
-                .padding(.vertical, UIMetrics.sidebarRailDividerGap)
-            ForEach(SettingsPage.all, id: \.self) { settingsTile($0) }
-            Spacer(minLength: 0)
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: UIMetrics.sidebarRailSpacing) {
+                    pageButton(Copywriter.mainPageToday, "sun.max", route.page == .today) { route.page = .today }
+                    pageButton(Copywriter.mainPageActivities, "list.bullet", isActivities) { route.page = .activities(nil) }
+                    pageButton(Copywriter.mainPageReports, "chart.bar", route.page == .reports) { route.page = .reports }
+                    Rectangle().fill(Night.border)
+                        .frame(width: UIMetrics.sidebarRailDividerWidth, height: UIMetrics.dividerHeight)
+                        .padding(.vertical, UIMetrics.sidebarRailDividerGap)
+                    ForEach(SettingsPage.all, id: \.self) { settingsTile($0) }
+                }
+            }
             trackerDot
             githubLink
-            Text(verbatim: Copywriter.sidebarVersion(AboutFooter.version))
+            Text(verbatim: Copywriter.sidebarVersion(SidebarFooter.version))
                 .font(Typography.tracker(UIMetrics.sidebarRailVersionFont, .regular))
                 .foregroundStyle(Night.faint)
         }
@@ -78,8 +81,11 @@ struct SidebarRail: View {
             .frame(width: UIMetrics.sidebarDotSize, height: UIMetrics.sidebarDotSize)
             .padding(UIMetrics.sidebarDotHalo)
             .background(Circle().fill(on ? Night.trackerFill : .clear))
+            .frame(width: UIMetrics.sidebarDotHit, height: UIMetrics.sidebarDotHit)
+            .contentShape(Rectangle())
             .padding(.bottom, UIMetrics.sidebarDotBottomGap)
             .help(hint)
+            .accessibilityElement(children: .ignore)
             .accessibilityLabel(hint)
     }
 

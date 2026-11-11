@@ -12,8 +12,8 @@ struct SidebarToggleButton: View {
                 .font(.system(size: UIMetrics.sidebarToggleIcon, weight: .semibold))
                 .foregroundStyle(Night.muted)
                 .frame(width: size.width, height: size.height)
-                .background(RoundedRectangle(cornerRadius: UIMetrics.sidebarToggleRadius, style: .continuous).fill(Night.card))
-                .overlay(RoundedRectangle(cornerRadius: UIMetrics.sidebarToggleRadius, style: .continuous).stroke(Night.border))
+                .background(RoundedRectangle(cornerRadius: UIMetrics.sidebarTileRadius, style: .continuous).fill(Night.card))
+                .overlay(RoundedRectangle(cornerRadius: UIMetrics.sidebarTileRadius, style: .continuous).stroke(Night.border))
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)

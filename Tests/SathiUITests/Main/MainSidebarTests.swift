@@ -99,7 +99,7 @@ struct MainSidebarTests {
 
     @Test func openSidebarShowsTheFooterWithTwoLinks() throws {
         let sut = try sidebar(EngineHarness(), MainRoute(.today)).inspect()
-        #expect(throws: Never.self) { try sut.find(text: Copywriter.sidebarFooter(version: AboutFooter.version)) }
+        #expect(throws: Never.self) { try sut.find(text: Copywriter.sidebarFooter(version: SidebarFooter.version)) }
         #expect(throws: Never.self) { try sut.find(viewWithAccessibilityLabel: "GitHub") }
         #expect(throws: Never.self) { try sut.find(viewWithAccessibilityLabel: "Portfolio") }
     }
@@ -122,7 +122,7 @@ struct MainSidebarTests {
 
     @Test func closedRailShowsTheVersion() throws {
         let shown = try texts(EngineHarness(), MainRoute(.today), open: false)
-        #expect(shown.contains(Copywriter.sidebarVersion(AboutFooter.version)))
+        #expect(shown.contains(Copywriter.sidebarVersion(SidebarFooter.version)))
     }
 
     @Test func closedRailLabelsEveryIcon() throws {
@@ -150,6 +150,26 @@ struct MainSidebarTests {
     @Test func closedRailShowsTrackerOnHintWhenOn() throws {
         let sut = try sidebar(EngineHarness.tracker { _ in }, MainRoute(.today), open: false).inspect()
         #expect(throws: Never.self) { try sut.find(viewWithAccessibilityLabel: Copywriter.sidebarTrackerOnHint) }
+    }
+
+    @Test func openListScrollsItsMiddleAndPinsTheFooter() throws {
+        let sut = try sidebar(EngineHarness(), MainRoute(.today)).inspect()
+        let scroll = try sut.find(ViewType.ScrollView.self)
+        #expect(throws: Never.self) { try scroll.find(text: "Sound") }
+        #expect(throws: (any Error).self) { try scroll.find(SidebarFooter.self) }
+        #expect(throws: (any Error).self) { try scroll.find(TrackerStatusBlock.self) }
+    }
+
+    @Test func railScrollsItsTilesAndPinsTheBottom() throws {
+        let sut = try sidebar(EngineHarness(), MainRoute(.today), open: false).inspect()
+        let scroll = try sut.find(ViewType.ScrollView.self)
+        #expect(throws: Never.self) { try scroll.find(viewWithAccessibilityLabel: "Sound") }
+        #expect(throws: (any Error).self) { try scroll.find(viewWithAccessibilityLabel: Copywriter.sidebarTrackerOffHint) }
+    }
+
+    @Test func trackerDotHasAFingerSizedHitArea() {
+        #expect(UIMetrics.sidebarDotHit >= 28)
+        #expect(UIMetrics.sidebarDotHit > UIMetrics.sidebarDotSize + UIMetrics.sidebarDotHalo * 2)
     }
 
     @Test func everySettingsPageHasAnIcon() {

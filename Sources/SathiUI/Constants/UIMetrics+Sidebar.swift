@@ -4,17 +4,16 @@ extension UIMetrics {
     static let sidebarRailWidth: CGFloat = 64
     static let sidebarAnimation: Double = 0.2
     static let sidebarToggleSize: CGFloat = 28
-    static let sidebarToggleRadius: CGFloat = 6
     static let sidebarToggleIcon: CGFloat = 14
     static let sidebarRailToggleSize = CGSize(width: 40, height: 34)
     static let sidebarRailLogoGap: CGFloat = 8
     static let sidebarRailTopInset: CGFloat = 46
-    static let sidebarRailSpacing: CGFloat = 4
+    static let sidebarRailSpacing: CGFloat = 2
     static let sidebarRailPageSize = CGSize(width: 44, height: 38)
     static let sidebarRailPageIcon: CGFloat = 18
     static let sidebarRailDividerWidth: CGFloat = 28
     static let sidebarRailDividerGap: CGFloat = 8
-    static let sidebarRailTileGap: CGFloat = 3
+    static let sidebarRailTileGap: CGFloat = 2
     static let sidebarTileSize: CGFloat = 22
     static let sidebarRailTileSize: CGFloat = 30
     static let sidebarTileRadius: CGFloat = 6
@@ -29,6 +28,8 @@ extension UIMetrics {
     static let sidebarHeadingPadding = EdgeInsets(top: 14, leading: 10, bottom: 4, trailing: 10)
     static let sidebarLogoPadding = EdgeInsets(top: 0, leading: 6, bottom: 14, trailing: 6)
     static let sidebarFooterFont: CGFloat = 11
+    static let sidebarFooterMinScale: CGFloat = 0.8
+    static let sidebarDotHit: CGFloat = 28
     static let sidebarFooterGap: CGFloat = 6
     static let sidebarFooterPadding: CGFloat = 8
     static let sidebarFooterTopGap: CGFloat = 10
@@ -38,6 +39,6 @@ extension UIMetrics {
     static let sidebarRailVersionFont: CGFloat = 10
     static let sidebarDotSize: CGFloat = 10
     static let sidebarDotHalo: CGFloat = 4
-    static let sidebarDotBottomGap: CGFloat = 14
+    static let sidebarDotBottomGap: CGFloat = 4
     static let sidebarRailBottomPadding: CGFloat = 14
 }

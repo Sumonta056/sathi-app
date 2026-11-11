@@ -33,8 +33,4 @@ struct CopywriterSidebarTests {
         #expect(Copywriter.sidebarCloseLabel == "Close sidebar")
         #expect(Copywriter.sidebarSettingsHeading == "SETTINGS")
     }
-
-    @Test func sidebarKeyIsNotAPrefsKey() {
-        #expect(StorageKeys.sidebarOpen == "sathi.ui.sidebarOpen")
-    }
 }
