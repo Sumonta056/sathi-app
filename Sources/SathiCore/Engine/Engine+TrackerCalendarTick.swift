@@ -43,7 +43,7 @@ extension Engine {
         trackerCalendarRuntime.note = note
         trackerCalendarRuntime.noteUntil = clock.now.wholeSecond.addingTimeInterval(Timing.eventNoteShow)
         presenter.showTrackerNote(note)
-        storesChanged()
+        objectWillChange.send()
     }
 
     func closeEventNote() {
@@ -52,7 +52,7 @@ extension Engine {
         trackerCalendarRuntime.note = nil
         trackerCalendarRuntime.noteUntil = nil
         trackerCalendarRuntime.undo = nil
-        storesChanged()
+        objectWillChange.send()
     }
 
     private func handleEventStarts(_ n: Date) {
