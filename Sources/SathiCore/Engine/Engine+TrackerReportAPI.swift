@@ -40,7 +40,7 @@ extension Engine {
             new.awayPlaceName = edit.awayPlaceName
         } else {
             new.category = edit.category
-            new = calendarActivityEdited(from: old, to: new)
+            new = calendarActivityEdited(from: old, to: new, choice: edit.calendar)
         }
         removeStoredActivity(id)
         storeActivity(new)
@@ -52,7 +52,11 @@ extension Engine {
         let edit = edit.wholeSeconds
         if let problem = ActivityEditCheck.problem(edit, others: busySpans(near: edit, except: nil), calendar: calendar) { return problem }
         if edit.end > clock.now { return .inFuture }
-        let item = Activity(text: ActivityText.clean(edit.text) ?? edit.text, category: edit.category, start: edit.start, end: edit.end)
+        var item = Activity(text: ActivityText.clean(edit.text) ?? edit.text, category: edit.category, start: edit.start, end: edit.end)
+        if case let .calendar(id) = edit.calendar {
+            item.calendarID = id
+            item = savingToCalendar(item)
+        }
         storeActivity(item)
         return .saved(item.id)
     }

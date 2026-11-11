@@ -20,6 +20,28 @@ extension Engine {
         return a
     }
 
+    func calendarActivityEdited(from old: Activity, to new: Activity, choice: ActivityCalendarChoice) -> Activity {
+        guard old.kind == .work, old.sourceEventID == nil else { return calendarActivityEdited(from: old, to: new) }
+        switch choice {
+        case .keep:
+            return calendarActivityEdited(from: old, to: new)
+        case .none:
+            calendarActivityDeleted(old)
+            var a = new
+            a.calendarID = nil
+            a.eventID = nil
+            return a
+        case let .calendar(id) where id == old.calendarID && old.eventID?.isEmpty == false:
+            return calendarActivityEdited(from: old, to: new)
+        case let .calendar(id):
+            calendarActivityDeleted(old)
+            var a = new
+            a.calendarID = id
+            a.eventID = nil
+            return savingToCalendar(a)
+        }
+    }
+
     func calendarActivityEdited(from old: Activity, to new: Activity) -> Activity {
         guard let eventID = old.eventID, !eventID.isEmpty, let calendarID = new.calendarID ?? old.calendarID else { return new }
         var a = new
