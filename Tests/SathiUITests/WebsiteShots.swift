@@ -28,7 +28,7 @@ struct WebsiteShots {
 
     @Test func reports() throws {
         let h = harness()
-        try save(ReportsView().frame(width: UIMetrics.settingsSize.width, height: UIMetrics.settingsSize.height), "reports", h)
+        try save(ReportsPage().frame(width: UIMetrics.settingsSize.width, height: UIMetrics.settingsSize.height), "reports", h)
     }
 
     @Test func waterBubble() throws {

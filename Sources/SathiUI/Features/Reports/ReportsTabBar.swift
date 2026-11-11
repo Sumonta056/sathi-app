@@ -1,17 +1,6 @@
 import SathiCore
 import SwiftUI
 
-enum ReportsTab: CaseIterable {
-    case habits, activities
-
-    var title: String {
-        switch self {
-        case .habits: return Copywriter.trackerTabHabits
-        case .activities: return Copywriter.trackerTabActivities
-        }
-    }
-}
-
 enum ActivityRange: CaseIterable {
     case day, month
 

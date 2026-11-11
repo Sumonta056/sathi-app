@@ -16,16 +16,9 @@ struct TrackerReportsWiringTests {
         return EngineHarness.tracker(at: noon, activities: [item])
     }
 
-    @Test func reportsShowHabitsAndActivitiesTabs() throws {
-        let sut = try ReportsView().environmentObject(harness().engine).inspect()
-        #expect(throws: Never.self) { try Find.button(sut, holding: Copywriter.trackerTabHabits) }
-        #expect(throws: Never.self) { try Find.button(sut, holding: Copywriter.trackerTabActivities) }
-        #expect(Find.lacks(sut, text: Copywriter.trackerTimeline))
-    }
-
     @Test func activitiesTabShowsTodaysLogFromTheEngine() throws {
         let h = harness()
-        let sut = try ReportsView(tab: .activities).environmentObject(h.engine).inspect()
+        let sut = try ReportsView().environmentObject(h.engine).inspect()
         #expect(throws: Never.self) { try sut.find(text: Copywriter.trackerTimeline) }
         #expect(MenuFind.hasText(sut, containing: "Fix login bug"))
         #expect(throws: Never.self) { try Find.button(sut, holding: Copywriter.trackerRangeMonth) }
