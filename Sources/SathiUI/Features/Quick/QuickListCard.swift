@@ -10,7 +10,7 @@ struct QuickListCard: View {
             VStack(alignment: .leading, spacing: UIMetrics.quickCardSpacing) {
                 header(count: items.count)
                 rows(items)
-                addRow
+                QuickAddButton()
             }
             .quickCardStyle()
         }
@@ -47,27 +47,5 @@ struct QuickListCard: View {
         VStack(spacing: 0) {
             ForEach(items) { QuickRow(item: $0) }
         }
-    }
-
-    private var addRow: some View {
-        Button { e.openQuickAdd() } label: {
-            HStack(spacing: UIMetrics.quickTimeSpacing) {
-                Image(systemName: "plus")
-                    .font(.system(size: UIMetrics.quickIconSize, weight: .heavy))
-                Text(verbatim: "Quick reminder")
-                    .font(Typography.rowLabel)
-                Spacer(minLength: 0)
-            }
-            .foregroundStyle(Night.quick)
-            .padding(.horizontal, UIMetrics.chipPadding)
-            .frame(height: UIMetrics.quickAddHeight)
-            .overlay(
-                RoundedRectangle(cornerRadius: UIMetrics.buttonRadius, style: .continuous)
-                    .strokeBorder(Night.quickBorder, style: StrokeStyle(lineWidth: UIMetrics.cardBorder, dash: [UIMetrics.dashLength]))
-            )
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .padding(.top, UIMetrics.quickCardSpacing)
     }
 }

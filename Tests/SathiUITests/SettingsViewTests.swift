@@ -31,7 +31,7 @@ struct SettingsViewTests {
 
     @Test func rootNameFieldEditsTheName() throws {
         let h = EngineHarness()
-        try lazyField(hosted(SettingsView(), h).inspect(), "Your name").text = "Asha"
+        try lazyField(hosted(SettingsPageView(page: .general), h).inspect(), "Your name").text = "Asha"
         #expect(h.engine.data.prefs.general.name == "Asha")
     }
 

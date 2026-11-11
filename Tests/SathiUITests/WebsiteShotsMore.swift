@@ -67,6 +67,10 @@ struct WebsiteShotsMore {
 
     @Test func blockSettings() throws {
         let h = Shots.harness()
-        try Shots.save(SettingsView(tab: .timeBlocks).frame(height: UIMetrics.settingsSize.height), "block-settings", h)
+        try Shots.save(
+            SettingsPageView(page: .timeBlocks).frame(width: UIMetrics.settingsSize.width, height: UIMetrics.settingsSize.height),
+            "block-settings",
+            h
+        )
     }
 }

@@ -9,7 +9,7 @@ import ViewInspector
 @Suite("Quick settings card")
 struct QuickSettingsCardTests {
     private func tab(_ h: EngineHarness) throws -> InspectableView<ViewType.ClassifiedView> {
-        try hosted(GeneralTab(), h).inspect()
+        try hosted(QuickSettingsCard(), h).inspect()
     }
 
     @Test func hasTheTitleAndTheSwitchLabel() throws {

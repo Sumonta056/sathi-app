@@ -7,7 +7,7 @@ struct TimeBlockSettingsPage: View {
     var body: some View {
         let engine = e
         VStack(alignment: .leading, spacing: UIMetrics.pageSpacing) {
-            PageTitle(title: Copywriter.blockSettingsTitle, subtitle: Copywriter.blockSettingsSubtitle)
+            SettingsSubtitle(text: Copywriter.blockSettingsSubtitle)
             SettingsCard {
                 SettingRow(label: Copywriter.blockSettingsAccess, showsDivider: false) {
                     BlockAccessStatus()

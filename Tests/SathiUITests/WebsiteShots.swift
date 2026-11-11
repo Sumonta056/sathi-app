@@ -23,7 +23,11 @@ struct WebsiteShots {
 
     @Test func settings() throws {
         let h = harness()
-        try save(SettingsView(tab: .habit(.water)).frame(height: UIMetrics.settingsSize.height), "settings", h)
+        try save(
+            SettingsPageView(page: .habit(.water)).frame(width: UIMetrics.settingsSize.width, height: UIMetrics.settingsSize.height),
+            "settings",
+            h
+        )
     }
 
     @Test func reports() throws {

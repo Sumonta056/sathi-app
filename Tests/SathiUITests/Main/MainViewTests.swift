@@ -48,10 +48,6 @@ struct MainViewTests {
         #expect(throws: Never.self) { try main(.activities(nil)).find(ActivityReportsView.self) }
     }
 
-    @Test func settingsPageHasNoOldSidebar() throws {
-        #expect(throws: (any Error).self) { try main(.settings(.general)).find(SettingsSidebar.self) }
-    }
-
     @Test func todayPageShowsTheTodayPage() throws {
         #expect(throws: Never.self) { try main(.today).find(TodayPage.self) }
     }

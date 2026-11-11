@@ -35,13 +35,6 @@ struct MeditationViewTests {
         #expect(throws: (any Error).self) { try sut.inspect().find(text: "Breathe in") }
     }
 
-    @Test func settingsHaveAMeditationTab() throws {
-        let h = harness()
-        let sut = MeditationSettingsTab().environmentObject(h.engine)
-        #expect(try sut.inspect().find(text: "SHANTI · MEDITATION") != nil)
-        #expect(try sut.inspect().find(text: "Pause. Breathe. Come back.") != nil)
-    }
-
     @Test func settingsShowMeditationReminderNow() throws {
         let h = harness()
         let sut = MeditationSettingsTab().environmentObject(h.engine)

@@ -23,7 +23,7 @@ struct TrackerSettingsPageTests {
     @Test func hasEveryRowOfRule39() throws {
         let sut = try page(EngineHarness())
         let texts: [String] = [
-            Copywriter.trackerSettingsTitle, Copywriter.trackerOnLabel, Copywriter.trackerHours, Copywriter.trackerDays,
+            Copywriter.trackerOnLabel, Copywriter.trackerHours, Copywriter.trackerDays,
             Copywriter.trackerAskEvery, Copywriter.trackerUsualLength, Copywriter.trackerAwayAfter,
             Copywriter.trackerCategories.uppercased(), Copywriter.trackerCalendar.uppercased(), Copywriter.trackerShortcutLabel,
             Copywriter.trackerEndOfDayLabel, Copywriter.trackerSoundLabel
