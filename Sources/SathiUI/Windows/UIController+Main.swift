@@ -14,6 +14,11 @@ extension UIController {
         if let mainWindow { mainWindowShown(mainWindow) }
     }
 
+    package func reopenMain() {
+        guard let mainWindow else { return showMain(.today) }
+        mainWindowShown(mainWindow)
+    }
+
     func mainWillClose() {
         mainWindow?.contentView = nil
         mainWindow = nil
@@ -26,6 +31,7 @@ extension UIController {
         NSApp.activate(ignoringOtherApps: true)
         AppMenu.install(in: NSApp.mainMenu)
         DispatchQueue.main.async { AppMenu.install(in: NSApp.mainMenu) }
+        if window.isMiniaturized { window.deminiaturize(nil) }
         window.makeKeyAndOrderFront(nil)
     }
 

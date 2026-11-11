@@ -15,7 +15,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        AppEnvironment.engine.openMain(.today)
+        AppEnvironment.presenter.reopenMain()
         return false
     }
 

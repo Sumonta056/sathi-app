@@ -57,4 +57,25 @@ struct MainWindowLifecycleTests {
         #expect(c.mainWindow !== old)
         #expect(c.mainRoute?.page == .today)
     }
+
+    @Test func reopenBringsTheOpenWindowBackOnItsPage() throws {
+        let h = EngineHarness()
+        let spy = Spy()
+        let c = controller(h, spy)
+        c.showMain(.reports)
+        let window = try #require(c.mainWindow)
+        c.reopenMain()
+        #expect(c.mainWindow === window)
+        #expect(c.mainRoute?.page == .reports)
+        #expect(spy.shown.count == 2)
+    }
+
+    @Test func reopenWithNoWindowOpensToday() {
+        let h = EngineHarness()
+        let spy = Spy()
+        let c = controller(h, spy)
+        c.reopenMain()
+        #expect(c.mainRoute?.page == .today)
+        #expect(spy.shown.count == 1)
+    }
 }
