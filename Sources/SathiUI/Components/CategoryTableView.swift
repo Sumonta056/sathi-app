@@ -6,13 +6,16 @@ struct CategoryTableView: View {
     let summary: String
     var columns = 1
     var showsChange = false
+    var showsTotal = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: UIMetrics.sectionSpacing) {
             HStack(alignment: .firstTextBaseline, spacing: UIMetrics.categoryTableHeaderGap) {
-                Text(verbatim: table.totalText)
-                    .font(.system(size: UIMetrics.categoryTableTotalFont, weight: .black, design: .rounded))
-                    .foregroundStyle(Night.text)
+                if showsTotal {
+                    Text(verbatim: table.totalText)
+                        .font(.system(size: UIMetrics.categoryTableTotalFont, weight: .black, design: .rounded))
+                        .foregroundStyle(Night.text)
+                }
                 Text(verbatim: summary)
                     .font(Typography.hint)
                     .foregroundStyle(Night.muted)

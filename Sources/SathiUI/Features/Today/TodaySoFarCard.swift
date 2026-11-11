@@ -17,6 +17,7 @@ struct TodaySoFarCard: View {
                 )
                 .overlay(nowMarker(hours))
                 ActivityAxis(hours: hours, calendar: calendar)
+                    .overlay(nowLabel(hours))
             } else if !sofar.isOn {
                 Text(verbatim: Copywriter.todaySoFarOffHint)
                     .font(Typography.tracker(UIMetrics.todayPanelNoteFont, .regular))
@@ -45,13 +46,40 @@ struct TodaySoFarCard: View {
         }
     }
 
+    private func fraction(_ hours: DateInterval) -> CGFloat? {
+        guard hours.contains(now) else { return nil }
+        return CGFloat(now.timeIntervalSince(hours.start) / max(hours.duration, 1))
+    }
+
+    @ViewBuilder
+    private func nowLabel(_ hours: DateInterval) -> some View {
+        if let fraction = fraction(hours) {
+            GeometryReader { g in
+                Text(verbatim: Copywriter.todayNowAt(now, calendar: calendar))
+                    .font(Typography.hint.weight(.heavy))
+                    .foregroundStyle(Night.text)
+                    .fixedSize()
+                    .position(
+                        x: min(max(g.size.width * fraction, UIMetrics.todayNowLabelHalfWidth), g.size.width - UIMetrics.todayNowLabelHalfWidth),
+                        y: g.size.height / 2
+                    )
+            }
+        }
+    }
+
+    @ViewBuilder
     private func nowMarker(_ hours: DateInterval) -> some View {
+        if let fraction = fraction(hours) {
+            marker(fraction)
+        }
+    }
+
+    private func marker(_ fraction: CGFloat) -> some View {
         GeometryReader { g in
-            let fraction = max(0, min(1, now.timeIntervalSince(hours.start) / max(hours.duration, 1)))
             Rectangle()
                 .fill(Night.text)
                 .frame(width: UIMetrics.todayNowMarkerWidth, height: g.size.height)
-                .offset(x: g.size.width * CGFloat(fraction))
+                .offset(x: g.size.width * fraction)
         }
         .accessibilityLabel(Copywriter.todayNowMarker)
     }

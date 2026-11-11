@@ -74,4 +74,33 @@ struct TodayV2Tests {
         let sut = try hosted(TodayComingUp(items: [], calendar: cal, now: now), EngineHarness()).inspect()
         #expect(throws: Never.self) { try sut.find(text: "Nothing more today.") }
     }
+
+    @Test func breakdownHidesTheTotal() throws {
+        let sut = try hosted(TodayBreakdownCard(sofar: sofar(), categories: []), EngineHarness()).inspect()
+        #expect(Find.lacks(sut, text: "3h 0m"))
+    }
+
+    @Test func categoryTableShowsTotalByDefault() throws {
+        let table = CategoryTable([CategoryTableInput(name: "Work", colorHex: 0xFF0000, seconds: 3600)])
+        let sut = try hosted(CategoryTableView(table: table, summary: "x"), EngineHarness()).inspect()
+        #expect(throws: Never.self) { try sut.find(text: "1h 0m") }
+    }
+
+    @Test func nowLabelShowsInsideHours() throws {
+        let sut = try hosted(TodaySoFarCard(sofar: sofar(), categories: [], calendar: cal, now: now), EngineHarness()).inspect()
+        #expect(throws: Never.self) { try sut.find(text: Copywriter.todayNowAt(now, calendar: cal)) }
+    }
+
+    @Test func nowLabelHiddenOutsideHours() throws {
+        let late = day(2026, 3, 4, 20)
+        let sut = try hosted(TodaySoFarCard(sofar: sofar(), categories: [], calendar: cal, now: late), EngineHarness()).inspect()
+        #expect(Find.lacks(sut, text: Copywriter.todayNowAt(late, calendar: cal)))
+    }
+
+    @Test func comingUpShowsDetailAfterTime() throws {
+        let item = ComingUpItem(kind: .trackerAsk, title: "Still on it?", time: now.addingTimeInterval(600), detail: "Coding Hobby")
+        let sut = try hosted(TodayComingUp(items: [item], calendar: cal, now: now), EngineHarness()).inspect()
+        let clock = Copywriter.trackerClock(item.time, calendar: cal)
+        #expect(throws: Never.self) { try sut.find(text: clock + " · Coding Hobby") }
+    }
 }

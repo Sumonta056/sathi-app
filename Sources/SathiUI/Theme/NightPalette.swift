@@ -6,6 +6,7 @@ enum NightHex {
     static let water: UInt32 = 0x4CC3F5
     static let cheek: UInt32 = 0xFF9FB8
     static let spark: UInt32 = 0xFFC94A
+    static let trackerCoral: UInt32 = 0xFF8A80
     static let calmGround: UInt32 = 0x16142A
     static let text: UInt32 = 0xEEF2FA
     static let muted: UInt32 = 0x9AA6BF
@@ -44,7 +45,7 @@ enum Night {
     static let block = Color(hex: 0x5ED6C4)
     static let blockFill = Color(hex: 0x142A2A)
     static let blockBorder = Color(hex: 0x1F4744)
-    static let tracker = Color(hex: 0xFF8A80)
+    static let tracker = Color(hex: NightHex.trackerCoral)
     static let trackerFill = Color(hex: 0x2E1A1C)
     static let trackerOnAccent = Color(hex: 0x2A0E0C)
     static let trackerSelectedText = Color(hex: 0xFFB3AB)

@@ -13,7 +13,7 @@ struct TodayBreakdownCard: View {
                 .foregroundStyle(Night.text)
             if sofar.isOn {
                 CategoryTableView(
-                    table: table, summary: Copywriter.todayCategoryCount(table.rows.count), columns: 2, showsChange: false
+                    table: table, summary: Copywriter.todayCategoryCount(table.rows.count), columns: 2, showsChange: false, showsTotal: false
                 )
             } else {
                 Text(verbatim: Copywriter.todaySoFarOffHint)
@@ -28,7 +28,7 @@ struct TodayBreakdownCard: View {
     }
 
     private func input(_ total: ActivityCategoryTotal) -> CategoryTableInput {
-        let hex = categories.first(where: { total.isNamed && $0.name == total.name })?.colorHex ?? UIMetrics.todayUnnamedHex
+        let hex = categories.first(where: { total.isNamed && $0.name == total.name })?.colorHex ?? NightHex.trackerCoral
         return CategoryTableInput(name: total.name, colorHex: hex, seconds: total.seconds)
     }
 }

@@ -63,4 +63,5 @@ package struct TodayScreen: Equatable, Sendable {
     package var buddies: [TodayBuddy]
     package var sofar: TodaySoFar
     package var comingUp: [ComingUpItem]
+    package var at: Date
 }

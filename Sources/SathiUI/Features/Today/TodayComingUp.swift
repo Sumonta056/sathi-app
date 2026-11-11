@@ -37,7 +37,7 @@ struct TodayComingUp: View {
                     .font(Typography.tracker(UIMetrics.todayComingTitleFont, .bold))
                     .foregroundStyle(Night.text)
                     .lineLimit(1)
-                Text(verbatim: Copywriter.trackerClock(item.time, calendar: calendar))
+                Text(verbatim: Copywriter.todayTimeAndDetail(item.time, detail: item.detail, calendar: calendar))
                     .font(Typography.tracker(UIMetrics.todayComingDetailFont, .regular))
                     .foregroundStyle(Night.muted)
             }

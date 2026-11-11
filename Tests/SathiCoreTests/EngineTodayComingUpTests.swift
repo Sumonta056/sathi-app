@@ -51,6 +51,7 @@ struct EngineTodayComingUpTests {
         #expect(h.engine.todayScreen.comingUp.first { $0.kind == .trackerAsk }?.title != "Still on it?")
         h.start("Code review", minutes: 30)
         #expect(h.engine.todayScreen.comingUp.first { $0.kind == .trackerAsk }?.title == "Still on it?")
+        #expect(h.engine.todayScreen.comingUp.first { $0.kind == .trackerAsk }?.detail == "Code review")
     }
 
     @Test func timesAreWholeMinutes() {

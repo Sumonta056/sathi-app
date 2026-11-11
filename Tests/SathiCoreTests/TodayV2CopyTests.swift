@@ -45,4 +45,14 @@ struct TodayV2CopyTests {
         #expect(Copywriter.todayCategoryCount(1) == "1 category")
         #expect(Copywriter.todayCategoryCount(10) == "10 categories")
     }
+
+    @Test func timeAndDetail() {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(identifier: "UTC") ?? .current
+        let t = Date(timeIntervalSince1970: 0)
+        let clock = Copywriter.trackerClock(t, calendar: cal)
+        #expect(Copywriter.todayTimeAndDetail(t, detail: nil, calendar: cal) == clock)
+        #expect(Copywriter.todayTimeAndDetail(t, detail: "Code", calendar: cal) == clock + " · Code")
+        #expect(Copywriter.todayNowAt(t, calendar: cal) == "Now " + clock)
+    }
 }

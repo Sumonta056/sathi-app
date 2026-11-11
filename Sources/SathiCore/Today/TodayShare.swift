@@ -5,6 +5,6 @@ package enum TodayShare {
         guard let hours else { return nil }
         let elapsed = min(now, hours.end).timeIntervalSince(hours.start)
         guard elapsed > 0 else { return nil }
-        return min(Limits.percentMax, Int((logged / elapsed * Double(Limits.percentMax)).rounded()))
+        return min(Limits.fullPercent, Int((logged / elapsed * Double(Limits.fullPercent)).rounded()))
     }
 }

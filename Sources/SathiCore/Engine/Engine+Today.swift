@@ -23,7 +23,8 @@ extension Engine {
             now: todayNow(n),
             buddies: buddies,
             sofar: todaySoFar(n),
-            comingUp: ComingUpList.make(items: comingUpItems(statuses), now: n, calendar: calendar)
+            comingUp: ComingUpList.make(items: comingUpItems(statuses), now: n, calendar: calendar),
+            at: n
         )
     }
 
@@ -94,7 +95,7 @@ extension Engine {
         var items: [ComingUpItem] = []
         if let ask = trackerNextPopup {
             let title = runningActivity == nil ? Copywriter.trackerWhatNow : Copywriter.todayStillOnIt
-            items.append(ComingUpItem(kind: .trackerAsk, title: title, time: ask.wholeMinute))
+            items.append(ComingUpItem(kind: .trackerAsk, title: title, time: ask.wholeMinute, detail: runningActivity?.text))
         }
         for id in HabitID.allCases {
             switch statuses[id] ?? .off {

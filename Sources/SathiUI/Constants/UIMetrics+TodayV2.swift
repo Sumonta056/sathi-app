@@ -4,7 +4,7 @@ extension UIMetrics {
     static let todaySoFarTotalFont: CGFloat = 24
     static let todaySoFarGap: CGFloat = 10
     static let todayNowMarkerWidth: CGFloat = 2
-    static let todayUnnamedHex: UInt32 = 0xFF8A80
+    static let todayNowLabelHalfWidth: CGFloat = 44
     static let todayBreakdownGap: CGFloat = 12
     static let todayComingRowGap: CGFloat = 8
     static let todayComingRowPadding = EdgeInsets(top: 8, leading: 10, bottom: 8, trailing: 10)

@@ -102,5 +102,4 @@ package enum Limits {
     package static let morningStartHour = 5
     package static let afternoonStartHour = 12
     package static let eveningStartHour = 17
-    package static let percentMax = 100
 }
