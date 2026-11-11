@@ -59,6 +59,9 @@ enum Night {
     static let trackerEvent = Color(hex: 0x7FB8FF)
     static let trackerEventFill = Color(hex: 0x15263A)
     static let trackerRowSelected = Color(hex: 0x24304A)
+    static let trackerNowBorder = Color(hex: 0x4A2A2C)
+    static let trackerStopBorder = Color(hex: 0x5A3436)
+    static let trackerNowText = Color(hex: 0xC9B9B9)
     static let trackerOK = Color(hex: NightHex.sprout)
 
     static func category(_ hex: UInt32) -> Color { Color(hex: hex) }

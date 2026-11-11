@@ -17,20 +17,10 @@ struct MainView: View {
 
     @ViewBuilder private var page: some View {
         switch route.page {
-        case .today: TodayPlaceholder()
+        case .today: TodayPage()
         case .activities: ReportsView(tab: .activities)
         case .reports: ReportsView(tab: .habits)
         case let .settings(page): SettingsPageView(page: page)
         }
-    }
-}
-
-struct TodayPlaceholder: View {
-    var body: some View {
-        Text(verbatim: Copywriter.mainPageToday)
-            .font(Typography.tracker(UIMetrics.mainPageTitleFont, .heavy))
-            .foregroundStyle(Night.text)
-            .padding(UIMetrics.mainContentPadding)
-            .padding(.top, UIMetrics.titleBarInset)
     }
 }

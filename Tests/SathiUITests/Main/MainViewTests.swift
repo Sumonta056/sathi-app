@@ -52,8 +52,8 @@ struct MainViewTests {
         #expect(throws: (any Error).self) { try main(.settings(.general)).find(SettingsSidebar.self) }
     }
 
-    @Test func todayPageShowsTheTodayPlaceholder() throws {
-        #expect(throws: Never.self) { try main(.today).find(TodayPlaceholder.self) }
+    @Test func todayPageShowsTheTodayPage() throws {
+        #expect(throws: Never.self) { try main(.today).find(TodayPage.self) }
     }
 
     @Test func routeChangeSwitchesThePage() throws {

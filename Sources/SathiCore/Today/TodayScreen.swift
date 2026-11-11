@@ -27,6 +27,15 @@ package struct TodayBuddy: Equatable, Identifiable, Sendable {
     package var status: TodayBuddyStatus
 
     package var id: HabitID { habit }
+
+    package init(habit: HabitID, total: String, goal: Int, unit: String, progress: Double, status: TodayBuddyStatus) {
+        self.habit = habit
+        self.total = total
+        self.goal = goal
+        self.unit = unit
+        self.progress = progress
+        self.status = status
+    }
 }
 
 package struct TodaySoFar: Equatable, Sendable {
@@ -35,6 +44,14 @@ package struct TodaySoFar: Equatable, Sendable {
     package var segments: [ActivitySegment]
     package var logged: TimeInterval
     package var categories: [ActivityCategoryTotal]
+
+    package init(isOn: Bool, hours: DateInterval? = nil, segments: [ActivitySegment], logged: TimeInterval, categories: [ActivityCategoryTotal]) {
+        self.isOn = isOn
+        self.hours = hours
+        self.segments = segments
+        self.logged = logged
+        self.categories = categories
+    }
 
     package static let off = TodaySoFar(isOn: false, hours: nil, segments: [], logged: 0, categories: [])
 }
