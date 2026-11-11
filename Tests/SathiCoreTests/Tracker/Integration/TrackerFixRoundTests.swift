@@ -45,16 +45,6 @@ struct TrackerFixRoundTests {
         #expect(h.engine.trackerPromptByUser)
     }
 
-    @Test func theAskedReportDayIsTakenOnce() {
-        let h = EngineHarness.tracker(at: wed(10))
-        let d = DayKey(wed(10), calendar: .current)
-        h.engine.openActivityReport(d)
-        #expect(h.engine.takeActivityReportDay() == d)
-        #expect(h.engine.takeActivityReportDay() == nil)
-        h.engine.openActivityReport(d)
-        #expect(h.engine.takeActivityReportDay() == d)
-    }
-
     @Test func aFileWithStartAfterEndRepairsOnlyTheEnd() throws {
         let t = try tracker(#"{"startMinutes":1140,"endMinutes":600}"#)
         #expect(t.startMinutes == 1140)

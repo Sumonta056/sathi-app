@@ -46,14 +46,6 @@ struct ActivitySupportingTests {
         #expect(ActivityEditDraft.message(.notFound) == nil)
     }
 
-    @Test func datePickerCellsStartOnTheFirstWeekday() throws {
-        let march = try #require(MonthKey(year: 2026, month: 3))
-        let weeks = ActivityDatePicker.cells(march, calendar: Fix.calendar)
-        #expect(weeks[0].prefix(6).allSatisfy { $0 == nil })
-        #expect(weeks[0][6] == Fix.key(1))
-        #expect(weeks.flatMap { $0 }.compactMap { $0 }.count == 31)
-    }
-
     @Test func axisMarksAreWholeHours() {
         let marks = ActivityAxis.marks(Fix.day().hours, calendar: Fix.calendar)
         #expect(marks.count == 10)

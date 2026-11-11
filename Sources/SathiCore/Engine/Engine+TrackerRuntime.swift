@@ -7,7 +7,6 @@ struct TrackerRuntime: Equatable {
     var endOfDayDue: DayKey?
     var presenceStarted = false
     var registeredShortcut: KeyShortcut?
-    var reportDay: DayKey?
     var promptByUser = false
     var sessionTimedOut = false
     var whatNowAt: Date?

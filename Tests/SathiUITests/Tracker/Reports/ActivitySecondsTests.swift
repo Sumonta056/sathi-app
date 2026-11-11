@@ -80,32 +80,3 @@ struct ActivitySecondsTests {
         #expect(starts == starts.sorted())
     }
 }
-
-@MainActor
-@Suite("Activity date picker")
-struct ActivityDatePickerViewTests {
-    typealias Fix = ActivityViewSupport
-
-    private func picker(pick: @escaping (DayKey) -> Void = { _ in }) -> ActivityDatePicker {
-        ActivityDatePicker(
-            selected: Fix.key(4), calendar: Fix.calendar,
-            marks: { _ in [Fix.key(5)] }, pick: pick
-        )
-    }
-
-    private func cell(_ sut: ActivityDatePicker, _ day: Int) throws -> InspectableView<ViewType.Button> {
-        try sut.inspect().find(ViewType.Button.self) { try $0.accessibilityLabel().string() == Fix.key(day).raw }
-    }
-
-    @Test func aDayWithActivitiesShowsADot() throws {
-        let sut = picker()
-        #expect(try cell(sut, 5).accessibilityValue().string() == Copywriter.trackerHasActivities)
-        #expect(try cell(sut, 6).accessibilityValue().string() == "")
-    }
-
-    @Test func pickingACellSelectsThatDay() throws {
-        var picked: DayKey?
-        try cell(picker { picked = $0 }, 9).tap()
-        #expect(picked == Fix.key(9))
-    }
-}

@@ -76,11 +76,4 @@ struct TrackerPresenterFixTests {
         ui.trackerReturnApp = nil
         ui.closeTrackerPrompt(.center)
     }
-
-    @Test func reportsTakeTheAskedDayOnAppear() throws {
-        let (h, _) = setUp()
-        h.engine.openActivityReport(DayKey(day(2026, 3, 2, 12), calendar: .current))
-        try ReportsView().environmentObject(h.engine).inspect().find(ViewType.VStack.self).callOnAppear()
-        #expect(h.engine.activityReportDay == nil)
-    }
 }

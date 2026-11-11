@@ -17,29 +17,18 @@ struct ActivityDayViewTests {
         try sut.inspect().find(ViewType.Button.self) { try $0.labelView().find(text: title) != nil }.tap()
     }
 
-    @Test func showsTheFourTiles() throws {
-        let sut = try view().inspect()
-        for label in ["REAL WORK", "TOP CATEGORY", "ACTIVITIES", "AWAY"] {
-            #expect(throws: Never.self) { try sut.find(text: label) }
-        }
-    }
-
-    @Test func copyAsTextGivesTheStandupText() throws {
+    @Test func copyGivesTheStandupText() throws {
         var copied: String?
         var actions = ActivityDayActions()
         actions.copy = { copied = $0 }
-        try press(view(actions), "Copy as text")
+        try press(view(actions), "Copy")
         #expect(copied == ActivityStandupText.make(Fix.day(), calendar: Fix.calendar))
     }
 
-    @Test func arrowsOpenTheNeighbourDays() throws {
-        var picked: [DayKey] = []
-        var actions = ActivityDayActions()
-        actions.select = { picked.append($0) }
-        let sut = view(actions)
-        try sut.inspect().find(ViewType.Button.self) { try $0.labelView().image().actualImage().name() == "chevron.left" }.tap()
-        try sut.inspect().find(ViewType.Button.self) { try $0.labelView().image().actualImage().name() == "chevron.right" }.tap()
-        #expect(picked == [Fix.key(3), Fix.key(5)])
+    @Test func showsTheTotalsAndTheStandupText() throws {
+        let sut = try view().inspect()
+        #expect(throws: Never.self) { try sut.find(text: "Totals") }
+        #expect(throws: Never.self) { try sut.find(text: "Standup text") }
     }
 
     @Test func fillAppearsForEveryGapOfAMinuteOrMore() throws {

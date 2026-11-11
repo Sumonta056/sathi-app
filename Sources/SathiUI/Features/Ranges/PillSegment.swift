@@ -1,17 +1,6 @@
 import SathiCore
 import SwiftUI
 
-enum ActivityRange: CaseIterable {
-    case day, month
-
-    var title: String {
-        switch self {
-        case .day: return Copywriter.trackerRangeDay
-        case .month: return Copywriter.trackerRangeMonth
-        }
-    }
-}
-
 struct PillSegment<Option: Hashable>: View {
     let options: [Option]
     @Binding var selected: Option

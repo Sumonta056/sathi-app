@@ -75,7 +75,6 @@ struct EngineTrackerDayEdgeTests {
         h.engine.skipTrackerPrompt()
         h.advance(minutes: 10)
         h.engine.trackerEndOfDayState()?.openReport()
-        #expect(h.engine.activityReportDay == DayKey(wed(18), calendar: .current))
         #expect(h.presenter.calls.last == .showMain(.activities(DayKey(wed(18), calendar: .current))))
         #expect(h.presenter.trackerCalls.last == .closeEndOfDay)
     }
