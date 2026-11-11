@@ -94,6 +94,18 @@ struct ActivityEditCalendarTests {
         let sut = section(result: .calendarFailed(Fix.items[0].id), closed: { closed += 1 })
         try sut.inspect().find(ViewType.Button.self) { try $0.labelView().find(text: "Save") != nil }.tap()
         #expect(closed == 0)
-        #expect(ActivityEditDraft.message(.calendarFailed(ActivityID())) == "Could not update the calendar. Check calendar access.")
+        #expect(ActivityEditDraft.message(.calendarFailed(ActivityID())) == Copywriter.activitiesCalendarFailed)
+    }
+
+    @Test func theSectionShowsTheCalendarErrorLine() throws {
+        let sut = ActivityEditSection(
+            draft: ActivityEditDraft(Fix.items[0], calendar: Fix.calendar), title: "Edit activity", accent: Night.tracker,
+            categories: ActivityCategory.defaults, calendars: Fix.calendars, dayStart: Fix.key(4).start(in: Fix.calendar),
+            calendar: Fix.calendar, save: { _ in .saved(ActivityID()) }, delete: nil, close: {},
+            message: ActivityEditDraft.message(.calendarFailed(Fix.items[0].id))
+        )
+        #expect(throws: Never.self) {
+            try sut.inspect().find(text: "Saved, but the old calendar event could not be removed. Check calendar access.")
+        }
     }
 }

@@ -13,7 +13,7 @@ struct ActivityEditSection: View {
     let save: (ActivityEdit) -> ActivityEditResult
     let delete: (() -> Bool)?
     let close: () -> Void
-    @State private var message: String?
+    @State var message: String?
 
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: UIMetrics.activitiesEditRadius, style: .continuous)

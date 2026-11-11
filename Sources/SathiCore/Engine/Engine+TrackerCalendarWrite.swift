@@ -19,7 +19,7 @@ extension Engine {
         case .keep:
             return (calendarActivityEdited(from: old, to: new), true)
         case .none:
-            if let oldEvent, !calendarWriter.delete(eventID: oldEvent) { return (calendarActivityEdited(from: old, to: new), true) }
+            if let oldEvent, !calendarWriter.delete(eventID: oldEvent) { return (calendarActivityEdited(from: old, to: new), false) }
             var a = new
             a.calendarID = nil
             a.eventID = nil
@@ -41,8 +41,8 @@ extension Engine {
         guard let oldEvent else { return (a, true) }
         guard let written = a.eventID else { return (calendarActivityEdited(from: old, to: new), true) }
         if calendarWriter.delete(eventID: oldEvent) { return (a, true) }
-        let cleaned = calendarWriter.delete(eventID: written)
-        return (calendarActivityEdited(from: old, to: new), cleaned)
+        guard calendarWriter.delete(eventID: written) else { return (a, false) }
+        return (calendarActivityEdited(from: old, to: new), true)
     }
 
     func calendarActivityEdited(from old: Activity, to new: Activity) -> Activity {
