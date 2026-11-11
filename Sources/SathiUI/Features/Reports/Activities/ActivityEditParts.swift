@@ -42,7 +42,7 @@ struct ActivityEditTimes: View {
             TrackerFlowLayout(spacing: UIMetrics.activitiesChipGap) {
                 ForEach(Limits.activityEditLengthChips, id: \.self) { minutes in
                     PromptBox(
-                        label: Copywriter.activitiesLength(TimeInterval(minutes) * Timing.minute), on: false,
+                        label: Copywriter.activitiesChipLength(minutes), on: false,
                         id: "activity.length.\(minutes)", look: .activityEdit(accent)
                     ) { draft.setLength(minutes) }
                 }

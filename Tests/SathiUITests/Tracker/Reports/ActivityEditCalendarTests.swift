@@ -71,8 +71,12 @@ struct ActivityEditCalendarTests {
         #expect(throws: Never.self) { try sut.find(text: "1h 30m") }
     }
 
+    @Test func theChipLabelDropsAZeroMinuteRemainder() {
+        #expect([15, 30, 60, 120, 90].map(Copywriter.activitiesChipLength) == ["15m", "30m", "1h", "2h", "1h 30m"])
+    }
+
     @Test func theLengthChipsAreFifteenThirtyOneAndTwoHours() throws {
-        #expect(try boxes(section(), "activity.length.").map(\.label) == ["15m", "30m", "1h 0m", "2h 0m"])
+        #expect(try boxes(section(), "activity.length.").map(\.label) == ["15m", "30m", "1h", "2h"])
     }
 
     @Test(arguments: [(15, (9, 15)), (30, (9, 30)), (60, (10, 0)), (120, (11, 0))])

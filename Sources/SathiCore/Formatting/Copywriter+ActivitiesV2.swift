@@ -26,6 +26,13 @@ extension Copywriter {
     package static let activitiesCurrentCalendar = "Current calendar"
     package static let activitiesDeleteFailed = "Sathi could not delete the calendar event, so the activity stays. Try again."
 
+    package static func activitiesChipLength(_ minutes: Int) -> String {
+        let h = minutes / Limits.minutesPerHour
+        let m = minutes % Limits.minutesPerHour
+        if h == 0 { return "\(m)m" }
+        return m == 0 ? "\(h)h" : "\(h)h \(m)m"
+    }
+
     package static func activitiesLength(_ seconds: TimeInterval) -> String { categoryTableHours(seconds) }
 
     package static func activitiesLoggedNote(_ change: RangeChange, kind: ReportRange) -> String {
