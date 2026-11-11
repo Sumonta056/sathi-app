@@ -24,8 +24,7 @@ struct TrackerStatusBlock: View {
     }
 
     private func hours(_ prefs: TrackerPrefs) -> String {
-        var cal = Calendar.current
-        cal.timeZone = e.timeZone
+        let cal = e.rangeCalendar
         let day = cal.startOfDay(for: e.now)
         let start = day.addingTimeInterval(TimeInterval(prefs.startMinutes) * Timing.minute)
         let end = day.addingTimeInterval(TimeInterval(prefs.endMinutes) * Timing.minute)

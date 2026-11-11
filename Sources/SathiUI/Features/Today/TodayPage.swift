@@ -15,8 +15,7 @@ struct TodayPage: View {
     }
 
     private func content(_ screen: TodayScreen) -> some View {
-        var cal = Calendar.current
-        cal.timeZone = e.timeZone
+        let cal = e.rangeCalendar
         return VStack(alignment: .leading, spacing: UIMetrics.todayPageSpacing) {
             TodayHeader(e: e, dateLine: screen.dateLine, greeting: screen.greeting)
             TodayNowCard(e: e, now: screen.now, calendar: cal)
