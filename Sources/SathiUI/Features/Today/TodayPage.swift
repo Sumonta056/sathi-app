@@ -20,9 +20,10 @@ struct TodayPage: View {
             TodayHeader(e: e, dateLine: screen.dateLine, greeting: screen.greeting)
             TodayNowCard(e: e, now: screen.now, calendar: cal)
             TodayBuddyGrid(e: e, buddies: screen.buddies, calendar: cal)
+            TodaySoFarCard(sofar: screen.sofar, categories: e.activityCategories, calendar: cal, now: e.now)
             WeightedRow(gap: UIMetrics.todayGridGap, weights: UIMetrics.todayLowerWeights) {
-                TodaySoFarCard(sofar: screen.sofar, categories: e.activityCategories, calendar: cal)
-                TodayComingUp(items: screen.comingUp, calendar: cal)
+                TodayBreakdownCard(sofar: screen.sofar, categories: e.activityCategories)
+                TodayComingUp(items: screen.comingUp, calendar: cal, now: e.now)
             }
             .frame(maxHeight: .infinity)
         }
