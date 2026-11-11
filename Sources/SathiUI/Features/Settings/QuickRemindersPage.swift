@@ -24,7 +24,7 @@ struct QuickRemindersPage: View {
             Image(systemName: "bell")
                 .font(.system(size: UIMetrics.quickIconSize, weight: .heavy))
                 .foregroundStyle(Night.quick)
-            Text(verbatim: "Pending")
+            Text(verbatim: Copywriter.settingsQuickPending)
                 .font(Typography.cardTitle)
                 .foregroundStyle(Night.text)
             Spacer(minLength: 0)

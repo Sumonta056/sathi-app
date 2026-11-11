@@ -4,6 +4,9 @@ extension Copywriter {
     package static let settingsEyebrow = "SETTINGS"
     package static let settingsSaveNote = "Settings save at once."
     package static let settingsSoundLink = "Session sound is on the Sound page."
+    package static let settingsOn = "On"
+    package static let settingsQuickPending = "Pending"
+    package static let settingsAddQuick = "Quick reminder"
     package static let settingsSoftSounds = "Play soft sounds"
     package static let settingsSoftSoundsHint = "A tiny pop when a buddy says hi."
 

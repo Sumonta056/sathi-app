@@ -9,7 +9,7 @@ struct QuickAddButton: View {
             HStack(spacing: UIMetrics.quickTimeSpacing) {
                 Image(systemName: "plus")
                     .font(.system(size: UIMetrics.quickIconSize, weight: .heavy))
-                Text(verbatim: "Quick reminder")
+                Text(verbatim: Copywriter.settingsAddQuick)
                     .font(Typography.rowLabel)
                 Spacer(minLength: 0)
             }

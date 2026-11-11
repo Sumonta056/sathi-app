@@ -19,7 +19,7 @@ struct SettingsHeader: View {
             Spacer(minLength: 0)
             if case let .habit(id) = page {
                 HStack(spacing: UIMetrics.sectionSpacing) {
-                    Text(verbatim: "On")
+                    Text(verbatim: Copywriter.settingsOn)
                         .font(Typography.rowLabel)
                         .foregroundStyle(Night.label)
                     BuddySwitch(isOn: e.enabledBinding(id), accent: Night.accent(id), label: Copywriter.settingsOnLabel(id))

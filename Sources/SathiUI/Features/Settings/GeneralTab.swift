@@ -50,22 +50,6 @@ struct GeneralTab: View {
     }
 }
 
-struct PageTitle: View {
-    let title: String
-    let subtitle: String
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: UIMetrics.textSpacing) {
-            Text(verbatim: title)
-                .font(Typography.title)
-                .foregroundStyle(Night.text)
-            Text(verbatim: subtitle)
-                .font(Typography.hint)
-                .foregroundStyle(Night.muted)
-        }
-    }
-}
-
 struct ThemeCards: View {
     var body: some View {
         OptionCardRow {

@@ -15,7 +15,7 @@ struct TimeBlockSettingsPageTests {
     @Test func showsEverySection() throws {
         let sut = try BlockSettings.page(BlockSettings.harness())
         for text in [
-            Copywriter.blockSettingsTitle, Copywriter.blockSettingsDefaultCalendar, Copywriter.blockSettingsCalendarNote,
+            Copywriter.blockSettingsDefaultCalendar, Copywriter.blockSettingsCalendarNote,
             Copywriter.blockSettingsDisplay, Copywriter.blockSettingsMenuBar, Copywriter.blockSettingsWidget,
             Copywriter.blockSettingsSound
         ] {

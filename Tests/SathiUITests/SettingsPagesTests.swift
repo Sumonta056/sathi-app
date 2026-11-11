@@ -25,13 +25,29 @@ struct SettingsPagesTests {
         let sut = try page(p, EngineHarness())
         switch p {
         case .general: #expect(throws: Never.self) { try sut.find(GeneralTab.self) }
-        case let .habit(id): #expect(throws: Never.self) { try sut.find(HabitTab.self) }
-            #expect(HabitTab(id: id).id == id)
+        case let .habit(id): try expectHabitTab(id, in: sut)
         case .quickReminders: #expect(throws: Never.self) { try sut.find(QuickSettingsCard.self) }
         case .tracker: #expect(throws: Never.self) { try sut.find(TrackerSettingsPage.self) }
         case .timeBlocks: #expect(throws: Never.self) { try sut.find(TimeBlockSettingsPage.self) }
         case .sound: #expect(throws: Never.self) { try sut.find(MeditationSoundCard.self) }
         }
+    }
+
+    private func expectHabitTab(_ id: HabitID, in sut: InspectableView<ViewType.ClassifiedView>) throws {
+        switch id {
+        case .water: _ = try sut.find(WaterSettingsTab.self)
+        case .reading: _ = try sut.find(ReadingSettingsTab.self)
+        case .meditation: _ = try sut.find(MeditationSettingsTab.self)
+        case .gym: _ = try sut.find(GymSettingsTab.self)
+        }
+    }
+
+    @Test(arguments: SettingsPage.all)
+    func everyPageShowsItsTitleExactlyOnce(_ p: SettingsPage) throws {
+        let sut = try page(p, EngineHarness())
+        let title = Copywriter.settingsHeaderTitle(p)
+        let count = sut.findAll(ViewType.Text.self).filter { (try? $0.string()) == title }.count
+        #expect(count == 1)
     }
 
     @Test func headerTitlesNameTheBuddyAndTheHabit() {

@@ -8,7 +8,7 @@ struct TrackerSettingsPage: View {
         let engine = e
         let on = engine.trackerOn.wrappedValue
         VStack(alignment: .leading, spacing: UIMetrics.pageSpacing) {
-            PageTitle(title: Copywriter.trackerSettingsTitle, subtitle: Copywriter.trackerSettingsSubtitle)
+            SettingsSubtitle(text: Copywriter.trackerSettingsSubtitle)
             SettingsCard {
                 SettingRow(label: Copywriter.trackerOnLabel, showsDivider: false) {
                     BuddySwitch(isOn: engine.trackerOn, accent: Night.tracker, label: Copywriter.trackerOnLabel)
