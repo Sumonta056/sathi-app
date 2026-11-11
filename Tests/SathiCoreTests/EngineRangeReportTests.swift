@@ -49,12 +49,4 @@ struct EngineRangeReportTests {
         let range = mondayWeek(h.clock.now)
         #expect(h.engine.report(range) == h.engine.report(.week))
     }
-
-    @Test func theScreenForTheCurrentWeekEqualsTheOldWeekScreen() {
-        let h = EngineHarness {
-            $0.events = [.done(.water, 3, at: day(2026, 3, 2, 10))]
-        }
-        let range = mondayWeek(h.clock.now)
-        #expect(h.engine.reportScreen(range, selected: .water) == h.engine.reportScreen(.week, selected: .water))
-    }
 }

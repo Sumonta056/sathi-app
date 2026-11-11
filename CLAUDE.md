@@ -29,10 +29,10 @@ Sources/
     Tracker/       Activity, ActivityKind, ActivityCategory(+List), ActivityDraft, ActivityEdit, ActivityDay, AwayPlaceList, ActivityMonth, RunningActivity, AwayPlace, AwaySpan, TrackerPrefs(+Hours), TrackerLiveState, PromptKind, PromptState, TrackerPromptState, TrackerPromptActions, TrackerCalendarInfo, TrackerNote(+State), TrackerEndOfDayState, EventMode, KeyShortcut, MonthKey, Rules/ (AskTime, SwitchTimes, TrackerHours, RecentList, ActivityEditCheck), Calendar/ (EventRules, EventCategoryRule, SpanCut)
     Constants/     Timing, Limits, StorageKeys, SoundName
     Scheduling/    EscalationPolicy (bubble/lock), TickPlanner (timer delay)
-    Stats/         Stats (daily totals), GymLegacyMinutes, StreakCalculator, ReportBuilder + Report, ReportScreen + ReportScreenInput, ReportScreenBuilder (+Tiles, +Chart, +Calendar, +Text), DaySummary
+    Stats/         Stats (daily totals), GymLegacyMinutes, StreakCalculator, ReportBuilder + Report, ReportChart + ReportChartBuilder, BuddyDayJudge, AllBuddiesStreak, ReportsOverview + ReportsOverviewBuilder, StreakMonthBuilder, BuddyTabReport, DaySummary
     Export/        CSVExporter, JSONExporter (backup), ExportNames, ExportFormat, ExportJob, ExportOutcome, ActivityMonthExporter
     Formatting/    Fmt, Copywriter (+Reading, +Meditation, +Gym, +DaySummary, +Quick, +TimeBlock, +TimeBlockPopups, +TimeBlockSettings, +TimeBlockView)
-    Ports/         Clock, StateStore, HistoryStore, SoundPlayer, SessionAudio, ReminderPresenter, FileExporter, SummaryRenderer, CalendarWriter (+CalendarEventInfo, event read), LinkOpener, ActivityStore, PresenceMonitor, HotkeyRegistrar
+    Ports/         Clock, StateStore, HistoryStore, SoundPlayer, SessionAudio, ReminderPresenter, CalendarWriter (+CalendarEventInfo, event read), LinkOpener, ActivityStore, PresenceMonitor, HotkeyRegistrar
     Storage/       JSONFiles, FileSlot, FileStateStore, FileHistoryStore, FileActivityStore, MonthEvents, MonthActivities, RawJSON, LegacyMigrator, Legacy/ (v1 shapes)
     Engine/        Engine (+Loop, +Actions, +Session, +SessionPause, +SessionRestore, +Breath, +Corner, +Display, +Menu, +History, +Reports, +Export, +DaySummary, +Quick, +QuickLoop, +TimeBlock, +TimeBlockLoop, +TimeBlockCalendar, +TimeBlockDisplay, +TimeBlockMenu, +Tracker* (API, Loop, Log, Away, Places, Hooks, Runtime, PromptState, Categories, ReportAPI, Export, Calendar, CalendarRead, CalendarTick, CalendarWrite, CalendarAway, CalendarRuntime)), StatusModel
   SathiUI/       SwiftUI + AppKit. Views and windows only.
@@ -47,7 +47,7 @@ Sources/
   Sathi/         Executable. SathiApp, AppDelegate, AppEnvironment (composition root).
 Resources/        Info.plist (version), AppIcon.icns (app icon), AppIcon.png (1024 px preview)
 Tests/
-  SathiTestSupport/  FakeClock, InMemoryStateStore, InMemoryHistoryStore, SpySoundPlayer, SpyPresenter, SpySessionAudio, SpyFileExporter, SpySummaryRenderer, ThreadSpyHistoryStore, DecodedBackup, FixedZone, EngineHarness (+TimeBlock, +Tracker), InMemoryActivityStore, SpyCalendarWriter, SpyPresenter+Tracker, TrackerFakes, TestFiles, day()
+  SathiTestSupport/  FakeClock, InMemoryStateStore, InMemoryHistoryStore, SpySoundPlayer, SpyPresenter, SpySessionAudio, ThreadSpyHistoryStore, DecodedBackup, FixedZone, EngineHarness (+TimeBlock, +Tracker), InMemoryActivityStore, SpyCalendarWriter, SpyPresenter+Tracker, TrackerFakes, TestFiles, day()
   SathiCoreTests/    Swift Testing unit tests for every Core module
   SathiUITests/      ViewInspector tests for views + engine interaction
 docs/             ROADMAP.md, specs/ (one spec per phase), design/ (design reference PNGs)

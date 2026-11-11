@@ -3,17 +3,16 @@ import SathiCore
 import SathiTestSupport
 import Testing
 
-@Suite("ReportScreen chart")
-struct ReportScreenChartTests {
-    private var fixture: ReportScreenFixture {
-        var f = ReportScreenFixture.at(2026, 10, 21, 15)
+@Suite("Report chart")
+struct ReportChartTests {
+    private var fixture: ReportChartFixture {
+        var f = ReportChartFixture.at(2026, 10, 21, 15)
         f.events = [
-            .done(.water, 8, at: ReportScreenFixture.on(2026, 10, 19)),
-            .done(.water, 7.75, at: ReportScreenFixture.on(2026, 10, 20)),
-            .done(.water, 2, at: ReportScreenFixture.zone.date(2026, 10, 21, 9, 30)),
-            .done(.meditation, 5, at: ReportScreenFixture.on(2026, 10, 19, 8))
+            .done(.water, 8, at: ReportChartFixture.on(2026, 10, 19)),
+            .done(.water, 7.75, at: ReportChartFixture.on(2026, 10, 20)),
+            .done(.water, 2, at: ReportChartFixture.zone.date(2026, 10, 21, 9, 30)),
+            .done(.meditation, 5, at: ReportChartFixture.on(2026, 10, 19, 8))
         ]
-        f.enabled = [.water, .reading, .meditation]
         return f
     }
 
@@ -25,11 +24,11 @@ struct ReportScreenChartTests {
         (.day, .meditation, "Meditation · today")
     ])
     func titleNamesTheHabitAndRange(_ range: ReportRange, _ habit: HabitID, _ title: String) {
-        #expect(fixture.screen(range, selected: habit).chart.title == title)
+        #expect(fixture.chart(range, selected: habit).title == title)
     }
 
     @Test func dayBarsAreTwoHourBucketsLabelledByStartHour() throws {
-        let bars = fixture.screen(.day).chart.bars
+        let bars = fixture.chart(.day).bars
         try #require(bars.count == 12)
         #expect(bars.map(\.label) == ["12a", "2a", "4a", "6a", "8a", "10a", "12p", "2p", "4p", "6p", "8p", "10p"])
         #expect(bars.map(\.id) == Array(0 ..< 12))
@@ -46,12 +45,12 @@ struct ReportScreenChartTests {
     ])
     func dayLabelsComeFromThePlannedHourOnDSTDays(_ zone: String, _ y: Int, _ m: Int, _ d: Int) {
         let place = FixedZone(zone)
-        let f = ReportScreenFixture(now: place.date(y, m, d, 15), calendar: place.calendar)
-        #expect(f.screen(.day).chart.bars.map(\.label) == ["12a", "2a", "4a", "6a", "8a", "10a", "12p", "2p", "4p", "6p", "8p", "10p"])
+        let f = ReportChartFixture(now: place.date(y, m, d, 15), calendar: place.calendar)
+        #expect(f.chart(.day).bars.map(\.label) == ["12a", "2a", "4a", "6a", "8a", "10a", "12p", "2p", "4p", "6p", "8p", "10p"])
     }
 
     @Test func dayHasNoGoalAndAnyAmountIsMet() throws {
-        let chart = fixture.screen(.day).chart
+        let chart = fixture.chart(.day)
         try #require(chart.bars.count == 12)
         #expect(chart.goal == nil)
         #expect(chart.bars[4].value == 2)
@@ -60,7 +59,7 @@ struct ReportScreenChartTests {
     }
 
     @Test func weekBarsAreMondayToSundayWithTheGoal() {
-        let chart = fixture.screen(.week).chart
+        let chart = fixture.chart(.week)
         #expect(chart.bars.map(\.label) == ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
         #expect(chart.bars.map(\.id) == Array(0 ..< 7))
         #expect(chart.bars.map(\.value) == [8, 7.75, 2, 0, 0, 0, 0])
@@ -68,12 +67,12 @@ struct ReportScreenChartTests {
     }
 
     @Test func weekGoalIsMetAtTheGoalEdge() {
-        let bars = fixture.screen(.week).chart.bars
+        let bars = fixture.chart(.week).bars
         #expect(bars.map(\.metGoal) == [true, false, false, false, false, false, false])
     }
 
     @Test func monthLabelsOnlyEveryFifthDayFromTheFirst() throws {
-        let bars = fixture.screen(.month).chart.bars
+        let bars = fixture.chart(.month).bars
         try #require(bars.count == 31)
         let labelled = bars.filter { !$0.label.isEmpty }
         #expect(labelled.map(\.label) == ["1", "6", "11", "16", "21", "26", "31"])
@@ -81,13 +80,13 @@ struct ReportScreenChartTests {
         #expect(bars[18].value == 8)
         #expect(bars[18].metGoal)
         #expect(!bars[19].metGoal)
-        #expect(fixture.screen(.month).chart.goal == 8)
+        #expect(fixture.chart(.month).goal == 8)
     }
 
     @Test func aZeroGoalHasNoGoalLineAndNothingIsMet() throws {
         var f = fixture
         f.prefs.meditation.dailyGoalMinutes = 0
-        let chart = f.screen(.week, selected: .meditation).chart
+        let chart = f.chart(.week, selected: .meditation)
         try #require(chart.bars.count == 7)
         #expect(chart.goal == nil)
         #expect(chart.bars[0].value == 5)
@@ -95,7 +94,7 @@ struct ReportScreenChartTests {
     }
 
     @Test func theChartFollowsTheSelectedHabit() throws {
-        let chart = fixture.screen(.week, selected: .meditation).chart
+        let chart = fixture.chart(.week, selected: .meditation)
         try #require(chart.bars.count == 7)
         #expect(chart.bars[0].value == 5)
         #expect(chart.goal == 10)

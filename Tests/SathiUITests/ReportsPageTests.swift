@@ -8,103 +8,123 @@ import ViewInspector
 @MainActor
 @Suite("Reports page")
 struct ReportsPageTests {
-    private func harness() -> EngineHarness {
-        EngineHarness(at: day(2026, 3, 4, 20)) {
-            $0.events = [
-                .done(.water, 8, at: day(2026, 3, 2, 12)),
-                .done(.water, 8, at: day(2026, 3, 3, 12)),
-                .done(.reading, 140, at: day(2026, 3, 3, 14)),
-                .done(.water, 6, at: day(2026, 2, 24, 12))
-            ]
-        }
+    private func page(_ given: EngineHarness? = nil, selected: HabitID? = nil) throws
+        -> InspectableView<ViewType.ClassifiedView> {
+        let h = given ?? ReportsFixture.harness()
+        return try ReportsPage(range: ReportsFixture.week(), selected: selected).environmentObject(h.engine).inspect()
     }
 
-    private func page(_ h: EngineHarness, selected: HabitID? = nil) throws -> InspectableView<ViewType.ClassifiedView> {
-        try ReportsPage(selected: selected).environmentObject(h.engine).inspect()
-    }
-
-    @Test func showsTheTitleAndTheRangeBar() throws {
-        let sut = try page(harness())
+    @Test func showsTheTitleTheRangeBarAndExport() throws {
+        let sut = try page()
         #expect(throws: Never.self) { try sut.find(text: "Reports") }
-        let range = StatsRange.containing(day(2026, 3, 4, 20), kind: .week, calendar: .current)
-        let title = Copywriter.rangeTitle(range, now: day(2026, 3, 4, 20), calendar: .current)
-        #expect(throws: Never.self) { try sut.find(text: title) }
+        #expect(throws: Never.self) { try Find.button(sut, holding: "Export CSV") }
     }
 
-    @Test func showsOneCardPerBuddyWithTotalAndGoalDays() throws {
-        let sut = try page(harness())
-        #expect(sut.findAll(BuddyTotalCard.self).count == 4)
-        let texts = MenuFind.texts(sut)
-        for label in ["Fota · water", "Boi · reading", "Shanti · meditation", "Shokti · gym"] {
-            #expect(texts.contains(label))
-        }
-        #expect(texts.contains("16 glasses"))
-        #expect(texts.contains("2h 20m"))
-        #expect(MenuFind.hasText(sut, containing: "goal met"))
-        #expect(MenuFind.hasText(sut, containing: " days"))
+    @Test func theTabRowHasAllBuddiesThenOneTabPerBuddyWithGoalDays() throws {
+        let sut = try page()
+        let row = try sut.find(ReportsTabRow.self)
+        let titles = MenuFind.texts(row)
+        #expect(titles == ["All buddies", "Fota · 2/7", "Boi · 1/7", "Shanti · 3/7", "Shokti · 1/7"])
     }
 
-    @Test func theChangeLineComparesWithLastWeek() throws {
-        let texts = try MenuFind.texts(page(harness()))
-        #expect(texts.contains("+10 glasses vs last week"))
+    @Test func allBuddiesIsSelectedByDefault() throws {
+        let sut = try page()
+        #expect(throws: Never.self) { try sut.find(ReportsAllTab.self) }
+        #expect(throws: (any Error).self) { try sut.find(ReportsBuddyTab.self) }
+        #expect(try Find.button(sut, holding: "All buddies").accessibilityTraits().contains(.isSelected))
     }
 
-    @Test func anOffBuddyIsDimmedAndSaysOff() throws {
-        let sut = try page(harness())
-        let card = try sut.find(text: "Shanti · meditation").find(BuddyTotalCard.self, relation: .parent)
-        #expect(throws: Never.self) { try card.find(text: "Off") }
-        #expect(try card.find(ViewType.Button.self).opacity() < 1)
-    }
-
-    @Test func noDetailChartUntilACardIsTapped() throws {
-        #expect(throws: (any Error).self) { try page(harness()).find(HabitReportsView.self) }
-    }
-
-    @Test func tappingACardShowsItsDetailChart() throws {
-        let sut = try page(harness(), selected: .reading)
-        #expect(throws: Never.self) { try sut.find(HabitReportsView.self) }
-        #expect(throws: Never.self) { try sut.find(text: "Reading · this week") }
-    }
-
-    @Test func tappingTheCardSelectsItAndTappingAgainHidesTheDetail() throws {
+    @Test func tappingABuddyTabSelectsItAndAllBuddiesGoesBack() throws {
         let selected = Box<HabitID?>(nil)
-        let sut = try BuddyTotalsRow(
-            totals: harness().engine.buddyRange(StatsRange.containing(day(2026, 3, 4), kind: .week, calendar: .current)).totals,
-            kind: .week,
-            selected: selected.binding
-        ).inspect()
-        try Find.button(sut, holding: "Boi · reading").tap()
+        let scores = ReportsFixture.harness().engine.reportsOverview(ReportsFixture.week()).scores
+        let sut = try ReportsTabRow(scores: scores, selected: selected.binding).inspect()
+        try Find.button(sut, holding: "Boi · 1/7").tap()
         #expect(selected.value == .reading)
-        try Find.button(sut, holding: "Boi · reading").tap()
+        try Find.button(sut, holding: "All buddies").tap()
         #expect(selected.value == nil)
     }
 
-    @Test func theGoalDaysChartAndTheCategoryCardAreShown() throws {
-        let sut = try page(harness())
-        #expect(throws: Never.self) { try sut.find(text: "Goals met per day of 2 buddies") }
-        #expect(throws: Never.self) { try sut.find(text: "Time by category vs last week") }
+    @Test func anOffBuddyTabIsDisabled() throws {
+        let sut = try page(EngineHarness(at: ReportsFixture.now))
+        #expect(try Find.button(sut, holding: "Shanti · 0/7").isDisabled())
+        #expect(try !Find.button(sut, holding: "Fota · 0/7").isDisabled())
+    }
+
+    @Test func theScoreCardShowsGoalsHeadlineAndChange() throws {
+        let texts = try MenuFind.texts(page().find(ReportsScoreCard.self))
+        for text in [
+            "7",
+            "of 28 goals",
+            "WEEK SCORE · 3 DAYS SO FAR",
+            "Good week. Shanti leads, Shokti needs a push.",
+            "+6 goals vs the same days last week · streak 0 days",
+            "2/7",
+            "Fota"
+        ] {
+            #expect(texts.contains(text))
+        }
+    }
+
+    @Test func theDayGridShowsDaysValuesAndLegend() throws {
+        let texts = try MenuFind.texts(page().find(DayByDayCard.self))
+        for text in ["Day by day", "Mon 9", "Wed 11", "8", "3", "15m", Copywriter.reportsDayByDayLegend] {
+            #expect(texts.contains(text))
+        }
+    }
+
+    @Test func aBuddyNameInTheGridOpensItsTab() throws {
+        let opened = Box<HabitID?>(nil)
+        let overview = ReportsFixture.harness().engine.reportsOverview(ReportsFixture.week())
+        let sut = try DayByDayCard(overview: overview) { opened.value = $0 }.inspect()
+        try Find.button(sut, holding: "Shokti").tap()
+        #expect(opened.value == .gym)
+    }
+
+    @Test func theBottomRowHasTheCategoryCardAndTheStreakCalendar() throws {
+        let sut = try page()
+        #expect(throws: Never.self) { try sut.find(text: "Time by category") }
         #expect(throws: Never.self) { try sut.find(text: "No activities in this range.") }
+        #expect(throws: Never.self) { try sut.find(StreakOverviewView.self) }
+        #expect(throws: Never.self) { try sut.find(text: "November 2026") }
     }
 
-    @Test func categoryRowsShowTimeAndChangeWithCalendarEventsAndAway() throws {
-        let h = EngineHarness.tracker(
-            at: day(2026, 3, 4, 20),
-            activities: [
-                Activity(text: "Fix bug", category: "Coding", start: day(2026, 3, 4, 9), end: day(2026, 3, 4, 11)),
-                Activity(text: "Fix bug", category: "Coding", start: day(2026, 2, 25, 9), end: day(2026, 2, 25, 10)),
-                Activity(kind: .event, text: "Standup", start: day(2026, 3, 4, 12), end: day(2026, 3, 4, 13))
-            ]
-        )
-        let sut = try ReportsPage().environmentObject(h.engine).inspect()
+    @Test func aBuddyTabShowsItsChartFactsAndMonth() throws {
+        let sut = try page(selected: .gym)
+        #expect(throws: (any Error).self) { try sut.find(ReportsAllTab.self) }
         let texts = MenuFind.texts(sut)
-        #expect(texts.contains("Coding"))
-        #expect(texts.contains("+1 h"))
-        #expect(texts.contains("Calendar events"))
+        for text in [
+            "Shokti · gym minutes",
+            "daily goal 10 min",
+            "THIS WEEK",
+            "10m",
+            "Goal days",
+            "1 of 7",
+            "Mon · 10m",
+            "Shokti · November",
+            "1 goal day"
+        ] {
+            #expect(texts.contains(text))
+        }
+        #expect(throws: Never.self) { try sut.find(BuddyMonthView.self) }
     }
 
-    @Test func exportButtonIsPresent() throws {
-        let sut = try page(harness())
-        #expect(throws: Never.self) { try Find.button(sut, holding: "Export CSV") }
-        #expect(sut.findAll(ReportsExportButton.self).count == 1)
+    @Test func theCalendarMonthFollowsTheRange() {
+        let calendar = Calendar.current
+        let past = StatsRange.containing(day(2026, 10, 20), kind: .week, calendar: calendar)
+        let month = ReportsAllTab.month(past, now: ReportsFixture.now, calendar: calendar)
+        #expect(month.holds(day(2026, 10, 20)))
+        let current = ReportsAllTab.month(ReportsFixture.week(), now: ReportsFixture.now, calendar: calendar)
+        #expect(current.holds(ReportsFixture.now))
+    }
+
+    @Test func anOffBuddySelectionShowsAllBuddies() throws {
+        let sut = try page(EngineHarness(at: ReportsFixture.now), selected: .gym)
+        #expect(throws: Never.self) { try sut.find(ReportsAllTab.self) }
+        #expect(throws: (any Error).self) { try sut.find(ReportsBuddyTab.self) }
+    }
+
+    @Test func theTabRowScrollsSidewaysWhenTheWindowIsNarrow() throws {
+        let row = try page().find(ReportsTabRow.self)
+        #expect(throws: Never.self) { try row.find(ViewType.ScrollView.self) }
     }
 }

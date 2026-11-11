@@ -1,4 +1,4 @@
-import SathiCore
+@testable import SathiCore
 import SathiTestSupport
 @testable import SathiUI
 import SwiftUI
@@ -8,40 +8,19 @@ import ViewInspector
 @MainActor
 @Suite("Reports parts")
 struct ReportsPartsTests {
-    private func harness() -> EngineHarness {
-        EngineHarness {
-            $0.events = [1, 2, 3].map { .done(.water, 8, at: day(2026, 3, $0, 12)) } + [.snooze(.water, at: day(2026, 3, 3, 11))]
-        }
-    }
-
-    @Test func streakCalendarShowsTitleStreakAndWeekdayHeaders() throws {
-        let month = harness().engine.reportScreen(.week, selected: .water).calendar
-        let sut = try StreakCalendarView(month: month).inspect()
-        #expect(throws: Never.self) { try sut.find(text: "March streak") }
-        #expect(throws: Never.self) { try sut.find(text: "3 days") }
-        let headers = MenuFind.texts(sut).filter { ["M", "T", "W", "F", "S"].contains($0) }
-        #expect(headers == ["M", "T", "W", "T", "F", "S", "S"])
-    }
-
-    @Test func streakCalendarGridKeepsEveryDayOfTheMonth() {
-        let month = harness().engine.reportScreen(.week, selected: .water).calendar
-        let slots = StreakCalendarView.slots(month)
-        #expect(Set(slots.map(\.id)).count == slots.count)
-        #expect(slots.count == 7 + month.leadingBlanks + 31)
-        let days = slots.compactMap { slot -> Int? in
-            if case let .day(cell) = slot { return cell.day }
-            return nil
-        }
-        #expect(days == Array(1 ... 31))
-    }
-
     @Test func factsShowEachLabelAndValue() throws {
-        let facts = harness().engine.reportScreen(.week, selected: .water).facts
-        #expect(facts.map(\.label) == ["Best day", "Snoozes this week", "Longest streak"])
+        let facts = ReportsFixture.harness().engine.buddyTab(ReportsFixture.week(), habit: .water).facts
+        #expect(facts.map(\.label) == ["Goal days", "Best day", "Daily average", "Streak"])
         let texts = try MenuFind.texts(ReportFactsView(facts: facts).inspect())
         for fact in facts {
             #expect(texts.contains(fact.label))
             #expect(texts.contains(fact.value))
         }
+    }
+
+    @Test func barValuesShowTheAmountAndACheckWhenTheGoalIsMet() {
+        let bar = ReportBar(id: 0, label: "Mon", value: 12, metGoal: true)
+        #expect(ReportChartView.valueText(bar, habit: .gym, hasGoal: true) == "12m \u{2713}")
+        #expect(ReportChartView.valueText(bar, habit: .gym, hasGoal: false) == "12m")
     }
 }

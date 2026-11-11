@@ -18,23 +18,7 @@ extension Engine {
         )
     }
 
-    package func reportScreen(_ range: StatsRange, selected: HabitID) -> ReportScreen {
-        let enabled = enabledHabits(data.prefs)
-        let habit = ReportScreenBuilder.resolve(selected, enabled: enabled)
-        let month = StatsRange.containing(clock.now, kind: .month, calendar: calendar)
-        return ReportScreenBuilder(calendar: calendar).build(ReportScreenInput(
-            range: range.kind,
-            selected: selected,
-            report: report(range),
-            month: report(month),
-            enabled: enabled,
-            streak: streak(habit),
-            longest: longestStreak(habit),
-            now: clock.now
-        ))
-    }
-
-    private func rangeEvents(_ span: DateInterval) -> [HistoryEvent] {
+    func rangeEvents(_ span: DateInterval) -> [HistoryEvent] {
         let windowStart = Self.windowStart(now: clock.now, calendar: calendar)
         let older = span.start < windowStart
             ? storedEvents(from: span.start, to: min(span.end, windowStart)) : []
