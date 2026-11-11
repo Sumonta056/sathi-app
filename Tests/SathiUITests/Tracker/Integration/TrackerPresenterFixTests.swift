@@ -37,7 +37,9 @@ struct TrackerPresenterFixTests {
         let calls = PromptCalls()
         let times = [Prompt.now.addingTimeInterval(-600), Prompt.now]
         let s = Prompt.state(.whatNow, calls: calls) { $0.switchTimes = times }
-        try WhatNowPopup(state: s).inspect().find(ViewType.VStack.self).callOnExitCommand()
+        let skip = try Prompt.view(s).find(viewWithAccessibilityIdentifier: "tracker.skip").find(ViewType.Button.self, relation: .parent)
+        #expect(try skip.modifier(PromptKey.self).actualView().shortcut == .cancelAction)
+        try skip.tap()
         #expect(calls.skipped == [Prompt.now])
     }
 
