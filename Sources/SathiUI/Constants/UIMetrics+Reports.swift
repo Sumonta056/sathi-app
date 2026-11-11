@@ -32,3 +32,8 @@ extension UIMetrics {
     static let calendarOffLine: CGFloat = 1
     static let calendarOffDash: [CGFloat] = [2, 2]
 }
+
+extension UIMetrics {
+    static let activitiesSideWidth: CGFloat = 320
+    static let activitiesTextLines = 12
+}

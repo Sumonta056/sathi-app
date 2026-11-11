@@ -45,7 +45,7 @@ struct MainViewTests {
     }
 
     @Test func activitiesPageShowsTheActivityReports() throws {
-        #expect(throws: Never.self) { try main(.activities(nil)).find(ActivityReportsView.self) }
+        #expect(throws: Never.self) { try main(.activities(nil)).find(ActivitiesPage.self) }
     }
 
     @Test func settingsPageHasNoOldSidebar() throws {

@@ -2,7 +2,8 @@ import SathiCore
 import SwiftUI
 
 struct ActivityMonthRowView: View {
-    let row: ActivityMonthRow
+    let day: DayKey
+    let row: ActivityMonthRow?
     let categories: [ActivityCategory]
     let calendar: Calendar
     let open: () -> Void
@@ -10,17 +11,14 @@ struct ActivityMonthRowView: View {
     var body: some View {
         Button(action: open) {
             HStack(spacing: UIMetrics.reportsGap) {
-                Text(verbatim: Copywriter.trackerShortDate(row.day.start(in: calendar), calendar: calendar))
+                Text(verbatim: Copywriter.trackerShortDate(day.start(in: calendar), calendar: calendar))
                     .font(Typography.rowLabel).foregroundStyle(Night.text)
                     .frame(width: UIMetrics.trackerMonthDayWidth, alignment: .leading)
-                Text(verbatim: Copywriter.trackerTileDuration(row.realWork))
+                Text(verbatim: row.map { Copywriter.trackerTileDuration($0.realWork) } ?? Copywriter.trackerNoValue)
                     .font(Typography.hint).foregroundStyle(Night.muted)
                     .frame(width: UIMetrics.trackerMonthHoursWidth, alignment: .leading)
-                ActivityRibbon(
-                    segments: row.segments, hours: row.hours, categories: categories,
-                    height: UIMetrics.trackerMonthStripHeight, radius: UIMetrics.trackerBarRadius, showsLabels: false
-                )
-                Text(verbatim: row.topTexts.joined(separator: ", "))
+                strip
+                Text(verbatim: row?.topTexts.joined(separator: ", ") ?? "")
                     .font(Typography.hint).foregroundStyle(Night.muted).lineLimit(1)
                     .frame(width: UIMetrics.trackerMonthTopWidth, alignment: .leading)
             }
@@ -28,5 +26,18 @@ struct ActivityMonthRowView: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+    }
+
+    @ViewBuilder private var strip: some View {
+        if let row {
+            ActivityRibbon(
+                segments: row.segments, hours: row.hours, categories: categories,
+                height: UIMetrics.trackerMonthStripHeight, radius: UIMetrics.trackerBarRadius, showsLabels: false
+            )
+        } else {
+            RoundedRectangle(cornerRadius: UIMetrics.trackerBarRadius, style: .continuous)
+                .fill(Night.divider)
+                .frame(height: UIMetrics.trackerMonthStripHeight)
+        }
     }
 }

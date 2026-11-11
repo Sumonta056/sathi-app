@@ -1,3 +1,4 @@
+import SathiCore
 import SwiftUI
 
 struct ActivityTile: View {
@@ -5,6 +6,8 @@ struct ActivityTile: View {
     let value: String
     let note: String
     var accent: Color = Night.tracker
+    var change: RangeChange = .none
+    var changeText = ""
 
     var body: some View {
         VStack(alignment: .leading, spacing: UIMetrics.textSpacing) {
@@ -24,6 +27,7 @@ struct ActivityTile: View {
                 .font(Typography.hint)
                 .foregroundStyle(Night.muted)
                 .lineLimit(1)
+            RangeChangeText(change: change, text: changeText)
         }
         .padding(UIMetrics.trackerTilePadding)
         .frame(maxWidth: .infinity, alignment: .leading)

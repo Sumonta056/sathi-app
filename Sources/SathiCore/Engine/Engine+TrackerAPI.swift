@@ -132,9 +132,7 @@ extension Engine {
     }
 
     package func openActivityReport(_ day: DayKey) {
-        trackerRuntime.reportDay = day
         closeTrackerEndOfDay()
-        objectWillChange.send()
         openMain(.activities(day))
     }
 
