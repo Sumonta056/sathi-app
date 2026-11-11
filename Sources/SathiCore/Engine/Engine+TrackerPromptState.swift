@@ -14,6 +14,7 @@ extension Engine {
         s.running = data.live.tracker.running
         s.lastActivity = data.live.tracker.lastActivity
         s.resume = p.resume
+        s.doneAt = p.doneAt
         s.recents = recentActivities
         s.categories = activityCategories
         s.calendars = calendarChoices()
@@ -22,11 +23,13 @@ extension Engine {
         s.calendar = calendar
         s.askEveryMinutes = trackerPrefs.askEveryMinutes
         s.shortcut = trackerPrefs.shortcut
-        if let from = p.switchFrom { s.switchTimes = SwitchTimes.chips(from: from, to: n, calendar: calendar) }
+        s.switchTimes = promptSwitchTimes(p, now: n)
+        if kind == .whatNow { s.lastEnded = lastEndedActivity(before: n) }
         if kind == .stillOnIt { s.waitedMinutes = AskTime.waitedMinutes(shownAt: p.shownAt, now: n) }
         if kind == .welcomeBack {
             s.away = trackerRuntime.lastAway
             s.loggedWhileAway = trackerRuntime.loggedWhileAway
+            s.stoppedByAway = trackerRuntime.endedByAway?.text
             s.places = awayPlaces
         }
         if kind == .whatNow || kind == .center { s.runningEvent = unloggedRunningEvent() }

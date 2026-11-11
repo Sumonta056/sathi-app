@@ -106,7 +106,7 @@ extension Engine {
         let today = DayKey(n, calendar: calendar)
         dropStaleEndOfDay(n)
         guard trackerPrefs.endOfDayOn, !trackerRuntime.endOfDayShowing, data.live.tracker.running == nil,
-              !isAnyLockShowing else { return }
+              data.live.tracker.prompt == nil, !isAnyLockShowing else { return }
         if let due = trackerRuntime.endOfDayDue {
             trackerRuntime.endOfDayDue = nil
             if data.live.tracker.lastEndOfDay != due { return showTrackerEndOfDay(for: due) }

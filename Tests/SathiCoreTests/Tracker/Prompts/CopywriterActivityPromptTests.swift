@@ -1,0 +1,32 @@
+import Foundation
+import SathiCore
+import SathiTestSupport
+import Testing
+
+@Suite("Copywriter activity prompt")
+struct CopywriterActivityPromptTests {
+    private typealias Fix = PromptFixture
+
+    @Test func bodyWordsMatchTheSpec() {
+        #expect(Copywriter.activityPromptRecent == "RECENT · tap to fill")
+        #expect(Copywriter.activityPromptShowAll(8) == "Show all 8")
+        #expect(Copywriter.activityPromptField == "Type what you do, or tap a card on the left")
+        #expect(Copywriter.activityPromptAddPlace == "+ Place")
+        #expect(Copywriter.activityPromptReallyStarted == "It really started at")
+        #expect(Copywriter.activityPromptEscSkip == "Esc: Skip")
+    }
+
+    @Test func startedLinkSaysNowOrTheTime() {
+        #expect(Copywriter.activityPromptStarted(nil, calendar: Fix.calendar) == "Started: Now · change")
+        #expect(Copywriter.activityPromptStarted(Fix.at(10, 15), calendar: Fix.calendar) == "Started: " + Fix.clock(Fix.at(10, 15)) + " · change")
+    }
+
+    @Test func eventLengthIsUntilItsEnd() {
+        #expect(Copywriter.activityPromptUntil(Fix.at(13), calendar: Fix.calendar) == "Until " + Fix.clock(Fix.at(13)))
+    }
+
+    @Test func shortcutTagWithNoShortcutIsYouAsked() {
+        let s = Fix.screen(.center) { $0.shortcut = nil }
+        #expect(s.tag == "YOU ASKED")
+    }
+}

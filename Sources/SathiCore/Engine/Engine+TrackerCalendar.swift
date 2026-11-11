@@ -95,6 +95,7 @@ extension Engine {
     package func fillEventAsk(_ s: inout TrackerPromptState) {
         guard s.kind == .eventAsk, let e = eventAskEvent() else { return }
         s.event = e
+        s.eventCalendarTitle = calendarTitle(of: e)
         s.draft.text = e.title
         s.draft.category = eventCategory(e).name
         s.draft.sourceEventID = e.id

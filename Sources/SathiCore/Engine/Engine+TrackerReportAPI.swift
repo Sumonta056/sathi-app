@@ -3,6 +3,7 @@ import Foundation
 extension Engine {
     package var activityReportDay: DayKey? { trackerRuntime.reportDay }
     package var trackerPromptByUser: Bool { trackerRuntime.promptByUser }
+    package var trackerPromptTakesKeyboard: Bool { trackerPrompt != nil && trackerPromptByUser }
 
     package func takeActivityReportDay() -> DayKey? {
         defer { trackerRuntime.reportDay = nil }
