@@ -7,15 +7,15 @@ struct QuickLinks: View {
 
     var body: some View {
         HStack {
-            link(Copywriter.quickPanelReports) { e.openReports() }
+            link(Copywriter.quickPanelReports, id: "quick.reports") { e.openReports() }
             Spacer()
-            link(Copywriter.quickPanelSettings) { e.openSettings() }
+            link(Copywriter.quickPanelSettings, id: "quick.settings") { e.openSettings() }
             Spacer()
-            link(Copywriter.quickPanelQuit) { NSApp.terminate(nil) }
+            link(Copywriter.quickPanelQuit, id: "quick.quit") { NSApp.terminate(nil) }
         }
     }
 
-    private func link(_ title: String, action: @escaping () -> Void) -> some View {
+    private func link(_ title: String, id: String, action: @escaping () -> Void) -> some View {
         Button {
             MenuBarWindow.close()
             action()
@@ -27,5 +27,6 @@ struct QuickLinks: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier(id)
     }
 }

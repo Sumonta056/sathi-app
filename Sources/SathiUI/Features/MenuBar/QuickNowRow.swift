@@ -24,7 +24,7 @@ struct QuickNowRow: View {
                 .buttonStyle(AccentButton(
                     accent: Night.tracker, height: UIMetrics.quickNowButtonHeight, text: Night.trackerOnAccent
                 ))
-                .accessibilityIdentifier("menu.tracker.log")
+                .accessibilityIdentifier(e.runningActivity == nil ? "quick.log" : "quick.switch")
             }
             .padding(UIMetrics.quickNowPadding)
             .background(shape.fill(Night.trackerFill))

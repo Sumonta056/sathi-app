@@ -1,7 +1,9 @@
 import Foundation
 
 extension Copywriter {
+    private static let weekdayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     package static let quickPanelTitle = "Sathi"
+    package static let quickPanelReminder = "Quick reminder"
     package static let quickPanelSwitch = "Switch"
     package static let quickPanelOpen = "Open Sathi"
     package static let quickPanelReports = "Reports"
@@ -13,12 +15,9 @@ extension Copywriter {
     package static let quickPanelPlusGlass = "+1 glass"
 
     package static func quickPanelClock(_ date: Date, calendar: Calendar) -> String {
-        let f = DateFormatter()
-        f.calendar = calendar
-        f.timeZone = calendar.timeZone
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.dateFormat = "EEE HH:mm"
-        return f.string(from: date)
+        let c = calendar.dateComponents([.weekday, .hour, .minute], from: date)
+        let name = weekdayNames[((c.weekday ?? 1) - 1) % weekdayNames.count]
+        return name + " " + String(format: "%02d:%02d", c.hour ?? 0, c.minute ?? 0)
     }
 
     package static func quickPanelNow(_ seconds: TimeInterval) -> String {

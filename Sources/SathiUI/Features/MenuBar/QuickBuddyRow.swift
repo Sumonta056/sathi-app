@@ -15,7 +15,7 @@ struct QuickBuddyRow: View {
                 .font(Typography.rowLabel)
                 .foregroundStyle(Night.text)
             Spacer(minLength: 0)
-            Text(verbatim: Copywriter.quickPanelStatus(buddy, calendar: .current))
+            Text(verbatim: Copywriter.quickPanelStatus(buddy, calendar: e.calendar))
                 .font(Typography.hint)
                 .foregroundStyle(buddy.status == .met ? Night.sprout : Night.muted)
                 .lineLimit(1)
@@ -24,6 +24,7 @@ struct QuickBuddyRow: View {
                     Text(verbatim: Copywriter.quickPanelPlusGlass)
                 }
                 .buttonStyle(GhostButton(accent: Night.water, height: UIMetrics.quickSmallButtonHeight))
+                .accessibilityIdentifier("quick.glass")
             }
         }
         .padding(UIMetrics.quickBuddyRowPadding)

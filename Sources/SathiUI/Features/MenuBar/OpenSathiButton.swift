@@ -18,6 +18,7 @@ struct OpenSathiButton: View {
                 .contentShape(shape)
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("quick.openSathi")
     }
 
     private var shape: RoundedRectangle {

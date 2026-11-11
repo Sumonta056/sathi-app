@@ -49,7 +49,7 @@ package final class Engine: ObservableObject {
     let activityStore: ActivityStore
     let presence: PresenceMonitor
     let hotkeys: HotkeyRegistrar
-    let calendar: Calendar
+    package let calendar: Calendar
 
     var timer: Timer?
     var isRunning = false

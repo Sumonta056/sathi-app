@@ -5,16 +5,22 @@ struct QuickActionRow: View {
     @EnvironmentObject var e: Engine
 
     var body: some View {
-        HStack(spacing: UIMetrics.quickActionSpacing) {
-            action("plus", Copywriter.quickToolTitle, label: Copywriter.quickToolButton) { e.openQuickAdd() }
-            if e.timeBlock == nil && e.calendarAccess != .denied {
-                action("timer", Copywriter.blockCardTitle, label: Copywriter.blockStartButton) { e.openBlockStart() }
+        VStack(spacing: UIMetrics.quickActionSpacing) {
+            HStack(spacing: UIMetrics.quickActionSpacing) {
+                action("plus", Copywriter.quickPanelReminder, label: Copywriter.quickToolButton, id: "quick.reminder") {
+                    e.openQuickAdd()
+                }
+                BreakMenu().accessibilityIdentifier("quick.break")
             }
-            BreakMenu()
+            if e.timeBlock == nil && e.calendarAccess != .denied {
+                action("timer", Copywriter.blockCardTitle, label: Copywriter.blockStartButton, id: "quick.timeBlock") {
+                    e.openBlockStart()
+                }
+            }
         }
     }
 
-    private func action(_ symbol: String, _ title: String, label: String, tap: @escaping () -> Void) -> some View {
+    private func action(_ symbol: String, _ title: String, label: String, id: String, tap: @escaping () -> Void) -> some View {
         Button(action: tap) {
             HStack(spacing: UIMetrics.chipSpacing) {
                 Image(systemName: symbol)
@@ -32,6 +38,7 @@ struct QuickActionRow: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel(label)
+        .accessibilityIdentifier(id)
     }
 
     private var shape: RoundedRectangle {

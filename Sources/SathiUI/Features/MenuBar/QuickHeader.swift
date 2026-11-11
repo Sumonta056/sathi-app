@@ -10,7 +10,7 @@ struct QuickHeader: View {
                 .font(Typography.cardTitle)
                 .foregroundStyle(Night.text)
             Spacer(minLength: 0)
-            Text(verbatim: Copywriter.quickPanelClock(e.now, calendar: .current))
+            Text(verbatim: Copywriter.quickPanelClock(e.now, calendar: e.calendar))
                 .font(Typography.hint)
                 .foregroundStyle(Night.muted)
         }

@@ -5,7 +5,7 @@ struct QuickBuddyList: View {
     @EnvironmentObject var e: Engine
 
     var body: some View {
-        let buddies = e.todayScreen.buddies
+        let buddies = e.todayBuddies
         VStack(spacing: 0) {
             ForEach(Array(buddies.enumerated()), id: \.element.id) { index, buddy in
                 if index > 0 {

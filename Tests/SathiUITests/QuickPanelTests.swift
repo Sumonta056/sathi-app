@@ -32,7 +32,7 @@ struct QuickPanelTests {
         let sut = try panel(h)
         #expect(throws: Never.self) { try sut.find(text: "Code review") }
         #expect(MenuFind.hasText(sut, containing: "NOW · "))
-        try Find.button(sut, holding: "Switch").tap()
+        try sut.find(viewWithAccessibilityIdentifier: "quick.switch").button().tap()
         #expect(h.engine.trackerPrompt?.kind == .center)
     }
 
@@ -40,7 +40,7 @@ struct QuickPanelTests {
         let h = trackerHarness()
         let sut = try panel(h)
         #expect(throws: Never.self) { try sut.find(text: "Not tracking now") }
-        try Find.button(sut, holding: "Log activity").tap()
+        try sut.find(viewWithAccessibilityIdentifier: "quick.log").button().tap()
         #expect(h.engine.trackerPrompt?.kind == .center)
     }
 
@@ -77,7 +77,7 @@ struct QuickPanelTests {
     @Test func plusOneGlassLogsAGlass() throws {
         let h = Glance.harness()
         let before = h.engine.glassesToday
-        try Find.button(panel(h), holding: "+1 glass").tap()
+        try panel(h).find(viewWithAccessibilityIdentifier: "quick.glass").button().tap()
         #expect(h.engine.glassesToday == before + 1)
     }
 
@@ -88,49 +88,52 @@ struct QuickPanelTests {
 
     @Test func openSathiOpensToday() throws {
         let h = Glance.harness()
-        try Find.button(panel(h), holding: "Open Sathi").tap()
+        try panel(h).find(viewWithAccessibilityIdentifier: "quick.openSathi").button().tap()
         #expect(h.presenter.calls.last == .showMain(.today))
     }
 
     @Test func reportsLinkOpensReports() throws {
         let h = Glance.harness()
-        try Find.button(panel(h), holding: "Reports").tap()
+        try panel(h).find(viewWithAccessibilityIdentifier: "quick.reports").button().tap()
         #expect(h.presenter.calls.last == .showMain(.reports))
     }
 
     @Test func settingsLinkOpensGeneralSettings() throws {
         let h = Glance.harness()
-        try Find.button(panel(h), holding: "Settings").tap()
+        try panel(h).find(viewWithAccessibilityIdentifier: "quick.settings").button().tap()
         #expect(h.presenter.calls.last == .showMain(.settings(.general)))
     }
 
     @Test func quitIsThere() throws {
-        #expect(throws: Never.self) { try Find.button(panel(Glance.harness()), holding: "Quit") }
+        #expect(throws: Never.self) { try panel(Glance.harness()).find(viewWithAccessibilityIdentifier: "quick.quit") }
     }
 
     @Test func quickReminderButtonOpensTheAddPopup() throws {
         let h = Glance.harness()
-        try Find.button(panel(h), holding: "Reminder").tap()
+        try panel(h).find(viewWithAccessibilityIdentifier: "quick.reminder").button().tap()
         #expect(h.presenter.calls.last == .showQuickAdd)
     }
 
     @Test func timeBlockButtonOpensTheStartPopup() throws {
         let h = Glance.harness()
-        try Find.button(panel(h), holding: "Time block").tap()
+        try panel(h).find(viewWithAccessibilityIdentifier: "quick.timeBlock").button().tap()
         #expect(h.presenter.calls.last == .showBlockStart)
     }
 
     @Test func timeBlockCardShowsOnlyWhileABlockRuns() throws {
         let idle = try panel(Glance.harness())
         #expect(Find.lacks(idle, text: "End now"))
-        #expect(throws: Never.self) { try Find.button(idle, holding: "Time block") }
+        #expect(throws: Never.self) { try idle.find(viewWithAccessibilityIdentifier: "quick.timeBlock") }
         let running = try panel(Glance.harness(block: .minutes(30)))
         #expect(throws: Never.self) { try running.find(button: "End now") }
-        #expect((try? Find.button(running, holding: "Time block")) == nil)
+        #expect((try? running.find(viewWithAccessibilityIdentifier: "quick.timeBlock")) == nil)
     }
 
     @Test func breakMenuIsInTheActionRow() throws {
-        #expect(try panel(Glance.harness()).findAll(BreakMenu.self).count == 1)
+        let sut = try panel(Glance.harness())
+        #expect(sut.findAll(BreakMenu.self).count == 1)
+        #expect(throws: Never.self) { try sut.find(viewWithAccessibilityIdentifier: "quick.break") }
+        #expect(throws: Never.self) { try sut.find(text: "Quick reminder") }
     }
 
     @Test func pausedPanelShowsTheNapBannerAndWakeUp() throws {
