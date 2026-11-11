@@ -5,16 +5,21 @@ import Foundation
 package final class TodayModel: ObservableObject {
     @Published package private(set) var screen: TodayScreen?
     private var subscription: AnyCancellable?
+    private var pending = false
 
     package init() {}
 
     package func attach(_ engine: Engine) {
         refresh(engine)
         subscription = engine.objectWillChange
-            .receive(on: DispatchQueue.main)
             .sink { [weak self, weak engine] _ in
-                guard let self, let engine else { return }
-                refresh(engine)
+                guard let self, !pending else { return }
+                pending = true
+                DispatchQueue.main.async { [weak self, weak engine] in
+                    guard let self else { return }
+                    pending = false
+                    if let engine, subscription != nil { refresh(engine) }
+                }
             }
     }
 

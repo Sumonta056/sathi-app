@@ -17,7 +17,7 @@ struct TodayHeaderButton: ButtonStyle {
 }
 
 struct TodayHeader: View {
-    @EnvironmentObject var e: Engine
+    let e: Engine
     let dateLine: String
     let greeting: String
 

@@ -2,7 +2,7 @@ import SathiCore
 import SwiftUI
 
 struct TodayNowCard: View {
-    @EnvironmentObject var e: Engine
+    let e: Engine
     let now: TodayNow
     let calendar: Calendar
 
@@ -39,7 +39,7 @@ struct TodayNowCard: View {
     }
 
     private func idle(nextAsk: Date?) -> some View {
-        card {
+        card(neutral: true) {
             texts(
                 title: Copywriter.trackerNotTracking,
                 detail: nextAsk.map { Copywriter.todayIdleDetail(nextAsk: $0, calendar: calendar) }

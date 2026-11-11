@@ -18,9 +18,9 @@ struct TodayPage: View {
         var cal = Calendar.current
         cal.timeZone = e.timeZone
         return VStack(alignment: .leading, spacing: UIMetrics.todayPageSpacing) {
-            TodayHeader(dateLine: screen.dateLine, greeting: screen.greeting)
-            TodayNowCard(now: screen.now, calendar: cal)
-            TodayBuddyGrid(buddies: screen.buddies, calendar: cal)
+            TodayHeader(e: e, dateLine: screen.dateLine, greeting: screen.greeting)
+            TodayNowCard(e: e, now: screen.now, calendar: cal)
+            TodayBuddyGrid(e: e, buddies: screen.buddies, calendar: cal)
             HStack(alignment: .top, spacing: UIMetrics.todayGridGap) {
                 TodaySoFarCard(sofar: screen.sofar, categories: e.activityCategories, calendar: cal)
                     .layoutPriority(UIMetrics.todayLowerLeftWeight)

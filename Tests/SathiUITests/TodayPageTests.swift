@@ -24,7 +24,8 @@ struct TodayPageTests {
     }
 
     private func card(_ b: TodayBuddy) throws -> InspectableView<ViewType.ClassifiedView> {
-        try hosted(TodayBuddyCard(buddy: b, calendar: cal), EngineHarness()).inspect()
+        let h = EngineHarness()
+        return try hosted(TodayBuddyCard(e: h.engine, buddy: b, calendar: cal), h).inspect()
     }
 
     private func running(_ h: EngineHarness) -> TodayNow {
@@ -33,7 +34,7 @@ struct TodayPageTests {
 
     @Test func runningNowCardShowsTheActivity() throws {
         let h = EngineHarness()
-        let sut = try hosted(TodayNowCard(now: running(h), calendar: cal), h).inspect()
+        let sut = try hosted(TodayNowCard(e: h.engine, now: running(h), calendar: cal), h).inspect()
         #expect(throws: Never.self) { try sut.find(text: "NOW") }
         #expect(throws: Never.self) { try sut.find(text: "42m") }
         #expect(throws: Never.self) { try sut.find(text: "Code review") }
@@ -45,7 +46,7 @@ struct TodayPageTests {
     @Test func switchOpensTheActivityPrompt() throws {
         let h = EngineHarness.tracker()
         h.engine.startActivity(ActivityDraft(text: "Code review", length: .minutes(30)))
-        let sut = try hosted(TodayNowCard(now: running(h), calendar: cal), h).inspect()
+        let sut = try hosted(TodayNowCard(e: h.engine, now: running(h), calendar: cal), h).inspect()
         try Find.button(sut, holding: "Switch").tap()
         #expect(h.tracker.prompt?.kind == .center)
     }
@@ -53,14 +54,14 @@ struct TodayPageTests {
     @Test func stopEndsTheRunningActivity() throws {
         let h = EngineHarness.tracker()
         h.engine.startActivity(ActivityDraft(text: "Code review", length: .minutes(30)))
-        let sut = try hosted(TodayNowCard(now: running(h), calendar: cal), h).inspect()
+        let sut = try hosted(TodayNowCard(e: h.engine, now: running(h), calendar: cal), h).inspect()
         try Find.button(sut, holding: "Stop").tap()
         #expect(h.tracker.prompt?.kind == .whatNow)
     }
 
     @Test func idleNowCardOffersToLogAnActivity() throws {
         let h = EngineHarness.tracker()
-        let sut = try hosted(TodayNowCard(now: .idle(nextAsk: day(2026, 3, 4, 10, 30)), calendar: cal), h).inspect()
+        let sut = try hosted(TodayNowCard(e: h.engine, now: .idle(nextAsk: day(2026, 3, 4, 10, 30)), calendar: cal), h).inspect()
         #expect(throws: Never.self) { try sut.find(text: "Not tracking now") }
         #expect(throws: Never.self) { try sut.find(text: "Next ask \(clock(day(2026, 3, 4, 10, 30)))") }
         try Find.button(sut, holding: "Log activity").tap()
@@ -69,7 +70,7 @@ struct TodayPageTests {
 
     @Test func offNowCardTurnsOnTheTracker() throws {
         let h = EngineHarness()
-        let sut = try hosted(TodayNowCard(now: .off, calendar: cal), h).inspect()
+        let sut = try hosted(TodayNowCard(e: h.engine, now: .off, calendar: cal), h).inspect()
         #expect(throws: Never.self) { try sut.find(text: Copywriter.todayTrackerOff) }
         try Find.button(sut, holding: "Turn on").tap()
         #expect(h.presenter.calls.last == .showMain(.settings(.tracker)))
@@ -77,7 +78,8 @@ struct TodayPageTests {
 
     @Test func gridShowsFourBuddyCards() throws {
         let buddies = HabitID.allCases.map { buddy($0, status: .off) }
-        let sut = try hosted(TodayBuddyGrid(buddies: buddies, calendar: cal), EngineHarness()).inspect()
+        let h = EngineHarness()
+        let sut = try hosted(TodayBuddyGrid(e: h.engine, buddies: buddies, calendar: cal), h).inspect()
         #expect(sut.findAll(TodayBuddyCard.self).count == 4)
     }
 
@@ -116,8 +118,9 @@ struct TodayPageTests {
 
     @Test func breatheNowOnlyOnShanti() throws {
         let t = day(2026, 3, 4, 16, 0)
+        let h = EngineHarness()
         let sut = try hosted(
-            TodayBuddyGrid(buddies: HabitID.allCases.map { buddy($0, status: .next(t)) }, calendar: cal), EngineHarness()
+            TodayBuddyGrid(e: h.engine, buddies: HabitID.allCases.map { buddy($0, status: .next(t)) }, calendar: cal), h
         ).inspect()
         #expect(sut.findAll(ViewType.Button.self, where: { (try? $0.labelView().find(text: "Breathe now")) != nil }).count == 1)
         #expect(throws: Never.self) { try card(buddy(.meditation, status: .next(t))).find(text: "Breathe now") }
@@ -127,7 +130,7 @@ struct TodayPageTests {
     @Test func breatheNowStartsTheSession() throws {
         let h = EngineHarness()
         let b = buddy(.meditation, status: .next(day(2026, 3, 4, 16, 0)))
-        try hosted(TodayBuddyCard(buddy: b, calendar: cal), h).inspect().find(button: "Breathe now").tap()
+        try hosted(TodayBuddyCard(e: h.engine, buddy: b, calendar: cal), h).inspect().find(button: "Breathe now").tap()
         #expect(h.presenter.calls.contains(.showSession(.meditation)))
     }
 
@@ -165,7 +168,8 @@ struct TodayPageTests {
     }
 
     @Test func headerShowsDateAndGreeting() throws {
-        let sut = try hosted(TodayHeader(dateLine: "TUESDAY, 4 MARCH", greeting: "Good morning"), EngineHarness()).inspect()
+        let h = EngineHarness()
+        let sut = try hosted(TodayHeader(e: h.engine, dateLine: "TUESDAY, 4 MARCH", greeting: "Good morning"), h).inspect()
         #expect(throws: Never.self) { try sut.find(text: "TUESDAY, 4 MARCH") }
         #expect(throws: Never.self) { try sut.find(text: "Good morning") }
         #expect(throws: Never.self) { try sut.find(BreakMenu.self) }
@@ -173,7 +177,7 @@ struct TodayPageTests {
 
     @Test func quickReminderButtonOpensTheAddPopup() throws {
         let h = EngineHarness()
-        let sut = try hosted(TodayHeader(dateLine: "X", greeting: "Y"), h).inspect()
+        let sut = try hosted(TodayHeader(e: h.engine, dateLine: "X", greeting: "Y"), h).inspect()
         try Find.button(sut, holding: "Quick reminder").tap()
         #expect(h.presenter.calls.last == .showQuickAdd)
     }

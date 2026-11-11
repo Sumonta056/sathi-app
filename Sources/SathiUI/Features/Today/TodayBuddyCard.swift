@@ -2,7 +2,7 @@ import SathiCore
 import SwiftUI
 
 struct TodayBuddyCard: View {
-    @EnvironmentObject var e: Engine
+    let e: Engine
     let buddy: TodayBuddy
     let calendar: Calendar
 
