@@ -4,16 +4,9 @@ import SwiftUI
 struct WaterSettingsTab: View {
     @EnvironmentObject var e: Engine
 
-    private static let copy = HeroCopy(
-        eyebrow: "FOTA · WATER",
-        title: "Small sips, all day long",
-        hint: "Fota taps you on the shoulder when it is time for a glass.",
-        switchLabel: "Water reminders"
-    )
-
     var body: some View {
         let engine = e
-        HabitSettingsPage(habit: .water, copy: Self.copy) {
+        HabitSettingsPage(habit: .water) {
             SettingsSection("Rhythm") { WaterRhythmCard() }
             DaysOffCard(habit: .water)
             SettingsSection("Daily goal") {

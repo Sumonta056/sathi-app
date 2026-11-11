@@ -4,12 +4,10 @@ import SwiftUI
 struct HabitSettingsPage<Sections: View>: View {
     @EnvironmentObject var e: Engine
     let habit: HabitID
-    let copy: HeroCopy
     let sections: Sections
 
-    init(habit: HabitID, copy: HeroCopy, @ViewBuilder sections: () -> Sections) {
+    init(habit: HabitID, @ViewBuilder sections: () -> Sections) {
         self.habit = habit
-        self.copy = copy
         self.sections = sections()
     }
 
@@ -17,16 +15,6 @@ struct HabitSettingsPage<Sections: View>: View {
         let engine = e
         let on = engine.data.prefs.isEnabled(habit)
         VStack(alignment: .leading, spacing: UIMetrics.pageSpacing) {
-            HeroCard(
-                habit: habit,
-                eyebrow: copy.eyebrow,
-                title: copy.title,
-                hint: copy.hint,
-                isOn: engine.enabledBinding(habit),
-                switchLabel: copy.switchLabel
-            ) {
-                StaticBuddy(habit: habit)
-            }
             VStack(alignment: .leading, spacing: UIMetrics.pageSpacing) {
                 sections
             }

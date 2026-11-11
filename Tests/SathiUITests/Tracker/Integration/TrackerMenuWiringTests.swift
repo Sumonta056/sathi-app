@@ -34,14 +34,8 @@ struct TrackerMenuWiringTests {
         #expect(h.engine.trackerPrompt?.kind == .whatNow)
     }
 
-    @Test func settingsSidebarHasTheMyDayGroupWithTheTracker() throws {
-        let sut = try SettingsSidebar(tab: Box(SettingsTab.general).binding).environmentObject(EngineHarness().engine).inspect()
-        #expect(throws: Never.self) { try sut.find(text: Copywriter.trackerSidebarGroup) }
-        #expect(throws: Never.self) { try sut.find(text: Copywriter.trackerSettingsTitle) }
-    }
-
     @Test func settingsShowsTheTrackerPage() throws {
-        let sut = try SettingsView(tab: .tracker).environmentObject(EngineHarness().engine).inspect()
+        let sut = try SettingsPageView(page: .tracker).environmentObject(EngineHarness().engine).inspect()
         #expect(throws: Never.self) { try sut.find(TrackerSettingsPage.self) }
     }
 }

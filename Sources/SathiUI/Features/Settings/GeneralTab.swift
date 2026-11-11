@@ -6,7 +6,6 @@ struct GeneralTab: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: UIMetrics.pageSpacing) {
-            PageTitle(title: "Hi there", subtitle: "A few things that apply to every buddy.")
             SettingsSection("You") {
                 SettingsCard {
                     SettingRow(label: "What should we call you?", showsDivider: false) {
@@ -45,8 +44,8 @@ struct GeneralTab: View {
                     }
                 }
             }
-            QuickSettingsCard()
             SettingsSection("Behaviour") { BehaviourCard() }
+            AboutFooter()
         }
     }
 }

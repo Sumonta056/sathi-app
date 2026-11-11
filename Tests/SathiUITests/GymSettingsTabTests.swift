@@ -23,11 +23,10 @@ struct GymSettingsTabTests {
         sut.findAll(ViewType.Text.self).compactMap { try? $0.string() }
     }
 
-    @Test func tabShowsHeroGoalRhythmIdeasAndThreeStrictnessCards() throws {
+    @Test func tabShowsGoalRhythmIdeasAndThreeStrictnessCards() throws {
         let h = harness()
         let sut = try tab(h)
         let texts = [
-            "SHOKTI · GYM", "Get up, little and often", "Shokti suggests a short move while you work.",
             "Sessions a day", "Each session", "Daily goal: 20 min · 4 × 5 min",
             "Work hours", "Popups spread evenly inside these hours.", "Work days",
             "+ Add idea", "Gentle", "Nudgy", "Strict", Strictness.strict.detail
@@ -35,7 +34,6 @@ struct GymSettingsTabTests {
         for text in texts {
             #expect(throws: Never.self) { try sut.find(text: text) }
         }
-        #expect(throws: Never.self) { try Find.button(sut, label: "Gym reminders") }
         #expect(throws: Never.self) { try sut.find(GymGoalCard.self) }
         #expect(throws: Never.self) { try sut.find(GymIdeasCard.self) }
         #expect(sut.findAll(ViewType.TextField.self).isEmpty)

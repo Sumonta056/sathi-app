@@ -100,16 +100,9 @@ struct WaterSettingsTabTests {
         #expect(h.engine.data.prefs.water.container == .bottle)
     }
 
-    @Test func heroSwitchTurnsWaterOff() throws {
-        let h = EngineHarness()
-        try Find.button(tab(h), label: "Water reminders").tap()
-        #expect(!h.engine.data.prefs.water.enabled)
-    }
-
     @Test func sectionsAreDisabledWhileWaterIsOff() throws {
         let sut = try tab(EngineHarness { $0.prefs.water.enabled = false })
         #expect(try sut.find(button: "60 min").isDisabled())
         #expect(try Find.button(sut, holding: "Gentle").isDisabled())
-        #expect(try !Find.button(sut, label: "Water reminders").isDisabled())
     }
 }

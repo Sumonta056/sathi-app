@@ -2,23 +2,16 @@ import SathiCore
 import SwiftUI
 
 struct MeditationSettingsTab: View {
-    private static let copy = HeroCopy(
-        eyebrow: "SHANTI · MEDITATION",
-        title: "Pause. Breathe. Come back.",
-        hint: "Shanti guides a short breath with a soft glowing circle.",
-        switchLabel: "Meditation reminders"
-    )
-
     @EnvironmentObject var e: Engine
 
     var body: some View {
         let engine = e
-        HabitSettingsPage(habit: .meditation, copy: Self.copy) {
+        HabitSettingsPage(habit: .meditation) {
             SettingsSection("Goal") { MeditationGoalCard() }
             SettingsSection("Rhythm") { MeditationRhythmCard() }
             DaysOffCard(habit: .meditation)
             SettingsSection("Breathing pattern") { BreathingPatternCards() }
-            SettingsSection("Sound") { MeditationSoundCard() }
+            SoundLink()
             SettingsSection("If I ignore Shanti") {
                 StrictnessCards(
                     options: Strictness.allCases,

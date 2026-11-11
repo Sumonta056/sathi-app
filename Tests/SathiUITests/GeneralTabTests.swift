@@ -12,10 +12,23 @@ struct GeneralTabTests {
         try hosted(GeneralTab(), h).inspect()
     }
 
-    @Test func showsTitleAndSubtitle() throws {
+    @Test func footerShowsMadeByWithLinks() throws {
         let sut = try tab(EngineHarness())
-        #expect(throws: Never.self) { try sut.find(text: "Hi there") }
-        #expect(throws: Never.self) { try sut.find(text: "A few things that apply to every buddy.") }
+        #expect(throws: Never.self) { try sut.find(text: "Made by Sumonta") }
+        let urls = try sut.findAll(ViewType.Link.self).map { try $0.url() }
+        #expect(urls.contains(Links.github))
+        #expect(urls.contains(Links.portfolio))
+    }
+
+    @Test func footerShowsTheVersionText() throws {
+        let sut = try tab(EngineHarness())
+        #expect(throws: Never.self) { try sut.find(text: AboutFooter.versionText) }
+    }
+
+    @Test func hasNoQuickReminderCardOrSoundSwitch() throws {
+        let sut = try tab(EngineHarness())
+        #expect(sut.findAll(QuickSettingsCard.self).isEmpty)
+        #expect(Find.lacks(sut, text: "Play soft sounds"))
     }
 
     @Test func atRestThereIsNoTextField() throws {
@@ -56,12 +69,6 @@ struct GeneralTabTests {
         let sut = try tab(EngineHarness { $0.prefs.general.ignoreMinutes = 7 })
         #expect(throws: Never.self) { try sut.find(text: "5 min") }
         #expect(throws: Never.self) { try sut.find(text: "7 min") }
-    }
-
-    @Test func soundsSwitchTurnsSoundOff() throws {
-        let h = EngineHarness()
-        try Find.button(tab(h), label: "Sounds").tap()
-        #expect(!h.engine.data.prefs.general.soundOn)
     }
 
     @Test func quietInMeetingsIsOffAndDisabled() throws {

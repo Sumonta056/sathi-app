@@ -12,12 +12,6 @@ struct ReadingSettingsTabTests {
         try hosted(ReadingSettingsTab(), h).inspect()
     }
 
-    @Test func showsTheHero() throws {
-        let sut = try tab(EngineHarness())
-        #expect(throws: Never.self) { try sut.find(text: "BOI · READING") }
-        #expect(throws: Never.self) { try sut.find(text: "A few pages before bed") }
-    }
-
     @Test func saturdayChipTurnsSaturdayOff() throws {
         let h = EngineHarness()
         try Find.button(tab(h), label: "Saturday").tap()

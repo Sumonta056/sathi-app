@@ -2,18 +2,11 @@ import SathiCore
 import SwiftUI
 
 struct GymSettingsTab: View {
-    private static let copy = HeroCopy(
-        eyebrow: "SHOKTI · GYM",
-        title: "Get up, little and often",
-        hint: "Shokti suggests a short move while you work.",
-        switchLabel: "Gym reminders"
-    )
-
     @EnvironmentObject var e: Engine
 
     var body: some View {
         let engine = e
-        HabitSettingsPage(habit: .gym, copy: Self.copy) {
+        HabitSettingsPage(habit: .gym) {
             SettingsSection("Daily goal") { GymGoalCard() }
             SettingsSection("Rhythm") { GymRhythmCard() }
             DaysOffCard(habit: .gym)
