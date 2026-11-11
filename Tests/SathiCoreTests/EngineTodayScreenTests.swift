@@ -160,3 +160,17 @@ struct EngineTodayScreenTests {
         #expect(h.engine.todayScreen.comingUp.contains { $0.kind == .habit(.water) && $0.time == until })
     }
 }
+
+@MainActor
+@Suite("Today buddies")
+struct EngineTodayBuddiesTests {
+    @Test func todayBuddiesEqualTheScreenBuddies() {
+        let h = EngineHarness(at: day(2026, 3, 4, 10)) {
+            $0.prefs.gym.enabled = true
+            $0.prefs.meditation.enabled = true
+        }
+        h.engine.logWater(3)
+        #expect(h.engine.todayBuddies == h.engine.todayScreen.buddies)
+        #expect(h.engine.todayBuddies.count == HabitID.allCases.count)
+    }
+}

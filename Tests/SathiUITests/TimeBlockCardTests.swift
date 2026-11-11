@@ -16,9 +16,9 @@ struct TimeBlockCardTests {
         #expect((try? sut.find(viewWithAccessibilityIdentifier: "block.start")) == nil)
     }
 
-    @Test func toolRowTimeBlockOpensTheStartPopup() throws {
+    @Test func actionRowTimeBlockOpensTheStartPopup() throws {
         let h = Block.harness()
-        try Find.button(hosted(ToolRow(), h).inspect(), holding: "Time block").tap()
+        try Find.button(hosted(QuickActionRow(), h).inspect(), holding: "Time block").tap()
         #expect(h.presenter.calls.last == .showBlockStart)
     }
 
@@ -99,14 +99,11 @@ struct TimeBlockCardTests {
         #expect(h.engine.timeBlock == nil)
     }
 
-    @Test func menuPanelHoldsOneCardAfterTheQuickList() throws {
-        let h = Quick.harness([Quick.item("A", minutes: 5)])
+    @Test func menuPanelHoldsOneTimeBlockCardWithEndNow() throws {
+        let h = Block.harness()
         h.startBlock("Plan", .minutes(30))
         let sut = try hosted(MenuPanel(), h).inspect()
         #expect(sut.findAll(TimeBlockCard.self).count == 1)
-        let texts = MenuFind.texts(sut)
-        let quick = try #require(texts.firstIndex(of: "Quick reminders"))
-        let block = try #require(texts.firstIndex(of: "End now"))
-        #expect(quick < block)
+        #expect(MenuFind.texts(sut).contains("End now"))
     }
 }

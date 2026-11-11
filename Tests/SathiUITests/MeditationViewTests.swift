@@ -20,17 +20,11 @@ struct MeditationViewTests {
         #expect(HabitID.meditation.kind == .pebble)
     }
 
-    @Test func habitCardBreatheStartsMeditation() throws {
-        let h = harness()
-        let sut = HabitCard(id: .meditation).environmentObject(h.engine)
-        try MenuFind.control(sut.inspect(), "Breathe").tap()
-        #expect(h.engine.phase(.meditation) == .session)
-    }
-
-    @Test func panelShowsAMeditationCardWhenEnabled() throws {
+    @Test func panelShowsAMeditationRow() throws {
         let h = harness()
         let sut = MenuPanel().environmentObject(h.engine)
-        #expect(try sut.inspect().findAll(HabitCard.self).count == 3)
+        let rows = try sut.inspect().findAll(QuickBuddyRow.self)
+        #expect(try rows.contains { try $0.actualView().buddy.habit == .meditation })
     }
 
     @Test func readingSessionHasNoBreathingPhase() throws {

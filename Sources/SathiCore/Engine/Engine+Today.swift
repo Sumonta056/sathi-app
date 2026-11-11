@@ -1,10 +1,22 @@
 import Foundation
 
 extension Engine {
+    package var todayBuddies: [TodayBuddy] {
+        todayBuddies(todayStatuses)
+    }
+
+    private var todayStatuses: [HabitID: TodayBuddyStatus] {
+        Dictionary(uniqueKeysWithValues: HabitID.allCases.map { ($0, todayStatus($0)) })
+    }
+
+    private func todayBuddies(_ statuses: [HabitID: TodayBuddyStatus]) -> [TodayBuddy] {
+        HabitID.allCases.map { todayBuddy($0, status: statuses[$0] ?? .off) }
+    }
+
     package var todayScreen: TodayScreen {
         let n = clock.now.wholeMinute
-        let statuses = Dictionary(uniqueKeysWithValues: HabitID.allCases.map { ($0, todayStatus($0)) })
-        let buddies = HabitID.allCases.map { todayBuddy($0, status: statuses[$0] ?? .off) }
+        let statuses = todayStatuses
+        let buddies = todayBuddies(statuses)
         return TodayScreen(
             dateLine: Copywriter.todayDateLine(n, calendar: calendar),
             greeting: Copywriter.greeting(at: n, name: data.prefs.general.name, calendar: calendar),
