@@ -6,14 +6,12 @@ struct TodayPage: View {
     @StateObject private var model = TodayModel()
 
     var body: some View {
-        Group {
-            if let screen = model.screen { content(screen) }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .padding(UIMetrics.mainContentPadding)
-        .padding(.top, UIMetrics.titleBarInset)
-        .onAppear { model.attach(e) }
-        .onDisappear { model.detach() }
+        content(model.screen ?? e.todayScreen)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .padding(UIMetrics.mainContentPadding)
+            .padding(.top, UIMetrics.titleBarInset)
+            .onAppear { model.attach(e) }
+            .onDisappear { model.detach() }
     }
 
     private func content(_ screen: TodayScreen) -> some View {

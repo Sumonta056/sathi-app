@@ -40,7 +40,10 @@ struct TodayNowCard: View {
 
     private func idle(nextAsk: Date?) -> some View {
         card {
-            texts(title: Copywriter.todayIdleTitle, detail: Copywriter.todayIdleDetail(nextAsk: nextAsk, calendar: calendar))
+            texts(
+                title: Copywriter.trackerNotTracking,
+                detail: nextAsk.map { Copywriter.todayIdleDetail(nextAsk: $0, calendar: calendar) }
+            )
             Button { e.openTrackerPanel() } label: { Text(verbatim: Copywriter.todayLogActivity) }
                 .buttonStyle(AccentButton(
                     accent: Night.tracker, height: UIMetrics.todayNowButtonHeight,
@@ -50,14 +53,14 @@ struct TodayNowCard: View {
     }
 
     private var off: some View {
-        card {
-            texts(title: Copywriter.todayTrackerOff, detail: Copywriter.todayTrackerOffHint)
+        card(neutral: true) {
+            texts(title: Copywriter.todayTrackerOff, detail: nil)
             Button { e.openSettings(.tracker) } label: { Text(verbatim: Copywriter.todayTurnOn) }
                 .buttonStyle(OutlineNowButton())
         }
     }
 
-    private func texts(title: String, detail: String) -> some View {
+    private func texts(title: String, detail: String?) -> some View {
         VStack(alignment: .leading, spacing: UIMetrics.todayNowTextGap) {
             Text(verbatim: Copywriter.todayNowLabel)
                 .font(Typography.tracker(UIMetrics.todayNowLabelFont, .bold))
@@ -67,20 +70,22 @@ struct TodayNowCard: View {
                 .font(Typography.tracker(UIMetrics.todayNowTitleFont, .bold))
                 .foregroundStyle(Night.text)
                 .lineLimit(1)
-            Text(verbatim: detail)
-                .font(Typography.tracker(UIMetrics.todayNowDetailFont, .regular))
-                .foregroundStyle(Night.trackerNowText)
-                .lineLimit(1)
+            if let detail {
+                Text(verbatim: detail)
+                    .font(Typography.tracker(UIMetrics.todayNowDetailFont, .regular))
+                    .foregroundStyle(Night.trackerNowText)
+                    .lineLimit(1)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private func card(@ViewBuilder _ content: () -> some View) -> some View {
+    private func card(neutral: Bool = false, @ViewBuilder _ content: () -> some View) -> some View {
         let shape = RoundedRectangle(cornerRadius: UIMetrics.todayCardRadius, style: .continuous)
         return HStack(spacing: UIMetrics.todayNowGap, content: content)
             .padding(UIMetrics.todayNowPadding)
-            .background(shape.fill(Night.trackerFill))
-            .overlay(shape.stroke(Night.trackerNowBorder))
+            .background(shape.fill(neutral ? Night.card : Night.trackerFill))
+            .overlay(shape.stroke(neutral ? Night.border : Night.trackerNowBorder))
     }
 }
 

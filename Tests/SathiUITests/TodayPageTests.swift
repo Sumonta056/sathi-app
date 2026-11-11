@@ -61,8 +61,8 @@ struct TodayPageTests {
     @Test func idleNowCardOffersToLogAnActivity() throws {
         let h = EngineHarness.tracker()
         let sut = try hosted(TodayNowCard(now: .idle(nextAsk: day(2026, 3, 4, 10, 30)), calendar: cal), h).inspect()
-        #expect(throws: Never.self) { try sut.find(text: "Nothing running") }
-        #expect(throws: Never.self) { try sut.find(text: "Next ask at \(clock(day(2026, 3, 4, 10, 30)))") }
+        #expect(throws: Never.self) { try sut.find(text: "Not tracking now") }
+        #expect(throws: Never.self) { try sut.find(text: "Next ask \(clock(day(2026, 3, 4, 10, 30)))") }
         try Find.button(sut, holding: "Log activity").tap()
         #expect(h.tracker.prompt?.kind == .center)
     }
@@ -176,5 +176,16 @@ struct TodayPageTests {
         let sut = try hosted(TodayHeader(dateLine: "X", greeting: "Y"), h).inspect()
         try Find.button(sut, holding: "Quick reminder").tap()
         #expect(h.presenter.calls.last == .showQuickAdd)
+    }
+
+    @Test func idleWithoutNextAskShowsNoAskLine() throws {
+        let sut = try hosted(TodayNowCard(now: .idle(nextAsk: nil), calendar: cal), EngineHarness.tracker()).inspect()
+        #expect(throws: Never.self) { try sut.find(text: "Not tracking now") }
+        #expect(Find.lacks(sut, text: "Next ask"))
+    }
+
+    @Test func pageShowsTheFirstScreenBeforeAppear() throws {
+        let sut = try hosted(TodayPage(), EngineHarness()).inspect()
+        #expect(throws: Never.self) { try sut.find(TodayHeader.self) }
     }
 }
