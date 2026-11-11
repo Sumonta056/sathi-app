@@ -2,6 +2,8 @@ import Foundation
 
 extension Copywriter {
     package static let todayStillOnIt = "Still on it?"
+    package static let todayDueNow = "Due now"
+    package static let todayPaused = "Paused"
     package static let todayDaySummary = "Day summary"
     package static let todayNothingMore = "Nothing more today."
     package static let todayGlassesUnit = "glasses"
@@ -31,5 +33,9 @@ extension Copywriter {
 
     package static func todayLogged(_ seconds: TimeInterval) -> String {
         trackerDuration(seconds) + " logged"
+    }
+
+    package static func todaySnoozed(until time: Date, calendar: Calendar) -> String {
+        "Snoozed until " + trackerClock(time, calendar: calendar)
     }
 }

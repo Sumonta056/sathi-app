@@ -11,6 +11,9 @@ package enum TodayBuddyStatus: Equatable, Sendable {
     case dayOff
     case off
     case noReminder
+    case dueNow
+    case paused
+    case snoozed(Date)
     case next(Date)
     case gymSession(Int, of: Int, Date)
 }

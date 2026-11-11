@@ -75,7 +75,7 @@ struct TodayModelTests {
         let bag = model.$screen.dropFirst().sink { _ in published += 1 }
         h.engine.logWater(1)
         await settle()
-        #expect(published >= 1)
+        #expect(published == 1)
         #expect(model.screen?.buddies.first { $0.habit == .water }?.total == "1")
         bag.cancel()
     }

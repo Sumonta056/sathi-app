@@ -124,4 +124,39 @@ struct EngineTodayScreenTests {
         #expect(total == 4)
         #expect(due > h.clock.now)
     }
+
+    @Test func dueNowBuddyShowsDueNowAndLeavesComingUp() {
+        let h = EngineHarness(at: day(2026, 3, 4, 10)) {
+            only(&$0, .water)
+            $0.live.lastWaterDone = day(2026, 3, 4, 6)
+        }
+        h.showReminder(.water)
+        #expect(buddy(h, .water).status == .dueNow)
+        #expect(!h.engine.todayScreen.comingUp.contains { $0.kind == .habit(.water) })
+    }
+
+    @Test func pausedDayShowsPausedAndLeavesComingUp() {
+        let h = EngineHarness(at: day(2026, 3, 4, 10)) {
+            only(&$0, .water)
+            $0.live.lastWaterDone = day(2026, 3, 4, 9, 30)
+        }
+        h.engine.pause(hours: 2)
+        #expect(buddy(h, .water).status == .paused)
+        #expect(!h.engine.todayScreen.comingUp.contains { $0.kind == .habit(.water) })
+    }
+
+    @Test func snoozedBuddyShowsSnoozedAndStaysInComingUp() {
+        let h = EngineHarness(at: day(2026, 3, 4, 10)) {
+            only(&$0, .water)
+            $0.live.lastWaterDone = day(2026, 3, 4, 6)
+        }
+        h.showReminder(.water)
+        h.engine.snooze(.water)
+        guard case let .snoozed(until) = buddy(h, .water).status else {
+            Issue.record("not snoozed")
+            return
+        }
+        #expect(until > h.clock.now)
+        #expect(h.engine.todayScreen.comingUp.contains { $0.kind == .habit(.water) && $0.time == until })
+    }
 }

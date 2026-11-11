@@ -3,13 +3,15 @@ import Foundation
 extension Engine {
     package var todayScreen: TodayScreen {
         let n = clock.now.wholeMinute
+        let statuses = Dictionary(uniqueKeysWithValues: HabitID.allCases.map { ($0, todayStatus($0)) })
+        let buddies = HabitID.allCases.map { todayBuddy($0, status: statuses[$0] ?? .off) }
         return TodayScreen(
             dateLine: Copywriter.todayDateLine(n, calendar: calendar),
             greeting: Copywriter.greeting(at: n, name: data.prefs.general.name, calendar: calendar),
             now: todayNow(n),
-            buddies: HabitID.allCases.map(todayBuddy),
+            buddies: buddies,
             sofar: todaySoFar(n),
-            comingUp: ComingUpList.make(items: comingUpItems(n), now: n, calendar: calendar)
+            comingUp: ComingUpList.make(items: comingUpItems(statuses), now: n, calendar: calendar)
         )
     }
 
@@ -26,11 +28,11 @@ extension Engine {
         )
     }
 
-    private func todayBuddy(_ id: HabitID) -> TodayBuddy {
+    private func todayBuddy(_ id: HabitID, status: TodayBuddyStatus) -> TodayBuddy {
         let goal = todayGoal(id)
         return TodayBuddy(
             habit: id, total: goal.total, goal: goal.goal, unit: goal.unit,
-            progress: min(1, progress(id)), status: todayStatus(id)
+            progress: min(1, progress(id)), status: status
         )
     }
 
@@ -45,9 +47,14 @@ extension Engine {
 
     private func todayStatus(_ id: HabitID) -> TodayBuddyStatus {
         if !enabled(id) { return .off }
+        if isActive(id) { return .dueNow }
+        if pausedUntil != nil { return .paused }
         if isOffToday(id) { return .dayOff }
-        if goalMet(id), state(id).snoozedUntil == nil { return .met }
+        let snoozedUntil = state(id).snoozedUntil
+        if goalMet(id), snoozedUntil == nil { return .met }
         guard let due = todayNextDue(id) else { return .noReminder }
+        if due <= clock.now.wholeMinute { return .dueNow }
+        if snoozedUntil != nil { return .snoozed(due) }
         guard id == .gym else { return .next(due) }
         let g = gymProgress
         return .gymSession(g.current, of: g.sessions, due)
@@ -71,17 +78,17 @@ extension Engine {
         )
     }
 
-    private func comingUpItems(_ n: Date) -> [ComingUpItem] {
+    private func comingUpItems(_ statuses: [HabitID: TodayBuddyStatus]) -> [ComingUpItem] {
         var items: [ComingUpItem] = []
         if let ask = trackerNextPopup {
             let title = runningActivity == nil ? Copywriter.trackerWhatNow : Copywriter.todayStillOnIt
             items.append(ComingUpItem(kind: .trackerAsk, title: title, time: ask.wholeMinute))
         }
         for id in HabitID.allCases {
-            switch todayStatus(id) {
-            case let .next(due), let .gymSession(_, _, due):
+            switch statuses[id] ?? .off {
+            case let .next(due), let .snoozed(due), let .gymSession(_, _, due):
                 items.append(ComingUpItem(kind: .habit(id), title: Copywriter.todayItemName(id), time: due))
-            case .met, .dayOff, .off, .noReminder:
+            case .met, .dayOff, .off, .noReminder, .dueNow, .paused:
                 break
             }
         }
