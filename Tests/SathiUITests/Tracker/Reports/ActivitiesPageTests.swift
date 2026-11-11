@@ -40,12 +40,19 @@ struct ActivitiesPageTests {
         #expect(MenuFind.hasText(sut, containing: "Fix login bug"))
         #expect(throws: Never.self) { try sut.find(text: Copywriter.activitiesStandupTitle) }
         #expect(throws: Never.self) { try Find.button(sut, holding: Copywriter.activitiesCopy) }
-        #expect(throws: Never.self) { try sut.find(text: "+ Add past activity") }
+        #expect(throws: Never.self) { try sut.find(text: Copywriter.activitiesAdd) }
     }
 
-    @Test func dayShowsTheTotalsCard() throws {
+    @Test func dayShowsTheCategoryTableTheTilesAndTheTimeline() throws {
         let (sut, _) = try page()
-        #expect(throws: Never.self) { try sut.find(text: Copywriter.activitiesTotalsTitle) }
+        #expect(throws: Never.self) { try sut.find(text: "logged · 1 category") }
+        #expect(throws: Never.self) { try sut.find(text: Copywriter.activitiesTileFocus) }
+        #expect(throws: Never.self) { try sut.find(text: Copywriter.activitiesTimeline) }
+    }
+
+    @Test func weekShowsTheCategoryTableOnTop() throws {
+        let (sut, _) = try page(range: .week)
+        #expect(sut.findAll(CategoryTableView.self).count == 1)
     }
 
     @Test func theRouteDayOpensThatDay() throws {
@@ -69,11 +76,11 @@ struct ActivitiesPageTests {
         #expect(MenuFind.texts(sut).contains("+2 h vs last week"))
     }
 
-    @Test func weekShowsCategoriesWithChangeAndTheCopyCard() throws {
+    @Test func weekShowsTheCategoryTableAndTheCopyCard() throws {
         let (sut, _) = try page(range: .week)
         let texts = MenuFind.texts(sut)
         #expect(texts.contains("Coding"))
-        #expect(texts.contains("Time by category vs last week"))
+        #expect(texts.contains("logged · 2 categories"))
         #expect(throws: Never.self) { try Find.button(sut, holding: Copywriter.activitiesCopy) }
     }
 

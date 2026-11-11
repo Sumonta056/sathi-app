@@ -14,36 +14,59 @@ struct ActivityReportEditTests {
     private static let away = Activity(kind: .away, text: "Away", start: Fix.at(4, 12), end: Fix.at(4, 13), awayPlace: .walk)
     private static let block = Activity(kind: .timeBlock, text: "Deep work", start: Fix.at(4, 14), end: Fix.at(4, 15))
 
-    private func row(_ a: Activity, running: Bool = false, deleted: @escaping (ActivityID) -> Void = { _ in }) -> ActivityLogRowView {
-        ActivityLogRowView(
-            row: .activity(a, running: running), categories: ActivityCategory.defaults, calendar: Fix.calendar,
-            onEdit: {}, onDelete: deleted, onFill: { _ in }, onSaveToCalendar: { _ in }
+    private func row(_ a: Activity, running: Bool = false, deleted: @escaping (ActivityID) -> Void = { _ in }) -> ActivityTimelineRow {
+        ActivityTimelineRow(
+            activity: a, running: running, categories: ActivityCategory.defaults, calendar: Fix.calendar,
+            onDelete: { deleted(a.id) }
         )
     }
 
-    private func buttons(_ v: some View, _ title: String) throws -> Int {
-        try v.inspect().findAll(ViewType.Button.self) { try $0.labelView().find(text: title) != nil }.count
+    private func labelled(_ v: some View, _ label: String) throws -> Bool {
+        (try? v.inspect().find(viewWithAccessibilityLabel: label)) != nil
     }
 
     @Test(arguments: [(work, false, true), (away, false, true), (block, false, false), (work, true, false)])
     func editShowsOnlyOnEditableRows(_ a: Activity, _ running: Bool, _ shows: Bool) {
-        #expect(ActivityLogRowView.canEdit(a, running: running) == shows)
+        #expect(ActivityTimelineRow.canEdit(a, running: running) == shows)
     }
 
-    @Test func anAwayRowHasEdit() throws {
-        #expect(try buttons(row(Self.away), "Edit") == 1)
+    @Test func anAwayRowHasAPencil() throws {
+        #expect(try labelled(row(Self.away), "Edit Away · Walk"))
     }
 
-    @Test func theRunningRowHasNoEdit() throws {
-        #expect(try buttons(row(Self.work, running: true), "Edit") == 0)
+    @Test func theRunningRowHasNoPencil() throws {
+        #expect(try !labelled(row(Self.work, running: true), "Edit Fix login bug"))
     }
 
-    @Test func aTimeBlockRowHasDeleteButNoEdit() throws {
+    @Test func aTimeBlockRowHasDeleteButNoPencil() throws {
         var deleted: [ActivityID] = []
         let sut = row(Self.block) { deleted.append($0) }
-        #expect(try buttons(sut, "Edit") == 0)
-        try sut.inspect().find(ViewType.Button.self) { try $0.labelView().find(text: "Delete") != nil }.tap()
+        #expect(try !labelled(sut, "Edit Deep work"))
+        try Find.button(sut.inspect(), label: "Delete Deep work").tap()
         #expect(deleted == [Self.block.id])
+    }
+
+    @Test(arguments: [(59, 44), (60, 60), (90, 60), (120, 60), (121, 68), (300, 68)])
+    func theRowHeightFollowsTheLengthBucket(_ minutes: Int, _ height: Double) {
+        let a = Activity(text: "x", start: Fix.at(4, 9), end: Fix.at(4, 9).addingTimeInterval(TimeInterval(minutes * 60)))
+        #expect(ActivityTimelineRow.height(a) == CGFloat(height))
+    }
+
+    @Test func aRowShowsItsCategoryLengthAndCalendar() throws {
+        var a = Self.work
+        a.calendarID = "work"
+        a.eventID = "ev1"
+        let sut = try ActivityTimelineRow(activity: a, categories: ActivityCategory.defaults, calendar: Fix.calendar, calendarName: "Work").inspect()
+        #expect(throws: Never.self) { try sut.find(text: "Fix login bug") }
+        #expect(throws: Never.self) { try sut.find(text: "Coding") }
+        #expect(throws: Never.self) { try sut.find(text: "1h 30m") }
+        #expect(throws: Never.self) { try sut.find(text: "Work") }
+    }
+
+    @Test func aRowWithoutAnEventShowsNoCalendar() throws {
+        let sut = try ActivityTimelineRow(activity: Self.work, categories: ActivityCategory.defaults, calendar: Fix.calendar, calendarName: "Work")
+            .inspect()
+        #expect(Find.lacks(sut, text: "Work"))
     }
 
     @Test func anAwayDraftSendsItsPlace() {
@@ -55,17 +78,18 @@ struct ActivityReportEditTests {
         #expect(e.end == Fix.at(4, 13))
     }
 
-    @Test func anAwayFormShowsThePlaceChipsAndNoTextOrCategory() throws {
-        let sut = ActivityEditForm(
-            draft: ActivityEditDraft(Self.away, calendar: Fix.calendar), categories: ActivityCategory.defaults,
-            dayStart: Fix.key(4).start(in: Fix.calendar), calendar: Fix.calendar,
-            save: { _ in .saved(ActivityID()) }, delete: {}, close: {}
+    @Test func anAwaySectionShowsThePlaceChipsAndNoTextCategoryOrCalendar() throws {
+        let sut = ActivityEditSection(
+            draft: ActivityEditDraft(Self.away, calendar: Fix.calendar), title: "Edit activity", accent: Night.chipText,
+            categories: ActivityCategory.defaults, calendars: Fix.calendars, dayStart: Fix.key(4).start(in: Fix.calendar),
+            calendar: Fix.calendar, save: { _ in .saved(ActivityID()) }, delete: {}, close: {}
         )
         let v = try sut.inspect()
         for place in AwayPlace.allCases {
             #expect(throws: Never.self) { try v.find(text: Copywriter.trackerAwayPlace(place)) }
         }
-        #expect(throws: (any Error).self) { try v.find(text: Copywriter.trackerNoCategory) }
+        #expect(Find.lacks(v, text: "CATEGORY"))
+        #expect(Find.lacks(v, text: "CALENDAR"))
         #expect(throws: (any Error).self) { try v.find(LazyTextField.self) }
     }
 

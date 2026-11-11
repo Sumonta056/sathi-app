@@ -3,28 +3,28 @@ import SwiftUI
 
 struct ActivityDayView: View {
     let day: ActivityDay
+    let overview: ActivityDayOverview
     let categories: [ActivityCategory]
     var calendar: Calendar = .current
+    var calendars: [CalendarChoice] = []
     var actions = ActivityDayActions()
+    var editing: ActivityEditTarget?
 
     var body: some View {
-        let stats = ActivityDayStats(day)
         ScrollView {
-            HStack(alignment: .top, spacing: UIMetrics.tileGap) {
-                ReportsCard {
-                    ActivityLogView(day: day, categories: categories, calendar: calendar, actions: actions)
+            VStack(alignment: .leading, spacing: UIMetrics.activitiesGap) {
+                WeightedRow(gap: UIMetrics.activitiesGap, weights: UIMetrics.activitiesTopWeights) {
+                    ActivityTableCard(table: ActivityTableCard.day(overview.categories, categories: categories))
+                    ActivityDayTiles(overview: overview)
                 }
-                VStack(spacing: UIMetrics.tileGap) {
-                    ReportsCard {
-                        Text(verbatim: Copywriter.activitiesTotalsTitle).font(Typography.rowLabel).foregroundStyle(Night.text)
-                        ActivityCategoryBars(totals: stats.categories, categories: categories)
-                    }
-                    ActivityTextCard(
-                        title: Copywriter.activitiesStandupTitle,
-                        text: ActivityStandupText.make(day, calendar: calendar), copy: actions.copy
-                    )
-                }
-                .frame(width: UIMetrics.activitiesSideWidth)
+                ActivityTimelineCard(
+                    day: day, categories: categories, calendar: calendar, calendars: calendars, actions: actions, editing: editing
+                )
+                .id(day.day)
+                ActivityTextCard(
+                    title: Copywriter.activitiesStandupTitle,
+                    text: ActivityStandupText.make(day, calendar: calendar), copy: actions.copy
+                )
             }
             .padding(.bottom, UIMetrics.reportsGap)
         }
