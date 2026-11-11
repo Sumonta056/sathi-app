@@ -38,13 +38,25 @@ struct EngineTrackerCalendarSafetyTests {
 
     @Test func aMoveWhoseOldEventCannotBeDeletedRemovesTheNewEventAndKeepsTheOld() {
         let h = EngineHarness.tracker(at: wed(12))
-        h.calendarWriter.nextDeleteResult = false
+        h.calendarWriter.deleteResults = ["ev9": false]
         let a = stored(h)
-        h.engine.editActivity(a.id, edit(.calendar("home")))
+        #expect(h.engine.editActivity(a.id, edit(.calendar("home"))) == .saved(a.id))
         #expect(h.calendarWriter.saved.map(\.calendarID) == ["home"])
         #expect(h.calendarWriter.deleted == ["ev9", "e1"])
         #expect(h.saved.first?.calendarID == "work")
         #expect(h.saved.first?.eventID == "ev9")
+    }
+
+    @Test func aMoveWhoseOldDeleteAndCleanupBothFailSavesTheEditAndSaysTheCalendarFailed() {
+        let h = EngineHarness.tracker(at: wed(12))
+        h.calendarWriter.nextDeleteResult = false
+        let a = stored(h)
+        #expect(h.engine.editActivity(a.id, edit(.calendar("home"))) == .calendarFailed(a.id))
+        #expect(h.calendarWriter.deleted == ["ev9", "e1"])
+        #expect(h.saved.first?.calendarID == "work")
+        #expect(h.saved.first?.eventID == "ev9")
+        #expect(h.saved.first?.text == "Spec v2")
+        #expect(h.saved.first?.end == wed(9, 40))
     }
 
     @Test func aFailedWriteForAnActivityWithoutAnEventKeepsThePickForARetry() {

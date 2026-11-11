@@ -106,6 +106,7 @@ struct ActivityEditDraft: Equatable {
         case .overlap: return Copywriter.trackerEditOverlap
         case .crossesMidnight: return Copywriter.trackerEditCrossesMidnight
         case .inFuture: return Copywriter.trackerEditInFuture
+        case .calendarFailed: return Copywriter.activitiesCalendarFailed
         case .saved, .notFound: return nil
         }
     }

@@ -88,4 +88,12 @@ struct ActivityEditCalendarTests {
         d.setLength(120)
         #expect(d.edit(dayStart: Fix.key(4).start(in: Fix.calendar), calendar: Fix.calendar).end == Fix.key(5).start(in: Fix.calendar))
     }
+
+    @Test func aCalendarFailureShowsTheErrorLineAndKeepsTheSectionOpen() throws {
+        var closed = 0
+        let sut = section(result: .calendarFailed(Fix.items[0].id), closed: { closed += 1 })
+        try sut.inspect().find(ViewType.Button.self) { try $0.labelView().find(text: "Save") != nil }.tap()
+        #expect(closed == 0)
+        #expect(ActivityEditDraft.message(.calendarFailed(ActivityID())) == "Could not update the calendar. Check calendar access.")
+    }
 }
