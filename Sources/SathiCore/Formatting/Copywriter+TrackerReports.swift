@@ -87,7 +87,11 @@ extension Copywriter {
     }
 
     package static func trackerMonthHeader(_ month: Date, days: Int, realWork: TimeInterval, calendar: Calendar) -> String {
-        trackerMonthTitle(month, calendar: calendar) + " · \(days) days tracked · " + trackerDuration(realWork)
+        trackerRangeHeader(title: trackerMonthTitle(month, calendar: calendar), days: days, realWork: realWork)
+    }
+
+    package static func trackerRangeHeader(title: String, days: Int, realWork: TimeInterval) -> String {
+        title + " · \(days) days tracked · " + trackerDuration(realWork)
     }
 
     package static func trackerMonthAverage(_ seconds: TimeInterval) -> String { "Average " + trackerDuration(seconds) + " a day" }
