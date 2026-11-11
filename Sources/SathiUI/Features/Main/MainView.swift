@@ -3,10 +3,11 @@ import SwiftUI
 
 struct MainView: View {
     @ObservedObject var route: MainRoute
+    @AppStorage(StorageKeys.sidebarOpen) private var sidebarOpen = true
 
     var body: some View {
         HStack(spacing: 0) {
-            MainSidebar(route: route)
+            MainSidebar(route: route, isOpen: $sidebarOpen)
             page
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 .background(Night.bg)

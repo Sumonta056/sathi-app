@@ -45,7 +45,6 @@ struct GeneralTab: View {
                 }
             }
             SettingsSection("Behaviour") { BehaviourCard() }
-            AboutFooter()
         }
     }
 }

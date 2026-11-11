@@ -12,17 +12,10 @@ struct GeneralTabTests {
         try hosted(GeneralTab(), h).inspect()
     }
 
-    @Test func footerShowsMadeByWithLinks() throws {
+    @Test func hasNoFooterBecauseTheSidebarOwnsIt() throws {
         let sut = try tab(EngineHarness())
-        #expect(throws: Never.self) { try sut.find(text: "Made by Sumonta") }
-        let urls = try sut.findAll(ViewType.Link.self).map { try $0.url() }
-        #expect(urls.contains(Links.github))
-        #expect(urls.contains(Links.portfolio))
-    }
-
-    @Test func footerShowsTheVersionText() throws {
-        let sut = try tab(EngineHarness())
-        #expect(throws: Never.self) { try sut.find(text: AboutFooter.versionText) }
+        #expect(sut.findAll(ViewType.Link.self).isEmpty)
+        #expect(Find.lacks(sut, text: "Made by Sumonta"))
     }
 
     @Test func hasNoQuickReminderCardOrSoundSwitch() throws {
