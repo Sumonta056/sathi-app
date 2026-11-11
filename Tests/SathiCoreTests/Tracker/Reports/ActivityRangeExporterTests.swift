@@ -16,13 +16,6 @@ struct ActivityRangeExporterTests {
         #expect(lines[2].contains(",60,work,Coding,Late,"))
     }
 
-    @Test func theMonthCsvIsTheSameAsTheRangeCsv() {
-        let items = [Fix.work("A", "Coding", 4, (9, 0), (10, 0)), Fix.away(4, (10, 0), (10, 30))]
-        let month = ActivityMonth(key: MonthKey(Fix.at(4, 12), calendar: Fix.calendar), items: items)
-        #expect(ActivityMonthExporter.csv(month, timeZone: Fix.zone.timeZone)
-            == ActivityRangeExporter.csv(items, timeZone: Fix.zone.timeZone))
-    }
-
     @Test func formulaStartsAreDefused() {
         let csv = ActivityRangeExporter.csv([Fix.work("=SUM(A1)", nil, 4, (9, 0), (10, 0))], timeZone: Fix.zone.timeZone)
         #expect(csv.contains(",'=SUM(A1),"))

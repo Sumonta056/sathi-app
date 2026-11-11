@@ -3,10 +3,9 @@ import Foundation
 import SathiTestSupport
 import Testing
 
-@Suite("ActivityMonthExporter")
-struct ActivityMonthExporterTests {
+@Suite("Activity CSV")
+struct ActivityCSVTests {
     private let zone = FixedZone("UTC")
-    private var key: MonthKey { MonthKey(year: 2026, month: 11)! }
 
     private func item(_ text: String, hour: Int, category: String? = "Coding", place: AwayPlace? = nil) -> Activity {
         let start = zone.date(2026, 11, 9, hour)
@@ -21,7 +20,7 @@ struct ActivityMonthExporterTests {
     }
 
     private func csv(_ items: [Activity]) -> [String] {
-        ActivityMonthExporter.csv(ActivityMonth(key: key, items: items), timeZone: zone.timeZone)
+        ActivityRangeExporter.csv(items, timeZone: zone.timeZone)
             .split(separator: "\n", omittingEmptySubsequences: true).map(String.init)
     }
 
@@ -33,7 +32,7 @@ struct ActivityMonthExporterTests {
         #expect(lines.count == 3)
     }
 
-    @Test func emptyMonthIsOnlyTheHeader() {
+    @Test func noItemsIsOnlyTheHeader() {
         #expect(csv([]) == ["start,end,minutes,kind,category,text,place"])
     }
 
@@ -59,21 +58,5 @@ struct ActivityMonthExporterTests {
     @Test func csvShowsKindAndPlaceForAway() {
         let lines = csv([item("Lunch", hour: 12, category: nil, place: .lunch)])
         #expect(lines[1].hasSuffix(",away,,Lunch,lunch"))
-    }
-
-    @Test func jsonHoldsMonthVersionAndItemsSorted() throws {
-        let month = ActivityMonth(key: key, items: [item("Later", hour: 14), item("Plan", hour: 9)])
-        let data = ActivityMonthExporter.json(month, exportedAt: zone.date(2026, 12, 1, 8))
-        let json = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
-        #expect(json["schemaVersion"] as? Int == Limits.schemaVersion)
-        #expect(json["month"] as? String == "2026-11")
-        #expect(json["exportedAt"] as? String == "2026-12-01T08:00:00Z")
-        let items = try #require(json["items"] as? [[String: Any]])
-        #expect(items.map { $0["text"] as? String } == ["Plan", "Later"])
-    }
-
-    @Test func fileNameUsesThePrefixMonthAndFormat() {
-        #expect(ActivityMonthExporter.fileName(key, format: .csv) == "Sathi-activities-2026-11.csv")
-        #expect(ActivityMonthExporter.fileName(key, format: .json) == "Sathi-activities-2026-11.json")
     }
 }

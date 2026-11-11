@@ -65,18 +65,4 @@ struct TrackerFixRoundTests {
         t.setEnd(0)
         #expect(t.startMinutes < t.endMinutes)
     }
-
-    @Test func exportNeverOverwritesAFileInTheFolder() throws {
-        let item = Activity(text: "Code review", category: "Coding", start: wed(9), end: wed(10))
-        let h = EngineHarness.tracker(at: wed(12), activities: [item])
-        let folder = makeTempFolder()
-        let month = MonthKey(wed(9), calendar: .current)
-        let old = folder.appendingPathComponent(ActivityMonthExporter.fileName(month, format: .json))
-        try writeText("old", to: old)
-        let urls = h.engine.exportActivityMonth(month, to: folder)
-        #expect(readText(old) == "old")
-        #expect(urls.count == 2)
-        #expect(urls.contains { $0.lastPathComponent.hasSuffix(" (2).json") })
-        try? FileManager.default.removeItem(at: folder)
-    }
 }

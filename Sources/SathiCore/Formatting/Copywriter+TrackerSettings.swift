@@ -12,9 +12,6 @@ extension Copywriter {
     package static let trackerDaysOffHint = "Sathi stays quiet on these days."
     package static let trackerNoCalendars = "No calendars found on this Mac."
     package static let trackerNewCategory = "New category"
-    package static let trackerSidebarGroup = "MY DAY"
-    package static let trackerNewBadge = "NEW"
-    package static let trackerSettingsTitle = "Activity tracker"
     package static let trackerSettingsSubtitle =
         "Sathi asks what you are doing and keeps your day. It is quiet on days off and when you take a break."
     package static let trackerOnLabel = "Tracker on"

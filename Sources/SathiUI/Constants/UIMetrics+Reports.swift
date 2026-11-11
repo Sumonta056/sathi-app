@@ -1,7 +1,6 @@
 import SwiftUI
 
 extension UIMetrics {
-    static let reportsPadding = EdgeInsets(top: 22, leading: 28, bottom: 22, trailing: 28)
     static let reportsGap: CGFloat = 16
     static let reportsPageGap: CGFloat = 18
     static let reportsCardsHeight: CGFloat = 260
@@ -11,7 +10,6 @@ extension UIMetrics {
     static let rangeArrowSize: CGFloat = 34
     static let rangeArrowRadius: CGFloat = 8
     static let tileGap: CGFloat = 12
-    static let tileMeterHeight: CGFloat = 6
     static let tilePadding = EdgeInsets(top: 14, leading: 16, bottom: 14, trailing: 16)
     static let tileSelectedBorder: CGFloat = 2
     static let reportsOffOpacity: Double = 0.5

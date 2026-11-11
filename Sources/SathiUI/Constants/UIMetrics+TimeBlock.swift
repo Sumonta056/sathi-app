@@ -10,7 +10,6 @@ extension UIMetrics {
     static let blockRowSpacing: CGFloat = 12
     static let blockTextSpacing: CGFloat = 4
     static let blockActionHeight: CGFloat = 34
-    static let blockEndPadding: CGFloat = 16
 
     static let blockMenuPadding: CGFloat = 10
     static let blockMenuSpacing: CGFloat = 6
@@ -27,7 +26,6 @@ extension UIMetrics {
     static let blockListRowSpacing: CGFloat = 10
 
     static let blockPopupWidth: CGFloat = 380
-    static let blockPopupPadding: CGFloat = 16
     static let blockPopupSpacing: CGFloat = 14
     static let blockTileSize: CGFloat = 40
     static let blockTileIcon: CGFloat = 22
@@ -42,7 +40,6 @@ extension UIMetrics {
     static let blockNoteTextSpacing: CGFloat = 2
     static let blockUndoHeight: CGFloat = 24
     static let blockToastPadding = EdgeInsets(top: 12, leading: 14, bottom: 12, trailing: 14)
-    static let blockToastRadius: CGFloat = 14
     static let blockToastIcon: CGFloat = 18
     static let blockToastSpacing: CGFloat = 10
 

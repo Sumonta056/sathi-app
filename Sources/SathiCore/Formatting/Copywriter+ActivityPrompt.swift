@@ -13,7 +13,6 @@ extension Copywriter {
     package static let activityPromptLogIt = "Log it"
     package static let activityPromptRecentLabel = "RECENT"
     package static let activityPromptTapToFill = "tap to fill"
-    package static let activityPromptRecent = activityPromptRecentLabel + " · " + activityPromptTapToFill
     package static let activityPromptQuiet = "Quiet"
     package static let activityPromptAllowCalendar = "Allow calendar access"
     package static let activityPromptField = "Type what you do, or tap a card on the left"

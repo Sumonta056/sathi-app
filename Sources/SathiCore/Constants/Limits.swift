@@ -87,7 +87,6 @@ package enum Limits {
     package static let trackerUsualLengthDefault = 30
     package static let idleDefault = 30
     package static let switchStepMinutes = 5
-    package static let switchChipsBeforeGrid = 4
     package static let monthlyTopTexts = 3
     package static let spaceKeyCode: UInt32 = 49
     package static let firstCopyNumber = 2

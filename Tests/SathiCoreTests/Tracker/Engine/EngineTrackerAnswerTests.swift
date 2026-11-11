@@ -40,13 +40,13 @@ struct EngineTrackerAnswerTests {
         #expect(h.running != nil)
     }
 
-    @Test func moreThanFourChipsShowTheGrid() {
+    @Test func aLongActivityOffersMoreThanFourSwitchTimes() {
         let h = EngineHarness.tracker(at: wed(10))
         h.start(minutes: 15)
         h.advance(minutes: 40)
         h.engine.doneActivity()
         let chips = h.engine.trackerPromptState(.whatNow)?.switchTimes ?? []
-        #expect(chips.count > Limits.switchChipsBeforeGrid)
+        #expect(chips.count > 4)
     }
 
     @Test func thePickedSwitchTimeEndsTheOldAndStartsTheNewAtTheSameSecond() {

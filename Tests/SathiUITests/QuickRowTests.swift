@@ -7,17 +7,10 @@ import Testing
 import ViewInspector
 
 @MainActor
-@Suite("Quick list card")
-struct QuickListCardTests {
+@Suite("Quick rows and popups")
+struct QuickRowTests {
     private func card(_ h: EngineHarness) throws -> InspectableView<ViewType.ClassifiedView> {
-        try hosted(QuickListCard(), h).inspect()
-    }
-
-    @Test func emptyCardRendersNothing() throws {
-        let sut = try card(Quick.harness())
-        #expect(MenuFind.texts(sut).isEmpty)
-        #expect(sut.findAll(ViewType.Button.self).isEmpty)
-        #expect(sut.findAll(QuickRow.self).isEmpty)
+        try hosted(QuickRemindersPage(), h).inspect()
     }
 
     @Test func rowsShowTextTimeAndWhen() throws {
@@ -41,19 +34,6 @@ struct QuickListCardTests {
         h.engine.tick()
         let sut = try card(h)
         #expect(throws: Never.self) { try sut.find(text: "Showing now") }
-    }
-
-    @Test func deleteButtonRemoves() throws {
-        let h = Quick.harness([Quick.item("Call mom", minutes: 25)])
-        try card(h).find(viewWithAccessibilityLabel: "Delete this reminder").button().tap()
-        #expect(h.engine.quickReminders.isEmpty)
-    }
-
-    @Test func rowsScrollOnlyAboveTheVisibleLimit() throws {
-        let few = try card(Quick.harness(Quick.many(UIMetrics.quickVisibleRows)))
-        #expect(few.findAll(ViewType.ScrollView.self).isEmpty)
-        let more = try card(Quick.harness(Quick.many(UIMetrics.quickVisibleRows + 1)))
-        #expect(more.findAll(ViewType.ScrollView.self).count == 1)
     }
 
     @Test func addRowOpensTheAddPopup() throws {

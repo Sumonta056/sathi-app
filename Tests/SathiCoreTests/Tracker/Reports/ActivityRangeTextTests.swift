@@ -19,15 +19,6 @@ struct ActivityRangeTextTests {
         #expect(lines.last?.hasPrefix("Thu, 5 Mar") == true)
     }
 
-    @Test func monthTextEqualsTheMonthTextOfBefore() {
-        let month = MonthKey(Fix.at(4, 12), calendar: Fix.calendar)
-        let range = StatsRange.containing(Fix.at(4, 12), kind: .month, calendar: Fix.calendar)
-        let title = Copywriter.trackerMonthTitle(month.start(in: Fix.calendar), calendar: Fix.calendar)
-        #expect(ActivityRangeText.make(days, title: title, calendar: Fix.calendar)
-            == ActivityMonthText.make(days, month: month, calendar: Fix.calendar))
-        #expect(title == Copywriter.rangeTitle(range, now: Fix.at(4, 12), calendar: Fix.calendar))
-    }
-
     @Test func anEmptyRangeIsTheHeaderAndAverageOnly() {
         let text = ActivityRangeText.make([], title: "2 – 8 Mar", calendar: Fix.calendar)
         #expect(text.split(separator: "\n").count == 2)

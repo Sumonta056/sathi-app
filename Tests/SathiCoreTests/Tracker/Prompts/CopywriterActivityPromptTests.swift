@@ -8,7 +8,6 @@ struct CopywriterActivityPromptTests {
     private typealias Fix = PromptFixture
 
     @Test func bodyWordsMatchTheSpec() {
-        #expect(Copywriter.activityPromptRecent == "RECENT · tap to fill")
         #expect(Copywriter.activityPromptShowAll(8) == "Show all 8")
         #expect(Copywriter.activityPromptField == "Type what you do, or tap a card on the left")
         #expect(Copywriter.activityPromptAddPlace == "+ Place")

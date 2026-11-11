@@ -151,7 +151,6 @@ struct QuickPanelTests {
 
     @Test func panelHoldsNoOldCardsOrAddForm() throws {
         let sut = try panel(Glance.harness(reminders: 2))
-        #expect(sut.findAll(QuickListCard.self).isEmpty)
         #expect(sut.findAll(QuickAddForm.self).isEmpty)
     }
 
