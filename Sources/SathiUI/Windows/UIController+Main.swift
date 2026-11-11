@@ -11,15 +11,25 @@ extension UIController {
             mainRoute = route
             mainWindow = MainWindow.make(engine: engine, route: route, closeWatcher: mainCloseWatcher)
         }
-        NSApp.setActivationPolicy(DockPolicy.policy(mainWindowOpen: true))
-        NSApp.activate(ignoringOtherApps: true)
-        mainWindow?.makeKeyAndOrderFront(nil)
+        if let mainWindow { mainWindowShown(mainWindow) }
     }
 
     func mainWillClose() {
         mainWindow?.contentView = nil
         mainWindow = nil
         mainRoute = nil
+        mainWindowClosed()
+    }
+
+    static func bringToFront(_ window: NSWindow) {
+        NSApp.setActivationPolicy(DockPolicy.policy(mainWindowOpen: true))
+        NSApp.activate(ignoringOtherApps: true)
+        AppMenu.install(in: NSApp.mainMenu)
+        DispatchQueue.main.async { AppMenu.install(in: NSApp.mainMenu) }
+        window.makeKeyAndOrderFront(nil)
+    }
+
+    static func backToMenuBar() {
         NSApp.setActivationPolicy(DockPolicy.policy(mainWindowOpen: false))
     }
 }

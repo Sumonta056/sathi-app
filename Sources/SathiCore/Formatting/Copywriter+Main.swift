@@ -7,6 +7,8 @@ extension Copywriter {
     package static let mainPageSettings = "Settings"
     package static let mainTrackerOn = "TRACKER ON"
     package static let mainTrackerOff = "TRACKER OFF"
+    package static let mainMenuFile = "File"
+    package static let mainMenuClose = "Close"
 
     package static func mainTrackerHours(_ start: Date, _ end: Date, askEvery: Int, calendar: Calendar) -> String {
         trackerSpan(start, end, calendar: calendar) + " · asks every \(askEvery) min"

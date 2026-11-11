@@ -5,6 +5,7 @@ import SathiUI
 final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
+        AppMenu.install(in: NSApp.mainMenu)
         AppEnvironment.engine.start()
         let event = NSAppleEventManager.shared().currentAppleEvent
         let propData = event?.paramDescriptor(forKeyword: keyAEPropData)?.enumCodeValue

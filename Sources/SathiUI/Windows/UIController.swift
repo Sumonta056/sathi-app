@@ -34,6 +34,8 @@ package final class UIController: ReminderPresenter {
     var mainWindow: NSWindow?
     var mainRoute: MainRoute?
     let mainCloseWatcher = WindowCloseWatcher()
+    var mainWindowShown: (NSWindow) -> Void = UIController.bringToFront
+    var mainWindowClosed: () -> Void = UIController.backToMenuBar
 
     package init() {
         mainCloseWatcher.onClose = { [weak self] in self?.mainWillClose() }
