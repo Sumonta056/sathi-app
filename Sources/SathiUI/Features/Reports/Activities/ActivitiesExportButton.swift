@@ -5,13 +5,13 @@ import SwiftUI
 struct ActivitiesExportButton: View {
     @EnvironmentObject var e: Engine
     let range: StatsRange
-    @State private var failed = false
+    @State private var note: String?
     @State private var busy = false
 
     var body: some View {
         HStack(spacing: UIMetrics.tileGap) {
-            if failed {
-                Text(verbatim: Copywriter.reportsExportFailed)
+            if let note {
+                Text(verbatim: note)
                     .font(Typography.hint)
                     .foregroundStyle(Night.tracker)
             }
@@ -32,21 +32,21 @@ struct ActivitiesExportButton: View {
 
     private func export() {
         guard let folder = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first else {
-            failed = true
+            note = Copywriter.reportsExportFailed
             return
         }
         busy = true
-        failed = false
+        note = nil
         let engine = e
         let shown = range
         Task { @MainActor in
-            let url = engine.exportActivities(shown, to: folder)
+            let result = engine.exportActivities(shown, to: folder)
             busy = false
-            guard let url else {
-                failed = true
-                return
+            switch result {
+            case let .saved(url): NSWorkspace.shared.activateFileViewerSelecting([url])
+            case .empty: note = Copywriter.reportsExportEmpty
+            case .failed: note = Copywriter.reportsExportFailed
             }
-            NSWorkspace.shared.activateFileViewerSelecting([url])
         }
     }
 

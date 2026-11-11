@@ -26,7 +26,7 @@ struct TrackerReportsWiringTests {
     @Test func exportWritesTheRangeCSV() {
         let h = harness()
         let folder = makeTempFolder()
-        let url = h.engine.exportActivities(h.engine.currentRange(.day), to: folder)
+        let url = h.engine.exportActivities(h.engine.currentRange(.day), to: folder).url
         #expect(url.map(fileExists) == true)
         try? FileManager.default.removeItem(at: folder)
     }

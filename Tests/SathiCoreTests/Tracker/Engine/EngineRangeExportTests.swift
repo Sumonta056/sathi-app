@@ -40,7 +40,7 @@ struct EngineRangeExportTests {
     @Test func exportsOnlyTheActivitiesOfTheRange() throws {
         let h = harness()
         let folder = makeTempFolder()
-        let url = try #require(h.engine.exportActivities(week(h), to: folder))
+        let url = try #require(h.engine.exportActivities(week(h), to: folder).url)
         #expect(url.lastPathComponent == ActivityRangeExporter.fileName(week(h), calendar: .current))
         let text = try #require(readText(url))
         #expect(text.contains("Code review") && text.contains("Early") && !text.contains("Old"))
@@ -50,8 +50,8 @@ struct EngineRangeExportTests {
     @Test func aSecondExportGetsAFreeName() throws {
         let h = harness()
         let folder = makeTempFolder()
-        let first = try #require(h.engine.exportActivities(week(h), to: folder))
-        let second = try #require(h.engine.exportActivities(week(h), to: folder))
+        let first = try #require(h.engine.exportActivities(week(h), to: folder).url)
+        let second = try #require(h.engine.exportActivities(week(h), to: folder).url)
         #expect(first != second)
         #expect(second.lastPathComponent == first.deletingPathExtension().lastPathComponent + " (2).csv")
         #expect(fileExists(first) && fileExists(second))
@@ -62,8 +62,8 @@ struct EngineRangeExportTests {
         let h = harness()
         let folder = makeTempFolder()
         let empty = week(h).previous.previous
-        #expect(h.engine.exportActivities(empty, to: folder) == nil)
-        #expect(h.engine.exportHistory(empty, to: folder) == nil)
+        #expect(h.engine.exportActivities(empty, to: folder) == .empty)
+        #expect(h.engine.exportHistory(empty, to: folder) == .empty)
         #expect(!fileExists(folder))
     }
 
@@ -72,15 +72,15 @@ struct EngineRangeExportTests {
         let outside = HistoryEvent.done(.water, 1, at: day(2026, 2, 20, 10))
         let h = EngineHarness(at: day(2026, 3, 4, 12)) { $0.events = [inside, outside] }
         let folder = makeTempFolder()
-        let url = try #require(h.engine.exportHistory(week(h), to: folder))
+        let url = try #require(h.engine.exportHistory(week(h), to: folder).url)
         #expect(url.lastPathComponent == HistoryRangeExporter.fileName(week(h), calendar: .current))
         let lines = try #require(readText(url)).split(separator: "\n")
         #expect(lines.count == 2)
         try? FileManager.default.removeItem(at: folder)
     }
 
-    @Test func aFolderThatCannotBeWrittenGivesNil() {
+    @Test func aFolderThatCannotBeWrittenFails() {
         let h = harness()
-        #expect(h.engine.exportActivities(week(h), to: URL(fileURLWithPath: "/dev/null/nope")) == nil)
+        #expect(h.engine.exportActivities(week(h), to: URL(fileURLWithPath: "/dev/null/nope")) == .failed)
     }
 }

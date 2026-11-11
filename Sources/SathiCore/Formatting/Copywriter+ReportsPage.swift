@@ -3,6 +3,7 @@ import Foundation
 extension Copywriter {
     package static let reportsExport = "Export CSV"
     package static let reportsExportFailed = "Could not save the file."
+    package static let reportsExportEmpty = "Nothing to export in this range."
     package static let reportsOff = "Off"
     package static let reportsNoActivities = "No activities in this range."
 

@@ -14,17 +14,17 @@ extension Engine {
         return ActivityRangeStats(days, compare: activityDays(overlapping: compare))
     }
 
-    package func exportActivities(_ range: StatsRange, to folder: URL) -> URL? {
+    package func exportActivities(_ range: StatsRange, to folder: URL) -> RangeExport {
         let items = monthsTouched(by: range.interval).flatMap { activityStore.month($0).items }
             .filter { range.holds($0.start) }
-        guard !items.isEmpty else { return nil }
+        guard !items.isEmpty else { return .empty }
         let csv = ActivityRangeExporter.csv(items, timeZone: calendar.timeZone)
         return writeExport(Data(csv.utf8), name: ActivityRangeExporter.fileName(range, calendar: calendar), to: folder)
     }
 
-    package func exportHistory(_ range: StatsRange, to folder: URL) -> URL? {
+    package func exportHistory(_ range: StatsRange, to folder: URL) -> RangeExport {
         let events = history.events(from: range.interval.start, to: range.interval.end)
-        guard !events.isEmpty else { return nil }
+        guard !events.isEmpty else { return .empty }
         let csv = CSVExporter.csv(events, timeZone: calendar.timeZone)
         return writeExport(Data(csv.utf8), name: HistoryRangeExporter.fileName(range, calendar: calendar), to: folder)
     }
@@ -56,9 +56,9 @@ extension Engine {
         return months
     }
 
-    private func writeExport(_ data: Data, name: String, to folder: URL) -> URL? {
-        guard (try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)) != nil else { return nil }
+    private func writeExport(_ data: Data, name: String, to folder: URL) -> RangeExport {
+        guard (try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)) != nil else { return .failed }
         let url = Self.freeURL(in: folder, name: name)
-        return (try? data.write(to: url, options: .withoutOverwriting)) == nil ? nil : url
+        return (try? data.write(to: url, options: .withoutOverwriting)) == nil ? .failed : .saved(url)
     }
 }
