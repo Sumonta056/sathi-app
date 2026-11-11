@@ -72,10 +72,4 @@ extension View {
     func trackerCenterCard(width: CGFloat = UIMetrics.trackerCenterCard) -> some View {
         modifier(TrackerCard(compact: false, width: width))
     }
-
-    func trackerBox(padding: EdgeInsets, radius: CGFloat) -> some View {
-        frame(maxWidth: .infinity, alignment: .leading)
-            .padding(padding)
-            .background(RoundedRectangle(cornerRadius: radius, style: .continuous).fill(Night.trackerInset))
-    }
 }

@@ -11,7 +11,11 @@ extension Copywriter {
     package static let activityPromptNothingRuns = "Nothing is running."
     package static let activityPromptNow = "now"
     package static let activityPromptLogIt = "Log it"
-    package static let activityPromptRecent = "RECENT · tap to fill"
+    package static let activityPromptRecentLabel = "RECENT"
+    package static let activityPromptTapToFill = "tap to fill"
+    package static let activityPromptRecent = activityPromptRecentLabel + " · " + activityPromptTapToFill
+    package static let activityPromptQuiet = "Quiet"
+    package static let activityPromptAllowCalendar = "Allow calendar access"
     package static let activityPromptField = "Type what you do, or tap a card on the left"
     package static let activityPromptAddPlace = "+ Place"
     package static let activityPromptReallyStarted = "It really started at"
@@ -65,6 +69,12 @@ extension Copywriter {
 
     package static func activityPromptCalendarGoes(_ calendarTitle: String) -> String {
         "One event goes to " + calendarTitle + " when the activity ends."
+    }
+
+    package static func activityPromptKey(_ number: Int) -> String { "⌘\(number)" }
+
+    package static func activityPromptRecentDetail(category: String?, length: TimeInterval) -> String {
+        (category ?? trackerNoCategory) + " · last " + trackerDuration(length)
     }
 
     package static func activityPromptShowAll(_ count: Int) -> String { "Show all \(count)" }

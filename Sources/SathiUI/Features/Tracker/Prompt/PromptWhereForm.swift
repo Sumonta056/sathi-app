@@ -2,7 +2,7 @@ import SathiCore
 import SwiftUI
 
 @MainActor
-final class WelcomeForm: ObservableObject {
+final class PromptWhereForm: ObservableObject {
     @Published var place: AwayPlace?
     @Published var placeName: String?
     @Published var places: [String]

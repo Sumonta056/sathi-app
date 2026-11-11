@@ -5,6 +5,7 @@ struct LazyTextField: View {
     @Binding var text: String
     let onSubmit: () -> Void
     let onEndEditing: () -> Void
+    let font: Font
     @State private var isEditing: Bool
     @FocusState private var focused: Bool
 
@@ -13,13 +14,15 @@ struct LazyTextField: View {
         text: Binding<String>,
         startsEditing: Bool = false,
         onSubmit: @escaping () -> Void = {},
-        onEndEditing: @escaping () -> Void = {}
+        onEndEditing: @escaping () -> Void = {},
+        font: Font = Typography.chip
     ) {
         self.placeholder = placeholder
         _text = text
         _isEditing = State(initialValue: startsEditing)
         self.onSubmit = onSubmit
         self.onEndEditing = onEndEditing
+        self.font = font
     }
 
     var body: some View {
@@ -33,7 +36,7 @@ struct LazyTextField: View {
     private var resting: some View {
         Button { isEditing = true } label: {
             Text(verbatim: text.isEmpty ? placeholder : text)
-                .font(Typography.chip)
+                .font(font)
                 .foregroundStyle(text.isEmpty ? Night.muted : Night.text)
                 .lineLimit(1)
                 .padding(UIMetrics.timeButtonPadding)
@@ -49,7 +52,7 @@ struct LazyTextField: View {
     private var field: some View {
         TextField(placeholder, text: $text)
             .textFieldStyle(.plain)
-            .font(Typography.chip)
+            .font(font)
             .foregroundStyle(Night.text)
             .padding(UIMetrics.timeButtonPadding)
             .frame(maxWidth: .infinity, alignment: .leading)
