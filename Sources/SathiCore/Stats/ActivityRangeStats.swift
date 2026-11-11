@@ -70,7 +70,9 @@ package struct ActivityRangeStats: Equatable, Sendable {
                 percent: 0, change: change(now.away, before.away)
             ))
         }
-        return rows
+        return rows.enumerated()
+            .sorted { $0.element.seconds != $1.element.seconds ? $0.element.seconds > $1.element.seconds : $0.offset < $1.offset }
+            .map(\.element)
     }
 
     private static func percent(_ part: TimeInterval, of whole: TimeInterval) -> Int {

@@ -65,6 +65,14 @@ struct ActivityRangeStatsTests {
         #expect(stats.categories.filter { $0.kind == .category }.isEmpty)
     }
 
+    @Test func allRowsAreLongestFirst() {
+        let event = Fix.work("Planning", "Meeting", 4, (9, 0), (11, 0), kind: .event)
+        let work = Fix.work("Docs", "Learning", 4, (11, 0), (11, 30))
+        let days = [Fix.day(4, [event, work, Fix.away(4, (12, 0), (13, 0))])]
+        let stats = ActivityRangeStats(days, compare: [])
+        #expect(stats.categories.map(\.name) == [Copywriter.trackerCalendarEvents, Copywriter.trackerAway, "Learning"])
+    }
+
     @Test func extraRowsAreLeftOutWhenThereIsNoSuchTime() {
         let stats = ActivityRangeStats(thisWeek, compare: [])
         #expect(stats.categories.contains { $0.kind == .events } == false)
