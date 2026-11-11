@@ -4,7 +4,7 @@ import SwiftUI
 
 @MainActor
 enum SettingsWindow {
-    static func make(engine: Engine, closeWatcher: WindowCloseWatcher) -> NSWindow {
+    static func make(engine: Engine, tab: SettingsTab = .general, closeWatcher: WindowCloseWatcher) -> NSWindow {
         let w = NSWindow(
             contentRect: NSRect(origin: .zero, size: UIMetrics.settingsSize),
             styleMask: [.titled, .closable, .miniaturizable, .fullSizeContentView],
@@ -18,11 +18,14 @@ enum SettingsWindow {
         w.backgroundColor = NSColor(Night.sidebar)
         w.isReleasedWhenClosed = false
         w.delegate = closeWatcher
-        let root = SettingsView()
-            .environmentObject(engine)
-            .environment(\.colorScheme, .dark)
-        w.contentView = NSHostingView(rootView: root)
+        w.contentView = content(engine: engine, tab: tab)
         w.center()
         return w
+    }
+
+    static func content(engine: Engine, tab: SettingsTab) -> NSView {
+        NSHostingView(rootView: SettingsView(tab: tab)
+            .environmentObject(engine)
+            .environment(\.colorScheme, .dark))
     }
 }

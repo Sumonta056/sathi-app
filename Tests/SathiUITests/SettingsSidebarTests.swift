@@ -71,7 +71,7 @@ struct SettingsSidebarTests {
     @Test func openReportsOpensTheReportsWindow() throws {
         let h = EngineHarness()
         try Find.button(sidebar(h).inspect(), holding: "Open reports").tap()
-        #expect(h.presenter.calls.last == .showReports)
+        #expect(h.presenter.calls.last == .showMain(.reports))
     }
 
     @Test func openReportsSitsRightAfterGeneral() throws {

@@ -126,9 +126,20 @@ package final class UIController: ReminderPresenter {
         NSApp.presentationOptions = []
     }
 
-    package func showSettings() {
-        if settings == nil, let engine {
-            settings = SettingsWindow.make(engine: engine, closeWatcher: settingsCloseWatcher)
+    package func showMain(_ page: MainPage) {
+        if case let .settings(target) = page {
+            presentSettings(SettingsTab(target))
+        } else {
+            presentReports()
+        }
+    }
+
+    private func presentSettings(_ tab: SettingsTab) {
+        guard let engine else { return }
+        if let settings {
+            settings.contentView = SettingsWindow.content(engine: engine, tab: tab)
+        } else {
+            settings = SettingsWindow.make(engine: engine, tab: tab, closeWatcher: settingsCloseWatcher)
         }
         NSApp.activate(ignoringOtherApps: true)
         settings?.makeKeyAndOrderFront(nil)
@@ -139,7 +150,7 @@ package final class UIController: ReminderPresenter {
         settings = nil
     }
 
-    package func showReports() {
+    private func presentReports() {
         if reports == nil, let engine {
             reports = ReportsWindow.make(engine: engine, closeWatcher: reportsCloseWatcher)
         }

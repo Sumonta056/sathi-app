@@ -135,7 +135,7 @@ extension Engine {
         trackerRuntime.reportDay = day
         closeTrackerEndOfDay()
         objectWillChange.send()
-        presenter.showReports()
+        openMain(.activities(day))
     }
 
     func clearAwayRuntime() {
