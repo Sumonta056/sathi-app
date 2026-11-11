@@ -94,7 +94,6 @@ enum Night {
 }
 
 extension NightHex {
-    static let trackerCoral: UInt32 = 0xFF8A80
     static let trackerAway: UInt32 = 0x3A4458
     static let trackerEvent: UInt32 = 0x7FB8FF
 }
