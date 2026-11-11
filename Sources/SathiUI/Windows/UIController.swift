@@ -22,13 +22,14 @@ package final class UIController: ReminderPresenter {
     var noteTask: Task<Void, Never>?
     var trackerPromptPanel: NSPanel?
     var trackerPromptKind: PromptKind?
+    var trackerPromptShown: PromptState?
+    var trackerPromptModel: ActivityPromptModel?
     var trackerReturnApp: NSRunningApplication?
     var trackerPromptHasKeys = false
     var trackerCenters: [ObjectIdentifier: NSPoint] = [:]
     var trackerNotePanel: NSPanel?
     var trackerNoteTask: Task<Void, Never>?
     var trackerEndOfDayPanel: NSPanel?
-    var trackerCorner: [NSPanel] = []
     var trackerResizeTokens: [ObjectIdentifier: NSObjectProtocol] = [:]
     private var locks: [NSWindow] = []
     private var settings: NSWindow?

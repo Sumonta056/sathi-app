@@ -3,6 +3,7 @@ import SwiftUI
 
 extension UIMetrics {
     static let activityPromptWidth: CGFloat = 880
+    static let centerStackGap: CGFloat = 12
     static let promptRadius: CGFloat = 22
     static let promptBorder: CGFloat = 1
     static let promptTopBar: CGFloat = 4

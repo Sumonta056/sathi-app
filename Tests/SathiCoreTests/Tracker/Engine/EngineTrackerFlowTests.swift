@@ -21,12 +21,11 @@ struct EngineTrackerFlowTests {
         #expect(h.trackerShows == [.whatNow])
     }
 
-    @Test func atTheStartOfTrackerHoursWhatNowShowsInTheCorner() {
+    @Test func atTheStartOfTrackerHoursWhatNowShows() {
         let h = EngineHarness.tracker(at: wed(8, 50))
         #expect(h.trackerShows.isEmpty)
         h.advance(minutes: 10)
         #expect(h.trackerShows == [.whatNow])
-        #expect(PromptKind.whatNow.isCorner)
     }
 
     @Test func stillOnItShowsAtLengthPlusOffsetWhenThatIsEarlierThanAskEvery() {

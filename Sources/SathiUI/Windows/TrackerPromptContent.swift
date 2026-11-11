@@ -3,8 +3,9 @@ import SwiftUI
 
 struct TrackerPromptContent: View {
     let state: TrackerPromptState
+    let model: ActivityPromptModel
 
     var body: some View {
-        ActivityPromptView(state: state)
+        ActivityPromptView(state: state, model: model)
     }
 }

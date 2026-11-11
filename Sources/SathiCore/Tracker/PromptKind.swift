@@ -6,11 +6,4 @@ package enum PromptKind: String, Codable, CaseIterable, Sendable {
     case stillOnIt
     case welcomeBack
     case eventAsk
-
-    package var isCorner: Bool {
-        switch self {
-        case .whatNow, .stillOnIt, .eventAsk: return true
-        case .center, .welcomeBack: return false
-        }
-    }
 }

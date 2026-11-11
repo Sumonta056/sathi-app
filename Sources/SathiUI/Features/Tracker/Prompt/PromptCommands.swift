@@ -10,12 +10,15 @@ struct PromptCommands {
     private var actions: TrackerPromptActions { state.actions }
 
     func start() {
+        guard !model.answered else { return }
         switch screen.reason {
         case .event:
+            model.answered = true
             if let category = model.draft.category { actions.pickEventCategory(category) }
             actions.answerEvent(true)
         case .ask, .shortcut, .ends, .back:
             guard let draft = model.draft.committed else { return }
+            model.answered = true
             actions.start(draft, model.started)
         }
     }

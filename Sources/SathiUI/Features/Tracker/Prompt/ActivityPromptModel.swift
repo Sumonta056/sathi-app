@@ -9,6 +9,7 @@ final class ActivityPromptModel: ObservableObject {
     @Published var showsAll = false
     @Published var calendars: TrackerCalendarInfo
     let places: PromptWhereForm
+    var answered = false
     private var asking = false
 
     init(_ state: TrackerPromptState) {

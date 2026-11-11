@@ -144,7 +144,7 @@ struct EngineTrackerGateTests {
     @Test func escInTheCenterPanelClosesItAndAsksAgainLater() {
         let h = EngineHarness.tracker(at: wed(10))
         h.engine.openTrackerPanel()
-        #expect(h.presenter.trackerCalls.contains(.closePrompt(.whatNow)))
+        #expect(h.presenter.trackerCalls.last == .showPrompt(.center))
         h.engine.closeTrackerPrompt()
         #expect(h.promptKind == nil)
         h.advance(minutes: 15)
