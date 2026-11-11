@@ -15,7 +15,7 @@ struct SettingsSidebarTests {
 
     @Test func showsEveryNavEntry() throws {
         let sut = try sidebar(EngineHarness()).inspect()
-        for text in ["Sathi", "General", "Water", "Reading", "Meditation", "Add a buddy", "Open reports"] {
+        for text in ["Sathi", "General", "Water", "Reading", "Meditation", "Add a buddy"] {
             #expect(throws: Never.self) { try sut.find(text: text) }
         }
     }
@@ -60,25 +60,6 @@ struct SettingsSidebarTests {
         let sut = try sidebar(EngineHarness(), Box(.habit(.water))).inspect()
         #expect(try A11y.isSelected(Find.button(sut, holding: "Water")))
         #expect(try !A11y.isSelected(Find.button(sut, holding: "General")))
-    }
-
-    @Test func openReportsIsEnabledWithoutSoon() throws {
-        let sut = try sidebar(EngineHarness()).inspect()
-        #expect(Find.lacks(sut, text: "Soon"))
-        #expect(try !Find.button(sut, holding: "Open reports").isDisabled())
-    }
-
-    @Test func openReportsOpensTheReportsWindow() throws {
-        let h = EngineHarness()
-        try Find.button(sidebar(h).inspect(), holding: "Open reports").tap()
-        #expect(h.presenter.calls.last == .showMain(.reports))
-    }
-
-    @Test func openReportsSitsRightAfterGeneral() throws {
-        let sut = try sidebar(EngineHarness()).inspect()
-        let order = sut.findAll(ViewType.Text.self).compactMap { try? $0.string() }
-        let general = try #require(order.firstIndex(of: "General"))
-        #expect(order[general + 1] == "Open reports")
     }
 
     @Test func footerShowsMadeByWithLinks() throws {

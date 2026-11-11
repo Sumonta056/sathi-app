@@ -10,7 +10,6 @@ struct SettingsSidebar: View {
         VStack(alignment: .leading, spacing: UIMetrics.sidebarSpacing) {
             SidebarLogo()
             SidebarNavButton(title: "General", icon: "slider.horizontal.3", tint: Night.muted, tab: .general, selection: $tab)
-            OpenReportsRow()
             Text(verbatim: "BUDDIES")
                 .font(Typography.sectionLabel)
                 .tracking(UIMetrics.labelTracking)
@@ -85,25 +84,5 @@ struct NewBadge: View {
             .padding(UIMetrics.badgePadding)
             .background(Capsule().fill(Night.calm))
             .fixedSize()
-    }
-}
-
-struct OpenReportsRow: View {
-    @EnvironmentObject var e: Engine
-
-    var body: some View {
-        Button { e.openReports() } label: {
-            HStack {
-                Image(systemName: "chart.bar.fill")
-                    .frame(width: UIMetrics.navIconSize)
-                Text(verbatim: "Open reports")
-                    .font(Typography.rowLabel)
-                Spacer()
-            }
-            .foregroundStyle(Night.text)
-            .padding(UIMetrics.navPadding)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
     }
 }
