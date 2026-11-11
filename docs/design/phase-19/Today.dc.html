@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Today · So far</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1000px; height: 440px; box-sizing: border-box; padding: 24px; background: #121826; color: #EEF2FA; font-family: Figtree, system-ui, sans-serif; display: flex; flex-direction: column; gap: 16px;">
+  <div style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px;">
+    <div style="display: flex; align-items: baseline; gap: 8px;"><span style="font-weight: 800; font-size: 16px; flex-grow: 1;">Today so far</span><span style="font-size: 24px; font-weight: 800;">12h 37m</span><span style="font-size: 12px; color: #9AA6BF;">logged · 85% of tracker hours</span></div>
+    <div style="height: 26px; border-radius: 8px; background: #161D2C; display: flex; gap: 2px; padding: 3px; box-sizing: border-box;">
+      <i style="flex: 150; border-radius: 5px; background: #FF9FB8;"></i><i style="flex: 20; border-radius: 5px; background: #FF5A5F;"></i><i style="flex: 15; border-radius: 5px; background: #4CC3F5;"></i><i style="flex: 32; border-radius: 5px; background: #5FD39A;"></i><i style="flex: 125; border-radius: 5px; background: #A99CF5;"></i><i style="flex: 13; border-radius: 5px; background: #F2A64A;"></i><i style="flex: 45; border-radius: 5px; background: #4F8BF5;"></i><i style="flex: 50; border-radius: 5px; background: #FF5A5F;"></i><i style="flex: 12; border-radius: 5px; background: #3A4458;"></i><i style="flex: 270; border-radius: 5px; background: #FF7A6B;"></i><i style="flex: 2; background: #EEF2FA;"></i><i style="flex: 90; border-radius: 5px; border: 1px dashed #3A4458;"></i>
+    </div>
+    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #7784A0;"><span>7 AM</span><span>9</span><span>11</span><span>1 PM</span><span>3</span><span>5</span><span>7</span><span style="color: #EEF2FA; font-weight: 800;">Now 9:45 PM</span><span>11 PM</span></div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1.7fr 1fr; gap: 16px; align-items: stretch;">
+    <div style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px;">
+      <div style="display: flex;"><span style="font-weight: 800; font-size: 16px; flex-grow: 1;">Breakdown</span><span style="font-size: 12px; color: #9AA6BF;">10 categories</span></div>
+      <div style="height: 10px; border-radius: 4px; overflow: hidden; display: flex; gap: 2px;"><i style="flex: 25; background: #FF9FB8;"></i><i style="flex: 23; background: #FF7A6B;"></i><i style="flex: 17; background: #A99CF5;"></i><i style="flex: 10; background: #4F8BF5;"></i><i style="flex: 9; background: #F5B36B;"></i><i style="flex: 7; background: #FF5A5F;"></i><i style="flex: 4; background: #5FD39A;"></i><i style="flex: 2; background: #4CC3F5;"></i><i style="flex: 1; background: #CDEF5A;"></i><i style="flex: 1; background: #F2A64A;"></i></div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; font-size: 13px;">
+        <div style="display: flex; flex-direction: column;">
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #FF9FB8;"></i>Break<b style="text-align: right;">3h 6m</b><span style="color: #9AA6BF; text-align: right;">25%</span></span>
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #FF7A6B;"></i>Coding Hobby<b style="text-align: right;">2h 54m</b><span style="color: #9AA6BF; text-align: right;">23%</span></span>
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #A99CF5;"></i>Coding Client<b style="text-align: right;">2h 8m</b><span style="color: #9AA6BF; text-align: right;">17%</span></span>
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #4F8BF5;"></i>Client Meeting<b style="text-align: right;">1h 12m</b><span style="color: #9AA6BF; text-align: right;">10%</span></span>
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #F5B36B;"></i>Client Work<b style="text-align: right;">1h 10m</b><span style="color: #9AA6BF; text-align: right;">9%</span></span>
+        </div>
+        <div style="display: flex; flex-direction: column;">
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #FF5A5F;"></i>Coding<b style="text-align: right;">55m</b><span style="color: #9AA6BF; text-align: right;">7%</span></span>
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #5FD39A;"></i>Learning<b style="text-align: right;">32m</b><span style="color: #9AA6BF; text-align: right;">4%</span></span>
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #4CC3F5;"></i>Organizing<b style="text-align: right;">15m</b><span style="color: #9AA6BF; text-align: right;">2%</span></span>
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #CDEF5A;"></i>Gym<b style="text-align: right;">11m</b><span style="color: #9AA6BF; text-align: right;">1%</span></span>
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #F2A64A;"></i>Reading<b style="text-align: right;">10m</b><span style="color: #9AA6BF; text-align: right;">1%</span></span>
+        </div>
+      </div>
+    </div>
+    <div style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px;">
+      <div style="font-weight: 800; font-size: 16px; margin-bottom: 2px;">Coming up</div>
+      <div style="display: flex; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 10px; background: #161D2C;">
+        <span style="width: 32px; height: 32px; border-radius: 8px; background: #211F38; display: flex; align-items: center; justify-content: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A99CF5" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3"></circle></svg></span>
+        <div style="flex-grow: 1;"><div style="font-weight: 700; font-size: 13px;">Shanti · meditation</div><div style="font-size: 11px; color: #9AA6BF;">9:49 PM</div></div>
+        <span style="padding: 3px 8px; border-radius: 6px; background: #211F38; color: #A99CF5; font-size: 11px; font-weight: 800;">in 4 min</span>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 10px; background: #161D2C;">
+        <span style="width: 32px; height: 32px; border-radius: 8px; background: #2E1A1C; display: flex; align-items: center; justify-content: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF8A80" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></span>
+        <div style="flex-grow: 1;"><div style="font-weight: 700; font-size: 13px;">Still on it?</div><div style="font-size: 11px; color: #9AA6BF;">9:56 PM · Coding Hobby</div></div>
+        <span style="padding: 3px 8px; border-radius: 6px; background: #2E1A1C; color: #FF8A80; font-size: 11px; font-weight: 800;">in 11 min</span>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 10px; background: #161D2C;">
+        <span style="width: 32px; height: 32px; border-radius: 8px; background: #2A2A1A; display: flex; align-items: center; justify-content: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFC94A" stroke-width="2" aria-hidden="true"><path d="M20 14A8 8 0 1 1 10 4a6 6 0 0 0 10 10z"></path></svg></span>
+        <div style="flex-grow: 1;"><div style="font-weight: 700; font-size: 13px;">Day summary</div><div style="font-size: 11px; color: #9AA6BF;">10:00 PM</div></div>
+        <span style="padding: 3px 8px; border-radius: 6px; background: #222B40; color: #C9D2E3; font-size: 11px; font-weight: 800;">in 15 min</span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1000,"height":440}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

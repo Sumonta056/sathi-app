@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reports · All buddies</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1000px; height: 1090px; box-sizing: border-box; padding: 28px 32px; background: #121826; color: #EEF2FA; font-family: Figtree, system-ui, sans-serif; display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; align-items: center; gap: 12px;">
+    <h1 style="margin: 0; font-size: 28px; font-weight: 800; flex-grow: 1;">Reports</h1>
+    <div style="display: flex; background: #1A2233; border: 1px solid #263049; border-radius: 10px; padding: 3px;">
+      <span style="padding: 6px 14px; font-size: 13px; color: #9AA6BF; font-weight: 600;">Day</span>
+      <span style="padding: 6px 14px; border-radius: 7px; background: #1E2840; font-weight: 700; font-size: 13px;">Week</span>
+      <span style="padding: 6px 14px; font-size: 13px; color: #9AA6BF; font-weight: 600;">Month</span>
+    </div>
+    <span style="font-weight: 700; font-size: 14px;">‹  8 – 14 Nov  ›</span>
+    <button style="height: 32px; padding: 0 14px; border-radius: 8px; border: 1px solid #263049; background: #1A2233; color: #EEF2FA; font-family: inherit; font-weight: 700;">Export CSV</button>
+  </div>
+
+  <div style="display: flex; gap: 8px;">
+    <button style="height: 44px; padding: 0 16px; border-radius: 10px; border: 2px solid #EEF2FA; background: #1E2840; color: #EEF2FA; font-family: inherit; font-weight: 800; font-size: 13px;">All buddies</button>
+    <button style="height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #263049; background: #1A2233; color: #4CC3F5; font-family: inherit; font-weight: 700; font-size: 13px;">Fota · 4/7</button>
+    <button style="height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #263049; background: #1A2233; color: #F2A64A; font-family: inherit; font-weight: 700; font-size: 13px;">Boi · 3/7</button>
+    <button style="height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #263049; background: #1A2233; color: #A99CF5; font-family: inherit; font-weight: 700; font-size: 13px;">Shanti · 3/7</button>
+    <button style="height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #263049; background: #1A2233; color: #CDEF5A; font-family: inherit; font-weight: 700; font-size: 13px;">Shokti · 1/7</button>
+  </div>
+
+  <div style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 20px 24px; display: flex; gap: 28px; align-items: center;">
+    <div style="width: 120px; height: 120px; border-radius: 60px; background: conic-gradient(#5FD39A 0 39%, #222B40 0); display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><div style="width: 92px; height: 92px; border-radius: 46px; background: #1A2233; display: flex; flex-direction: column; align-items: center; justify-content: center;"><b style="font-size: 26px;">11</b><span style="font-size: 11px; color: #9AA6BF;">of 28 goals</span></div></div>
+    <div style="flex-grow: 1;">
+      <div style="font-size: 12px; color: #9AA6BF; font-weight: 700; letter-spacing: 0.06em;">WEEK SCORE · 4 DAYS SO FAR</div>
+      <div style="font-size: 26px; font-weight: 800; margin-top: 4px;">Good week. Fota leads, Shokti needs a push.</div>
+      <div style="font-size: 13px; color: #5FD39A; margin-top: 6px;">+3 goals vs the same days last week · streak 1 day</div>
+    </div>
+    <div style="display: flex; gap: 14px;">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;"><div style="width: 52px; height: 52px; border-radius: 26px; background: conic-gradient(#4CC3F5 0 57%, #222B40 0); display: flex; align-items: center; justify-content: center;"><div style="width: 40px; height: 40px; border-radius: 20px; background: #1A2233; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800;">4/7</div></div><span style="font-size: 11px; color: #4CC3F5; font-weight: 700;">Fota</span></div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;"><div style="width: 52px; height: 52px; border-radius: 26px; background: conic-gradient(#F2A64A 0 43%, #222B40 0); display: flex; align-items: center; justify-content: center;"><div style="width: 40px; height: 40px; border-radius: 20px; background: #1A2233; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800;">3/7</div></div><span style="font-size: 11px; color: #F2A64A; font-weight: 700;">Boi</span></div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;"><div style="width: 52px; height: 52px; border-radius: 26px; background: conic-gradient(#A99CF5 0 43%, #222B40 0); display: flex; align-items: center; justify-content: center;"><div style="width: 40px; height: 40px; border-radius: 20px; background: #1A2233; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800;">3/7</div></div><span style="font-size: 11px; color: #A99CF5; font-weight: 700;">Shanti</span></div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;"><div style="width: 52px; height: 52px; border-radius: 26px; background: conic-gradient(#CDEF5A 0 14%, #222B40 0); display: flex; align-items: center; justify-content: center;"><div style="width: 40px; height: 40px; border-radius: 20px; background: #1A2233; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800;">1/7</div></div><span style="font-size: 11px; color: #CDEF5A; font-weight: 700;">Shokti</span></div>
+    </div>
+  </div>
+
+  <div style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 16px 20px;">
+    <div style="font-weight: 800; font-size: 14px; margin-bottom: 12px;">Day by day</div>
+    <div style="display: grid; grid-template-columns: 110px repeat(7, minmax(0, 1fr)); gap: 6px; font-size: 12px; align-items: center;">
+      <span></span><span style="color: #9AA6BF; text-align: center;">Sun 9</span><span style="color: #9AA6BF; text-align: center;">Mon 10</span><span style="color: #9AA6BF; text-align: center;">Tue 11</span><span style="text-align: center; font-weight: 800;">Wed 12</span><span style="color: #5A6680; text-align: center;">Thu 13</span><span style="color: #5A6680; text-align: center;">Fri 14</span><span style="color: #5A6680; text-align: center;">Sat 15</span>
+      <span style="color: #4CC3F5; font-weight: 800;">Fota</span><span style="height: 32px; border-radius: 6px; background: #4CC3F5; color: #0D1220; display: flex; align-items: center; justify-content: center; font-weight: 800;">6</span><span style="height: 32px; border-radius: 6px; background: #4CC3F5; color: #0D1220; display: flex; align-items: center; justify-content: center; font-weight: 800;">6</span><span style="height: 32px; border-radius: 6px; background: #4CC3F5; color: #0D1220; display: flex; align-items: center; justify-content: center; font-weight: 800;">7</span><span style="height: 32px; border-radius: 6px; background: #4CC3F5; color: #0D1220; display: flex; align-items: center; justify-content: center; font-weight: 800;">6</span><span style="height: 32px; border-radius: 6px; border: 1px dashed #263049;"></span><span style="height: 32px; border-radius: 6px; border: 1px dashed #263049;"></span><span style="height: 32px; border-radius: 6px; border: 1px dashed #263049;"></span>
+      <span style="color: #F2A64A; font-weight: 800;">Boi</span><span style="height: 32px; border-radius: 6px; background: #2A2219; color: #F2A64A; display: flex; align-items: center; justify-content: center;">10m</span><span style="height: 32px; border-radius: 6px; background: #F2A64A; color: #0D1220; display: flex; align-items: center; justify-content: center; font-weight: 800;">30m</span><span style="height: 32px; border-radius: 6px; background: #F2A64A; color: #0D1220; display: flex; align-items: center; justify-content: center; font-weight: 800;">30m</span><span style="height: 32px; border-radius: 6px; background: #F2A64A; color: #0D1220; display: flex; align-items: center; justify-content: center; font-weight: 800;">30m</span><span style="height: 32px; border-radius: 6px; border: 1px dashed #263049;"></span><span style="height: 32px; border-radius: 6px; border: 1px dashed #263049;"></span><span style="height: 32px; border-radius: 6px; border: 1px dashed #263049;"></span>
+      <span style="color: #A99CF5; font-weight: 800;">Shanti</span><span style="height: 32px; border-radius: 6px; background: #211F38; color: #A99CF5; display: flex; align-items: center; justify-content: center;">Off</span><span style="height: 32px; border-radius: 6px; background: #211F38; color: #A99CF5; display: flex; align-items: center; justify-content: center;">5m</span><span style="height: 32px; border-radius: 6px; background: #A99CF5; color: #0D1220; display: flex; align-items: center; justify-content: center; font-weight: 800;">10m</span><span style="height: 32px; border-radius: 6px; background: #A99CF5; color: #0D1220; display: flex; align-items: center; justify-content: center; font-weight: 800;">10m</span><span style="height: 32px; border-radius: 6px; border: 1px dashed #263049;"></span><span style="height: 32px; border-radius: 6px; border: 1px dashed #263049;"></span><span style="height: 32px; border-radius: 6px; border: 1px dashed #263049;"></span>
+      <span style="color: #CDEF5A; font-weight: 800;">Shokti</span><span style="height: 32px; border-radius: 6px; background: #222A16; color: #CDEF5A; display: flex; align-items: center; justify-content: center;">6m</span><span style="height: 32px; border-radius: 6px; background: #222A16; color: #CDEF5A; display: flex; align-items: center; justify-content: center;">7m</span><span style="height: 32px; border-radius: 6px; background: #222A16; color: #CDEF5A; display: flex; align-items: center; justify-content: center;">6m</span><span style="height: 32px; border-radius: 6px; background: #CDEF5A; color: #0D1220; display: flex; align-items: center; justify-content: center; font-weight: 800;">12m</span><span style="height: 32px; border-radius: 6px; border: 1px dashed #263049;"></span><span style="height: 32px; border-radius: 6px; border: 1px dashed #263049;"></span><span style="height: 32px; border-radius: 6px; border: 1px dashed #263049;"></span>
+    </div>
+    <div style="font-size: 11px; color: #9AA6BF; margin-top: 10px;">Solid cell = goal met · dim cell = some progress · dashed = still to come · click a buddy name to open its tab</div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 440px; gap: 16px; align-items: start;">
+    <div style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px;">
+      <div style="display: flex; align-items: baseline; gap: 8px;"><span style="font-weight: 800; font-size: 14px; flex-grow: 1;">Time by category</span><b style="font-size: 20px;">23h 32m</b><span style="font-size: 11px; color: #5FD39A;">+3h 10m vs last week</span></div>
+      <div style="height: 12px; border-radius: 4px; overflow: hidden; display: flex; gap: 2px;"><i style="flex: 30; background: #3A4458;"></i><i style="flex: 13; background: #FF9FB8;"></i><i style="flex: 12; background: #FF7A6B;"></i><i style="flex: 9; background: #A99CF5;"></i><i style="flex: 8; background: #F5B36B;"></i><i style="flex: 7; background: #FF5A5F;"></i><i style="flex: 5; background: #4F8BF5;"></i><i style="flex: 3; background: #5FD39A;"></i><i style="flex: 1; background: #4CC3F5;"></i></div>
+      <div style="display: flex; flex-direction: column; font-size: 13px;">
+        <span style="display: grid; grid-template-columns: 10px 1fr 60px 36px 56px; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #3A4458;"></i>Away<b style="text-align: right;">7h 4m</b><span style="color: #9AA6BF; text-align: right;">30%</span><span style="color: #9AA6BF; text-align: right; font-size: 11px;">+1h 2m</span></span>
+        <span style="display: grid; grid-template-columns: 10px 1fr 60px 36px 56px; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #FF9FB8;"></i>Break<b style="text-align: right;">3h 6m</b><span style="color: #9AA6BF; text-align: right;">13%</span><span style="color: #FF8A80; text-align: right; font-size: 11px;">+40m</span></span>
+        <span style="display: grid; grid-template-columns: 10px 1fr 60px 36px 56px; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #FF7A6B;"></i>Coding Hobby<b style="text-align: right;">2h 52m</b><span style="color: #9AA6BF; text-align: right;">12%</span><span style="color: #5FD39A; text-align: right; font-size: 11px;">+1h 2m</span></span>
+        <span style="display: grid; grid-template-columns: 10px 1fr 60px 36px 56px; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #A99CF5;"></i>Coding Client<b style="text-align: right;">2h 8m</b><span style="color: #9AA6BF; text-align: right;">9%</span><span style="color: #9AA6BF; text-align: right; font-size: 11px;">−12m</span></span>
+        <span style="display: grid; grid-template-columns: 10px 1fr 60px 36px 56px; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #F5B36B;"></i>Client Work<b style="text-align: right;">1h 59m</b><span style="color: #9AA6BF; text-align: right;">8%</span><span style="color: #5FD39A; text-align: right; font-size: 11px;">+20m</span></span>
+        <span style="display: grid; grid-template-columns: 10px 1fr 60px 36px 56px; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #FF5A5F;"></i>Coding<b style="text-align: right;">1h 39m</b><span style="color: #9AA6BF; text-align: right;">7%</span><span style="color: #9AA6BF; text-align: right; font-size: 11px;">−5m</span></span>
+        <span style="display: grid; grid-template-columns: 10px 1fr 60px 36px 56px; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #4F8BF5;"></i>Client Meeting<b style="text-align: right;">1h 12m</b><span style="color: #9AA6BF; text-align: right;">5%</span><span style="color: #9AA6BF; text-align: right; font-size: 11px;">−30m</span></span>
+        <span style="display: grid; grid-template-columns: 10px 1fr 60px 36px 56px; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #5FD39A;"></i>Learning<b style="text-align: right;">47m</b><span style="color: #9AA6BF; text-align: right;">3%</span><span style="color: #5FD39A; text-align: right; font-size: 11px;">+15m</span></span>
+        <span style="display: grid; grid-template-columns: 10px 1fr 60px 36px 56px; gap: 8px; align-items: center; padding: 6px 0;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #4CC3F5;"></i>Organizing<b style="text-align: right;">15m</b><span style="color: #9AA6BF; text-align: right;">1%</span><span style="color: #9AA6BF; text-align: right; font-size: 11px;">0m</span></span>
+      </div>
+    </div>
+    <dc-import name="StreakOverview" hint-size="440px,430px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1000,"height":1090}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
