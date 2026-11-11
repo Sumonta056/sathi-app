@@ -85,8 +85,12 @@ struct EngineTrackerWaveThreeFixTests {
         h.clock.advance(minutes: 10 * 60)
         h.engine.data.prefs.tracker.endOfDayOn = true
         h.engine.tick()
+        h.engine.skipTrackerPrompt()
+        h.engine.tick()
         #expect(!h.presenter.trackerCalls.contains(.showEndOfDay))
         h.advance(minutes: 8 * 60)
+        h.engine.skipTrackerPrompt()
+        h.engine.tick()
         #expect(h.presenter.trackerCalls.filter { $0 == .showEndOfDay }.count == 1)
         #expect(h.store.live.tracker.lastEndOfDay == DayKey(thu(18), calendar: .current))
     }
