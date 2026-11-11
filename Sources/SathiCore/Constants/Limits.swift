@@ -57,6 +57,8 @@ package enum Limits {
     package static let readingURLMax = 2048
     package static let quickTextMax = 80
     package static let quickMax = 20
+    package static let comingUpMax = 6
+    package static let todayCategoryRows = 4
     package static let quickChips = [5, 15, 30, 60]
     package static let quickNoteTextMax = 24
     package static let blockLengths = [15, 30, 40, 45, 60, 120]

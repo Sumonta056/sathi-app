@@ -146,6 +146,6 @@ struct EngineFlowTests {
     @Test func openSettingsAsksThePresenter() {
         let h = EngineHarness()
         h.engine.openSettings()
-        #expect(h.presenter.calls.last == .showSettings)
+        #expect(h.presenter.calls.last == .showMain(.settings(.general)))
     }
 }

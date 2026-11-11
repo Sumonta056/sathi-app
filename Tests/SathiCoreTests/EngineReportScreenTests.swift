@@ -53,7 +53,7 @@ struct EngineReportScreenTests {
     @Test func openReportsShowsTheReportsWindow() {
         let h = harness()
         h.engine.openReports()
-        #expect(h.presenter.calls.last == .showReports)
+        #expect(h.presenter.calls.last == .showMain(.reports))
     }
 
     private func gymHarness(workouts: Int) -> EngineHarness {

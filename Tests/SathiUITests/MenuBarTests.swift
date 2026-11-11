@@ -114,7 +114,7 @@ struct MenuBarTests {
     @Test func settingsOpensSettings() throws {
         let h = EngineHarness()
         try Find.button(panel(h), label: "Settings").tap()
-        #expect(h.presenter.calls.last == .showSettings)
+        #expect(h.presenter.calls.last == .showMain(.settings(.general)))
     }
 
     @Test func reportsIsEnabledAndOpensReports() throws {
@@ -122,7 +122,7 @@ struct MenuBarTests {
         let reports = try Find.button(panel(h), label: "Reports")
         #expect(!reports.isDisabled())
         try reports.tap()
-        #expect(h.presenter.calls.last == .showReports)
+        #expect(h.presenter.calls.last == .showMain(.reports))
     }
 
     @Test func quitIsThere() throws {
