@@ -20,7 +20,7 @@ struct ActivityAwayNameTests {
         ActivityEditSection(
             draft: ActivityEditDraft(a, calendar: Fix.calendar), title: "Edit activity", accent: Night.chipText,
             categories: ActivityCategory.defaults, calendars: [], dayStart: Fix.key(4).start(in: Fix.calendar), calendar: Fix.calendar,
-            save: { saved($0); return .saved(a.id) }, delete: {}, close: {}
+            save: { saved($0); return .saved(a.id) }, delete: { true }, close: {}
         )
     }
 

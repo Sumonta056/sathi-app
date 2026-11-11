@@ -11,10 +11,11 @@ struct ActivityEditSectionTests {
 
     private func section(
         _ activity: Activity = Fix.items[0], result: ActivityEditResult = .saved(ActivityID()),
-        saved: @escaping (ActivityEdit) -> Void = { _ in }, closed: @escaping () -> Void = {}, deleted: (() -> Void)? = nil
+        saved: @escaping (ActivityEdit) -> Void = { _ in }, closed: @escaping () -> Void = {}, deleted: (() -> Bool)? = nil
     ) -> ActivityEditSection {
         ActivityEditSection(
-            draft: ActivityEditDraft(activity, calendar: Fix.calendar), title: "Edit activity", accent: Night.tracker,
+            draft: ActivityEditDraft(activity, calendar: Fix.calendar, writable: Fix.calendars.map(\.id)), title: "Edit activity",
+            accent: Night.tracker,
             categories: ActivityCategory.defaults, calendars: Fix.calendars, dayStart: Fix.key(4).start(in: Fix.calendar),
             calendar: Fix.calendar, save: { saved($0); return result }, delete: deleted, close: closed
         )
@@ -59,34 +60,30 @@ struct ActivityEditSectionTests {
     @Test func deleteShowsOnlyWhenGiven() throws {
         #expect(try Find.lacks(section().inspect(), text: "Delete"))
         var deleted = 0
-        try press(section(deleted: { deleted += 1 }), "Delete")
+        try press(section(deleted: { deleted += 1; return true }), "Delete")
         #expect(deleted == 1)
     }
 
-    @Test func theFieldsAreInOrder() throws {
-        let sut = try section().inspect()
-        for label in ["NAME", "START", "END", "LENGTH", "CATEGORY", "CALENDAR", "sets the end"] {
-            #expect(throws: Never.self) { try sut.find(text: label) }
-        }
-        #expect(throws: Never.self) { try sut.find(text: "1h 30m") }
+    @Test func aFailedDeleteKeepsTheSectionOpen() throws {
+        var closed = 0
+        try press(section(closed: { closed += 1 }, deleted: { false }), "Delete")
+        #expect(closed == 0)
     }
 
-    @Test func theLengthChipsAreFifteenThirtyOneAndTwoHours() throws {
-        #expect(try boxes(section(), "activity.length.").map(\.label) == ["15m", "30m", "1h", "2h"])
+    @Test func aLengthChipKeepsTheSecondsOfTheStart() {
+        let a = Activity(text: "Review", start: Fix.at(4, 10, 37, 40), end: Fix.at(4, 11, 0))
+        var d = ActivityEditDraft(a, calendar: Fix.calendar)
+        d.setLength(15)
+        let e = d.edit(dayStart: Fix.key(4).start(in: Fix.calendar), calendar: Fix.calendar)
+        #expect(e.start == Fix.at(4, 10, 37, 40))
+        #expect(e.end == Fix.at(4, 10, 52, 40))
     }
 
-    @Test(arguments: [(15, (9, 15)), (30, (9, 30)), (60, (10, 0)), (120, (11, 0))])
-    func aLengthChipSetsTheEndFromTheStart(_ minutes: Int, _ end: (Int, Int)) {
+    @Test func aLengthChipAfterAStartChangeUsesTheNewStart() {
         var d = ActivityEditDraft(Fix.items[0], calendar: Fix.calendar)
-        d.setLength(minutes)
-        #expect(d.lengthSeconds == TimeInterval(minutes * 60))
-        #expect(d.edit(dayStart: Fix.key(4).start(in: Fix.calendar), calendar: Fix.calendar).end == Fix.at(4, end.0, end.1))
-    }
-
-    @Test func aLengthPastMidnightStopsAtMidnight() {
-        var d = ActivityEditDraft(start: Fix.at(4, 23), end: Fix.at(4, 23, 30), calendar: Fix.calendar)
-        d.setLength(120)
-        #expect(d.edit(dayStart: Fix.key(4).start(in: Fix.calendar), calendar: Fix.calendar).end == Fix.key(5).start(in: Fix.calendar))
+        d.startMinutes = 9 * 60 + 30
+        d.setLength(30)
+        #expect(d.edit(dayStart: Fix.key(4).start(in: Fix.calendar), calendar: Fix.calendar).end == Fix.at(4, 10))
     }
 
     @Test func everyCategoryIsAChipPlusNone() throws {

@@ -53,7 +53,8 @@ struct ActivitiesPage: View {
         } else if let day = page.day {
             ActivityDayView(
                 day: day, overview: overviewMemo.value(range, range: range, engine: e) { $0.activityDayOverview($1) },
-                categories: e.activityCategories, calendar: calendar, calendars: e.calendarChoices(), actions: dayActions
+                categories: e.activityCategories, calendar: calendar, calendars: e.calendarChoices(),
+                calendarNames: e.activityCalendarTitles, actions: dayActions
             )
         } else if let stats = page.stats {
             ActivityRangeView(

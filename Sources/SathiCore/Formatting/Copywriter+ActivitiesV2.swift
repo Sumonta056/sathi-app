@@ -22,6 +22,8 @@ extension Copywriter {
     package static let activitiesNoCalendar = "Do not add"
     package static let activitiesClose = "Close"
     package static let activitiesFillGap = "Fill this gap"
+    package static let activitiesCurrentCalendar = "Current calendar"
+    package static let activitiesDeleteFailed = "Sathi could not delete the calendar event, so the activity stays. Try again."
 
     package static func activitiesLength(_ seconds: TimeInterval) -> String {
         let total = max(0, Int(seconds / Timing.minute))

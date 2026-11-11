@@ -64,13 +64,9 @@ struct ActivityTimelineRow: View {
                 detail(span, Night.chipText)
                 if let category = activity.category { detail(category, color, weight: .bold) }
                 if activity.eventID != nil || activity.sourceEventID != nil {
-                    HStack(spacing: UIMetrics.textSpacing) {
-                        Image(systemName: "calendar").font(.system(size: UIMetrics.activitiesRowIcon))
-                        if let calendarName { Text(verbatim: calendarName) }
-                    }
-                    .font(Typography.tracker(UIMetrics.activitiesRowDetailFont, .medium))
-                    .foregroundStyle(Night.trackerEvent)
-                    .lineLimit(1)
+                    calendarLine(calendarName, Night.trackerEvent)
+                } else if activity.calendarID != nil {
+                    calendarLine(Copywriter.trackerNotInCalendar, Night.faint)
                 }
             }
         }
@@ -84,6 +80,16 @@ struct ActivityTimelineRow: View {
         }
         .foregroundStyle(Night.muted)
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func calendarLine(_ text: String?, _ color: Color) -> some View {
+        HStack(spacing: UIMetrics.textSpacing) {
+            Image(systemName: "calendar").font(.system(size: UIMetrics.activitiesRowIcon))
+            if let text { Text(verbatim: text) }
+        }
+        .font(Typography.tracker(UIMetrics.activitiesRowDetailFont, .medium))
+        .foregroundStyle(color)
+        .lineLimit(1)
     }
 
     private func detail(_ text: String, _ color: Color, weight: Font.Weight = .medium) -> some View {

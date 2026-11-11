@@ -7,10 +7,11 @@ struct ActivityEditSection: View {
     let accent: Color
     let categories: [ActivityCategory]
     let calendars: [CalendarChoice]
+    var calendarNames: [String: String] = [:]
     let dayStart: Date
     let calendar: Calendar
     let save: (ActivityEdit) -> ActivityEditResult
-    let delete: (() -> Void)?
+    let delete: (() -> Bool)?
     let close: () -> Void
     @State private var message: String?
 
@@ -32,7 +33,7 @@ struct ActivityEditSection: View {
                 }
             }
             ActivityEditTimes(draft: $draft, accent: accent)
-            ActivityEditChoices(draft: $draft, categories: categories, calendars: calendars)
+            ActivityEditChoices(draft: $draft, categories: categories, calendars: calendars, calendarNames: calendarNames)
             Divider().overlay(Night.border)
             footer
             if let message {
@@ -73,7 +74,7 @@ struct ActivityEditSection: View {
     private var footer: some View {
         HStack(spacing: UIMetrics.activitiesChipGap) {
             if let delete {
-                Button(Copywriter.trackerDelete) { delete() }
+                Button(Copywriter.trackerDelete) { message = delete() ? nil : Copywriter.activitiesDeleteFailed }
                     .buttonStyle(GhostButton(accent: Night.cheek, height: UIMetrics.activitiesFieldHeight))
             }
             Spacer(minLength: 0)

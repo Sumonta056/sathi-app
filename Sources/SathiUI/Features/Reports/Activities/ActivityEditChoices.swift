@@ -5,6 +5,7 @@ struct ActivityEditChoices: View {
     @Binding var draft: ActivityEditDraft
     let categories: [ActivityCategory]
     let calendars: [CalendarChoice]
+    var calendarNames: [String: String] = [:]
 
     var body: some View {
         VStack(alignment: .leading, spacing: UIMetrics.activitiesEditGap) {
@@ -29,12 +30,18 @@ struct ActivityEditChoices: View {
                     PromptBox(
                         label: Copywriter.activitiesNoCalendar, on: draft.calendarID == nil, id: "activity.calendar.none",
                         look: .activityEdit(Night.promptSecondary)
-                    ) { draft.calendarID = nil }
+                    ) { draft.pickCalendar(nil) }
+                    if let unlisted = draft.unlistedCalendarID {
+                        PromptBox(
+                            label: calendarNames[unlisted] ?? Copywriter.activitiesCurrentCalendar, on: draft.keepsCalendar,
+                            id: "activity.calendar.current", look: .activityEdit(Night.promptSecondary)
+                        ) { draft.pickCalendar(unlisted) }
+                    }
                     ForEach(calendars) { c in
                         PromptBox(
-                            label: c.title, on: draft.calendarID == c.id, id: "activity.calendar." + c.id,
+                            label: c.title, on: !draft.keepsCalendar && draft.calendarID == c.id, id: "activity.calendar." + c.id,
                             look: .activityEdit(Night.trackerEvent)
-                        ) { draft.calendarID = c.id }
+                        ) { draft.pickCalendar(c.id) }
                     }
                 }
             }

@@ -65,7 +65,10 @@ extension Engine {
     private func cutWork(_ item: Activity, around span: DateInterval) {
         removeStoredActivity(item.id)
         let pieces = SpanCut.cut(item.interval, removing: [span])
-        guard let first = pieces.first else { return calendarActivityDeleted(item) }
+        guard let first = pieces.first else {
+            calendarActivityDeleted(item)
+            return
+        }
         var kept = item
         kept.start = first.start
         kept.end = first.end

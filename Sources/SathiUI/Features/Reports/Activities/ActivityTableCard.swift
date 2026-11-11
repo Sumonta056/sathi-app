@@ -20,7 +20,7 @@ struct ActivityTableCard: View {
         CategoryTable(totals.compactMap { t in
             switch t.kind {
             case .away: return nil
-            case .events: return CategoryTableInput(name: t.name, colorHex: ActivityColors.eventHex, seconds: t.seconds)
+            case .events: return CategoryTableInput(name: t.name, colorHex: NightHex.trackerEvent, seconds: t.seconds)
             case .category:
                 return CategoryTableInput(name: t.name, colorHex: ActivityColors.hex(t.isNamed ? t.name : nil, in: categories), seconds: t.seconds)
             }

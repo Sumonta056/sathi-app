@@ -9,15 +9,16 @@ package struct ActivityDayOverview: Equatable, Sendable {
     package var awayCount: Int
     package var topPlace: String?
     package var count: Int
-    package var gaps: Int
+    package var gapSpans: [DateInterval]
 
+    package var gaps: Int { gapSpans.count }
     package var topCategory: String? { categories.first?.name }
 
     package var focusPercent: Int? {
         logged > 0 ? Int((focus / logged * Double(Limits.fullPercent)).rounded()) : nil
     }
 
-    package init(_ day: ActivityDay, loggedChange: RangeChange) {
+    package init(_ day: ActivityDay, loggedChange: RangeChange, now: Date = .distantFuture, isTrackerDay: Bool = true) {
         let stats = ActivityDayStats(day)
         let segments = stats.segments
         let aways = segments.filter { $0.kind == .away }
@@ -31,7 +32,7 @@ package struct ActivityDayOverview: Equatable, Sendable {
         awayCount = aways.count
         topPlace = Self.topPlace(aways)
         count = stats.count
-        gaps = segments.filter { $0.kind == .notLogged && $0.length >= Timing.activityMinimum }.count
+        gapSpans = ActivityGaps.spans(day, now: now, isTrackerDay: isTrackerDay)
     }
 
     private static let focusKinds: Set<ActivityKind> = [.work, .timeBlock]

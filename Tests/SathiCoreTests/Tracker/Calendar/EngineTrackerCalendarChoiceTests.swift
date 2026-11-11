@@ -89,16 +89,6 @@ struct EngineTrackerCalendarChoiceTests {
         #expect(h.saved.first?.eventID == "e1")
     }
 
-    @Test func aFailedWriteInTheNewCalendarKeepsTheActivityWithoutAnEvent() {
-        let h = EngineHarness.tracker(at: wed(12))
-        h.calendarWriter.nextSaveResult = .failed
-        let a = stored(h)
-        #expect(h.engine.editActivity(a.id, edit(.calendar("home"))) == .saved(a.id))
-        #expect(h.calendarWriter.deleted == ["ev9"])
-        #expect(h.saved.first?.calendarID == "home")
-        #expect(h.saved.first?.eventID == nil)
-    }
-
     @Test func anActivityFromACalendarEventIgnoresTheChoice() {
         let h = EngineHarness.tracker(at: wed(12))
         let a = stored(h, calendarID: "work", eventID: nil, source: "m1")

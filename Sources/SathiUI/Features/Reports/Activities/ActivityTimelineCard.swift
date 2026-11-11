@@ -3,15 +3,35 @@ import SwiftUI
 
 struct ActivityTimelineCard: View {
     let day: ActivityDay
+    let gaps: [DateInterval]
     let categories: [ActivityCategory]
     let calendar: Calendar
     var calendars: [CalendarChoice] = []
+    var calendarNames: [String: String] = [:]
     var actions = ActivityDayActions()
     @State var editing: ActivityEditTarget?
 
     var body: some View {
+        ActivityTimelineContent(
+            day: day, gaps: gaps, categories: categories, calendar: calendar, calendars: calendars,
+            calendarNames: calendarNames, actions: actions, editing: $editing
+        )
+    }
+}
+
+struct ActivityTimelineContent: View {
+    let day: ActivityDay
+    let gaps: [DateInterval]
+    let categories: [ActivityCategory]
+    let calendar: Calendar
+    let calendars: [CalendarChoice]
+    let calendarNames: [String: String]
+    let actions: ActivityDayActions
+    @Binding var editing: ActivityEditTarget?
+
+    var body: some View {
         let shape = RoundedRectangle(cornerRadius: UIMetrics.activitiesTileRadius, style: .continuous)
-        let rows = ActivityLogRows.make(day)
+        let rows = ActivityLogRows.make(day, gaps: gaps)
         VStack(alignment: .leading, spacing: UIMetrics.activitiesCardGap) {
             header(rows)
             ActivityRibbon(
@@ -21,9 +41,9 @@ struct ActivityTimelineCard: View {
             ActivityAxis(hours: day.hours, calendar: calendar)
             HStack(alignment: .top, spacing: UIMetrics.activitiesGap) {
                 ActivityTimelineList(
-                    rows: rows, categories: categories, calendar: calendar,
-                    calendarNames: Dictionary(calendars.map { ($0.id, $0.title) }, uniquingKeysWith: { a, _ in a }),
-                    editing: editing, onEdit: { editing = .activity($0) }, onFill: { editing = .add($0) }, onDelete: actions.delete
+                    rows: rows, categories: categories, calendar: calendar, calendarNames: calendarNames,
+                    editing: editing, onEdit: { editing = .activity($0) }, onFill: { editing = .add($0) },
+                    onDelete: { _ = actions.delete($0) }
                 )
                 if let editing, let section = section(editing) {
                     section
@@ -45,8 +65,7 @@ struct ActivityTimelineCard: View {
                 .foregroundStyle(Night.text)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Text(verbatim: Copywriter.activitiesCountLine(
-                ActivityDayStats(day).count,
-                gaps: rows.filter { !ActivityTimelineList.isActivity($0) }.count
+                ActivityDayStats(day).count, gaps: rows.filter { !ActivityTimelineList.isActivity($0) }.count
             ))
             .font(Typography.hint)
             .foregroundStyle(Night.muted)
@@ -66,16 +85,22 @@ struct ActivityTimelineCard: View {
         case let .activity(id):
             guard let a = day.activities.first(where: { $0.id == id }) else { return nil }
             return ActivityEditSection(
-                draft: ActivityEditDraft(a, calendar: calendar), title: Copywriter.activitiesEditTitle,
+                draft: ActivityEditDraft(a, calendar: calendar, writable: calendars.map(\.id)), title: Copywriter.activitiesEditTitle,
                 accent: a.kind == .away ? Night.chipText : ActivityColors.color(a.category, in: categories),
-                categories: categories, calendars: calendars, dayStart: dayStart, calendar: calendar,
-                save: { actions.edit(id, $0) }, delete: { actions.delete(id); editing = nil }, close: { editing = nil }
+                categories: categories, calendars: calendars, calendarNames: calendarNames, dayStart: dayStart, calendar: calendar,
+                save: { actions.edit(id, $0) },
+                delete: {
+                    guard actions.delete(id) else { return false }
+                    editing = nil
+                    return true
+                },
+                close: { editing = nil }
             )
         case let .add(span):
             return ActivityEditSection(
                 draft: ActivityEditDraft(start: span.start, end: span.end, calendar: calendar), title: Copywriter.activitiesAddTitle,
-                accent: Night.tracker, categories: categories, calendars: calendars, dayStart: dayStart, calendar: calendar,
-                save: { actions.add($0) }, delete: nil, close: { editing = nil }
+                accent: Night.tracker, categories: categories, calendars: calendars, calendarNames: calendarNames,
+                dayStart: dayStart, calendar: calendar, save: { actions.add($0) }, delete: nil, close: { editing = nil }
             )
         }
     }

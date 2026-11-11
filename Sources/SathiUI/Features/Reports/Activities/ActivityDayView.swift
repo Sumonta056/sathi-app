@@ -7,6 +7,7 @@ struct ActivityDayView: View {
     let categories: [ActivityCategory]
     var calendar: Calendar = .current
     var calendars: [CalendarChoice] = []
+    var calendarNames: [String: String] = [:]
     var actions = ActivityDayActions()
     var editing: ActivityEditTarget?
 
@@ -18,7 +19,8 @@ struct ActivityDayView: View {
                     ActivityDayTiles(overview: overview)
                 }
                 ActivityTimelineCard(
-                    day: day, categories: categories, calendar: calendar, calendars: calendars, actions: actions, editing: editing
+                    day: day, gaps: overview.gapSpans, categories: categories, calendar: calendar, calendars: calendars,
+                    calendarNames: calendarNames, actions: actions, editing: editing
                 )
                 .id(day.day)
                 ActivityTextCard(

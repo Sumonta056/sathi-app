@@ -63,6 +63,14 @@ struct ActivityReportEditTests {
         #expect(throws: Never.self) { try sut.find(text: "Work") }
     }
 
+    @Test func aRowWithACalendarButNoEventShowsTheNotInCalendarHint() throws {
+        var a = Self.work
+        a.calendarID = "work"
+        let sut = try ActivityTimelineRow(activity: a, categories: ActivityCategory.defaults, calendar: Fix.calendar, calendarName: "Work").inspect()
+        #expect(throws: Never.self) { try sut.find(text: "Not in calendar") }
+        #expect(Find.lacks(sut, text: "Work"))
+    }
+
     @Test func aRowWithoutAnEventShowsNoCalendar() throws {
         let sut = try ActivityTimelineRow(activity: Self.work, categories: ActivityCategory.defaults, calendar: Fix.calendar, calendarName: "Work")
             .inspect()
@@ -82,7 +90,7 @@ struct ActivityReportEditTests {
         let sut = ActivityEditSection(
             draft: ActivityEditDraft(Self.away, calendar: Fix.calendar), title: "Edit activity", accent: Night.chipText,
             categories: ActivityCategory.defaults, calendars: Fix.calendars, dayStart: Fix.key(4).start(in: Fix.calendar),
-            calendar: Fix.calendar, save: { _ in .saved(ActivityID()) }, delete: {}, close: {}
+            calendar: Fix.calendar, save: { _ in .saved(ActivityID()) }, delete: { true }, close: {}
         )
         let v = try sut.inspect()
         for place in AwayPlace.allCases {

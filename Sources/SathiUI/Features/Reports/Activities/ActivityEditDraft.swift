@@ -9,8 +9,11 @@ struct ActivityEditDraft: Equatable {
     var awayPlace: AwayPlace?
     var awayPlaceName: String?
     var calendarID: String?
+    var keepsCalendar = false
+    private(set) var unlistedCalendarID: String?
     let isAway: Bool
     let showsCalendar: Bool
+    private var pickedLength: Int?
     private let originalStart: Date
     private let originalEnd: Date
     private let originalStartMinutes: Int
@@ -34,13 +37,22 @@ struct ActivityEditDraft: Equatable {
         endMinutes = originalEndMinutes
     }
 
-    init(_ activity: Activity, calendar: Calendar) {
+    init(_ activity: Activity, calendar: Calendar, writable: [String]? = nil) {
         self.init(
             text: activity.text, category: activity.category, start: activity.start, end: activity.end, calendar: calendar,
             isAway: activity.kind == .away, awayPlace: activity.awayPlace,
             showsCalendar: activity.kind == .work && activity.sourceEventID == nil, calendarID: activity.calendarID
         )
         awayPlaceName = activity.awayPlaceName
+        if showsCalendar, let id = activity.calendarID, let writable, !writable.contains(id) {
+            unlistedCalendarID = id
+            keepsCalendar = true
+        }
+    }
+
+    mutating func pickCalendar(_ id: String?) {
+        calendarID = id
+        keepsCalendar = id != nil && id == unlistedCalendarID
     }
 
     func edit(dayStart: Date, calendar: Calendar) -> ActivityEdit {
@@ -48,8 +60,10 @@ struct ActivityEditDraft: Equatable {
             ? originalStart : Self.date(startMinutes, dayStart: dayStart, calendar: calendar)
         var end = endMinutes == originalEndMinutes
             ? originalEnd : Self.date(endMinutes, dayStart: dayStart, calendar: calendar)
-        if endMinutes != originalEndMinutes, endMinutes == 0, end <= start {
-            end = Self.date(Limits.minutesPerDay, dayStart: dayStart, calendar: calendar)
+        let midnight = Self.date(Limits.minutesPerDay, dayStart: dayStart, calendar: calendar)
+        if endMinutes != originalEndMinutes, endMinutes == 0, end <= start { end = midnight }
+        if let pickedLength, endMinutes == Self.endMinutes(startMinutes, length: pickedLength) {
+            end = min(start.addingTimeInterval(TimeInterval(pickedLength) * Timing.minute), midnight)
         }
         return ActivityEdit(
             text: text, category: category, start: start, end: end,
@@ -58,7 +72,7 @@ struct ActivityEditDraft: Equatable {
     }
 
     var calendarChoice: ActivityCalendarChoice {
-        guard showsCalendar else { return .keep }
+        guard showsCalendar, !keepsCalendar else { return .keep }
         return calendarID.map(ActivityCalendarChoice.calendar) ?? .none
     }
 
@@ -68,7 +82,12 @@ struct ActivityEditDraft: Equatable {
     }
 
     mutating func setLength(_ minutes: Int) {
-        endMinutes = min(startMinutes + minutes, Limits.minutesPerDay) % Limits.minutesPerDay
+        pickedLength = minutes
+        endMinutes = Self.endMinutes(startMinutes, length: minutes)
+    }
+
+    private static func endMinutes(_ start: Int, length: Int) -> Int {
+        min(start + length, Limits.minutesPerDay) % Limits.minutesPerDay
     }
 
     static func minutes(_ date: Date, calendar: Calendar) -> Int {

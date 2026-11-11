@@ -68,9 +68,11 @@ extension Engine {
         )
     }
 
-    package func deleteActivity(_ id: ActivityID) {
-        guard let old = removeStoredActivity(id) else { return }
-        calendarActivityDeleted(old)
+    @discardableResult
+    package func deleteActivity(_ id: ActivityID) -> Bool {
+        guard let old = storedActivity(id), calendarActivityDeleted(old) else { return false }
+        removeStoredActivity(id)
+        return true
     }
 
     private func busySpans(near edit: ActivityEdit, except id: ActivityID?) -> [DateInterval] {
