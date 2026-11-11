@@ -73,7 +73,7 @@ struct WebsiteShotsTracker {
 
     @Test func report() throws {
         let h = Self.harness(at: Self.at(17, 40))
-        let view = ReportsView(tab: .activities)
+        let view = ReportsView()
         try Shots.save(view, "tracker-report", h)
     }
 

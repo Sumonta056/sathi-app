@@ -39,7 +39,7 @@ extension Copywriter {
         }
     }
 
-    private static func rangeBefore(_ kind: ReportRange) -> String {
+    package static func rangeBefore(_ kind: ReportRange) -> String {
         switch kind {
         case .day: "yesterday"
         case .week: "last week"
@@ -47,7 +47,7 @@ extension Copywriter {
         }
     }
 
-    private static func rangeDate(_ date: Date, _ pattern: String, _ zone: TimeZone) -> String {
+    package static func rangeDate(_ date: Date, _ pattern: String, _ zone: TimeZone) -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.timeZone = zone

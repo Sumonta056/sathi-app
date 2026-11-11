@@ -41,7 +41,7 @@ struct MainViewTests {
     }
 
     @Test func reportsPageShowsTheReports() throws {
-        #expect(throws: Never.self) { try main(.reports).find(HabitReportsView.self) }
+        #expect(throws: Never.self) { try main(.reports).find(ReportsPage.self) }
     }
 
     @Test func activitiesPageShowsTheActivityReports() throws {

@@ -18,8 +18,8 @@ struct MainView: View {
     @ViewBuilder private var page: some View {
         switch route.page {
         case .today: TodayPlaceholder()
-        case .activities: ReportsView(tab: .activities)
-        case .reports: ReportsView(tab: .habits)
+        case .activities: ReportsView()
+        case .reports: ReportsPage()
         case let .settings(page): SettingsPageView(page: page)
         }
     }
