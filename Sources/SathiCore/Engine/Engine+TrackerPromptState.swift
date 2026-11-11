@@ -77,7 +77,7 @@ extension Engine {
 
     private func promptActions() -> TrackerPromptActions {
         var a = TrackerPromptActions()
-        a.start = { [weak self] draft, at in self?.startActivity(draft, switchAt: at) }
+        a.start = { [weak self] draft, at in self?.startActivity(draft, switchAt: at) ?? false }
         a.skip = { [weak self] at in self?.skipTrackerPrompt(switchAt: at) }
         a.stillOn = { [weak self] minutes in self?.stillOnIt(minutes: minutes) }
         a.stillOnLate = { [weak self] in self?.stillOnItLate() }

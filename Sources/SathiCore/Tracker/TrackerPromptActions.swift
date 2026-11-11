@@ -1,7 +1,7 @@
 import Foundation
 
 package struct TrackerPromptActions {
-    package var start: @MainActor (ActivityDraft, Date?) -> Void = { _, _ in }
+    package var start: @MainActor (ActivityDraft, Date?) -> Bool = { _, _ in false }
     package var skip: @MainActor (Date?) -> Void = { _ in }
     package var stillOn: @MainActor (Int?) -> Void = { _ in }
     package var stillOnLate: @MainActor () -> Void = {}

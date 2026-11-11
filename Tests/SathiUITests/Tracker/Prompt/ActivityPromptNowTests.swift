@@ -55,4 +55,23 @@ struct ActivityPromptNowTests {
         #expect(calls.continued == [nil])
         #expect(calls.skipped == [nil])
     }
+
+    @Test func aRefusedStartLeavesStartWorking() throws {
+        let calls = PromptCalls()
+        calls.startWorks = false
+        let s = Prompt.state(.whatNow, calls: calls)
+        let model = ActivityPromptModel(s)
+        try Prompt.tap(Prompt.view(s, model: model), "tracker.start")
+        #expect(!model.answered)
+        calls.startWorks = true
+        try Prompt.tap(Prompt.view(s, model: model), "tracker.start")
+        #expect(calls.started.count == 2)
+        #expect(model.answered)
+    }
+
+    @Test func theEngineRefusesAStartWhenTheTrackerIsOff() {
+        let h = EngineHarness.tracker(at: at(10)) { $0.prefs.tracker.isOn = false }
+        #expect(!h.engine.startActivity(ActivityDraft(text: "Spec")))
+        #expect(EngineHarness.tracker(at: at(10)).engine.startActivity(ActivityDraft(text: "Spec")))
+    }
 }

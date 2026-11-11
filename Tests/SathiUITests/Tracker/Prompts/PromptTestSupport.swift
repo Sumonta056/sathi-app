@@ -15,6 +15,7 @@ final class PromptCalls {
     var notAttending: [String] = []
     var answers: [Bool] = []
     var continued: [Date?] = []
+    var startWorks = true
 }
 
 @MainActor
@@ -37,7 +38,10 @@ enum Prompt {
         s.calendar = calendar
         s.categories = ActivityCategory.defaults
         s.calendars = [CalendarChoice(id: "work", title: "Work", account: "iCloud", colorHex: 0x4CC3F5)]
-        s.actions.start = { calls.started.append(($0, $1)) }
+        s.actions.start = {
+            calls.started.append(($0, $1))
+            return calls.startWorks
+        }
         s.actions.skip = { calls.skipped.append($0) }
         s.actions.stillOn = { calls.stillOn.append($0) }
         s.actions.stillOnLate = { calls.calls.append("stillLate") }

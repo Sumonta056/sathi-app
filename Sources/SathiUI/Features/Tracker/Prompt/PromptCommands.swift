@@ -18,8 +18,7 @@ struct PromptCommands {
             actions.answerEvent(true)
         case .ask, .shortcut, .ends, .back:
             guard let draft = model.draft.committed else { return }
-            model.answered = true
-            actions.start(draft, model.switchAt)
+            model.answered = actions.start(draft, model.switchAt)
         }
     }
 
