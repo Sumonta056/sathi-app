@@ -1,12 +1,6 @@
 import SathiCore
 import SwiftUI
 
-enum ReportsCategoryColors {
-    static let away: UInt32 = 0x3A4458
-    static let events: UInt32 = 0x7FB8FF
-    static let plain: UInt32 = 0xFF8A80
-}
-
 struct ReportsCategoryCard: View {
     let stats: ActivityRangeStats
     let kind: ReportRange
@@ -41,9 +35,9 @@ struct ReportsCategoryCard: View {
 
     private static func color(_ row: ActivityRangeTotal, categories: [ActivityCategory]) -> UInt32 {
         switch row.kind {
-        case .away: ReportsCategoryColors.away
-        case .events: ReportsCategoryColors.events
-        case .category: row.isNamed ? categories.first { $0.name == row.name }?.colorHex ?? ReportsCategoryColors.plain : ReportsCategoryColors.plain
+        case .away: NightHex.trackerAway
+        case .events: NightHex.trackerEvent
+        case .category: row.isNamed ? categories.first { $0.name == row.name }?.colorHex ?? NightHex.trackerCoral : NightHex.trackerCoral
         }
     }
 

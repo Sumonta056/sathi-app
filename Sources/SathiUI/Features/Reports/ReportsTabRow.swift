@@ -6,6 +6,13 @@ struct ReportsTabRow: View {
     @Binding var selected: HabitID?
 
     var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            tabs
+        }
+        .frame(height: UIMetrics.reportsTabHeight)
+    }
+
+    private var tabs: some View {
         HStack(spacing: UIMetrics.reportsTabGap) {
             tab(Copywriter.reportsAllBuddies, color: Night.text, fill: Night.navSelected, isSelected: selected == nil) {
                 selected = nil
@@ -22,7 +29,6 @@ struct ReportsTabRow: View {
                 .disabled(score.isOff)
                 .opacity(score.isOff ? UIMetrics.reportsOffOpacity : 1)
             }
-            Spacer(minLength: 0)
         }
         .frame(height: UIMetrics.reportsTabHeight)
     }

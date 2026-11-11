@@ -11,6 +11,7 @@ extension Copywriter {
     package static let reportsPreviousMonth = "Previous month"
     package static let reportsNextMonth = "Next month"
     package static let reportsNoValue = "\u{2014}"
+    package static let reportsWeekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
     package static func reportsTab(_ id: HabitID, met: Int, days: Int) -> String {
         id.buddy + " · " + reportsRingText(met, days: days)
@@ -58,6 +59,21 @@ extension Copywriter {
         let change = diff > 0 ? "+" + goals + " vs " + before
             : diff < 0 ? "\u{2212}" + goals + " vs " + before : "No change vs " + before
         return change + " · streak " + reportsDays(streak)
+    }
+
+    package static func reportsAmountChange(
+        _ change: RangeChange,
+        kind: ReportRange,
+        isCurrent: Bool,
+        format: (Double) -> String
+    ) -> String {
+        let before = isCurrent ? reportsSameSpan(kind) : rangeBefore(kind)
+        switch change {
+        case let .up(amount): return "+" + format(amount) + " vs " + before
+        case let .down(amount): return "\u{2212}" + format(amount) + " vs " + before
+        case .same: return "No change vs " + before
+        case .none: return ""
+        }
     }
 
     package static func reportsStreak(_ days: Int) -> String {

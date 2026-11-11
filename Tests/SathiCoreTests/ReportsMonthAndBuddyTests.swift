@@ -67,7 +67,7 @@ struct ReportsMonthAndBuddyTests {
         #expect(tab.goalText == "daily goal 8 glasses")
         #expect(tab.totalText == "19 glasses")
         #expect(tab.facts.first?.value == "2 of 7")
-        #expect(tab.changeText == "+11 glasses vs last week")
+        #expect(tab.changeText == "+11 glasses vs the same days last week")
         #expect(tab.isUp)
     }
 

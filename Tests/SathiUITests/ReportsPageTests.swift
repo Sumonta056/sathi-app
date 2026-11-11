@@ -116,4 +116,15 @@ struct ReportsPageTests {
         let current = ReportsAllTab.month(ReportsFixture.week(), now: ReportsFixture.now, calendar: calendar)
         #expect(current.holds(ReportsFixture.now))
     }
+
+    @Test func anOffBuddySelectionShowsAllBuddies() throws {
+        let sut = try page(EngineHarness(at: ReportsFixture.now), selected: .gym)
+        #expect(throws: Never.self) { try sut.find(ReportsAllTab.self) }
+        #expect(throws: (any Error).self) { try sut.find(ReportsBuddyTab.self) }
+    }
+
+    @Test func theTabRowScrollsSidewaysWhenTheWindowIsNarrow() throws {
+        let row = try page().find(ReportsTabRow.self)
+        #expect(throws: Never.self) { try row.find(ViewType.ScrollView.self) }
+    }
 }

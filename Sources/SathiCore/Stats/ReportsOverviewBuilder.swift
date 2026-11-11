@@ -22,7 +22,7 @@ package struct ReportsOverviewBuilder: Sendable {
         let before = live.reduce(0) { sum, id in sum + previousDays.filter { previous.isMet(id, on: $0) }.count }
         let total = ReportsScore(
             met: met,
-            possible: live.count * days.count,
+            possible: live.reduce(0) { sum, id in sum + days.filter { Self.isGoalDay(id, $0, judge) }.count },
             label: Copywriter.reportsScoreLabel(range.kind, daysSoFar: days.filter(judge.isPast).count, isCurrent: isCurrent),
             headline: Copywriter.reportsHeadline(range.kind, scores: scores.filter { live.contains($0.habit) }),
             changeText: Copywriter.reportsScoreChange(met - before, kind: range.kind, isCurrent: isCurrent, streak: streak),
@@ -35,6 +35,10 @@ package struct ReportsOverviewBuilder: Sendable {
             rows: live.map { row($0, days: days, judge: judge) },
             streak: streak
         )
+    }
+
+    static func isGoalDay(_ id: HabitID, _ day: Date, _ judge: BuddyDayJudge) -> Bool {
+        judge.isPast(day) ? judge.isCounted(id, on: day) : judge.isOn(id, on: day)
     }
 
     private func score(_ id: HabitID, days: [Date], judge: BuddyDayJudge) -> BuddyScore {

@@ -28,10 +28,10 @@ struct RangeMemoTests {
         return StatsRange.containing(now, kind: .week, calendar: h.engine.calendar)
     }
 
-    private func read(_ memo: RangeMemo<StatsRange, ReportsPageData>, _ h: EngineHarness, _ range: StatsRange, _ c: Counter) -> ReportsPageData {
+    private func read(_ memo: RangeMemo<StatsRange, ReportsOverview>, _ h: EngineHarness, _ range: StatsRange, _ c: Counter) -> ReportsOverview {
         memo.value(range, range: range, engine: h.engine) { e, r in
             c.builds += 1
-            return e.reportsPage(r)
+            return e.reportsOverview(r)
         }
     }
 
@@ -44,7 +44,7 @@ struct RangeMemoTests {
 
     @Test func sessionTicksInsideAMinuteDoNotRebuild() {
         let h = breathing()
-        let memo = RangeMemo<StatsRange, ReportsPageData>()
+        let memo = RangeMemo<StatsRange, ReportsOverview>()
         let c = Counter()
         let range = week(h)
         _ = read(memo, h, range, c)
@@ -57,7 +57,7 @@ struct RangeMemoTests {
 
     @Test func aPastRangeDoesNotRebuildAcrossMinutes() {
         let h = breathing()
-        let memo = RangeMemo<StatsRange, ReportsPageData>()
+        let memo = RangeMemo<StatsRange, ReportsOverview>()
         let c = Counter()
         let range = week(h, back: 8)
         _ = read(memo, h, range, c)
@@ -66,9 +66,20 @@ struct RangeMemoTests {
         #expect(c.builds == 1)
     }
 
+    @Test func aPastRangeRebuildsOnceTheDayChanges() {
+        let h = breathing()
+        let memo = RangeMemo<StatsRange, ReportsOverview>()
+        let c = Counter()
+        let range = week(h, back: 8)
+        _ = read(memo, h, range, c)
+        h.clock.now = h.clock.now.addingTimeInterval(86400)
+        _ = read(memo, h, range, c)
+        #expect(c.builds == 2)
+    }
+
     @Test func theCurrentRangeRebuildsOnceAMinute() {
         let h = breathing()
-        let memo = RangeMemo<StatsRange, ReportsPageData>()
+        let memo = RangeMemo<StatsRange, ReportsOverview>()
         let c = Counter()
         let range = week(h)
         _ = read(memo, h, range, c)
@@ -79,7 +90,7 @@ struct RangeMemoTests {
 
     @Test func changingTheRangeRebuilds() {
         let h = breathing()
-        let memo = RangeMemo<StatsRange, ReportsPageData>()
+        let memo = RangeMemo<StatsRange, ReportsOverview>()
         let c = Counter()
         _ = read(memo, h, week(h), c)
         _ = read(memo, h, week(h, back: 1), c)
@@ -89,7 +100,7 @@ struct RangeMemoTests {
 
     @Test func realDataChangesRebuild() {
         let h = EngineHarness.tracker(at: day(2026, 3, 4, 10))
-        let memo = RangeMemo<StatsRange, ReportsPageData>()
+        let memo = RangeMemo<StatsRange, ReportsOverview>()
         let c = Counter()
         let range = week(h, back: 1)
         _ = read(memo, h, range, c)

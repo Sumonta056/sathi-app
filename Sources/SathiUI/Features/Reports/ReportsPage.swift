@@ -15,12 +15,13 @@ struct ReportsPage: View {
     var body: some View {
         let range = picked ?? e.currentRange(.week)
         let overview = memo.value(range, range: range, engine: e) { $0.reportsOverview($1) }
+        let shown = Self.shown(selected, scores: overview.scores)
         ScrollView {
             VStack(alignment: .leading, spacing: UIMetrics.reportsPageGap) {
                 header(range)
-                ReportsTabRow(scores: overview.scores, selected: $selected)
-                if let selected {
-                    ReportsBuddyTab(range: range, habit: selected)
+                ReportsTabRow(scores: overview.scores, selected: Binding(get: { shown }, set: { selected = $0 }))
+                if let shown {
+                    ReportsBuddyTab(range: range, habit: shown)
                 } else {
                     ReportsAllTab(range: range, overview: overview) { selected = $0 }
                 }
@@ -28,6 +29,10 @@ struct ReportsPage: View {
             .padding(UIMetrics.mainContentPadding)
             .padding(.top, UIMetrics.titleBarInset)
         }
+    }
+
+    static func shown(_ selected: HabitID?, scores: [BuddyScore]) -> HabitID? {
+        scores.first { $0.habit == selected && !$0.isOff }?.habit
     }
 
     private func header(_ range: StatsRange) -> some View {

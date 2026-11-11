@@ -15,14 +15,14 @@ extension Engine {
     }
 
     package func buddyTab(_ range: StatsRange, habit: HabitID) -> BuddyTabReport {
-        let report = ReportScreenBuilder.habitReport(habit, in: report(range))
+        let report = ReportChartBuilder.habitReport(habit, in: report(range))
         let change = buddyRange(range).totals.first { $0.habit == habit }?.change ?? .none
         return BuddyTabBuilder(calendar: calendar).build(
             habit,
             range: range,
             judge: dayJudge(range.interval),
             parts: BuddyTabParts(
-                chart: ReportScreenBuilder(calendar: calendar).chart(range.kind, habit: report),
+                chart: ReportChartBuilder(calendar: calendar).chart(range.kind, habit: report),
                 change: change,
                 streak: streak(habit)
             )
@@ -38,12 +38,16 @@ extension Engine {
     }
 
     package func allBuddiesStreak() -> Int {
+        let today = calendar.startOfDay(for: clock.now)
+        if let cache = allStreakCache, cache.day == today, cache.stores == storeRevision { return cache.value }
         let resets = Dictionary(uniqueKeysWithValues: HabitID.allCases.compactMap { id in
             data.live.streakReset[id.rawValue].map { (id, $0) }
         })
-        return AllBuddiesStreak.current(now: clock.now, calendar: calendar) { month in
+        let value = AllBuddiesStreak.current(now: clock.now, calendar: calendar) { month in
             dayJudge(month, resets: resets)
         }
+        allStreakCache = AllStreakCache(day: today, stores: storeRevision, value: value)
+        return value
     }
 
     func dayJudge(_ span: DateInterval, resets: [HabitID: Date] = [:]) -> BuddyDayJudge {

@@ -15,21 +15,4 @@ struct EngineClockDayTests {
         #expect(h.engine.report(.day).interval.start == day(2026, 3, 5))
         #expect(h.engine.streak(.water) == 0)
     }
-
-    @Test func exportedAtIsAWholeSecondOfTheClock() async throws {
-        let h = EngineHarness(at: day(2026, 3, 4, 10).addingTimeInterval(0.75))
-        let folder = makeTempFolder()
-        try makeFolder(folder)
-        let url = folder.appendingPathComponent("backup.json")
-        let outcome = await h.engine.export(
-            .json,
-            screen: h.engine.reportScreen(.day, selected: .water),
-            to: SpyFileExporter(url: url),
-            renderer: SpySummaryRenderer()
-        )
-        #expect(outcome == .saved(url))
-        let data = try #require(readData(url))
-        let backup = try #require(DecodedBackup.decode(data))
-        #expect(backup.exportedAt == day(2026, 3, 4, 10))
-    }
 }

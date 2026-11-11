@@ -45,7 +45,7 @@ package struct BuddyTabBuilder: Sendable {
             facts.append(ReportFact(label: Copywriter.reportsFactBestDay, value: bestDay(id, days: past, judge: judge, kind: range.kind)))
         }
         facts.append(ReportFact(label: Copywriter.reportsFactAverage, value: Copywriter.reportsShortAmount(id, average)))
-        facts.append(ReportFact(label: Copywriter.reportsFactStreak, value: ReportScreenBuilder.days(parts.streak)))
+        facts.append(ReportFact(label: Copywriter.reportsFactStreak, value: Copywriter.reportsDays(parts.streak)))
         return BuddyTabReport(
             habit: id,
             title: Copywriter.reportsChartTitle(id),
@@ -53,7 +53,9 @@ package struct BuddyTabBuilder: Sendable {
             chart: parts.chart,
             totalLabel: Copywriter.reportsTotalLabel(range.kind, isCurrent: range.holds(judge.now)),
             totalText: Copywriter.reportsAmount(id, total),
-            changeText: Copywriter.rangeChange(change, kind: range.kind) { Copywriter.reportsAmount(id, $0) },
+            changeText: Copywriter.reportsAmountChange(change, kind: range.kind, isCurrent: range.holds(judge.now)) {
+                Copywriter.reportsAmount(id, $0)
+            },
             isUp: { if case .up = change { true } else { false } }(),
             facts: facts
         )

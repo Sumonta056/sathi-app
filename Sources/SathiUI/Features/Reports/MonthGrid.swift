@@ -2,16 +2,14 @@ import SathiCore
 import SwiftUI
 
 struct MonthGrid<Cell: View>: View {
-    static var weekdays: [String] { ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] }
-
     let leadingBlanks: Int
     let count: Int
     @ViewBuilder let cell: (Int) -> Cell
 
     var body: some View {
         LazyVGrid(columns: columns, spacing: UIMetrics.reportsMonthCellGap) {
-            ForEach(Self.weekdays.indices, id: \.self) { index in
-                Text(verbatim: Self.weekdays[index])
+            ForEach(Copywriter.reportsWeekdays.indices, id: \.self) { index in
+                Text(verbatim: Copywriter.reportsWeekdays[index])
                     .font(Typography.tracker(UIMetrics.reportsWeekdayFont, .semibold))
                     .foregroundStyle(Night.faint)
             }
@@ -25,7 +23,7 @@ struct MonthGrid<Cell: View>: View {
     }
 
     private var columns: [GridItem] {
-        Array(repeating: GridItem(.flexible(), spacing: UIMetrics.reportsMonthCellGap), count: Self.weekdays.count)
+        Array(repeating: GridItem(.flexible(), spacing: UIMetrics.reportsMonthCellGap), count: Copywriter.reportsWeekdays.count)
     }
 }
 

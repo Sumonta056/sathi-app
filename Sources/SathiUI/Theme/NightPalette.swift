@@ -44,7 +44,7 @@ enum Night {
     static let block = Color(hex: 0x5ED6C4)
     static let blockFill = Color(hex: 0x142A2A)
     static let blockBorder = Color(hex: 0x1F4744)
-    static let tracker = Color(hex: 0xFF8A80)
+    static let tracker = Color(hex: NightHex.trackerCoral)
     static let trackerFill = Color(hex: 0x2E1A1C)
     static let trackerOnAccent = Color(hex: 0x2A0E0C)
     static let trackerSelectedText = Color(hex: 0xFFB3AB)
@@ -54,9 +54,9 @@ enum Night {
     static let trackerMenuRow = Color(hex: 0x2A3550)
     static let trackerInset = Color(hex: 0x161D2C)
     static let trackerWell = Color(hex: 0x121826)
-    static let trackerAway = Color(hex: 0x3A4458)
+    static let trackerAway = Color(hex: NightHex.trackerAway)
     static let trackerNotLogged = Color(hex: 0x4A5570)
-    static let trackerEvent = Color(hex: 0x7FB8FF)
+    static let trackerEvent = Color(hex: NightHex.trackerEvent)
     static let trackerRowSelected = Color(hex: 0x24304A)
     static let trackerNowBorder = Color(hex: 0x4A2A2C)
     static let trackerStopBorder = Color(hex: 0x5A3436)
@@ -90,4 +90,10 @@ enum Night {
         case .gym: Color(hex: 0x46561F)
         }
     }
+}
+
+extension NightHex {
+    static let trackerCoral: UInt32 = 0xFF8A80
+    static let trackerAway: UInt32 = 0x3A4458
+    static let trackerEvent: UInt32 = 0x7FB8FF
 }

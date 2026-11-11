@@ -16,7 +16,7 @@ struct ReportsCalendarTests {
         let texts = MenuFind.texts(sut)
         #expect(texts.contains("November 2026"))
         #expect(texts.contains("Streak 0 days"))
-        #expect(Array(texts.filter { MonthGrid<EmptyView>.weekdays.contains($0) }.prefix(7)) == MonthGrid<EmptyView>.weekdays)
+        #expect(Array(texts.filter { Copywriter.reportsWeekdays.contains($0) }.prefix(7)) == Copywriter.reportsWeekdays)
         #expect(sut.findAll(OverviewDayCell.self).count == 30)
         let ninth = try sut.findAll(OverviewDayCell.self)[8].actualView().day
         #expect(ninth.isStreakDay)
@@ -60,7 +60,7 @@ struct ReportsCalendarTests {
         let range = h.engine.currentRange(.week)
         let stats = h.engine.activityRange(range)
         let inputs = ReportsCategoryCard.inputs(stats, categories: h.engine.activityCategories)
-        #expect(inputs.first { $0.name == Copywriter.trackerAway }?.colorHex == ReportsCategoryColors.away)
+        #expect(inputs.first { $0.name == Copywriter.trackerAway }?.colorHex == NightHex.trackerAway)
         let sut = try ReportsCategoryCard(stats: stats, kind: .week, categories: h.engine.activityCategories).inspect()
         let texts = MenuFind.texts(sut)
         for text in ["Time by category", "Coding", "+1h 0m", "Calendar events", Copywriter.trackerAway] {

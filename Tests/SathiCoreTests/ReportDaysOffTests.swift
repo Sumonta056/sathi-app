@@ -100,17 +100,15 @@ struct ReportDaysOffTests {
             $0.prefs.water.weekdays = workdays
             $0.events = [2, 3, 4, 5, 6, 8].map { .done(.water, 8, at: day(2026, 3, $0, 12)) }
         }
-        let month = h.engine.reportScreen(.month, selected: .water).calendar
-        let cell = { (d: Int) in try #require(month.cells.first { $0.day == d }) }
-        #expect(try cell(1).isOff)
-        #expect(try cell(1).level == 0)
-        #expect(try cell(7).isOff)
-        #expect(try cell(7).level == 0)
-        #expect(try cell(8).level == 3)
-        #expect(try !cell(8).isOff)
-        #expect(try !cell(6).isOff)
-        #expect(try !cell(9).isOff)
-        #expect(month.streakText == "6 days")
+        let range = StatsRange.containing(day(2026, 3, 9), kind: .month, calendar: .current)
+        let month = h.engine.buddyMonth(range, habit: .water)
+        let state = { (d: Int) in try #require(month.cells.first { $0.day == d }).state }
+        #expect(try state(1) == .off)
+        #expect(try state(7) == .off)
+        #expect(try state(8) == .met)
+        #expect(try state(6) == .met)
+        #expect(try state(9) == BuddyDayState.none)
+        #expect(h.engine.streak(.water) == 6)
     }
 
     @MainActor
@@ -118,12 +116,13 @@ struct ReportDaysOffTests {
         let h = EngineHarness(at: day(2026, 3, 9, 10)) {
             $0.events = [2, 3, 4, 5, 6, 8].map { .done(.water, 8, at: day(2026, 3, $0, 12)) }
         }
-        let before = h.engine.reportScreen(.month, selected: .water).calendar
-        #expect(try !#require(before.cells.first { $0.day == 7 }).isOff)
-        #expect(before.streakText == "1 day")
+        let range = StatsRange.containing(day(2026, 3, 9), kind: .month, calendar: .current)
+        let before = h.engine.buddyMonth(range, habit: .water)
+        #expect(try #require(before.cells.first { $0.day == 7 }).state == BuddyDayState.none)
+        #expect(h.engine.streak(.water) == 1)
         h.engine.data.prefs.water.daysOff = [DayKey(day(2026, 3, 7), calendar: .current)]
-        let after = h.engine.reportScreen(.month, selected: .water).calendar
-        #expect(try #require(after.cells.first { $0.day == 7 }).isOff)
-        #expect(after.streakText == "6 days")
+        let after = h.engine.buddyMonth(range, habit: .water)
+        #expect(try #require(after.cells.first { $0.day == 7 }).state == .off)
+        #expect(h.engine.streak(.water) == 6)
     }
 }

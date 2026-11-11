@@ -104,4 +104,22 @@ struct ReportsOverviewTests {
         #expect(score.label == "WEEK SCORE · 7 DAYS")
         #expect(score.changeText.hasPrefix("+1 goal vs last week"))
     }
+
+    @Test func aDayOffIsNotAGoalDay() {
+        let h = EngineHarness(at: Self.now) {
+            $0.prefs.water.enabled = false
+            $0.prefs.reading.enabled = false
+            $0.prefs.gym.enabled = true
+            $0.prefs.gym.sessionsPerDay = 2
+            $0.prefs.gym.sessionMinutes = 5
+            $0.prefs.gym.weekdays = [.monday, .wednesday, .friday]
+            $0.live.gymMinutesSince = day(2026, 1, 1)
+            $0.events = [2, 4, 6].map { .done(.gym, 10, at: day(2026, 11, $0, 9)) }
+        }
+        let past = h.engine.reportsOverview(Self.week().previous).score
+        #expect(past.met == 3)
+        #expect(past.possible == 3)
+        #expect(past.headline == "Great week. Every goal met.")
+        #expect(h.engine.reportsOverview(Self.week()).score.possible == 3)
+    }
 }

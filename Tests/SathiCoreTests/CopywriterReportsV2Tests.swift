@@ -70,4 +70,15 @@ struct CopywriterReportsV2Tests {
         let fresh = CategoryTable([CategoryTableInput(name: "Work", colorHex: 0, seconds: 7200)])
         #expect(Copywriter.reportsCategorySummary(fresh, kind: .week) == "logged · 1 category")
     }
+
+    @Test func weekdaysStartOnMonday() {
+        #expect(Copywriter.reportsWeekdays == ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
+    }
+
+    @Test func anAmountChangeSaysTheSameDaysForTheCurrentRange() {
+        let format = { (amount: Double) in "\(Int(amount))" }
+        #expect(Copywriter.reportsAmountChange(.up(3), kind: .week, isCurrent: true, format: format) == "+3 vs the same days last week")
+        #expect(Copywriter.reportsAmountChange(.down(2), kind: .month, isCurrent: false, format: format) == "\u{2212}2 vs last month")
+        #expect(Copywriter.reportsAmountChange(.none, kind: .week, isCurrent: true, format: format).isEmpty)
+    }
 }
