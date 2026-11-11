@@ -34,7 +34,7 @@ extension Engine {
         ))
     }
 
-    private func rangeEvents(_ span: DateInterval) -> [HistoryEvent] {
+    func rangeEvents(_ span: DateInterval) -> [HistoryEvent] {
         let windowStart = Self.windowStart(now: clock.now, calendar: calendar)
         let older = span.start < windowStart
             ? storedEvents(from: span.start, to: min(span.end, windowStart)) : []
