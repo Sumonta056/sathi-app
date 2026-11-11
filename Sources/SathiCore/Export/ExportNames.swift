@@ -7,6 +7,12 @@ package enum ExportNames {
         return prefix(format) + stamp + "." + format.rawValue
     }
 
+    package static func rangeFileName(prefix: String, _ range: StatsRange, calendar: Calendar) -> String {
+        let last = range.days.last?.start ?? range.interval.start
+        let first = DayKey(range.interval.start, calendar: calendar).raw
+        return prefix + first + "-" + DayKey(last, calendar: calendar).raw + "." + ExportFormat.csv.rawValue
+    }
+
     private static func prefix(_ format: ExportFormat) -> String {
         switch format {
         case .csv: return StorageKeys.exportHistoryPrefix
