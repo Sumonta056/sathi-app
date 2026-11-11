@@ -1,0 +1,46 @@
+import Foundation
+
+package enum TodayNow: Equatable, Sendable {
+    case running(minutes: Int, text: String, category: String?, since: Date, nextAsk: Date?)
+    case idle(nextAsk: Date?)
+    case off
+}
+
+package enum TodayBuddyStatus: Equatable, Sendable {
+    case met
+    case dayOff
+    case off
+    case noReminder
+    case next(Date)
+    case gymSession(Int, of: Int, Date)
+}
+
+package struct TodayBuddy: Equatable, Identifiable, Sendable {
+    package var habit: HabitID
+    package var total: String
+    package var goal: Int
+    package var unit: String
+    package var progress: Double
+    package var status: TodayBuddyStatus
+
+    package var id: HabitID { habit }
+}
+
+package struct TodaySoFar: Equatable, Sendable {
+    package var isOn: Bool
+    package var hours: DateInterval?
+    package var segments: [ActivitySegment]
+    package var logged: TimeInterval
+    package var categories: [ActivityCategoryTotal]
+
+    package static let off = TodaySoFar(isOn: false, hours: nil, segments: [], logged: 0, categories: [])
+}
+
+package struct TodayScreen: Equatable, Sendable {
+    package var dateLine: String
+    package var greeting: String
+    package var now: TodayNow
+    package var buddies: [TodayBuddy]
+    package var sofar: TodaySoFar
+    package var comingUp: [ComingUpItem]
+}
