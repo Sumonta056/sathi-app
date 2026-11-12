@@ -16,4 +16,17 @@ package enum AwayCause: String, Codable, CaseIterable, Sendable {
     case asleep
     case idle
     case onBreak
+    case chosen
+}
+
+extension AwayCause {
+    package var endsAtOnce: Bool { self == .onBreak || self == .chosen }
+
+    var inputGrace: TimeInterval? {
+        switch self {
+        case .idle: return 0
+        case .chosen: return Timing.chosenAwayGrace
+        case .locked, .asleep, .onBreak: return nil
+        }
+    }
 }

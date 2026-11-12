@@ -35,6 +35,8 @@ extension Engine {
         list.append(trackerHours.hours(on: n).end)
         if t.awaySince == nil {
             list.append((idleSince ?? n).addingTimeInterval(idleLimit))
+        } else if t.awayCause == .chosen, let since = t.awaySince {
+            list.append(since.addingTimeInterval(Timing.chosenAwayGrace))
         }
         return list.filter { $0 > n }
     }

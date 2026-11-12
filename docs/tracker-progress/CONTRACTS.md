@@ -143,7 +143,7 @@ PromptKind: `whatNow` (A), `center` (B), `stillOnIt` (C), `welcomeBack` (D), `ev
 
 ### Stored shapes
 - `TrackerPrefs`: every spec field with spec defaults; plus computed `days: HabitDays`, `sortedWeekdays`, `defaultCategory` (first category). Lenient: each bad field → its default; hours must be 0…1440 and a multiple of 5; askEvery and idle must be chips; a bad category item is dropped; a shortcut with no modifiers → default. Weekdays and daysOff encode sorted.
-- `TrackerLiveState`: `running`, `prompt`, `awaySince`, `awayCause`, `lastInput`, `lastEndOfDay: DayKey?`, `lastActivity: ActivityDraft?`, `beforeSession: ActivityDraft?`. Every field lenient; dates rounded on decode.
+- `TrackerLiveState`: `running`, `prompt`, `awaySince`, `awayCause`, `awayPlan: AwayPlan?` (phase 20, planned place of a chosen Away), `lastInput`, `lastEndOfDay: DayKey?`, `lastActivity: ActivityDraft?`, `beforeSession: ActivityDraft?`. Every field lenient; dates rounded on decode.
 - `RunningActivity`: spec fields plus `kind`, `lastAnswer` (for the Started row) and `confirmedUntil` (rule 22); init sets lastAnswer = start, confirmedUntil = askAt. `activity(until:)` builds the saved item.
 - `Activity`: spec item fields. `id`, `kind`, `start`, `end` strict (an item without them fails, so T2 keeps it as raw JSON); the rest lenient; an unknown `awayPlace` loads nil.
 

@@ -87,6 +87,7 @@ extension Engine {
         a.iWasHere = { [weak self] in self?.iWasHere() }
         a.pickPlace = { [weak self] place in self?.setAwayPlace(place) }
         a.pickPlaceName = { [weak self] name in self?.setAwayPlace(named: name) }
+        a.goAway = { [weak self] place, name in self?.goAway(place: place, name: name) }
         a.addPlace = { [weak self] name in self?.addAwayPlace(name) }
         a.notAttending = { [weak self] id in self?.notAttendingEvent(id) }
         a.answerEvent = { [weak self] yes in self?.answerEventAsk(yes) }

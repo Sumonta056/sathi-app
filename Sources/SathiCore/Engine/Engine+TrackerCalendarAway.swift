@@ -38,7 +38,11 @@ extension Engine {
                 removeStoredActivity(row.id)
             }
             let place = trackerRuntime.lastAway?.place
-            let away = Activity(kind: .away, text: Copywriter.trackerAwayText(place), start: span.start, end: span.end, awayPlace: place)
+            let name = trackerRuntime.lastAway?.placeName
+            let away = Activity(
+                kind: .away, text: Copywriter.trackerAwayText(place, name: name),
+                start: span.start, end: span.end, awayPlace: place, awayPlaceName: name
+            )
             storeActivity(away)
             if away.length >= Timing.activityMinimum { trackerRuntime.awayItems.append(away.id) }
         }

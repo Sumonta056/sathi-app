@@ -30,6 +30,7 @@ package enum Timing {
 
     package static let activityMinimum: TimeInterval = minute
     package static let activityMergeGap: TimeInterval = minute
+    package static let chosenAwayGrace: TimeInterval = 2 * minute
     package static let lateAnswer: TimeInterval = 5 * minute
     package static let eventNoteShow: TimeInterval = minute
     package static let endOfDayAnimation: TimeInterval = 1.5

@@ -102,6 +102,7 @@ extension Copywriter {
         case .locked: return "when the Mac was locked."
         case .idle: return "when the Mac was idle."
         case .onBreak: return "when you took a break."
+        case .chosen: return "when you went away."
         }
     }
 }

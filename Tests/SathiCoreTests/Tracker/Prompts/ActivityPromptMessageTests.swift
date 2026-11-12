@@ -49,6 +49,7 @@ struct ActivityPromptMessageTests {
         (AwayCause.locked, "when the Mac was locked."),
         (AwayCause.idle, "when the Mac was idle."),
         (AwayCause.onBreak, "when you took a break."),
+        (AwayCause.chosen, "when you went away."),
     ])
     func backNamesTheStoppedActivityByCause(cause: AwayCause, tail: String) {
         let s = Fix.screen(.welcomeBack) {
