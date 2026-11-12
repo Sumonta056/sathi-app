@@ -6,6 +6,7 @@ extension Engine {
         isRunning = true
         restoreBlock()
         restoreMeditationSession()
+        mergeOldRowsOnce()
         restoreTracker()
         tick()
     }

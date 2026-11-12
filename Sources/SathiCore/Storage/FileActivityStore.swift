@@ -36,6 +36,17 @@ package final class FileActivityStore: ActivityStore, @unchecked Sendable {
     }
 
     @discardableResult
+    package func backup(_ key: MonthKey) -> Bool {
+        queue.sync {
+            let target = backupURL(key)
+            guard !FileManager.default.fileExists(atPath: target.path) else { return true }
+            let file = contents(key)
+            guard !blocked.contains(key) else { return false }
+            return JSONFiles.write(file, to: target)
+        }
+    }
+
+    @discardableResult
     package func flush() -> Bool {
         queue.sync { writeDirty() }
     }
@@ -85,6 +96,10 @@ package final class FileActivityStore: ActivityStore, @unchecked Sendable {
 
     private func url(_ key: MonthKey) -> URL {
         folder.appendingPathComponent(key.raw + StorageKeys.jsonExtension)
+    }
+
+    private func backupURL(_ key: MonthKey) -> URL {
+        folder.appendingPathComponent(key.raw + StorageKeys.backupSuffix + StorageKeys.jsonExtension)
     }
 
     private func monthFiles() -> [MonthKey] {

@@ -31,6 +31,7 @@ The base folder is `~/Library/Application Support/Sathi/` (`AppEnvironment.base`
 | `state.json` | `LiveState` | `FileStateStore` |
 | `history/YYYY-MM.json` | `[HistoryEvent]` of one month | `FileHistoryStore` |
 | `activities/YYYY-MM.json` | `{"schemaVersion":1,"value":[Activity]}` of one month; unknown items and fields are kept | `FileActivityStore` |
+| `activities/YYYY-MM.backup.json` | Copy of a month file before the one-time merge of old rows (business rule 11d); never overwritten, never listed as a month | `FileActivityStore.backup` |
 | `migrated-v1` | The text `1`. Not JSON. | `LegacyMigrator` |
 | `<file>.corrupt` | A file that did not decode | `JSONFiles` |
 
