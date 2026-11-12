@@ -17,6 +17,7 @@ extension Copywriter {
     package static let activityPromptAllowCalendar = "Allow calendar access"
     package static let activityPromptField = "Type what you do, or tap a card on the left"
     package static let activityPromptAddPlace = "+ Place"
+    package static let activityPromptAwaySwitch = "I am going away"
     package static let activityPromptReallyStarted = "It really started at"
     package static let activityPromptEscSkip = "Esc: Skip"
     package static let activityPromptNoEvent = "Sathi adds no event for this activity."
@@ -25,6 +26,8 @@ extension Copywriter {
     package static func activityPromptShortcutTag(_ shortcut: KeyShortcut?) -> String {
         shortcut.map { activityPromptShortcutTag + " · " + trackerShortcut($0) } ?? activityPromptShortcutTag
     }
+
+    package static func activityPromptGoAway(_ place: String) -> String { "Go away · " + place }
 
     package static func activityPromptEventTitle(_ title: String) -> String { "Log “" + title + "” now?" }
 

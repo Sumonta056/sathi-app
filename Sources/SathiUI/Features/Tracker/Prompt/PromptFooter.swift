@@ -33,13 +33,13 @@ struct PromptFooter: View {
                 .buttonStyle(TrackerPressStyle())
             }
             Button(action: commands.start) {
-                Text(verbatim: screen.startLabel)
+                Text(verbatim: startLabel)
                     .font(Typography.tracker(UIMetrics.promptStartFont, .heavy))
                     .foregroundStyle(Night.onAccent)
                     .lineLimit(1)
                     .padding(.horizontal, UIMetrics.promptStartPadding)
                     .frame(height: UIMetrics.promptButtonHeight)
-                    .background(shape.fill(Night.reason(screen.reason)))
+                    .background(shape.fill(awayPick == nil ? Night.reason(screen.reason) : Night.sprout))
                     .contentShape(shape)
                     .accessibilityIdentifier("tracker.start")
             }
@@ -47,6 +47,12 @@ struct PromptFooter: View {
             .modifier(PromptKey.start)
         }
         .fixedSize()
+    }
+
+    private var awayPick: PromptAwayPick? { commands.model.awayPick }
+
+    private var startLabel: String {
+        awayPick.map { Copywriter.activityPromptGoAway($0.label) } ?? screen.startLabel
     }
 
     private var shape: RoundedRectangle {

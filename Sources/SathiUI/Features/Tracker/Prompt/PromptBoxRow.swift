@@ -4,13 +4,14 @@ import SwiftUI
 struct PromptBoxRow<Content: View>: View {
     let label: String
     var labelTop = UIMetrics.promptRowLabelTop
+    var labelColor = Night.promptSecondary
     @ViewBuilder let content: Content
 
     var body: some View {
         HStack(alignment: .top, spacing: UIMetrics.promptRowLabelGap) {
             Text(verbatim: label)
                 .font(Typography.tracker(UIMetrics.promptRowFont, .medium))
-                .foregroundStyle(Night.promptSecondary)
+                .foregroundStyle(labelColor)
                 .padding(.top, labelTop)
                 .frame(width: UIMetrics.promptRowLabelWidth, alignment: .leading)
             content

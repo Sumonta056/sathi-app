@@ -32,7 +32,7 @@ struct PromptWhereBoxes: View {
                     box(Copywriter.trackerIWasHere, on: false, id: "tracker.here") { state.actions.iWasHere() }
                 }
             }
-            if form.adding { addField }
+            if form.adding { PromptPlaceField(text: $form.newName, saveID: "tracker.place.save", onSave: save) }
             ForEach(state.loggedWhileAway, id: \.id) { row($0) }
         }
         .padding(.top, UIMetrics.promptWhereGap)
@@ -40,18 +40,6 @@ struct PromptWhereBoxes: View {
 
     private func box(_ label: String, on: Bool, id: String, action: @escaping () -> Void) -> some View {
         PromptBox(label: label, on: on, id: id, look: .place, action: action)
-    }
-
-    private var addField: some View {
-        let shape = RoundedRectangle(cornerRadius: UIMetrics.promptBoxRadius, style: .continuous)
-        return HStack(spacing: UIMetrics.promptWhereGap) {
-            LazyTextField(placeholder: Copywriter.trackerNewPlace, text: $form.newName, startsEditing: true, onSubmit: save)
-                .modifier(QuickTextLimit(text: $form.newName, limit: Limits.awayPlaceNameMax))
-                .frame(width: UIMetrics.promptPlaceFieldWidth, height: UIMetrics.promptBoxHeight)
-                .background(shape.fill(Night.promptBox))
-                .overlay(shape.strokeBorder(Night.promptBack, lineWidth: UIMetrics.promptBorder))
-            box(Copywriter.trackerAddPlace, on: true, id: "tracker.place.save", action: save)
-        }
     }
 
     private func row(_ a: Activity) -> some View {

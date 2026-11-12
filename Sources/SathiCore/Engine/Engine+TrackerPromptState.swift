@@ -30,8 +30,8 @@ extension Engine {
             s.away = trackerRuntime.lastAway
             s.loggedWhileAway = trackerRuntime.loggedWhileAway
             s.stoppedByAway = trackerRuntime.endedByAway?.text
-            s.places = awayPlaces
         }
+        s.places = awayPlaces
         if kind == .whatNow || kind == .center { s.runningEvent = unloggedRunningEvent() }
         fillEventAsk(&s)
         s.actions = promptActions()

@@ -10,20 +10,32 @@ struct PromptForm: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: UIMetrics.promptBodyGap) {
-            field
+            field.modifier(PromptDimmed(on: goingAway))
             VStack(alignment: .leading, spacing: UIMetrics.promptRowGap) {
                 PromptBoxRow(label: Copywriter.trackerCategory) { PromptCategoryBoxes(model: model, categories: state.categories) }
-                PromptBoxRow(label: Copywriter.trackerFor) { PromptLengthBoxes(model: model, state: state) }
+                    .modifier(PromptDimmed(on: goingAway))
                 if !isEvent {
-                    PromptBoxRow(label: Copywriter.trackerAskMe) { PromptAskBoxes(model: model) }
+                    PromptBoxRow(label: Copywriter.trackerAway, labelTop: 0, labelColor: Night.sproutLight) {
+                        PromptAwayRow(model: model, form: model.places, state: state)
+                    }
                 }
-                PromptBoxRow(label: Copywriter.trackerCalendar) { PromptCalendarBoxes(model: model, state: state, screen: screen) }
-                if !isEvent {
-                    PromptBoxRow(label: Copywriter.activityPromptQuiet, labelTop: 0) { PromptQuietRow(model: model) }
-                }
+                if !goingAway { rows }
             }
         }
     }
+
+    @ViewBuilder private var rows: some View {
+        PromptBoxRow(label: Copywriter.trackerFor) { PromptLengthBoxes(model: model, state: state) }
+        if !isEvent {
+            PromptBoxRow(label: Copywriter.trackerAskMe) { PromptAskBoxes(model: model) }
+        }
+        PromptBoxRow(label: Copywriter.trackerCalendar) { PromptCalendarBoxes(model: model, state: state, screen: screen) }
+        if !isEvent {
+            PromptBoxRow(label: Copywriter.activityPromptQuiet, labelTop: 0) { PromptQuietRow(model: model) }
+        }
+    }
+
+    private var goingAway: Bool { !isEvent && model.awayPick != nil }
 
     private var isEvent: Bool { screen.reason == .event }
 
@@ -44,5 +56,15 @@ struct PromptForm: View {
         ))
         .disabled(isEvent)
         .accessibilityIdentifier("prompt.field")
+    }
+}
+
+struct PromptDimmed: ViewModifier {
+    let on: Bool
+
+    func body(content: Content) -> some View {
+        content
+            .disabled(on)
+            .opacity(on ? UIMetrics.trackerDisabledOpacity : 1)
     }
 }

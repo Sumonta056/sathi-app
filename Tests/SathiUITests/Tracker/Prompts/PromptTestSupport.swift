@@ -15,6 +15,7 @@ final class PromptCalls {
     var notAttending: [String] = []
     var answers: [Bool] = []
     var continued: [Date?] = []
+    var wentAway: [AwayPlan] = []
     var startWorks = true
 }
 
@@ -52,6 +53,7 @@ enum Prompt {
         s.actions.pickPlace = { calls.places.append($0) }
         s.actions.pickPlaceName = { calls.placeNames.append($0) }
         s.actions.addPlace = { calls.addedPlaces.append($0) }
+        s.actions.goAway = { calls.wentAway.append(AwayPlan(place: $0, name: $1)) }
         s.actions.notAttending = { calls.notAttending.append($0) }
         s.actions.answerEvent = {
             calls.answers.append($0)

@@ -11,6 +11,11 @@ struct PromptCommands {
 
     func start() {
         guard !model.answered else { return }
+        if let pick = model.awayPick, screen.reason != .event {
+            model.answered = true
+            actions.goAway(pick.place, pick.name)
+            return
+        }
         switch screen.reason {
         case .event:
             model.answered = true

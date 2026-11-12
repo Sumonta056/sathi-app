@@ -117,4 +117,9 @@ struct EngineTrackerGoAwayTests {
         let bad = try JSONDecoder().decode(TrackerLiveState.self, from: Data(#"{"awayPlan":{"place":"moon"}}"#.utf8))
         #expect(bad.awayPlan == nil)
     }
+
+    @Test func theWhatNowPromptCarriesTheSavedPlaces() {
+        let h = EngineHarness.tracker(at: wed(10)) { $0.prefs.tracker.awayPlaces = ["Sleep", "Gym"] }
+        #expect(h.engine.trackerPromptState(.whatNow)?.places == ["Sleep", "Gym"])
+    }
 }

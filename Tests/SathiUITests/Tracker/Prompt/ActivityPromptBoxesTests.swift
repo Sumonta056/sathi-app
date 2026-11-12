@@ -73,7 +73,7 @@ struct ActivityPromptBoxesTests {
             $0.draft.quiet = true
         }
         let sut = try Prompt.view(s)
-        let quiet = try sut.find(BuddySwitch.self)
+        let quiet = try quietSwitch(sut)
         #expect(try !quiet.actualView().isOn)
         #expect(try quiet.find(ViewType.Button.self).isDisabled())
     }
@@ -81,7 +81,7 @@ struct ActivityPromptBoxesTests {
     @Test func theQuietSwitchTurnsOnForALength() throws {
         let s = Prompt.state(.whatNow) { $0.draft.length = .minutes(30) }
         let model = ActivityPromptModel(s)
-        try Prompt.view(s, model: model).find(BuddySwitch.self).find(ViewType.Button.self).tap()
+        try quietSwitch(Prompt.view(s, model: model)).find(ViewType.Button.self).tap()
         #expect(model.draft.quiet)
     }
 
@@ -115,7 +115,13 @@ struct ActivityPromptBoxesTests {
         let sut = try Prompt.view(Reasons.withKeep(kind))
         #expect(Prompt.hasText(sut, "Ask me"))
         #expect(Prompt.hasText(sut, "Quiet"))
-        #expect(sut.findAll(BuddySwitch.self).count == 1)
+        #expect(sut.findAll(BuddySwitch.self).map { (try? $0.actualView().label) ?? "" } == [
+            Copywriter.activityPromptAwaySwitch, Copywriter.trackerQuietSwitch
+        ])
         #expect(try !sut.find(LazyTextField.self).isDisabled())
+    }
+
+    private func quietSwitch(_ sut: InspectableView<some BaseViewType>) throws -> InspectableView<ViewType.View<BuddySwitch>> {
+        try sut.find(BuddySwitch.self, where: { try $0.actualView().label == Copywriter.trackerQuietSwitch })
     }
 }

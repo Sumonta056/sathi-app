@@ -8,6 +8,10 @@ final class ActivityPromptModel: ObservableObject {
     @Published var showsStarted = false
     @Published var showsAll = false
     @Published var calendars: TrackerCalendarInfo
+    @Published var awayOn = false
+    @Published var awayPick: PromptAwayPick?
+    @Published var awayAdding = false
+    @Published var awayNewName = ""
     let places: PromptWhereForm
     private let nowChoice: Date?
     var answered = false
