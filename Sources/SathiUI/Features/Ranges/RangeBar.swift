@@ -14,6 +14,8 @@ struct RangeBar: View {
                 Text(verbatim: Copywriter.rangeTitle(range, now: now, calendar: calendar))
                     .font(Typography.rowLabel)
                     .foregroundStyle(Night.text)
+                    .lineLimit(1)
+                    .fixedSize()
                     .frame(minWidth: UIMetrics.rangeTitleWidth)
                 arrow("chevron.right", label: Copywriter.rangeNext, enabled: range.canGoForward(now: now)) { range = range.next }
             }

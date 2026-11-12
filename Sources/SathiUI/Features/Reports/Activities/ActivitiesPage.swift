@@ -34,11 +34,7 @@ struct ActivitiesPage: View {
     }
 
     private func header(_ range: StatsRange) -> some View {
-        HStack(spacing: UIMetrics.reportsGap) {
-            Text(verbatim: Copywriter.mainPageActivities)
-                .font(Typography.tracker(UIMetrics.mainPageTitleFont, .heavy))
-                .foregroundStyle(Night.text)
-            Spacer(minLength: 0)
+        PageHeader(title: Copywriter.mainPageActivities) {
             RangeBar(range: Binding(get: { range }, set: { picked = $0 }), now: e.now, calendar: e.rangeCalendar)
             textButton(range)
             ActivitiesExportButton(range: range)

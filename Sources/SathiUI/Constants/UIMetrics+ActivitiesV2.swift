@@ -1,7 +1,7 @@
 import SwiftUI
 
 extension UIMetrics {
-    static let activitiesGap: CGFloat = 16
+    static let activitiesGap: CGFloat = 12
     static let activitiesTopWeights: [CGFloat] = [2, 1]
     static let activitiesTileGap: CGFloat = 10
     static let activitiesTilePadding = EdgeInsets(top: 12, leading: 14, bottom: 12, trailing: 14)

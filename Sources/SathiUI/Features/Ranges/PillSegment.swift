@@ -13,6 +13,8 @@ struct PillSegment<Option: Hashable>: View {
                 Button { selected = option } label: {
                     Text(verbatim: title(option))
                         .font(Typography.chip)
+                        .lineLimit(1)
+                        .fixedSize()
                         .foregroundStyle(on ? Night.text : Night.muted)
                         .padding(UIMetrics.rangeSegmentPadding)
                         .background(Capsule().fill(on ? Night.navSelected : .clear))

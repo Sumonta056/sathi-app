@@ -34,6 +34,13 @@ struct RangeBarTests {
         #expect(throws: Never.self) { try bar(range(.month)).inspect().find(text: "March 2026") }
     }
 
+    @Test func labelsAndTitleStayOnOneLine() throws {
+        let sut = try bar(range(.month)).inspect()
+        for name in ["Day", "Week", "Month", "March 2026"] {
+            #expect(try sut.find(text: name).lineLimit() == 1)
+        }
+    }
+
     @Test func forwardIsDisabledOnTheRangeThatHoldsToday() throws {
         let sut = try bar(range(.week)).inspect()
         #expect(try Find.button(sut, label: "Next").isDisabled())

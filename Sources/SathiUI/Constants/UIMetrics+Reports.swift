@@ -2,7 +2,7 @@ import SwiftUI
 
 extension UIMetrics {
     static let reportsGap: CGFloat = 16
-    static let reportsPageGap: CGFloat = 18
+    static let reportsPageGap: CGFloat = 12
     static let rangeBarGap: CGFloat = 10
     static let rangeTitleWidth: CGFloat = 110
     static let rangeArrowSize: CGFloat = 34

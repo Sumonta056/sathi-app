@@ -22,6 +22,6 @@ extension UIMetrics {
     static let mainStatusTitleFont: CGFloat = 11
     static let mainStatusTitleTracking: CGFloat = 0.66
     static let mainStatusFont: CGFloat = 12
-    static let mainContentPadding = EdgeInsets(top: 28, leading: 32, bottom: 28, trailing: 32)
+    static let mainContentPadding = EdgeInsets(top: 16, leading: 20, bottom: 16, trailing: 20)
     static let mainPageTitleFont: CGFloat = 26
 }
