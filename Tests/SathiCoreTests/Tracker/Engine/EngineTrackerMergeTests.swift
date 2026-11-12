@@ -83,4 +83,40 @@ struct EngineTrackerMergeTests {
         #expect(h.calendarWriter.saved.isEmpty)
         #expect(h.calendarWriter.updated.first?.1.end == wed(10, 10))
     }
+
+    @Test func mergeIsOneSaveOfTheMonth() {
+        let first = Activity(text: "Gaming", category: "Break", start: wed(9, 50), end: wed(10))
+        let h = EngineHarness.tracker(at: wed(10), activities: [first])
+        answer(h, draft())
+        let before = h.activities.saves
+        h.engine.startActivity(draft("Mail", "Work"))
+        #expect(h.activities.saves - before == 1)
+        #expect(h.saved.count == 1)
+    }
+
+    @Test func iWasHereAfterAMergedIdleKeepsOneRowAndOneEvent() {
+        let first = Activity(text: "Gaming", category: "Break", start: wed(9, 50), end: wed(10), calendarID: "work", eventID: "e1")
+        let h = EngineHarness.tracker(at: wed(10), activities: [first]) { $0.prefs.tracker.askEveryMinutes = 30 }
+        h.engine.startActivity(ActivityDraft(text: "Gaming", category: "Break", length: .open, calendarID: "work"))
+        h.presence.idleSeconds = 10 * 60
+        h.advance(minutes: 30)
+        h.presence.idleSeconds = 30 * 60
+        h.advance(minutes: 20)
+        #expect(h.running == nil)
+        #expect(h.saved.first { $0.kind == .work }?.end ?? wed(10) > wed(10))
+        h.presence.idleSeconds = 0
+        h.advance(minutes: 10)
+        h.engine.iWasHere()
+        #expect(h.saved.map(\.kind) == [.work])
+        #expect(h.saved[0].end == wed(10))
+        #expect(h.running?.text == "Gaming")
+        h.advance(minutes: 5)
+        h.engine.startActivity(draft("Mail", "Work"))
+        let gaming = h.saved.filter { $0.text == "Gaming" }
+        #expect(gaming.count == 1)
+        #expect(gaming[0].start == wed(9, 50))
+        #expect(gaming[0].eventID != nil)
+        #expect(h.calendarWriter.saved.isEmpty)
+        #expect(h.calendarWriter.deleted.isEmpty)
+    }
 }

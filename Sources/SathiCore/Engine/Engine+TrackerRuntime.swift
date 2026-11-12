@@ -30,6 +30,11 @@ struct TrackerRuntime: Equatable {
         set { away.endedByAway = newValue }
     }
 
+    var endedMergedInto: Activity? {
+        get { away.endedMergedInto }
+        set { away.endedMergedInto = newValue }
+    }
+
     var loggedWhileAway: [Activity] {
         get { away.loggedWhileAway }
         set { away.loggedWhileAway = newValue }

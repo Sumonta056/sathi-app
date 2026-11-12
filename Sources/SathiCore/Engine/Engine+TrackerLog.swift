@@ -61,9 +61,21 @@ extension Engine {
     private func extendStored(_ previous: Activity, with item: Activity) -> Activity {
         var joined = calendarActivityEdited(from: previous, to: ActivityMerge.joined(previous, item))
         joined = savingToCalendar(joined)
-        removeStoredActivity(previous.id)
-        storeActivity(joined)
+        if item.id == trackerRuntime.endedByAway?.id { trackerRuntime.endedMergedInto = previous }
+        replaceStoredActivity(previous.id) { _ in joined }
         return joined
+    }
+
+    func replaceStoredActivity(_ id: ActivityID, with make: (Activity) -> Activity) {
+        for key in activityStore.savedMonths().reversed() {
+            var month = activityStore.month(key)
+            guard let i = month.items.firstIndex(where: { $0.id == id }) else { continue }
+            month.items[i] = make(month.items[i])
+            month.items.sort { $0.start < $1.start }
+            activityStore.save(month)
+            storesChanged()
+            return
+        }
     }
 
     func storeActivity(_ item: Activity) {

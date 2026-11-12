@@ -13,6 +13,7 @@ extension Engine {
         let r = data.live.tracker.running
         let keeps = r.map { keepsThroughAway($0, cause: cause, at: at) } ?? false
         trackerRuntime.endedByAway = pendingDoneAt == nil && !keeps ? r : nil
+        trackerRuntime.endedMergedInto = nil
         if let r, !keeps {
             let end = cause == .onBreak ? at : AskTime.awayEnd(start: r.start, confirmedUntil: r.confirmedUntil, awayStart: at)
             endRunningOnInterrupt(at: end, interrupt: at)
@@ -105,7 +106,12 @@ extension Engine {
         trackerRuntime.awayItems = []
         trackerRuntime.lastAway = nil
         guard var r = trackerRuntime.endedByAway else { return }
-        if let old = removeStoredActivity(r.id) { calendarActivityDeleted(old) }
+        if let before = trackerRuntime.endedMergedInto {
+            replaceStoredActivity(before.id) { calendarActivityEdited(from: $0, to: before) }
+        } else if let old = removeStoredActivity(r.id) {
+            calendarActivityDeleted(old)
+        }
+        trackerRuntime.endedMergedInto = nil
         let n = clock.now.wholeSecond
         r.lastAnswer = n
         r.askAt = n.addingTimeInterval(trackerAskEvery)
