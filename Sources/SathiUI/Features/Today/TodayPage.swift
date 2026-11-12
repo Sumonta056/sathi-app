@@ -9,7 +9,6 @@ struct TodayPage: View {
         content(model.screen ?? e.todayScreen)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .padding(UIMetrics.mainContentPadding)
-            .padding(.top, UIMetrics.titleBarInset)
             .onAppear { model.attach(e) }
             .onDisappear { model.detach() }
     }

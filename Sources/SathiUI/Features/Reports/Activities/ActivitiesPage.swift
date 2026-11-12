@@ -20,7 +20,6 @@ struct ActivitiesPage: View {
             content(range)
         }
         .padding(UIMetrics.mainContentPadding)
-        .padding(.top, UIMetrics.titleBarInset)
         .onChange(of: day) { _ in picked = nil }
     }
 

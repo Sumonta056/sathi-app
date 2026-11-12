@@ -20,10 +20,9 @@ extension UIMetrics {
     static let activitiesTimeTop: CGFloat = 8
     static let activitiesColumnGap: CGFloat = 10
     static let activitiesRowGap: CGFloat = 6
-    static let activitiesRowShort: CGFloat = 44
-    static let activitiesRowMedium: CGFloat = 60
-    static let activitiesRowLong: CGFloat = 68
-    static let activitiesRowAway: CGFloat = 40
+    static let activitiesRowBase: CGFloat = 44
+    static let activitiesRowPerHour: CGFloat = 8
+    static let activitiesRowMax: CGFloat = 88
     static let activitiesRowGapHeight: CGFloat = 32
     static let activitiesRowRadius: CGFloat = 9
     static let activitiesRowBar: CGFloat = 4

@@ -23,7 +23,6 @@ package enum Limits {
     package static let absoluteTimeThreshold: TimeInterval = 3 * Timing.hour
 
     package static let minutesPerHour = 60
-    package static let activityMediumRowHours = 2
     package static let minutesPerDay = 24 * Limits.minutesPerHour
     package static let scheduleSlotMinutes = 5
     package static let daySummaryMinutes = 22 * 60

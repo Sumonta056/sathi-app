@@ -46,10 +46,18 @@ struct ActivityReportEditTests {
         #expect(deleted == [Self.block.id])
     }
 
-    @Test(arguments: [(59, 44), (60, 60), (90, 60), (120, 60), (121, 68), (300, 68)])
-    func theRowHeightFollowsTheLengthBucket(_ minutes: Int, _ height: Double) {
+    @Test(arguments: [(15, 46.0), (60, 52.0), (180, 68.0), (420, 88.0), (600, 88.0)])
+    func theRowHeightGrowsWithTheLengthUpToTheMax(_ minutes: Int, _ height: Double) {
         let a = Activity(text: "x", start: Fix.at(4, 9), end: Fix.at(4, 9).addingTimeInterval(TimeInterval(minutes * 60)))
         #expect(ActivityTimelineRow.height(a) == CGFloat(height))
+    }
+
+    @Test func anAwayRowUsesTheSameHeightRule() {
+        let end = Fix.at(4, 9).addingTimeInterval(2 * 3600 + 58 * 60)
+        let away = Activity(kind: .away, text: "Away", start: Fix.at(4, 9), end: end)
+        let work = Activity(text: "x", start: Fix.at(4, 9), end: end)
+        #expect(ActivityTimelineRow.height(away) == ActivityTimelineRow.height(work))
+        #expect(abs(ActivityTimelineRow.height(away) - 67.73) < 0.01)
     }
 
     @Test func aRowShowsItsCategoryLengthAndCalendar() throws {

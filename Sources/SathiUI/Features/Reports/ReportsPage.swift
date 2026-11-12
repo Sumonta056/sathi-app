@@ -27,7 +27,6 @@ struct ReportsPage: View {
                 }
             }
             .padding(UIMetrics.mainContentPadding)
-            .padding(.top, UIMetrics.titleBarInset)
         }
     }
 

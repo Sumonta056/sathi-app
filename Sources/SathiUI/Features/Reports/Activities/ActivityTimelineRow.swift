@@ -38,10 +38,8 @@ struct ActivityTimelineRow: View {
     }
 
     static func height(_ a: Activity) -> CGFloat {
-        if a.kind == .away { return UIMetrics.activitiesRowAway }
-        let hour = TimeInterval(Limits.minutesPerHour) * Timing.minute
-        if a.length < hour { return UIMetrics.activitiesRowShort }
-        return a.length <= hour * TimeInterval(Limits.activityMediumRowHours) ? UIMetrics.activitiesRowMedium : UIMetrics.activitiesRowLong
+        let hours = CGFloat(a.length / (Timing.minute * TimeInterval(Limits.minutesPerHour)))
+        return min(UIMetrics.activitiesRowMax, UIMetrics.activitiesRowBase + UIMetrics.activitiesRowPerHour * hours)
     }
 
     static func canEdit(_ a: Activity, running: Bool) -> Bool {

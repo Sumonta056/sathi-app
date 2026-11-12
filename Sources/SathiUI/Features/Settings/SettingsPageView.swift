@@ -14,7 +14,6 @@ struct SettingsPageView: View {
                     .foregroundStyle(Night.faint)
             }
             .padding(UIMetrics.mainContentPadding)
-            .padding(.top, UIMetrics.titleBarInset)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
