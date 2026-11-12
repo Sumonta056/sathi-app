@@ -19,6 +19,8 @@ package enum ActivityPromptBuilder {
             title: Copy.trackerWhatAreYouDoingNow, message: askMessage(s), startLabel: Copy.trackerStart, skip: .skip
         )
         p.keep = s.resume.map { .continueLast($0.text) }
+        p.card = lastCard(s)
+        if p.card != nil { p.message = Copy.activityPromptContinueOrStart }
         p.startedChoices = startedChoices(s)
         return p
     }
@@ -35,11 +37,11 @@ package enum ActivityPromptBuilder {
         var p = ActivityPromptScreen(
             reason: .shortcut, tag: Copy.activityPromptShortcutTag(s.shortcut), timeText: Copy.trackerClock(s.now, calendar: s.calendar),
             title: r == nil ? Copy.trackerWhatAreYouDoingNow : Copy.activityPromptSwitchTitle,
-            message: r.map { Copy.activityPromptRunning($0.text, minutes: minutes(from: $0.start, to: s.now), since: $0.start, calendar: s.calendar) }
-                ?? Copy.activityPromptNothingRuns,
+            message: r == nil ? Copy.activityPromptNothingRuns : Copy.activityPromptKeepItOrSwitch,
             startLabel: r == nil ? Copy.trackerStart : Copy.trackerSwitch, skip: .close
         )
         p.keep = r.map { .keep($0.text) }
+        p.card = r.map { runningCard($0, now: s.now, calendar: s.calendar) }
         p.startedChoices = startedChoices(s)
         return p
     }
@@ -50,10 +52,14 @@ package enum ActivityPromptBuilder {
         let ended = end.map { s.now >= $0 } ?? false
         var p = ActivityPromptScreen(
             reason: .ends, tag: ended ? Copy.activityPromptEndedTag : Copy.activityPromptStillTag,
-            timeText: endsTime(r, end: end, calendar: s.calendar), title: Copy.trackerWhatAreYouDoingNow,
+            timeText: endsTime(r, end: end, calendar: s.calendar),
+            title: r.map { Copy.activityPromptStillTitle($0.text) } ?? Copy.trackerWhatAreYouDoingNow,
             message: endsMessage(s), startLabel: Copy.trackerSwitch, skip: .skip
         )
-        if r != nil { p.keep = s.isLate ? .stillOnLate : .keepGoing(s.askEveryMinutes) }
+        if let r {
+            p.keep = s.isLate ? .stillOnLate : .keepGoing(s.askEveryMinutes)
+            p.card = runningCard(r, now: s.now, calendar: s.calendar)
+        }
         p.startedChoices = startedChoices(s)
         return p
     }
@@ -67,7 +73,7 @@ package enum ActivityPromptBuilder {
     private static func endsMessage(_ s: TrackerPromptState) -> String {
         if let waited = s.waitedMinutes { return Copy.trackerWaited(waited) }
         guard let r = s.running else { return Copy.activityPromptNothingRuns }
-        return Copy.activityPromptSoFar(r.text, minutes: minutes(from: r.start, to: s.now), category: r.category)
+        return Copy.activityPromptKeepOrSwitch(minutes: minutes(from: r.start, to: s.now))
     }
 
     private static func back(_ s: TrackerPromptState) -> ActivityPromptScreen {
@@ -78,6 +84,11 @@ package enum ActivityPromptBuilder {
         p.showsWhere = true
         p.showsIWasHere = s.away?.fromIdle == true
         p.keep = s.lastActivity.map { .backTo($0.text) }
+        p.card = backCard(s, detail: s.stoppedByAway == nil ? "" : p.message)
+        if p.card != nil, let away = s.away {
+            p.title = Copy.activityPromptWelcomeTitle
+            p.message = Copy.activityPromptAwayFor(minutes: minutes(from: away.start, to: away.end))
+        }
         p.startedChoices = startedChoices(s)
         return p
     }

@@ -44,8 +44,8 @@ struct ActivityPromptReasonTests {
         switch kind {
         case .whatNow: Expected(tag: "TIME TO CHECK", title: "What are you doing now?", start: "Start", keep: "Continue Coding")
         case .center: Expected(tag: "YOU ASKED", title: "Switch to something new?", start: "Switch", keep: "Keep Code review")
-        case .stillOnIt: Expected(tag: "STILL ON IT?", title: "What are you doing now?", start: "Switch", keep: "Keep going +15 min")
-        case .welcomeBack: Expected(tag: "WELCOME BACK", title: "What are you doing now?", start: "Start", keep: "Back to Coding")
+        case .stillOnIt: Expected(tag: "STILL ON IT?", title: "Still on Code review?", start: "Switch", keep: "Keep going +15 min")
+        case .welcomeBack: Expected(tag: "WELCOME BACK", title: "Welcome back. Where were you?", start: "Start", keep: "Back to Coding")
         case .eventAsk: Expected(tag: "CALENDAR EVENT", title: "Log “Standup” now?", start: "Log it", keep: nil)
         }
     }
@@ -59,7 +59,7 @@ struct ActivityPromptReasonTests {
     }
 
     @Test(arguments: PromptKind.allCases)
-    func theFooterNamesStartAndKeep(_ kind: PromptKind) throws {
+    func startAndKeepUseTheirLabels(_ kind: PromptKind) throws {
         let sut = try Prompt.view(Reasons.withKeep(kind))
         let e = Self.expected(kind)
         #expect(try Prompt.buttonText(sut, "tracker.start") == [e.start])

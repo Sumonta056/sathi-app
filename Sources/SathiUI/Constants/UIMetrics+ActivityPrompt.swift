@@ -71,7 +71,17 @@ extension UIMetrics {
     static let promptButtonFont: CGFloat = 14
     static let promptStartFont: CGFloat = 15
     static let promptSkipPadding: CGFloat = 10
-    static let promptKeepPadding: CGFloat = 16
     static let promptStartPadding: CGFloat = 28
     static let recentKeys = Limits.recentShown
+    static let promptRunPadding = EdgeInsets(top: 14, leading: 16, bottom: 14, trailing: 16)
+    static let promptRunRadius: CGFloat = 14
+    static let promptRunBorder: CGFloat = 2
+    static let promptRunGap: CGFloat = 10
+    static let promptRunLineGap: CGFloat = 12
+    static let promptRunNameFont: CGFloat = 22
+    static let promptRunDetailFont: CGFloat = 13
+    static let promptRunBar: CGFloat = 6
+    static let promptRunFill: Double = 0.12
+    static let promptRunTrack: Double = 0.25
+    static let promptOrGap: CGFloat = 12
 }

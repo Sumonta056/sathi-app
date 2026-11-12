@@ -27,7 +27,19 @@ struct PromptCommands {
         }
     }
 
+    var startIsPrimary: Bool {
+        screen.card == nil || model.draft.committed != nil || model.goingAway(on: screen) != nil
+    }
+
+    var entersKeep: Bool { !startIsPrimary && screen.keep != nil }
+
+    func submit() {
+        if entersKeep { keep() } else { start() }
+    }
+
     func keep() {
+        guard !model.answered, screen.keep != nil else { return }
+        model.answered = true
         switch screen.keep {
         case .continueLast: actions.continueLast(model.switchAt)
         case .keep: actions.close()

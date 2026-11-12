@@ -33,7 +33,7 @@ struct ActivityPromptMessageTests {
             $0.resume = ActivityDraft(text: "Spec")
             $0.lastEnded = Activity(kind: .buddy, text: "Reading", start: Fix.at(10), end: Fix.at(10, 30))
         }
-        #expect(s.message == "Reading ended at " + Fix.clock(Fix.at(10, 30)) + ".")
+        #expect(s.message == "Continue it, or start something new.")
         #expect(s.keep == .continueLast("Spec"))
     }
 
@@ -56,7 +56,8 @@ struct ActivityPromptMessageTests {
             $0.away?.cause = cause
             $0.stoppedByAway = "Code review"
         }
-        #expect(s.message == "Code review stopped at " + Fix.clock(Fix.at(9, 55)) + " " + tail)
+        #expect(s.card?.detail == "Code review stopped at " + Fix.clock(Fix.at(9, 55)) + " " + tail)
+        #expect(s.message == "You were away 35 min.")
     }
 
     @Test func backWithNothingRunningBeforeSaysHowLongTheUserWasAway() {

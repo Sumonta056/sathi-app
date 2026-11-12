@@ -41,7 +41,7 @@ struct PromptForm: View {
 
     private var field: some View {
         let shape = RoundedRectangle(cornerRadius: UIMetrics.promptFieldRadius, style: .continuous)
-        let focused = active == .key
+        let focused = active == .key && (screen.card == nil || model.draft.committed != nil)
         return LazyTextField(
             placeholder: Copywriter.activityPromptField, text: $model.draft.text, startsEditing: !isEvent, onSubmit: onSubmit,
             font: Typography.tracker(UIMetrics.promptFieldFont, .semibold)

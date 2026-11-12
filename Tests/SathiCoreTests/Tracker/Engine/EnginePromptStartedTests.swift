@@ -58,7 +58,9 @@ struct EnginePromptStartedTests {
 
     @Test func backNamesTheActivityTheAwayStopped() {
         let h = backAfterLock()
-        #expect(screen(h, .welcomeBack)?.message == "Write spec stopped at " + clock(wed(10, 20)) + " when the Mac was locked.")
+        let s = screen(h, .welcomeBack)
+        #expect(s?.card?.detail == "Write spec stopped at " + clock(wed(10, 20)) + " when the Mac was locked.")
+        #expect(s?.message == "You were away 30 min.")
     }
 
     @Test func shortcutWhileRunningOffersStartedTimesFromTheLastAnswer() {

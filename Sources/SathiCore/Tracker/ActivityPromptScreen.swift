@@ -13,6 +13,7 @@ package struct ActivityPromptScreen: Equatable, Sendable {
     package var startedChoices: [Date] = []
     package var fixedStart: Date?
     package var calendarNote: String?
+    package var card: PromptCard?
     package var showsIWasHere = false
 
     package init(reason: PromptReason, tag: String, timeText: String, title: String, message: String, startLabel: String, skip: PromptSkip) {

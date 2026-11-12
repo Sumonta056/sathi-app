@@ -40,7 +40,11 @@ struct ActivityPromptView: View {
 
     private func formColumn(_ commands: PromptCommands) -> some View {
         VStack(alignment: .leading, spacing: UIMetrics.promptBodyGap) {
-            PromptForm(model: model, state: state, screen: screen, onSubmit: commands.start)
+            if let card = screen.card {
+                PromptRunningCard(card: card, screen: screen, state: state, commands: commands)
+                PromptOrSwitch()
+            }
+            PromptForm(model: model, state: state, screen: screen, onSubmit: commands.submit)
             Spacer(minLength: 0)
             if model.showsStarted, !startedChoices.isEmpty {
                 PromptStartedBoxes(model: model, choices: startedChoices, calendar: state.calendar)

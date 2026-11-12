@@ -39,14 +39,6 @@ extension Copywriter {
         activityPromptNothingRuns + " " + activityPromptEnded(text, at: time, calendar: calendar)
     }
 
-    package static func activityPromptRunning(_ text: String, minutes: Int, since start: Date, calendar: Calendar) -> String {
-        "Now: " + text + " · \(minutes) min since " + trackerClock(start, calendar: calendar) + ". Switch ends it."
-    }
-
-    package static func activityPromptSoFar(_ text: String, minutes: Int, category: String?) -> String {
-        text + " · \(minutes) min so far" + (category.map { " as " + $0 } ?? "") + "."
-    }
-
     package static func activityPromptUntilNow(_ start: Date, calendar: Calendar) -> String {
         trackerClock(start, calendar: calendar) + " – " + activityPromptNow
     }

@@ -22,9 +22,16 @@ struct ActivityPromptBuilderTests {
         case .whatNow: return Row(reason: .ask, tag: "TIME TO CHECK", title: ask, start: "Start", keep: nil, skip: .skip)
         case .center: return Row(reason: .shortcut, tag: "YOU ASKED · ⌃⌥⌘Space", title: ask, start: "Start", keep: nil, skip: .close)
         case .stillOnIt:
-            return Row(reason: .ends, tag: "ACTIVITY ENDED", title: ask, start: "Switch", keep: .keepGoing(15), skip: .skip)
+            return Row(reason: .ends, tag: "ACTIVITY ENDED", title: "Still on Code review?", start: "Switch", keep: .keepGoing(15), skip: .skip)
         case .welcomeBack:
-            return Row(reason: .back, tag: "WELCOME BACK", title: ask, start: "Start", keep: .backTo("Code review"), skip: .close)
+            return Row(
+                reason: .back,
+                tag: "WELCOME BACK",
+                title: "Welcome back. Where were you?",
+                start: "Start",
+                keep: .backTo("Code review"),
+                skip: .close
+            )
         case .eventAsk:
             return Row(reason: .event, tag: "CALENDAR EVENT", title: "Log “Design sync” now?", start: "Log it", keep: nil, skip: .answerNo)
         }
@@ -75,7 +82,7 @@ struct ActivityPromptBuilderTests {
 
     @Test func endsMessageCountsTheMinutesSoFar() {
         let s = Fix.screen(.stillOnIt, now: Fix.at(10, 42))
-        #expect(s.message == "Code review · 42 min so far as Coding.")
+        #expect(s.message == "42 min so far. Keep going, or switch.")
     }
 
     @Test func lateEndsSaysHowLongItWaitedAndKeepsStillOnIt() {
@@ -87,7 +94,7 @@ struct ActivityPromptBuilderTests {
     @Test func shortcutWhileRunningOffersASwitch() {
         let s = Fix.screen(.center, now: Fix.at(10, 42)) { $0.running = Fix.running() }
         #expect(s.title == "Switch to something new?")
-        #expect(s.message == "Now: Code review · 42 min since " + Fix.clock(Fix.at(10)) + ". Switch ends it.")
+        #expect(s.message == "Keep it, or type a new one to switch.")
         #expect(s.startLabel == "Switch")
         #expect(s.keep == .keep("Code review"))
         #expect(s.timeText == Fix.clock(Fix.at(10, 42)))

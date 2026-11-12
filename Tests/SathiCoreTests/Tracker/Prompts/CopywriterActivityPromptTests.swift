@@ -48,4 +48,27 @@ struct CopywriterActivityPromptTests {
         let s = Fix.screen(.center) { $0.shortcut = nil }
         #expect(s.tag == "YOU ASKED")
     }
+
+    @Test func runningCardWordsMatchTheSpec() {
+        #expect(Copywriter.activityPromptNowRunning == "NOW RUNNING")
+        #expect(Copywriter.activityPromptBeforeYouLeft == "BEFORE YOU LEFT")
+        #expect(Copywriter.activityPromptLastActivity == "LAST ACTIVITY")
+        #expect(Copywriter.activityPromptOrSwitch == "or switch to something new")
+        #expect(Copywriter.activityPromptWelcomeTitle == "Welcome back. Where were you?")
+        #expect(Copywriter.activityPromptKeepItOrSwitch == "Keep it, or type a new one to switch.")
+        #expect(Copywriter.activityPromptContinueOrStart == "Continue it, or start something new.")
+    }
+
+    @Test func runningCardLinesNameTheActivityAndTheMinutes() {
+        #expect(Copywriter.activityPromptStillTitle("Code review") == "Still on Code review?")
+        #expect(Copywriter.activityPromptKeepOrSwitch(minutes: 42) == "42 min so far. Keep going, or switch.")
+    }
+
+    @Test func cardDetailShowsTheLengthOrSoFarForOpen() {
+        let started = "Started " + Fix.clock(Fix.at(10))
+        let timed = Copywriter.activityPromptCardDetail(start: Fix.at(10), minutes: 20, length: 30, calendar: Fix.calendar)
+        let open = Copywriter.activityPromptCardDetail(start: Fix.at(10), minutes: 75, length: nil, calendar: Fix.calendar)
+        #expect(timed == started + " · 20 of 30 min")
+        #expect(open == started + " · 75 min so far")
+    }
 }

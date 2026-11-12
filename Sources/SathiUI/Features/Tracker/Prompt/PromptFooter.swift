@@ -18,38 +18,29 @@ struct PromptFooter: View {
             }
             .buttonStyle(TrackerPressStyle())
             .modifier(PromptKey.skip)
-            if let keep = screen.keepLabel, awayPick == nil {
-                Button(action: commands.keep) {
-                    Text(verbatim: keep)
-                        .font(Typography.tracker(UIMetrics.promptButtonFont, .semibold))
-                        .foregroundStyle(Night.text)
-                        .lineLimit(1)
-                        .padding(.horizontal, UIMetrics.promptKeepPadding)
-                        .frame(height: UIMetrics.promptButtonHeight)
-                        .overlay(shape.strokeBorder(Night.promptBoxLine, lineWidth: UIMetrics.promptBorder))
-                        .contentShape(shape)
-                        .accessibilityIdentifier("prompt.keep")
-                }
-                .buttonStyle(TrackerPressStyle())
-            }
             Button(action: commands.start) {
                 Text(verbatim: startLabel)
                     .font(Typography.tracker(UIMetrics.promptStartFont, .heavy))
-                    .foregroundStyle(Night.onAccent)
+                    .foregroundStyle(primary ? Night.onAccent : Night.text)
                     .lineLimit(1)
                     .padding(.horizontal, UIMetrics.promptStartPadding)
                     .frame(height: UIMetrics.promptButtonHeight)
-                    .background(shape.fill(awayPick == nil ? Night.reason(screen.reason) : Night.sprout))
+                    .background(shape.fill(primary ? fill : Color.clear))
+                    .overlay(shape.strokeBorder(primary ? Color.clear : Night.promptBoxLine, lineWidth: UIMetrics.promptBorder))
                     .contentShape(shape)
                     .accessibilityIdentifier("tracker.start")
             }
             .buttonStyle(TrackerPressStyle())
-            .modifier(PromptKey.start)
+            .modifier(commands.entersKeep ? PromptKey(shortcut: nil) : PromptKey.start)
         }
         .fixedSize()
     }
 
     private var awayPick: PromptAwayPick? { commands.model.goingAway(on: screen) }
+
+    private var primary: Bool { commands.startIsPrimary }
+
+    private var fill: Color { awayPick == nil ? Night.reason(screen.reason) : Night.sprout }
 
     private var startLabel: String {
         awayPick.map { Copywriter.activityPromptGoAway($0.label) } ?? screen.startLabel
