@@ -125,4 +125,11 @@ struct ActivitiesPageTests {
         #expect(throws: Never.self) { try Find.button(sut, holding: Copywriter.activitiesExport) }
         #expect(sut.findAll(ActivitiesExportButton.self).count == 1)
     }
+
+    @Test(arguments: [ReportRange.week, .month])
+    func aRangeScrollsWithNoScrollBar(_ range: ReportRange) throws {
+        let (sut, _) = try page(range: range)
+        let scroll = try sut.find(ActivityRangeView.self).find(ViewType.ScrollView.self)
+        #expect(try scroll.showsIndicators() == false)
+    }
 }

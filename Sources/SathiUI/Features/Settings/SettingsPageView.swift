@@ -5,7 +5,7 @@ struct SettingsPageView: View {
     let page: SettingsPage
 
     var body: some View {
-        ScrollView {
+        ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .leading, spacing: UIMetrics.pageSpacing) {
                 SettingsHeader(page: page)
                 content

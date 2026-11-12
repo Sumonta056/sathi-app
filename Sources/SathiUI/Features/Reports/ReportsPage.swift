@@ -16,7 +16,7 @@ struct ReportsPage: View {
         let range = picked ?? e.currentRange(.week)
         let overview = memo.value(range, range: range, engine: e) { $0.reportsOverview($1) }
         let shown = Self.shown(selected, scores: overview.scores)
-        ScrollView {
+        ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .leading, spacing: UIMetrics.reportsPageGap) {
                 header(range)
                 ReportsTabRow(scores: overview.scores, selected: Binding(get: { shown }, set: { selected = $0 }))
@@ -35,11 +35,7 @@ struct ReportsPage: View {
     }
 
     private func header(_ range: StatsRange) -> some View {
-        HStack(spacing: UIMetrics.reportsGap) {
-            Text(verbatim: Copywriter.mainPageReports)
-                .font(Typography.tracker(UIMetrics.mainPageTitleFont, .heavy))
-                .foregroundStyle(Night.text)
-            Spacer(minLength: 0)
+        PageHeader(title: Copywriter.mainPageReports) {
             RangeBar(range: rangeBinding(range), now: e.now, calendar: e.rangeCalendar)
             ReportsExportButton(range: range)
         }

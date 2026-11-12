@@ -79,4 +79,10 @@ struct SettingsPagesTests {
         #expect(try sut.find(button: "60 min").isDisabled())
         #expect(try !Find.button(sut, label: "Water reminders").isDisabled())
     }
+
+    @Test(arguments: SettingsPage.all)
+    func everyPageScrollsWithNoScrollBar(_ p: SettingsPage) throws {
+        let scroll = try page(p, EngineHarness()).find(ViewType.ScrollView.self)
+        #expect(try scroll.showsIndicators() == false)
+    }
 }

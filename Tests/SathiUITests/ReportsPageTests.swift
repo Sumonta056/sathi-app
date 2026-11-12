@@ -127,4 +127,10 @@ struct ReportsPageTests {
         let row = try page().find(ReportsTabRow.self)
         #expect(throws: Never.self) { try row.find(ViewType.ScrollView.self) }
     }
+
+    @Test func thePageScrollsWithNoScrollBar() throws {
+        let scroll = try page().find(ViewType.ScrollView.self)
+        #expect(try scroll.axes() == .vertical)
+        #expect(try scroll.showsIndicators() == false)
+    }
 }

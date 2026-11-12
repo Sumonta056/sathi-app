@@ -11,7 +11,7 @@ struct ActivityRangeView: View {
     var actions = ActivityRangeActions()
 
     var body: some View {
-        ScrollView {
+        ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .leading, spacing: UIMetrics.reportsGap) {
                 ActivityTableCard(table: ActivityTableCard.range(stats.categories, categories: categories))
                 tiles
