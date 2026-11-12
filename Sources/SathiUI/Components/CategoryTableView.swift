@@ -20,7 +20,7 @@ struct CategoryTableView: View {
                     .font(Typography.hint)
                     .foregroundStyle(Night.muted)
             }
-            CategoryTableBar(rows: table.rows)
+            CategoryTableBar(rows: table.rows.filter { !$0.isAway })
             HStack(alignment: .top, spacing: UIMetrics.categoryTableColumnGap) {
                 ForEach(Array(Self.split(table.rows, columns: columns).enumerated()), id: \.offset) { _, rows in
                     VStack(spacing: 0) {

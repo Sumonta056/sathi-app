@@ -25,7 +25,7 @@ struct ReportsCategoryCard: View {
     static func inputs(_ stats: ActivityRangeStats, categories: [ActivityCategory]) -> [CategoryTableInput] {
         stats.categories.map { row in
             CategoryTableInput(
-                name: row.name,
+                name: row.kind == .away ? Copywriter.categoryTableAwayRow(row.name) : row.name,
                 colorHex: color(row, categories: categories),
                 seconds: row.seconds,
                 previousSeconds: row.previousSeconds

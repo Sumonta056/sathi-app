@@ -15,7 +15,7 @@ struct ActivityDayView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: UIMetrics.activitiesGap) {
                 WeightedRow(gap: UIMetrics.activitiesGap, weights: UIMetrics.activitiesTopWeights) {
-                    ActivityTableCard(table: ActivityTableCard.day(overview.categories, categories: categories))
+                    ActivityTableCard(table: ActivityTableCard.day(overview.categories, away: overview.awayTotals, categories: categories))
                     ActivityDayTiles(overview: overview)
                 }
                 ActivityTimelineCard(

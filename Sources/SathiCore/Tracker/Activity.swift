@@ -41,6 +41,7 @@ package struct Activity: Codable, Equatable, Identifiable, Sendable {
 
     package var length: TimeInterval { end.timeIntervalSince(start) }
     package var interval: DateInterval { DateInterval(start: start, end: max(start, end)) }
+    package var awayPlaceLabel: String? { awayPlaceName ?? awayPlace.map(Copywriter.trackerAwayPlace) }
     package var awayText: String { Copywriter.trackerAwayText(awayPlace, name: awayPlaceName) }
 }
 

@@ -14,7 +14,22 @@ package struct ActivityRangeTotal: Equatable, Identifiable, Sendable {
     package var percent: Int
     package var change: RangeChange
 
-    package var id: String { kind == .category ? name : "\(kind)" }
+    package var id: String {
+        switch kind {
+        case .category: name
+        case .events: "\(kind)"
+        case .away: "\(kind)-\(name)"
+        }
+    }
+
+    package init(name: String, kind: ActivityRangeRowKind, isNamed: Bool, seconds: TimeInterval, percent: Int, change: RangeChange) {
+        self.name = name
+        self.kind = kind
+        self.isNamed = isNamed
+        self.seconds = seconds
+        self.percent = percent
+        self.change = change
+    }
 
     package var previousSeconds: TimeInterval? {
         switch change {
@@ -73,11 +88,11 @@ package struct ActivityRangeStats: Equatable, Sendable {
                 percent: percent(current.events, of: now.realWork), change: change(current.events, previous.events)
             ))
         }
-        if now.away > 0 {
-            rows.append(ActivityRangeTotal(
-                name: Copywriter.trackerAway, kind: .away, isNamed: true, seconds: now.away,
-                percent: 0, change: change(now.away, before.away)
-            ))
+        rows += current.aways.map { total in
+            ActivityRangeTotal(
+                name: total.name, kind: .away, isNamed: true, seconds: total.seconds, percent: 0,
+                change: change(total.seconds, previous.aways.first { $0.name == total.name }?.seconds ?? 0)
+            )
         }
         return rows.enumerated()
             .sorted { $0.element.seconds != $1.element.seconds ? $0.element.seconds > $1.element.seconds : $0.offset < $1.offset }
@@ -91,11 +106,13 @@ package struct ActivityRangeStats: Equatable, Sendable {
     private struct Split {
         var categories: [ActivityCategoryTotal]
         var events: TimeInterval
+        var aways: [ActivityCategoryTotal]
 
         init(_ stats: ActivityMonthStats) {
             let work = stats.rows.flatMap(\.segments).filter { $0.kind == .work }
             let events = work.filter { $0.activity?.kind == .event }
             self.events = events.reduce(0) { $0 + $1.length }
+            aways = ActivityDayStats.awayTotals(stats.rows.flatMap(\.segments).filter { $0.kind == .away })
             categories = ActivityDayStats.categoryTotals(work.filter { $0.activity?.kind != .event }, realWork: stats.realWork)
         }
     }

@@ -9,6 +9,12 @@ extension Copywriter {
         n == 1 ? "1 category" : "\(n) categories"
     }
 
+    package static let categoryTableNoPercent = "—"
+
+    package static func categoryTableAwayRow(_ place: String) -> String {
+        place == trackerAway ? place : place + " · " + trackerAway
+    }
+
     package static let categoryTableZeroTotal = "0m"
 
     package static func categoryTablePercent(_ seconds: TimeInterval, of total: TimeInterval) -> String {

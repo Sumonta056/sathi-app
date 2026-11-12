@@ -24,6 +24,7 @@ package struct ActivityDayStats: Equatable, Sendable {
     package var count: Int
     package var inCalendar: Int
     package var categories: [ActivityCategoryTotal]
+    package var awayTotals: [ActivityCategoryTotal]
 
     package var tracked: TimeInterval { realWork + away + notLogged }
     package var topCategory: ActivityCategoryTotal? { categories.first }
@@ -43,6 +44,17 @@ package struct ActivityDayStats: Equatable, Sendable {
         count = Set(people.map(\.id)).count
         inCalendar = Set(people.filter { $0.eventID != nil || $0.sourceEventID != nil }.map(\.id)).count
         categories = Self.categoryTotals(work, realWork: total(.work))
+        awayTotals = Self.awayTotals(segs.filter { $0.kind == .away })
+    }
+
+    package static func awayTotals(_ aways: [ActivitySegment]) -> [ActivityCategoryTotal] {
+        var sums: [String: TimeInterval] = [:]
+        for s in aways {
+            sums[s.activity?.awayPlaceLabel ?? Copywriter.trackerAway, default: 0] += s.length
+        }
+        return sums
+            .map { ActivityCategoryTotal(name: $0.key, isNamed: true, seconds: $0.value, percent: 0) }
+            .sorted { ($1.seconds, $0.name) < ($0.seconds, $1.name) }
     }
 
     package static func categoryTotals(_ work: [ActivitySegment], realWork: TimeInterval) -> [ActivityCategoryTotal] {

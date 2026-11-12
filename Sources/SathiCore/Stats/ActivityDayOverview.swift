@@ -2,6 +2,7 @@ import Foundation
 
 package struct ActivityDayOverview: Equatable, Sendable {
     package var categories: [ActivityCategoryTotal]
+    package var awayTotals: [ActivityCategoryTotal]
     package var logged: TimeInterval
     package var loggedChange: RangeChange
     package var focus: TimeInterval
@@ -23,6 +24,7 @@ package struct ActivityDayOverview: Equatable, Sendable {
         let segments = stats.segments
         let aways = segments.filter { $0.kind == .away }
         categories = stats.categories
+        awayTotals = stats.awayTotals
         logged = stats.realWork
         self.loggedChange = loggedChange
         focus = segments
@@ -41,7 +43,7 @@ package struct ActivityDayOverview: Equatable, Sendable {
         var sums: [String: TimeInterval] = [:]
         var order: [String] = []
         for s in aways {
-            guard let a = s.activity, let name = a.awayPlaceName ?? a.awayPlace.map(Copywriter.trackerAwayPlace) else { continue }
+            guard let a = s.activity, let name = a.awayPlaceLabel else { continue }
             if sums[name] == nil { order.append(name) }
             sums[name, default: 0] += s.length
         }
