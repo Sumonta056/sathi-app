@@ -39,10 +39,10 @@ package final class FileActivityStore: ActivityStore, @unchecked Sendable {
     package func backup(_ key: MonthKey) -> Bool {
         queue.sync {
             let target = backupURL(key)
-            guard !FileManager.default.fileExists(atPath: target.path) else { return true }
-            let file = contents(key)
-            guard !blocked.contains(key) else { return false }
-            return JSONFiles.write(file, to: target)
+            let files = FileManager.default
+            guard !files.fileExists(atPath: target.path) else { return true }
+            guard files.fileExists(atPath: url(key).path) else { return JSONFiles.write(contents(key), to: target) }
+            return (try? files.copyItem(at: url(key), to: target)) != nil
         }
     }
 

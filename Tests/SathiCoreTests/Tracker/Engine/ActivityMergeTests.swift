@@ -63,4 +63,23 @@ struct ActivityMergeTests {
         #expect(out[0].id == rows[0].id)
         #expect(out[0].start == wed(10) && out[0].end == wed(10, 30))
     }
+
+    @Test func aLaterRowThatAloneHasAnEventBringsItsCalendar() {
+        var first = row()
+        first.calendarID = "X"
+        var second = row(from: wed(10, 10), to: wed(10, 20), event: "ev-y")
+        second.calendarID = "Y"
+        let joined = ActivityMerge.joined(first, second)
+        #expect(joined.eventID == "ev-y")
+        #expect(joined.calendarID == "Y")
+        #expect(joined.id == first.id)
+    }
+
+    @Test func theEarlierCalendarWinsWhenTheEventIsNotTakenOver() {
+        var first = row(event: "ev-x")
+        first.calendarID = "X"
+        var second = row(from: wed(10, 10), to: wed(10, 20))
+        second.calendarID = "Y"
+        #expect(ActivityMerge.joined(first, second).calendarID == "X")
+    }
 }

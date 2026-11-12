@@ -32,12 +32,12 @@ struct FileActivityStoreBackupTests {
         #expect(readData(backupFile) == original)
     }
 
-    @Test func backupKeepsUnknownFieldsAndItems() throws {
+    @Test func backupCopiesTheOriginalBytesWithUnknownData() throws {
         try writeText(fileWithUnknowns, to: file)
-        #expect(store().backup(key))
-        let text = try #require(readText(backupFile))
-        #expect(text.contains("\"mood\":\"calm\""))
-        #expect(text.contains("\"future\":true"))
+        let s = store()
+        #expect(s.month(key).items.map(\.text) == ["Plan"])
+        #expect(s.backup(key))
+        #expect(readText(backupFile) == fileWithUnknowns)
     }
 
     @Test func backupFilesAreNotListedAsMonths() {

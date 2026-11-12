@@ -112,6 +112,39 @@ struct EngineOldRowsMergeTests {
         let h = started(rows) { $0.live.tracker.away.awayItems = [rows[1].id] }
         #expect(sorted(h) == rows)
     }
+
+    @Test func aLaterRowThatAloneHasAnEventGivesTheMergedRowItsEventAndCalendar() {
+        var first = row(mon(10), mon(10, 10))
+        first.calendarID = "X"
+        var second = row(mon(10, 10), mon(10, 20), event: "ev-y")
+        second.calendarID = "Y"
+        let saved = sorted(started([first, second]))
+        #expect(saved.count == 1)
+        #expect(saved.first?.id == first.id)
+        #expect(saved.first?.eventID == "ev-y")
+        #expect(saved.first?.calendarID == "Y")
+    }
+
+    @Test func aThirtySecondGapIsPartOfTheMergedRow() {
+        let first = row(mon(10), mon(10, 10))
+        let second = row(mon(10, 10).addingTimeInterval(30), mon(10, 20))
+        let saved = sorted(started([first, second]))
+        #expect(saved.count == 1)
+        #expect(saved.first?.start == mon(10))
+        #expect(saved.first?.end == mon(10, 20))
+    }
+
+    @Test func aDayWithARowLoggedWhileAwayIsLeftAlone() {
+        let rows = gaming(3)
+        let h = started(rows) { $0.live.tracker.away.loggedWhileAway = [rows[2]] }
+        #expect(sorted(h) == rows)
+    }
+
+    @Test func aDayWithTheRowAnAwayEndedMergedIntoIsLeftAlone() {
+        let rows = gaming(3)
+        let h = started(rows) { $0.live.tracker.away.endedMergedInto = rows[0] }
+        #expect(sorted(h) == rows)
+    }
 }
 
 @Suite("Tracker prefs merged old rows flag")

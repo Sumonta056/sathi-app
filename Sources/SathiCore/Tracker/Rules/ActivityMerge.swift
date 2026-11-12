@@ -14,8 +14,12 @@ package enum ActivityMerge {
     package static func joined(_ previous: Activity, _ next: Activity) -> Activity {
         var a = previous
         a.end = max(previous.end, next.end)
-        if !hasEvent(a), hasEvent(next) { a.eventID = next.eventID }
-        a.calendarID = previous.calendarID ?? next.calendarID
+        if !hasEvent(a), hasEvent(next) {
+            a.eventID = next.eventID
+            a.calendarID = next.calendarID
+        } else {
+            a.calendarID = previous.calendarID ?? next.calendarID
+        }
         return a
     }
 

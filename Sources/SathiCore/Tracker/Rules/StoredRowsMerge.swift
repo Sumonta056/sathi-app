@@ -1,7 +1,7 @@
 import Foundation
 
-package enum StoredRowsMerge {
-    package static func merged(_ month: ActivityMonth, calendar: Calendar, keep: Set<ActivityID>) -> ActivityMonth? {
+enum StoredRowsMerge {
+    static func merged(_ month: ActivityMonth, calendar: Calendar, keep: Set<ActivityID>) -> ActivityMonth? {
         let days = Dictionary(grouping: month.items) { calendar.startOfDay(for: $0.start) }
         var changed = false
         var items: [Activity] = []
