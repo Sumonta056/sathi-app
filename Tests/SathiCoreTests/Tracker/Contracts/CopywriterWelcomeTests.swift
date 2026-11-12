@@ -33,7 +33,9 @@ struct CopywriterWelcomeTests {
 
     @Test func theSettingsTexts() {
         #expect(Copywriter.trackerPlacesLabel == "Away places")
-        #expect(Copywriter.trackerPlacesHint == "Your own answers for \"Where were you?\"")
-        #expect(Copywriter.trackerPlacesEmpty == "Add a place in the Welcome back popup.")
+        #expect(Copywriter.trackerPlacesHint == "They show in the Away row of every popup and in Welcome back.")
+        #expect(Copywriter.trackerPlacesBuiltIn == "Built in")
+        #expect(Copywriter.trackerPlacesYours == "Yours")
+        #expect(Copywriter.trackerPlacesAdd == "+ Add place")
     }
 }

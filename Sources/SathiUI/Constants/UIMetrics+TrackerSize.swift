@@ -92,6 +92,8 @@ extension UIMetrics {
     static let trackerPlaceFont: CGFloat = 13
     static let trackerOutlineFont: CGFloat = 13
     static let trackerPlaceBoxSpacing: CGFloat = 9
+    static let trackerPlaceFieldWidth: CGFloat = 200
+    static let trackerPlaceAddGap: CGFloat = 8
     static let trackerBackDot: CGFloat = 9
     static let trackerNoteCardSpacing: CGFloat = 12
     static let trackerNoteButton: CGFloat = 34

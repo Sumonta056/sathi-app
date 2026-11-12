@@ -31,12 +31,31 @@ struct TrackerPlacesRowTests {
 
     @Test func theRowHasItsLabel() throws {
         _ = try row(harness(["Doctor"])).find(text: "Away places")
+        _ = try row(harness(["Doctor"])).find(text: Copywriter.trackerPlacesHint)
+    }
+
+    @Test func theHintNamesWhereThePlacesShow() {
+        #expect(Copywriter.trackerPlacesHint == "They show in the Away row of every popup and in Welcome back.")
+    }
+
+    @Test func builtInPlacesShowReadOnlyWithNoRemoveButton() throws {
+        let sut = try row(harness([]))
+        _ = try sut.find(text: "Built in")
+        for place in AwayPlace.choices {
+            _ = try sut.find(text: Copywriter.trackerAwayPlace(place))
+        }
+        #expect(ids(sut).isEmpty)
+        #expect(sut.findAll(ViewType.Button.self).filter { (try? $0.labelView().find(text: "Lunch")) != nil }.isEmpty)
+    }
+
+    @Test func yoursShowsOnlyWhenThereIsAUserPlace() throws {
+        #expect(try Find.lacks(row(harness([])), text: "Yours"))
+        _ = try row(harness(["Doctor"])).find(text: "Yours")
     }
 
     @Test func eachPlaceHasARemoveButtonInOrder() throws {
         let sut = try row(harness(["Doctor", "School run", "Gym"]))
         #expect(ids(sut) == [prefix + "Doctor", prefix + "School run", prefix + "Gym"])
-        #expect(Find.lacks(sut, text: "Add a place in the Welcome back popup."))
     }
 
     @Test func aTapRemovesThatPlaceFromPrefs() throws {
@@ -53,14 +72,69 @@ struct TrackerPlacesRowTests {
         #expect(h.store.prefs.tracker.awayPlaces == [])
         let sut = try row(h)
         #expect(ids(sut).isEmpty)
-        _ = try sut.find(text: "Add a place in the Welcome back popup.")
+        #expect(Find.lacks(sut, text: "Yours"))
     }
 
-    @Test func anEmptyListShowsTheEmptyTextAndNoButton() throws {
+    @Test func anEmptyListShowsNoRemoveButton() throws {
         let sut = try row(harness([]))
-        _ = try sut.find(text: "Add a place in the Welcome back popup.")
         _ = try sut.find(text: "Away places")
         #expect(ids(sut).isEmpty)
+    }
+
+    @Test func theNewPlaceFieldAndAddButtonShow() throws {
+        let sut = try row(harness(["Doctor"]))
+        #expect(throws: Never.self) { try lazyField(sut, "New place") }
+        #expect(throws: Never.self) { try sut.find(button: "+ Add place") }
+    }
+
+    @Test func theFieldAndButtonHideAtTheMax() throws {
+        let names = (1 ... Limits.awayPlaceMax).map { "P\($0)" }
+        let sut = try row(harness(names))
+        #expect(sut.findAll(LazyTextField.self).isEmpty)
+        #expect(Find.lacks(sut, text: "+ Add place"))
+    }
+
+    @Test func theFieldComesBackWhenOnePlaceIsRemoved() throws {
+        let names = (1 ... Limits.awayPlaceMax).map { "P\($0)" }
+        let h = harness(names)
+        try tap(row(h), prefix + "P1")
+        #expect(throws: Never.self) { try lazyField(row(h), "New place") }
+    }
+
+    private func addRow(_ h: EngineHarness, _ state: PlaceNameState) throws -> InspectableView<ViewType.ClassifiedView> {
+        try hosted(state.row(), h).inspect()
+    }
+
+    @Test func addButtonSavesThePlaceAndClearsTheField() throws {
+        let h = harness(["Doctor"])
+        let state = PlaceNameState("  Cafe ")
+        try addRow(h, state).find(button: "+ Add place").tap()
+        #expect(h.store.prefs.tracker.awayPlaces == ["Doctor", "Cafe"])
+        #expect(state.value.isEmpty)
+    }
+
+    @Test func returnInTheFieldAdds() throws {
+        let h = harness([])
+        let state = PlaceNameState("Cafe")
+        try lazyField(addRow(h, state), "New place").onSubmit()
+        #expect(h.engine.awayPlaces == ["Cafe"])
+        #expect(state.value.isEmpty)
+    }
+
+    @Test(arguments: ["doctor", " DOCTOR ", "Lunch", "lunch", "Other", "", "   "])
+    func aRefusedNameChangesNothingAndKeepsTheText(_ text: String) throws {
+        let h = harness(["Doctor"])
+        let state = PlaceNameState(text)
+        try addRow(h, state).find(button: "+ Add place").tap()
+        #expect(h.engine.awayPlaces == ["Doctor"])
+        #expect(state.value == text)
+    }
+
+    @Test func theNewPlaceShowsAsAChipAfterAdding() throws {
+        let h = harness([])
+        let state = PlaceNameState("Cafe")
+        try addRow(h, state).find(button: "+ Add place").tap()
+        #expect(try ids(row(h)) == [prefix + "Cafe"])
     }
 
     @Test func theRowSitsInTheMoreCard() throws {
@@ -76,5 +150,18 @@ struct TrackerPlacesRowTests {
         let sut = try hosted(TrackerSettingsPage(), harness(["Doctor"])).inspect()
         _ = try sut.find(text: "Away places")
         #expect(ids(sut) == [prefix + "Doctor"])
+    }
+}
+
+@MainActor
+final class PlaceNameState {
+    var value: String
+
+    init(_ value: String = "") {
+        self.value = value
+    }
+
+    func row() -> TrackerPlaceAddRow {
+        TrackerPlaceAddRow(text: Binding(get: { self.value }, set: { self.value = $0 }))
     }
 }
