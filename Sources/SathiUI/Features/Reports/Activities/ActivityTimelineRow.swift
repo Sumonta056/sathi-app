@@ -32,7 +32,7 @@ struct ActivityTimelineRow: View {
         .overlay(alignment: .leading) { color.frame(width: UIMetrics.activitiesRowBar) }
         .clipShape(shape)
         .overlay(shape.strokeBorder(
-            selected ? color : isAway ? Night.border : .clear,
+            selected ? Night.tracker : isAway ? Night.border : .clear,
             lineWidth: selected ? UIMetrics.activitiesRowOutline : UIMetrics.cardBorder
         ))
     }

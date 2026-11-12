@@ -69,13 +69,33 @@ struct ActivityDayViewTests {
         #expect(try view().inspect().findAll(ActivityEditSection.self).isEmpty)
     }
 
-    @Test func theEditSectionOpensInsideTheTimelineAndOutlinesTheRow() throws {
+    private func dayScroll(_ sut: InspectableView<ViewType.ClassifiedView>) throws -> InspectableView<ViewType.ScrollView> {
+        try sut.find(ViewType.ScrollView.self) { (try? $0.find(ActivityTimelineCard.self)) != nil }
+    }
+
+    @Test func theEditPanelSitsBesideTheScrollingTimeline() throws {
         let sut = try view(editing: .activity(Fix.items[0].id)).inspect()
-        let card = try sut.find(ActivityTimelineCard.self)
-        #expect(card.findAll(ActivityEditSection.self).count == 1)
-        #expect(throws: Never.self) { try card.find(text: "Edit activity") }
+        #expect(sut.findAll(ActivityEditSection.self).count == 1)
+        #expect(sut.findAll(ActivityEditPanel.self).count == 1)
+        #expect(try dayScroll(sut).findAll(ActivityEditSection.self).isEmpty)
+        #expect(try sut.find(ActivityTimelineCard.self).findAll(ActivityEditSection.self).isEmpty)
+        #expect(throws: Never.self) { try sut.find(ActivityEditPanel.self).find(text: "Edit activity") }
+    }
+
+    @Test func theEditedRowStaysOutlined() throws {
+        let sut = try view(editing: .activity(Fix.items[0].id)).inspect()
         let rows = try sut.findAll(ActivityTimelineRow.self).map { try $0.actualView() }
         #expect(rows.filter(\.selected).map(\.activity.id) == [Fix.items[0].id])
+    }
+
+    @Test func noEditPanelWhenNothingIsEdited() throws {
+        #expect(try view().inspect().findAll(ActivityEditPanel.self).isEmpty)
+    }
+
+    @Test func theDayScrollHidesItsIndicators() throws {
+        let scroll = try dayScroll(view().inspect())
+        #expect(try scroll.showsIndicators() == false)
+        #expect(try scroll.axes() == .vertical)
     }
 
     @Test func aGapOpensTheAddSectionForThatSpan() throws {
@@ -84,7 +104,7 @@ struct ActivityDayViewTests {
         var actions = ActivityDayActions()
         actions.add = { added = $0; return .saved(ActivityID()) }
         let sut = try view(actions, editing: .add(gap)).inspect()
-        #expect(throws: Never.self) { try sut.find(text: "Add activity") }
+        #expect(throws: Never.self) { try sut.find(ActivityEditPanel.self).find(text: "Add activity") }
         try sut.find(ActivityEditSection.self).find(ViewType.Button.self) { try $0.labelView().find(text: "Save") != nil }.tap()
         #expect(added?.start == gap.start)
         #expect(added?.end == gap.end)

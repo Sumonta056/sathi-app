@@ -9,22 +9,31 @@ struct ActivityDayView: View {
     var calendars: [CalendarChoice] = []
     var calendarNames: [String: String] = [:]
     var actions = ActivityDayActions()
-    var editing: ActivityEditTarget?
+    @State var editing: ActivityEditTarget?
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: UIMetrics.activitiesGap) {
-                WeightedRow(gap: UIMetrics.activitiesGap, weights: UIMetrics.activitiesTopWeights) {
-                    ActivityTableCard(table: ActivityTableCard.day(overview.categories, away: overview.awayTotals, categories: categories))
-                    ActivityDayTiles(overview: overview)
+        HStack(alignment: .top, spacing: UIMetrics.activitiesGap) {
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(alignment: .leading, spacing: UIMetrics.activitiesGap) {
+                    WeightedRow(gap: UIMetrics.activitiesGap, weights: UIMetrics.activitiesTopWeights) {
+                        ActivityTableCard(table: ActivityTableCard.day(overview.categories, away: overview.awayTotals, categories: categories))
+                        ActivityDayTiles(overview: overview)
+                    }
+                    ActivityTimelineCard(
+                        day: day, count: overview.count, gaps: overview.gapSpans, categories: categories, calendar: calendar,
+                        calendars: calendars, calendarNames: calendarNames, actions: actions, editing: $editing
+                    )
                 }
-                ActivityTimelineCard(
-                    day: day, count: overview.count, gaps: overview.gapSpans, categories: categories, calendar: calendar, calendars: calendars,
-                    calendarNames: calendarNames, actions: actions, editing: editing
-                )
-                .id(day.day)
+                .padding(.bottom, UIMetrics.reportsGap)
             }
-            .padding(.bottom, UIMetrics.reportsGap)
+            if let editing, ActivityEditPanel.shows(editing, in: day) {
+                ActivityEditPanel(
+                    day: day, target: editing, categories: categories, calendar: calendar, calendars: calendars,
+                    calendarNames: calendarNames, actions: actions, editing: $editing
+                )
+                .frame(width: UIMetrics.activitiesEditWidth)
+            }
         }
+        .onChange(of: day.day) { _ in editing = nil }
     }
 }
