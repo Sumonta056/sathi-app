@@ -57,7 +57,7 @@ struct WebsiteShotsTracker {
 
     @Test func whatNow() throws {
         let h = Self.harness(at: Self.at(10, 30))
-        try Shots.save(WhatNowPopup(state: Self.prompt(.whatNow, at: Self.at(10, 30))), "tracker-what-now", h)
+        try Shots.save(ActivityPromptView(state: Self.prompt(.whatNow, at: Self.at(10, 30))), "tracker-what-now", h)
     }
 
     @Test func stillOn() throws {
@@ -68,12 +68,12 @@ struct WebsiteShotsTracker {
         )
         running.lastAnswer = Self.at(13, 15)
         s.running = running
-        try Shots.save(StillOnItPopup(state: s), "tracker-still-on", h)
+        try Shots.save(ActivityPromptView(state: s), "tracker-still-on", h)
     }
 
     @Test func report() throws {
         let h = Self.harness(at: Self.at(17, 40))
-        let view = ReportsView(tab: .activities)
+        let view = ActivitiesPage()
         try Shots.save(view, "tracker-report", h)
     }
 

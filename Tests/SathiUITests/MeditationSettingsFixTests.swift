@@ -15,7 +15,7 @@ struct MeditationSettingsFixTests {
 
     @Test func chimeSwitchSaysItPlaysAtStartAndEnd() throws {
         let h = EngineHarness { $0.prefs.meditation.enabled = true }
-        let sut = try hosted(MeditationSettingsTab(), h).inspect()
+        let sut = try hosted(MeditationSoundCard(), h).inspect()
         #expect(throws: Never.self) { try sut.find(text: "Soft bell at start and end") }
         try Find.button(sut, label: "Soft bell at start and end").tap()
         #expect(!h.engine.data.prefs.meditation.chime)

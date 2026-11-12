@@ -38,17 +38,24 @@ extension Engine {
                 removeStoredActivity(row.id)
             }
             let place = trackerRuntime.lastAway?.place
-            let away = Activity(kind: .away, text: Copywriter.trackerAwayText(place), start: span.start, end: span.end, awayPlace: place)
+            let name = trackerRuntime.lastAway?.placeName
+            let away = Activity(
+                kind: .away, text: Copywriter.trackerAwayText(place, name: name),
+                start: span.start, end: span.end, awayPlace: place, awayPlaceName: name
+            )
             storeActivity(away)
             if away.length >= Timing.activityMinimum { trackerRuntime.awayItems.append(away.id) }
         }
         trackerRuntime.loggedWhileAway.removeAll { $0.sourceEventID == id }
-        objectWillChange.send()
+        storesChanged()
         return true
     }
 
     private func logAwayEvent(_ e: CalendarEventInfo, until end: Date, final: Bool) -> Activity {
-        if trackerRuntime.endedByAway?.sourceEventID == e.id { trackerRuntime.endedByAway = nil }
+        if trackerRuntime.endedByAway?.sourceEventID == e.id {
+            trackerRuntime.endedByAway = nil
+            trackerRuntime.endedMergedInto = nil
+        }
         let pick = eventCategory(e)
         if let added = pick.added { addActivityCategory(added.name, colorHex: added.colorHex) }
         let draft = eventDraft(e, category: pick.name, from: e.start)

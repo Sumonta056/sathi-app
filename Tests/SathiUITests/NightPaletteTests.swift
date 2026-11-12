@@ -74,6 +74,28 @@ struct NightPaletteTests {
         #expect(RGB(Night.trackerSelectedText).matches(RGB(hex: 0xFFB3AB)))
     }
 
+    @Test(arguments: [
+        (PromptReason.ask, UInt32(0xFF8A80)),
+        (.shortcut, UInt32(0xA99CF5)),
+        (.ends, UInt32(0xFFC94A)),
+        (.back, UInt32(0x5FD39A)),
+        (.event, UInt32(0x7FB8FF)),
+    ])
+    func eachPromptReasonHasItsColor(_ reason: PromptReason, _ hex: UInt32) {
+        #expect(RGB(Night.reason(reason)).matches(RGB(hex: hex)))
+        expectReadable(Night.onAccent, on: Night.reason(reason), "onAccent on \(reason)")
+    }
+
+    @Test func promptGroundsMatchTheMockup() {
+        #expect(RGB(Night.promptHeader).matches(RGB(hex: 0x161D2C)))
+        #expect(RGB(Night.promptCard).matches(RGB(hex: 0x1A2233)))
+        #expect(RGB(Night.promptCardLine).matches(RGB(hex: 0x263049)))
+        #expect(RGB(Night.promptBoxLine).matches(RGB(hex: 0x2C3650)))
+        #expect(RGB(Night.promptBox).matches(RGB(hex: 0x121826)))
+        #expect(RGB(Night.promptAsk).matches(RGB(Night.tracker)))
+        #expect(RGB(Night.promptEvent).matches(RGB(Night.trackerEvent)))
+    }
+
     @Test func sparkStaysYellow() {
         #expect(RGB(Night.spark).matches(RGB(hex: 0xFFC94A)))
         #expect(!RGB(Night.tracker).matches(RGB(Night.spark)))

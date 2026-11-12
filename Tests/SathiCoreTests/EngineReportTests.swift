@@ -59,16 +59,4 @@ struct EngineReportTests {
         #expect(report.range == range)
         #expect(report.interval.start <= h.clock.now && h.clock.now < report.interval.end)
     }
-
-    @Test func longestStreakFindsAnOlderLongerRun() {
-        let h = EngineHarness {
-            $0.events = metDays(40, endingAt: day(2025, 12, 1, 12)) + metDays(5, endingAt: day(2026, 3, 3, 12))
-        }
-        #expect(h.engine.streak(.water) == 5)
-        #expect(h.engine.longestStreak(.water) == 40)
-    }
-
-    @Test func longestStreakIsZeroWithoutHistory() {
-        #expect(EngineHarness().engine.longestStreak(.reading) == 0)
-    }
 }

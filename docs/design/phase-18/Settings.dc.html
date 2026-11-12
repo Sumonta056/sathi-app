@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sathi · Settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1200px; height: 760px; box-sizing: border-box; display: flex; background: #121826; color: #EEF2FA; font-family: Figtree, system-ui, sans-serif; border-radius: 12px; overflow: hidden; border: 1px solid #263049;">
+  <nav aria-label="Sections" style="width: 210px; flex-shrink: 0; background: #0D1220; display: flex; flex-direction: column; padding: 14px 12px; box-sizing: border-box; gap: 4px; border-right: 1px solid #222B40;">
+    <div style="display: flex; gap: 8px; padding: 2px 4px 22px;">
+      <span style="width: 12px; height: 12px; border-radius: 6px; background: #FF5F57;"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #FEBC2E;"></span><span style="width: 12px; height: 12px; border-radius: 6px; background: #28C840;"></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 8px 18px;"><span style="width: 28px; height: 28px; border-radius: 9px; background: #4CC3F5; display: block;"></span><span style="font-weight: 800; font-size: 18px;">Sathi</span></div>
+    <a href="Main.dc.html" style="padding: 10px 12px; border-radius: 10px; color: #9AA6BF; text-decoration: none; font-weight: 500; font-size: 14px;">Today</a>
+    <a href="Activities.dc.html" style="padding: 10px 12px; border-radius: 10px; color: #9AA6BF; text-decoration: none; font-weight: 500; font-size: 14px;">Activities</a>
+    <a href="Reports.dc.html" style="padding: 10px 12px; border-radius: 10px; color: #9AA6BF; text-decoration: none; font-weight: 500; font-size: 14px;">Reports</a>
+    <a href="Settings.dc.html" style="padding: 10px 12px; border-radius: 10px; background: #1E2840; color: #EEF2FA; text-decoration: none; font-weight: 600; font-size: 14px;">Settings</a>
+    <div style="display: flex; flex-direction: column; gap: 2px; padding: 6px 0 0 14px; border-left: 1px solid #222B40; margin-left: 18px;">
+      <a href="#" style="padding: 7px 10px; font-size: 13px; color: #9AA6BF; text-decoration: none;">General</a>
+      <a href="#" style="padding: 7px 10px; font-size: 13px; color: #4CC3F5; font-weight: 700; text-decoration: none;">Fota</a>
+      <a href="#" style="padding: 7px 10px; font-size: 13px; color: #9AA6BF; text-decoration: none;">Boi</a>
+      <a href="#" style="padding: 7px 10px; font-size: 13px; color: #9AA6BF; text-decoration: none;">Shanti</a>
+      <a href="#" style="padding: 7px 10px; font-size: 13px; color: #9AA6BF; text-decoration: none;">Shokti</a>
+      <a href="#" style="padding: 7px 10px; font-size: 13px; color: #9AA6BF; text-decoration: none;">Quick reminders</a>
+      <a href="#" style="padding: 7px 10px; font-size: 13px; color: #9AA6BF; text-decoration: none;">Activity tracker</a>
+      <a href="#" style="padding: 7px 10px; font-size: 13px; color: #9AA6BF; text-decoration: none;">Sound</a>
+    </div>
+  </nav>
+
+  <main style="flex: 1; min-width: 0; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px;">
+    <header style="display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-size: 12px; color: #8C99B3; font-weight: 600; letter-spacing: .06em;">SETTINGS</span>
+        <h1 style="margin: 0; font-size: 26px; font-weight: 800;">Fota · water</h1>
+      </div>
+      <label style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: #C9D2E3;">On
+        <span style="width: 44px; height: 26px; border-radius: 13px; background: #4CC3F5; position: relative; display: block;"><span style="position: absolute; right: 3px; top: 3px; width: 20px; height: 20px; border-radius: 10px; background: #0D1220;"></span></span>
+      </label>
+    </header>
+
+    <section style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 6px 20px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #222B40;"><span style="font-size: 14px;">Daily goal</span><div style="display: flex; align-items: center; gap: 12px;"><button aria-label="Less" style="font: inherit; width: 30px; height: 30px; border-radius: 8px; background: #121826; color: #EEF2FA; border: 1px solid #2C3650;">−</button><span style="font-weight: 700; min-width: 70px; text-align: center;">8 glasses</span><button aria-label="More" style="font: inherit; width: 30px; height: 30px; border-radius: 8px; background: #121826; color: #EEF2FA; border: 1px solid #2C3650;">+</button></div></div>
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #222B40;"><span style="font-size: 14px;">Remind every</span><div style="display: flex; gap: 6px;"><button style="font: inherit; font-size: 13px; color: #C9D2E3; background: #121826; border: 1px solid #2C3650; border-radius: 999px; padding: 0 12px; height: 30px;">30 min</button><button style="font: inherit; font-size: 13px; color: #0D1220; font-weight: 700; background: #4CC3F5; border: 0; border-radius: 999px; padding: 0 12px; height: 30px;">45 min</button><button style="font: inherit; font-size: 13px; color: #C9D2E3; background: #121826; border: 1px solid #2C3650; border-radius: 999px; padding: 0 12px; height: 30px;">60 min</button><button style="font: inherit; font-size: 13px; color: #C9D2E3; background: #121826; border: 1px solid #2C3650; border-radius: 999px; padding: 0 12px; height: 30px;">90 min</button></div></div>
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 0;"><span style="font-size: 14px;">Hours</span><div style="display: flex; align-items: center; gap: 8px; font-size: 13px;"><button style="font: inherit; font-size: 13px; color: #C9D2E3; background: #121826; border: 1px solid #2C3650; border-radius: 8px; padding: 0 10px; height: 30px;">9:00</button><span style="color: #9AA6BF;">to</span><button style="font: inherit; font-size: 13px; color: #C9D2E3; background: #121826; border: 1px solid #2C3650; border-radius: 8px; padding: 0 10px; height: 30px;">18:00</button></div></div>
+    </section>
+
+    <section aria-label="Level" style="display: flex; flex-direction: column; gap: 10px;">
+      <span style="font-size: 13px; color: #8C99B3; font-weight: 600;">How firm is Fota?</span>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;">
+        <button style="font: inherit; text-align: left; background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 14px 16px; color: #EEF2FA; display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 700;">Gentle</span><span style="font-size: 12px; color: #9AA6BF;">A bubble each time.</span></button>
+        <button aria-pressed="true" style="font: inherit; text-align: left; background: #15263A; border: 2px solid #4CC3F5; border-radius: 14px; padding: 13px 15px; color: #EEF2FA; display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 700;">Nudgy</span><span style="font-size: 12px; color: #9AA6BF;">Stays on top after 1 snooze.</span></button>
+        <button style="font: inherit; text-align: left; background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 14px 16px; color: #EEF2FA; display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 700;">Strict</span><span style="font-size: 12px; color: #9AA6BF;">Locks the screen after 2 snoozes.</span></button>
+      </div>
+    </section>
+
+    <section aria-label="Days" style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between;">
+      <span style="font-size: 14px;">Days</span>
+      <div style="display: flex; gap: 6px;">
+        <span style="width: 34px; height: 34px; border-radius: 17px; background: #4CC3F5; color: #0D1220; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center;">M</span>
+        <span style="width: 34px; height: 34px; border-radius: 17px; background: #4CC3F5; color: #0D1220; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center;">T</span>
+        <span style="width: 34px; height: 34px; border-radius: 17px; background: #4CC3F5; color: #0D1220; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center;">W</span>
+        <span style="width: 34px; height: 34px; border-radius: 17px; background: #4CC3F5; color: #0D1220; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center;">T</span>
+        <span style="width: 34px; height: 34px; border-radius: 17px; background: #4CC3F5; color: #0D1220; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center;">F</span>
+        <span style="width: 34px; height: 34px; border-radius: 17px; background: #121826; border: 1px solid #2C3650; box-sizing: border-box; color: #9AA6BF; font-size: 13px; display: flex; align-items: center; justify-content: center;">S</span>
+        <span style="width: 34px; height: 34px; border-radius: 17px; background: #121826; border: 1px solid #2C3650; box-sizing: border-box; color: #9AA6BF; font-size: 13px; display: flex; align-items: center; justify-content: center;">S</span>
+      </div>
+    </section>
+    <span style="font-size: 12px; color: #7784A0;">Settings save at once. No separate window: every page lives in this sidebar.</span>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":760}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

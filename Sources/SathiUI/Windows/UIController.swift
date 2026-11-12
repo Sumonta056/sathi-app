@@ -22,23 +22,24 @@ package final class UIController: ReminderPresenter {
     var noteTask: Task<Void, Never>?
     var trackerPromptPanel: NSPanel?
     var trackerPromptKind: PromptKind?
+    var trackerPromptShown: PromptState?
+    var trackerPromptModel: ActivityPromptModel?
     var trackerReturnApp: NSRunningApplication?
     var trackerPromptHasKeys = false
     var trackerCenters: [ObjectIdentifier: NSPoint] = [:]
     var trackerNotePanel: NSPanel?
     var trackerNoteTask: Task<Void, Never>?
     var trackerEndOfDayPanel: NSPanel?
-    var trackerCorner: [NSPanel] = []
     var trackerResizeTokens: [ObjectIdentifier: NSObjectProtocol] = [:]
     private var locks: [NSWindow] = []
-    private var settings: NSWindow?
-    private let settingsCloseWatcher = WindowCloseWatcher()
-    private var reports: NSWindow?
-    private let reportsCloseWatcher = WindowCloseWatcher()
+    var mainWindow: NSWindow?
+    var mainRoute: MainRoute?
+    let mainCloseWatcher = WindowCloseWatcher()
+    var mainWindowShown: (NSWindow) -> Void = UIController.bringToFront
+    var mainWindowClosed: () -> Void = UIController.backToMenuBar
 
     package init() {
-        settingsCloseWatcher.onClose = { [weak self] in self?.settingsWillClose() }
-        reportsCloseWatcher.onClose = { [weak self] in self?.reportsWillClose() }
+        mainCloseWatcher.onClose = { [weak self] in self?.mainWillClose() }
     }
 
     package func showBubble(_ id: HabitID, _ level: Level) {
@@ -124,32 +125,6 @@ package final class UIController: ReminderPresenter {
         locks.forEach { $0.orderOut(nil) }
         locks.removeAll()
         NSApp.presentationOptions = []
-    }
-
-    package func showSettings() {
-        if settings == nil, let engine {
-            settings = SettingsWindow.make(engine: engine, closeWatcher: settingsCloseWatcher)
-        }
-        NSApp.activate(ignoringOtherApps: true)
-        settings?.makeKeyAndOrderFront(nil)
-    }
-
-    private func settingsWillClose() {
-        settings?.contentView = nil
-        settings = nil
-    }
-
-    package func showReports() {
-        if reports == nil, let engine {
-            reports = ReportsWindow.make(engine: engine, closeWatcher: reportsCloseWatcher)
-        }
-        NSApp.activate(ignoringOtherApps: true)
-        reports?.makeKeyAndOrderFront(nil)
-    }
-
-    private func reportsWillClose() {
-        reports?.contentView = nil
-        reports = nil
     }
 
     func hosting(_ view: some View) -> FirstClickHostingView<AnyView>? {

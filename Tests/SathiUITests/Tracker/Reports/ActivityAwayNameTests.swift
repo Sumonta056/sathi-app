@@ -16,23 +16,20 @@ struct ActivityAwayNameTests {
     private static let other = Activity(kind: .away, text: "Away · Other", start: Fix.at(4, 12), end: Fix.at(4, 13), awayPlace: .other)
     private static let stale = Activity(kind: .away, text: "Away", start: Fix.at(4, 12), end: Fix.at(4, 13), awayPlace: .walk)
 
-    private func form(_ a: Activity, saved: @escaping (ActivityEdit) -> Void = { _ in }) -> ActivityEditForm {
-        ActivityEditForm(
-            draft: ActivityEditDraft(a, calendar: Fix.calendar), categories: ActivityCategory.defaults,
-            dayStart: Fix.key(4).start(in: Fix.calendar), calendar: Fix.calendar,
-            save: { saved($0); return .saved(a.id) }, delete: {}, close: {}
+    private func form(_ a: Activity, saved: @escaping (ActivityEdit) -> Void = { _ in }) -> ActivityEditSection {
+        ActivityEditSection(
+            draft: ActivityEditDraft(a, calendar: Fix.calendar), title: "Edit activity", accent: Night.chipText,
+            categories: ActivityCategory.defaults, calendars: [], dayStart: Fix.key(4).start(in: Fix.calendar), calendar: Fix.calendar,
+            save: { saved($0); return .saved(a.id) }, delete: { true }, close: {}
         )
     }
 
-    private func chips(_ a: Activity) throws -> [TrackerChip] {
-        try form(a).inspect().findAll(TrackerChip.self).compactMap { try? $0.actualView() }.filter { $0.id.hasPrefix("report.place.") }
+    private func chips(_ a: Activity) throws -> [PromptBox] {
+        try form(a).inspect().findAll(PromptBox.self).compactMap { try? $0.actualView() }.filter { $0.id.hasPrefix("report.place.") }
     }
 
-    private func row(_ a: Activity) -> ActivityLogRowView {
-        ActivityLogRowView(
-            row: .activity(a, running: false), categories: ActivityCategory.defaults, calendar: Fix.calendar,
-            onEdit: {}, onFill: { _ in }, onSaveToCalendar: { _ in }
-        )
+    private func row(_ a: Activity) -> ActivityTimelineRow {
+        ActivityTimelineRow(activity: a, categories: ActivityCategory.defaults, calendar: Fix.calendar)
     }
 
     @Test func theDraftCarriesTheNameIntoTheEdit() {

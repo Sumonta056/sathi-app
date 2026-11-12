@@ -3,43 +3,36 @@ import SwiftUI
 
 struct TrackerPlacesRow: View {
     @EnvironmentObject var e: Engine
+    @State private var newName = ""
 
     var body: some View {
         let engine = e
         VStack(alignment: .leading, spacing: UIMetrics.trackerPlaceBoxSpacing) {
             SettingRow(label: Copywriter.trackerPlacesLabel, hint: Copywriter.trackerPlacesHint, showsDivider: false) { EmptyView() }
-            if engine.awayPlaces.isEmpty {
-                Text(verbatim: Copywriter.trackerPlacesEmpty)
-                    .font(Typography.hint)
-                    .foregroundStyle(Night.faint)
-            } else {
-                TrackerFlowLayout(spacing: UIMetrics.trackerChipSpacing) {
+            group(Copywriter.trackerPlacesBuiltIn) {
+                ForEach(AwayPlace.choices, id: \.self) { place in
+                    TrackerPlaceChip(name: Copywriter.trackerAwayPlace(place), remove: nil)
+                }
+            }
+            if !engine.awayPlaces.isEmpty {
+                group(Copywriter.trackerPlacesYours) {
                     ForEach(engine.awayPlaces, id: \.self) { name in
-                        chip(name) { engine.removeAwayPlace(name) }
+                        TrackerPlaceChip(name: name) { engine.removeAwayPlace(name) }
                     }
                 }
+            }
+            if engine.awayPlaces.count < Limits.awayPlaceMax {
+                TrackerPlaceAddRow(text: $newName)
             }
         }
     }
 
-    private func chip(_ name: String, remove: @escaping () -> Void) -> some View {
-        let shape = Capsule()
-        return Button(action: remove) {
-            HStack(spacing: UIMetrics.trackerChipSpacing) {
-                Text(verbatim: name)
-                    .font(Typography.tracker(UIMetrics.trackerPlaceFont, .semibold))
-                    .foregroundStyle(Night.chipText)
-                Image(systemName: "xmark")
-                    .font(.system(size: UIMetrics.trackerRemoveIcon, weight: .bold))
-                    .foregroundStyle(Night.muted)
-            }
-            .padding(.horizontal, UIMetrics.trackerPillPadding)
-            .frame(height: UIMetrics.trackerPillHeight)
-            .overlay(shape.strokeBorder(Night.fieldBorder, lineWidth: UIMetrics.trackerChipBorder))
-            .contentShape(shape)
-            .accessibilityIdentifier("settings.tracker.place.remove." + name)
+    private func group(_ title: String, @ViewBuilder chips: () -> some View) -> some View {
+        VStack(alignment: .leading, spacing: UIMetrics.trackerPlaceBoxSpacing) {
+            Text(verbatim: title)
+                .font(Typography.hint)
+                .foregroundStyle(Night.faint)
+            TrackerFlowLayout(spacing: UIMetrics.trackerChipSpacing) { chips() }
         }
-        .buttonStyle(.plain)
-        .accessibilityLabel(Text(verbatim: Copywriter.trackerRemovePlace(name)))
     }
 }

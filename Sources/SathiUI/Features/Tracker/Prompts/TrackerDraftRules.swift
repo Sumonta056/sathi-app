@@ -32,19 +32,3 @@ extension ActivityDraft {
         return copy
     }
 }
-
-enum TrackerSwitchPick {
-    static func minutes(of date: Date, calendar: Calendar) -> Int {
-        calendar.component(.hour, from: date) * Limits.minutesPerHour + calendar.component(.minute, from: date)
-    }
-
-    static func nearest(to minutes: Int, in times: [Date], calendar: Calendar) -> Date? {
-        times.min { abs(Self.minutes(of: $0, calendar: calendar) - minutes) < abs(Self.minutes(of: $1, calendar: calendar) - minutes) }
-    }
-}
-
-extension TrackerPromptState {
-    func recentsShown(_ limit: Int) -> [RecentActivity] {
-        Array(recents.prefix(limit))
-    }
-}

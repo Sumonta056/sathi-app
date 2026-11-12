@@ -24,21 +24,22 @@ Sources/
   SathiCore/     Foundation only. All logic. Fully unit-tested.
     Models/        HabitID, Strictness, Container, Mood, Prefs, GeneralPrefs, LiveState, HistoryEvent, Persisted, ReminderState, Session, GoalText, Set+KeepOne, DecodingDefaults, Calendar+Days, Date+WholeSecond, DayKey
     Habits/        HabitRules, HabitDays, DayClock, DayOffMonth, one folder per habit: Water/, Reading/, Meditation/, Gym/ (prefs, rules, helpers such as Weekday, BreathingPattern, BreathCue, BreathCues, GymIdeas, GymProgress)
+    Today/         TodayScreen, TodayShare, ComingUpList
     Quick/         QuickReminder, QuickPrefs, QuickTime, QuickActivity
     TimeBlock/     TimeBlock, TimeBlockLength, TimeBlockPrefs
-    Tracker/       Activity, ActivityKind, ActivityCategory(+List), ActivityDraft, ActivityEdit, ActivityDay, AwayPlaceList, ActivityMonth, RunningActivity, AwayPlace, AwaySpan, TrackerPrefs(+Hours), TrackerLiveState, PromptKind, PromptState, TrackerPromptState, TrackerPromptActions, TrackerCalendarInfo, TrackerNote(+State), TrackerEndOfDayState, EventMode, KeyShortcut, MonthKey, Rules/ (AskTime, SwitchTimes, TrackerHours, RecentList, ActivityEditCheck), Calendar/ (EventRules, EventCategoryRule, SpanCut)
+    Tracker/       Activity, ActivityKind, ActivityCategory(+List), ActivityDraft, ActivityEdit, ActivityDay, AwayPlan, AwayPlaceList, ActivityMonth, RunningActivity, AwayPlace, AwaySpan, TrackerPrefs(+Hours), TrackerLiveState, PromptKind, PromptState, TrackerPromptState, TrackerPromptActions, TrackerCalendarInfo, TrackerNote(+State), TrackerEndOfDayState, EventMode, KeyShortcut, MonthKey, Rules/ (AskTime, SwitchTimes, TrackerHours, RecentList, ActivityEditCheck, ActivityMerge, StoredRowsMerge), Calendar/ (EventRules, EventCategoryRule, SpanCut)
     Constants/     Timing, Limits, StorageKeys, SoundName
     Scheduling/    EscalationPolicy (bubble/lock), TickPlanner (timer delay)
-    Stats/         Stats (daily totals), GymLegacyMinutes, StreakCalculator, ReportBuilder + Report, ReportScreen + ReportScreenInput, ReportScreenBuilder (+Tiles, +Chart, +Calendar, +Text), DaySummary
-    Export/        CSVExporter, JSONExporter (backup), ExportNames, ExportFormat, ExportJob, ExportOutcome, ActivityMonthExporter
+    Stats/         Stats (daily totals), GymLegacyMinutes, StreakCalculator, ReportBuilder + Report, ReportChart + ReportChartBuilder, BuddyDayJudge, AllBuddiesStreak, ReportsOverview + ReportsOverviewBuilder, StreakMonthBuilder, BuddyTabReport, BuddyRangeBuilder + BuddyRangeReport, CategoryTable, RangeChange, StatsRange, ActivityDayOverview, ActivityRangeStats, ActivityGaps, DaySummary
+    Export/        CSVExporter, JSONExporter (backup), ExportNames, ExportFormat, ExportJob, ExportOutcome, RangeExport, ActivityRangeExporter, HistoryRangeExporter
     Formatting/    Fmt, Copywriter (+Reading, +Meditation, +Gym, +DaySummary, +Quick, +TimeBlock, +TimeBlockPopups, +TimeBlockSettings, +TimeBlockView)
-    Ports/         Clock, StateStore, HistoryStore, SoundPlayer, SessionAudio, ReminderPresenter, FileExporter, SummaryRenderer, CalendarWriter (+CalendarEventInfo, event read), LinkOpener, ActivityStore, PresenceMonitor, HotkeyRegistrar
+    Ports/         Clock, StateStore, HistoryStore, SoundPlayer, SessionAudio, ReminderPresenter, CalendarWriter (+CalendarEventInfo, event read), LinkOpener, ActivityStore, PresenceMonitor, HotkeyRegistrar
     Storage/       JSONFiles, FileSlot, FileStateStore, FileHistoryStore, FileActivityStore, MonthEvents, MonthActivities, RawJSON, LegacyMigrator, Legacy/ (v1 shapes)
-    Engine/        Engine (+Loop, +Actions, +Session, +SessionPause, +SessionRestore, +Breath, +Corner, +Display, +Menu, +History, +Reports, +Export, +DaySummary, +Quick, +QuickLoop, +TimeBlock, +TimeBlockLoop, +TimeBlockCalendar, +TimeBlockDisplay, +TimeBlockMenu, +Tracker* (API, Loop, Log, Away, Places, Hooks, Runtime, PromptState, Categories, ReportAPI, Export, Calendar, CalendarRead, CalendarTick, CalendarWrite, CalendarAway, CalendarRuntime)), StatusModel
+    Engine/        Engine (+Loop, +Actions, +Session, +SessionPause, +SessionRestore, +Breath, +Corner, +Display, +Menu, +History, +Reports, +ReportsV2, +RangeReports, +ActivitiesOverview, +Today, +DaySummary, +Quick, +QuickLoop, +TimeBlock, +TimeBlockLoop, +TimeBlockCalendar, +TimeBlockDisplay, +TimeBlockMenu, +Tracker* (API, Loop, Log, Away, Places, Hooks, Runtime, PromptState, Categories, ReportAPI, Export, Calendar, CalendarRead, CalendarTick, CalendarWrite, CalendarAway, CalendarRuntime, GoAway, Tidy)), StatusModel
   SathiUI/       SwiftUI + AppKit. Views and windows only.
-    Constants/     UIMetrics (+Bubble, +Components, +Corner, +Lock, +Meditation, +Breath, +Menu, +Quick, +Reports, +Settings, +TimeBlock, +TimeBlockSettings), TimeSlots
+    Constants/     UIMetrics (+Bubble, +Components, +Corner, +Lock, +Meditation, +Breath, +Menu, +Quick, +Reports, +Settings, +TimeBlock, +TimeBlockSettings, +CategoryTable, +ReportsV2, +ActivitiesV2, +TodayV2, +Sidebar), TimeSlots
     Theme/         NightPalette (Night tokens), Typography, ButtonStyles, GhostButton, ProgressBar, Shake, ShakeSound, Color+Hex, BreathFont, RGB
-    Components/    HeroCard, SettingsCard, SettingRow, OptionCard, ChipRow, SectionLabel, BuddySwitch, WeekdayRow, DaysOffCard, DaysOffRow, DayOffPicker, DayOffCalendar, DayOffCellButton, VolumeSlider, TimeMenu + TimePickerGrid + TimeParts (the 5-minute time chip grid)
+    Components/    HeroCard, SettingsCard, SettingRow, OptionCard, ChipRow, SectionLabel, BuddySwitch, WeekdayRow, DaysOffCard, DaysOffRow, DayOffPicker, DayOffCalendar, DayOffCellButton, VolumeSlider, CategoryTableView (+RowView, +Bar), WeightedRow, TimeMenu + TimePickerGrid + TimeParts (the 5-minute time chip grid)
     Buddy/         BuddyView, BuddyCanvas (+Pebble, +Kettlebell), BuddyKind, BuddyInk, WaterInk, BuddyPaths, BobbingBuddy, GlassIcon, BottleView
     Features/      MenuBar/, Bubble/, Water/, Reading/, Meditation/ (BreatheView, BreathFrame, BreathOrb, BreathRing, BreathMotion, BreathMood, BlobShape, MeditationSoundCard), Gym/, Session/, Celebrate/, Lock/, Settings/, Reports/, DaySummary/, Quick/, TimeBlock/, Tracker/ (Prompts/ A B C D F and ask-first, EndOfDay/), Reports/Activities/, Settings/Tracker/
     Windows/       UIController (+Corner, +Placement, +Quick, +TimeBlock, +Tracker, +TrackerPanels; ReminderPresenter impl), MenuWindowFit, CornerLayout, PanelFactory, CornerToast, SettingsWindow, ReportsWindow, LockScreen, PanelWindows, WindowCloseWatcher
@@ -47,7 +48,7 @@ Sources/
   Sathi/         Executable. SathiApp, AppDelegate, AppEnvironment (composition root).
 Resources/        Info.plist (version), AppIcon.icns (app icon), AppIcon.png (1024 px preview)
 Tests/
-  SathiTestSupport/  FakeClock, InMemoryStateStore, InMemoryHistoryStore, SpySoundPlayer, SpyPresenter, SpySessionAudio, SpyFileExporter, SpySummaryRenderer, ThreadSpyHistoryStore, DecodedBackup, FixedZone, EngineHarness (+TimeBlock, +Tracker), InMemoryActivityStore, SpyCalendarWriter, SpyPresenter+Tracker, TrackerFakes, TestFiles, day()
+  SathiTestSupport/  FakeClock, InMemoryStateStore, InMemoryHistoryStore, SpySoundPlayer, SpyPresenter, SpySessionAudio, ThreadSpyHistoryStore, DecodedBackup, FixedZone, EngineHarness (+TimeBlock, +Tracker), InMemoryActivityStore, SpyCalendarWriter, SpyPresenter+Tracker, TrackerFakes, TestFiles, day()
   SathiCoreTests/    Swift Testing unit tests for every Core module
   SathiUITests/      ViewInspector tests for views + engine interaction
 docs/             ROADMAP.md, specs/ (one spec per phase), design/ (design reference PNGs)
@@ -55,7 +56,7 @@ site/             GitHub Pages website: index.html, site.css, screenshots/, og.p
 .github/          workflows/ ci.yml (lint, test, site check), pages.yml (deploy site/), release.yml (tag → DMG on GitHub Release)
 ```
 
-Data lives in `~/Library/Application Support/Sathi/`: `prefs.json`, `state.json`, `history/YYYY-MM.json`, `activities/YYYY-MM.json`.
+Data lives in `~/Library/Application Support/Sathi/`: `prefs.json`, `state.json`, `history/YYYY-MM.json`, `activities/YYYY-MM.json`, `activities/YYYY-MM.backup.json` (one copy of a month made before the old-rows merge).
 
 Dependency direction: `Sathi → SathiUI → SathiCore`. Never the other way.
 

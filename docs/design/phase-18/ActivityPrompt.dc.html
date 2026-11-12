@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Activity prompt</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<section aria-label="Activity prompt" style="width: 880px; min-height: 680px; box-sizing: border-box; background: #1A2233; border: 1px solid #2C3650; border-radius: 22px; font-family: Figtree, system-ui, sans-serif; color: #EEF2FA; display: flex; flex-direction: column; overflow: hidden;">
+
+  <header style="background: #161D2C; border-top: 4px solid {{c.color}}; border-bottom: 1px solid #263049; padding: 18px 22px 18px 24px; display: flex; gap: 16px; align-items: flex-start;">
+    <div style="width: 48px; height: 48px; border-radius: 14px; background: {{c.color}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0D1220" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg>
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 11px; font-weight: 800; letter-spacing: .1em; color: #0D1220; background: {{c.color}}; border-radius: 6px; padding: 3px 8px;">{{c.tag}}</span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: {{c.color}};">{{c.time}}</span>
+      </div>
+      <h2 style="margin: 2px 0 0; font-size: 28px; font-weight: 800; line-height: 1.1; letter-spacing: -.01em;">{{c.title}}</h2>
+      <span style="font-size: 14px; color: #C9D2E3;">{{c.line1}}</span>
+      <sc-if value="{{c.where}}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding-top: 4px;">
+          <span style="font-size: 12px; color: #A6EBC7; margin-right: 2px;">Where were you?</span>
+          <sc-for list="{{whereChips}}" as="w" hint-placeholder-count="6">
+            <button onClick="{{w.pick}}" style="{{w.style}}">{{w.label}}</button>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+    <button aria-label="Skip" style="font: inherit; width: 32px; height: 32px; border-radius: 8px; background: transparent; border: 1px solid #2C3650; color: #C9D2E3; cursor: pointer; flex-shrink: 0;">✕</button>
+  </header>
+
+  <div style="flex: 1; display: flex; min-height: 0;">
+  <aside aria-label="Recent activities" style="width: 290px; flex-shrink: 0; background: #131A28; border-right: 1px solid #263049; padding: 20px 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 4px 4px;">
+      <span style="font-size: 11px; font-weight: 700; letter-spacing: .09em; color: #8C99B3;">RECENT</span>
+      <span style="font-size: 11px; color: #7784A0;">tap to fill</span>
+    </div>
+    <sc-for list="{{recent}}" as="r" hint-placeholder-count="6">
+      <button onClick="{{r.pick}}" style="{{r.card}}">
+        <span style="width: 4px; align-self: stretch; border-radius: 2px; background: {{r.color}};"></span>
+        <span style="flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0;">
+          <span style="font-size: 14px; font-weight: 700; color: #EEF2FA;">{{r.name}}</span>
+          <span style="font-size: 12px; color: #9AA6BF;">{{r.cat}} · last {{r.last}}</span>
+        </span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #7784A0; border: 1px solid #2C3650; border-radius: 6px; padding: 2px 6px;">{{r.key}}</span>
+      </button>
+    </sc-for>
+    <span style="flex: 1;"></span>
+    <button style="font: inherit; font-size: 13px; color: #9AA6BF; background: transparent; border: 1px dashed #4A5570; border-radius: 10px; height: 38px; cursor: pointer;">Show all 10</button>
+  </aside>
+
+  <div style="flex: 1; min-width: 0; padding: 20px 22px 20px; display: flex; flex-direction: column; gap: 16px;">
+    <input aria-label="Activity" value="{{text}}" onChange="{{onText}}" placeholder="Type what you do, or tap a card on the left" style="{{inputStyle}}">
+
+    <div style="display: grid; grid-template-columns: 84px minmax(0, 1fr); row-gap: 12px; column-gap: 8px; align-items: start; font-size: 13px;">
+      <span style="color: #9AA6BF; padding-top: 8px;">Category</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+        <sc-for list="{{catChips}}" as="k" hint-placeholder-count="7">
+          <button onClick="{{k.pick}}" style="{{k.style}}"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 4px; margin-right: 6px; background: {{k.color}};"></span>{{k.label}}</button>
+        </sc-for>
+      </div>
+      <span style="color: #9AA6BF; padding-top: 8px;">For</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+        <sc-for list="{{forChips}}" as="f" hint-placeholder-count="5">
+          <button onClick="{{f.pick}}" style="{{f.style}}">{{f.label}}</button>
+        </sc-for>
+      </div>
+      <span style="color: #9AA6BF; padding-top: 8px;">Ask me</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+        <sc-for list="{{askChips}}" as="a" hint-placeholder-count="3">
+          <button onClick="{{a.pick}}" style="{{a.style}}">{{a.label}}</button>
+        </sc-for>
+      </div>
+      <span style="color: #9AA6BF; padding-top: 8px;">Calendar</span>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+          <sc-for list="{{calChips}}" as="cl" hint-placeholder-count="5">
+            <button onClick="{{cl.pick}}" style="{{cl.style}}"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 4px; margin-right: 6px; background: {{cl.dot}};"></span>{{cl.label}}</button>
+          </sc-for>
+        </div>
+        <span style="font-size: 12px; color: #7784A0;">{{calNote}}</span>
+      </div>
+      <span style="color: #9AA6BF; padding-top: 4px;">Quiet</span>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button aria-label="No popups until it ends" aria-pressed="{{quiet}}" onClick="{{toggleQuiet}}" style="{{quietTrack}}"><span style="{{quietKnob}}"></span></button>
+        <span style="color: #C9D2E3;">No popups until it ends</span>
+      </div>
+    </div>
+
+    <span style="flex: 1;"></span>
+    <sc-if value="{{showStart}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; align-items: center; gap: 6px; padding: 10px 12px; background: #161D2C; border: 1px solid #263049; border-radius: 10px;">
+        <span style="font-size: 12px; color: #9AA6BF; margin-right: 6px;">It really started at</span>
+        <sc-for list="{{startChips}}" as="s" hint-placeholder-count="4">
+          <button onClick="{{s.pick}}" style="{{s.style}}">{{s.label}}</button>
+        </sc-for>
+      </div>
+    </sc-if>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span style="flex: 1; display: flex; align-items: center; gap: 12px; min-width: 0;">
+        <button onClick="{{toggleStart}}" style="font: inherit; font-size: 12px; color: #9AA6BF; background: transparent; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-decoration-color: #4A5570; text-underline-offset: 3px;">Started: {{startedLabel}} · change</button>
+        <span style="font-size: 12px; color: #4A5570;">Esc: Skip</span>
+      </span>
+      <button style="font: inherit; font-size: 14px; font-weight: 600; color: #9AA6BF; background: transparent; border: 0; height: 44px; padding: 0 10px; cursor: pointer;">Skip</button>
+      <sc-if value="{{c.keep}}" hint-placeholder-val="{{ true }}">
+        <button style="font: inherit; font-size: 14px; font-weight: 600; color: #EEF2FA; background: transparent; border: 1px solid #2C3650; border-radius: 12px; height: 44px; padding: 0 16px; cursor: pointer;">{{c.keepLabel}}</button>
+      </sc-if>
+      <button style="font: inherit; font-size: 15px; font-weight: 800; color: #2A0E0C; background: #FF8A80; border: 0; border-radius: 12px; height: 44px; padding: 0 28px; cursor: pointer;">{{c.startLabel}}</button>
+    </div>
+  </div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"kind":{"editor":"enum","options":["ask","shortcut","ends","back","event"],"default":"ends"},"$preview":{"width":880,"height":680}}'>
+class Component extends DCLogic {
+renderVals() {
+  const kind = this.props.kind ?? 'ends';
+  const base = { where: false, keep: false, keepLabel: '', startLabel: 'Start', title: 'What are you doing now?', text: '', focus: false, forPick: '30 min', cat: 'Work', started: 'Now', cal: 'Work', calNote: 'One event goes to this calendar when the activity ends.', ask: 'When it ends', starts: ['2:40', '2:45', '2:50', 'Now'], fors: ['15 min', '30 min', '1 h', '2 h', 'Open'] };
+  const K = {
+    ask: { tag: 'TIME TO CHECK', time: '2:52 PM', color: '#FF8A80', tint: 'rgba(255,138,128,.10)', line: 'rgba(255,138,128,.35)', icon: 'M12 7v5l3 2M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z', line1: 'Nothing is running. Standup ended at 10:20 AM.' },
+    shortcut: { tag: 'YOU ASKED · ⌥⌘A', time: '2:52 PM', color: '#A99CF5', tint: 'rgba(169,156,245,.10)', line: 'rgba(169,156,245,.35)', icon: 'M3 7h18v10H3zM7 11h1M11 11h1M15 11h1M8 14h8', line1: 'Now: Code review · 42 min since 2:10 PM. Switch ends it.', title: 'Switch to something new?', text: 'Write tracker sp', focus: true, keep: true, keepLabel: 'Keep Code review', startLabel: 'Switch' },
+    ends: { tag: 'ACTIVITY ENDED', time: '5:25 – 6:25 PM', color: '#FFC94A', tint: 'rgba(255,201,74,.09)', line: 'rgba(255,201,74,.35)', icon: 'M5 21V4M5 4h11l-2 4 2 4H5', line1: 'Sathi macOS App is done · 1 h logged as Coding Hobby.', keep: true, keepLabel: 'Keep going +15 min', forPick: '15 min', cat: 'Coding Hobby', cal: 'Calendar', starts: ['6:19', '6:20', '6:25', 'Now'] },
+    back: { tag: 'WELCOME BACK', time: 'AWAY 2:05 – 2:40 PM', color: '#5FD39A', tint: 'rgba(95,211,154,.09)', line: 'rgba(95,211,154,.35)', icon: 'M3 12h11M10 8l4 4-4 4M15 4h5v16h-5', line1: 'Code review stopped at 2:05 PM when the Mac went to sleep.', where: true, keep: true, keepLabel: 'Back to Code review', started: '2:40' },
+    event: { tag: 'CALENDAR EVENT', time: '12:00 – 1:00 PM', color: '#7FB8FF', tint: 'rgba(127,184,255,.10)', line: 'rgba(127,184,255,.35)', icon: 'M4 6h16v14H4zM4 10h16M9 3v4M15 3v4', line1: 'Design sync is in your Work calendar. It ends by itself at 1:00 PM.', title: 'Log “Design sync” now?', text: 'Design sync', forPick: 'Until 1:00', fors: ['Until 1:00', '30 min', 'Open'], cat: 'Meeting', cal: 'None', calNote: 'Already in your Work calendar, so Sathi adds no copy.', startLabel: 'Log it', started: '12:00', starts: ['12:00', 'Now'] }
+  };
+  const c = Object.assign({}, base, K[kind] || K.ends);
+  const s = (this.state && this.state.kind === kind) ? this.state : { kind };
+  const get = (k, d) => (s[k] === undefined ? d : s[k]);
+  const set = (patch) => this.setState(Object.assign({}, s, { kind }, patch));
+  const on = 'font: inherit; font-size: 13px; font-weight: 600; color: #FFB3AB; background: rgba(255,138,128,.16); border: 1px solid #FF8A80; border-radius: 6px; padding: 0 12px; height: 34px; cursor: pointer;';
+  const off = 'font: inherit; font-size: 13px; color: #C9D2E3; background: #121826; border: 1px solid #2C3650; border-radius: 6px; padding: 0 12px; height: 34px; cursor: pointer;';
+  const boxOn = 'font: inherit; font-size: 13px; font-weight: 600; color: #FFB3AB; background: rgba(255,138,128,.16); border: 1px solid #FF8A80; border-radius: 6px; padding: 0 12px; height: 34px; cursor: pointer;';
+  const boxOff = 'font: inherit; font-size: 13px; color: #C9D2E3; background: #121826; border: 1px solid #2C3650; border-radius: 6px; padding: 0 12px; height: 34px; cursor: pointer;';
+  const chips = (list, key, d) => list.map((label) => ({ label, style: get(key, d) === label ? on : off, pick: () => set({ [key]: label }) }));
+  const cats = [['Work', '#FF8A80'], ['Meeting', '#C9B8FF'], ['Learning', '#F2A64A'], ['Coding Hobby', '#5FD39A'], ['Personal', '#7FB8FF'], ['Admin', '#9AA6BF'], ['Health', '#FF9FB8']];
+  const colorOf = (n) => (cats.find((x) => x[0] === n) || ['', '#9AA6BF'])[1];
+  const text = get('text', c.text);
+  const recentList = [['Sathi macOS App', 'Coding Hobby', '1 h'], ['Code review', 'Work', '45 min'], ['Standup', 'Meeting', '30 min'], ['Email and Slack', 'Work', '50 min'], ['Swift course', 'Learning', '1 h'], ['Lunch', 'Personal', '40 min']];
+  const cardOn = 'font: inherit; text-align: left; display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 12px; background: #2E1A1C; border: 1px solid #FF8A80; cursor: pointer;';
+  const cardOff = 'font: inherit; text-align: left; display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 12px; background: #1A2233; border: 1px solid #263049; cursor: pointer;';
+  const cals = [['Work', '#7FB8FF'], ['Calendar', '#5FD39A'], ['Personal', '#FF9FB8'], ['Family', '#F2A64A'], ['None', 'transparent']];
+  const calPick = get('cal', c.cal);
+  const quiet = get('quiet', false);
+  return {
+    c,
+    text,
+    onText: (e) => set({ text: e.target.value }),
+    inputStyle: 'font: inherit; font-size: 17px; font-weight: 600; color: #EEF2FA; background: #121826; border-radius: 12px; height: 50px; padding: 0 16px; width: 100%; box-sizing: border-box; outline: none; ' + (c.focus ? 'border: 2px solid #FF8A80;' : 'border: 1px solid #2C3650;'),
+    recent: recentList.map(([name, cat, last], i) => ({ name, cat, last, key: '⌘' + (i + 1), color: colorOf(cat), card: text === name ? cardOn : cardOff, pick: () => set({ text: name, cat }) })),
+    catChips: cats.map(([label, color]) => ({ label, color, style: get('cat', c.cat) === label ? boxOn : boxOff, pick: () => set({ cat: label }) })),
+    forChips: chips(c.fors, 'for', c.forPick),
+    startChips: chips(c.starts, 'started', c.started),
+    startedLabel: get('started', c.started),
+    showStart: get('showStart', false),
+    toggleStart: () => set({ showStart: !get('showStart', false) }),
+    askChips: chips(['When it ends', '+5 min', '+15 min'], 'ask', c.ask),
+    calChips: cals.map(([label, dot]) => ({ label: label, dot: label === 'None' ? '#4A5570' : dot, style: calPick === label ? 'font: inherit; font-size: 13px; font-weight: 700; color: #0D1220; background: ' + (label === 'None' ? '#9AA6BF' : dot) + '; border: 1px solid transparent; border-radius: 6px; padding: 0 12px; height: 34px; cursor: pointer;' : boxOff, pick: () => set({ cal: label }) })),
+    calNote: calPick === 'None' ? (kind === 'event' ? c.calNote : 'Sathi adds no event for this activity.') : (kind === 'event' ? 'Sathi adds a second event to ' + calPick + '.' : 'One event goes to ' + calPick + ' when the activity ends.'),
+    whereChips: ['Lunch', 'Break', 'Meeting', 'Walk', 'Gym', '+ Place'].map((label) => ({ label, style: get('where', 'Lunch') === label ? 'font: inherit; font-size: 12px; font-weight: 700; color: #0D1220; background: #5FD39A; border: 0; border-radius: 6px; padding: 0 10px; height: 28px; cursor: pointer;' : 'font: inherit; font-size: 12px; color: #A6EBC7; background: transparent; border: 1px solid rgba(95,211,154,.4); border-radius: 6px; padding: 0 10px; height: 28px; cursor: pointer;', pick: () => set({ where: label }) })),
+    quiet,
+    toggleQuiet: () => set({ quiet: !quiet }),
+    quietTrack: 'position: relative; width: 40px; height: 24px; border-radius: 12px; border: 0; cursor: pointer; padding: 0; flex-shrink: 0; background: ' + (quiet ? '#FF8A80' : '#3A4458') + ';',
+    quietKnob: 'position: absolute; top: 3px; width: 18px; height: 18px; border-radius: 9px; background: #EEF2FA; left: ' + (quiet ? '19px' : '3px') + ';'
+  };
+}
+}
+</script>
+</body>
+</html>

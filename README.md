@@ -117,7 +117,7 @@ Reports → Activities shows each day and month: a timeline, totals by category,
 
 ## Privacy
 
-Sathi makes no network requests. All data stays on your Mac in `~/Library/Application Support/Sathi/`. Calendars are the only exception: with your permission, Sathi writes time blocks and tracker activities as events to the calendar you pick, through macOS Calendar, and that calendar's account can sync it. If you turn on calendar reading, Sathi reads events only from the calendars you tick, only on this Mac. Activities are saved in `activities/YYYY-MM.json`.
+Sathi makes no network requests. All data stays on your Mac in `~/Library/Application Support/Sathi/`. Calendars are the only exception: with your permission, Sathi writes time blocks and tracker activities as events to the calendar you pick, through macOS Calendar, and that calendar's account can sync it. If you turn on calendar reading, Sathi reads events only from the calendars you tick, only on this Mac. Activities are saved in `activities/YYYY-MM.json`. Before Sathi merges old touching rows it keeps a copy of that month as `activities/YYYY-MM.backup.json`.
 
 | File | Holds |
 |---|---|

@@ -5,8 +5,12 @@ extension Engine {
     package var trackerPrompt: PromptState? { data.live.tracker.prompt }
     package var trackerQuietUntil: Date? { data.live.tracker.running?.quietUntil }
 
-    package func startActivity(_ draft: ActivityDraft, switchAt: Date? = nil) {
-        guard trackerPrefs.isOn, let text = ActivityText.clean(draft.text) else { return sound.beep() }
+    @discardableResult
+    package func startActivity(_ draft: ActivityDraft, switchAt: Date? = nil) -> Bool {
+        guard trackerPrefs.isOn, let text = ActivityText.clean(draft.text) else {
+            sound.beep()
+            return false
+        }
         let n = clock.now.wholeSecond
         if data.live.tracker.awaySince != nil { returnFromAway(at: n, welcomes: false) }
         var at = min(switchAt?.wholeSecond ?? n, n)
@@ -21,6 +25,7 @@ extension Engine {
         d.text = text
         beginActivity(d, at: at)
         requestTick()
+        return true
     }
 
     package func skipTrackerPrompt(switchAt: Date? = nil) {
@@ -132,16 +137,15 @@ extension Engine {
     }
 
     package func openActivityReport(_ day: DayKey) {
-        trackerRuntime.reportDay = day
         closeTrackerEndOfDay()
-        objectWillChange.send()
-        presenter.showReports()
+        openMain(.activities(day))
     }
 
     func clearAwayRuntime() {
         trackerRuntime.lastAway = nil
         trackerRuntime.awayItems = []
         trackerRuntime.endedByAway = nil
+        trackerRuntime.endedMergedInto = nil
         trackerRuntime.loggedWhileAway = []
     }
 }

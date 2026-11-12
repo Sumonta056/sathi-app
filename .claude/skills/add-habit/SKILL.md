@@ -100,9 +100,9 @@ Tests: `Engine<Name>Tests.swift` with `EngineHarness`. Check the done event, the
 2. `SathiUI` errors show only after `SathiCore` compiles. Run `swift build` again and fix them.
 3. Use these lists as a check. The compiler is the source of truth.
 
-Core (`Sources/SathiCore/`). A scratch build with a new case fails in these 10 files:
+Core (`Sources/SathiCore/`). A scratch build with a new case fails in files such as:
 
-- `Models/HabitID.swift`, `Models/Prefs.swift`, `Models/Persisted.swift`, `Stats/ReportScreenBuilder+Tiles.swift`
+- `Models/HabitID.swift`, `Models/Prefs.swift`, `Models/Persisted.swift`, `Stats/BuddyDayJudge.swift`, `Stats/ReportsOverviewBuilder.swift`, `Stats/StreakMonthBuilder.swift`
 - `Engine/Engine+Actions.swift`, `Engine+Corner.swift`, `Engine+Display.swift`, `Engine+Loop.swift`, `Engine+Menu.swift`, `Engine+Session.swift`
 
 `Habits/HabitRules.swift` and `Formatting/Copywriter.swift` also switch on `HabitID`. Steps 3 and 4 change them first, so they compile.

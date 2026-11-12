@@ -1,0 +1,57 @@
+import SwiftUI
+
+extension UIMetrics {
+    static let activitiesGap: CGFloat = 12
+    static let activitiesTopWeights: [CGFloat] = [2, 1]
+    static let activitiesTileGap: CGFloat = 10
+    static let activitiesTilePadding = EdgeInsets(top: 12, leading: 14, bottom: 12, trailing: 14)
+    static let activitiesTileRadius: CGFloat = 14
+    static let activitiesTileLabelFont: CGFloat = 11
+    static let activitiesTileValueFont: CGFloat = 20
+    static let activitiesTileNoteFont: CGFloat = 11
+    static let activitiesTileLineGap: CGFloat = 3
+    static let activitiesCardPadding = EdgeInsets(top: 16, leading: 18, bottom: 16, trailing: 18)
+    static let activitiesCardGap: CGFloat = 10
+    static let activitiesTitleFont: CGFloat = 15
+    static let activitiesLaneHeight: CGFloat = 20
+    static let activitiesLaneRadius: CGFloat = 6
+    static let activitiesTimeWidth: CGFloat = 62
+    static let activitiesTimeFont: CGFloat = 11
+    static let activitiesTimeTop: CGFloat = 8
+    static let activitiesColumnGap: CGFloat = 10
+    static let activitiesRowGap: CGFloat = 6
+    static let activitiesRowBase: CGFloat = 44
+    static let activitiesRowPerHour: CGFloat = 8
+    static let activitiesRowMax: CGFloat = 88
+    static let activitiesRowGapHeight: CGFloat = 32
+    static let activitiesRowRadius: CGFloat = 9
+    static let activitiesRowBar: CGFloat = 4
+    static let activitiesRowPadding = EdgeInsets(top: 0, leading: 14, bottom: 0, trailing: 10)
+    static let activitiesRowInner: CGFloat = 10
+    static let activitiesRowTint: Double = 0.14
+    static let activitiesRowOutline: CGFloat = 2
+    static let activitiesRowTitleFont: CGFloat = 13
+    static let activitiesRowDetailFont: CGFloat = 11
+    static let activitiesRowDetailGap: CGFloat = 8
+    static let activitiesRowIcon: CGFloat = 11
+    static let activitiesPencil: CGFloat = 28
+    static let activitiesPencilIcon: CGFloat = 13
+    static let activitiesPencilRadius: CGFloat = 7
+    static let activitiesPlusHeight: CGFloat = 24
+    static let activitiesEditWidth: CGFloat = 330
+    static let activitiesEditPadding: CGFloat = 16
+    static let activitiesEditGap: CGFloat = 12
+    static let activitiesEditRadius: CGFloat = 12
+    static let activitiesEditMark = CGSize(width: 4, height: 20)
+    static let activitiesEditClose: CGFloat = 26
+    static let activitiesFieldLabelFont: CGFloat = 11
+    static let activitiesFieldGap: CGFloat = 5
+    static let activitiesFieldHeight: CGFloat = 32
+    static let activitiesChipHeight: CGFloat = 26
+    static let activitiesChipFont: CGFloat = 11
+    static let activitiesChipPadding: CGFloat = 8
+    static let activitiesChipGap: CGFloat = 5
+    static let activitiesHeaderButton: CGFloat = 30
+    static let activitiesGapFont: CGFloat = 12
+    static let activitiesPencilTint: Double = 0.42
+}

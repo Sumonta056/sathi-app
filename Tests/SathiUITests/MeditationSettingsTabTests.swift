@@ -19,12 +19,6 @@ struct MeditationSettingsTabTests {
         try hosted(MeditationSettingsTab(), h).inspect()
     }
 
-    @Test func showsTheHero() throws {
-        let sut = try tab(harness())
-        #expect(throws: Never.self) { try sut.find(text: "SHANTI · MEDITATION") }
-        #expect(throws: Never.self) { try sut.find(text: "Pause. Breathe. Come back.") }
-    }
-
     @Test func showsTheGoalAndRhythmRows() throws {
         let sut = try tab(harness())
         for text in ["Daily goal", "Each session", "Remind me every", "Between", "IF I IGNORE SHANTI"] {
@@ -104,15 +98,9 @@ struct MeditationSettingsTabTests {
         #expect(throws: Never.self) { try tab(harness()).find(text: "4·4·4·4") }
     }
 
-    @Test func chimeSwitchFlipsChime() throws {
-        let h = harness()
-        try Find.button(tab(h), label: "Soft bell at start and end").tap()
-        #expect(!h.engine.data.prefs.meditation.chime)
-    }
-
     @Test func sectionsAreDisabledWhileMeditationIsOff() throws {
         let sut = try tab(EngineHarness())
         #expect(try sut.find(button: "20 min").isDisabled())
-        #expect(try Find.button(sut, label: "Soft bell at start and end").isDisabled())
+        #expect(try Find.button(sut, holding: "Strict").isDisabled())
     }
 }

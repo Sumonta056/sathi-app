@@ -6,11 +6,14 @@ enum NightHex {
     static let water: UInt32 = 0x4CC3F5
     static let cheek: UInt32 = 0xFF9FB8
     static let spark: UInt32 = 0xFFC94A
+    static let trackerCoral: UInt32 = 0xFF8A80
     static let calmGround: UInt32 = 0x16142A
     static let text: UInt32 = 0xEEF2FA
     static let muted: UInt32 = 0x9AA6BF
     static let sprout: UInt32 = 0x5FD39A
     static let border: UInt32 = 0x263049
+    static let trackerEvent: UInt32 = 0x7FB8FF
+    static let trackerAway: UInt32 = 0x3A4458
 }
 
 enum Night {
@@ -44,7 +47,7 @@ enum Night {
     static let block = Color(hex: 0x5ED6C4)
     static let blockFill = Color(hex: 0x142A2A)
     static let blockBorder = Color(hex: 0x1F4744)
-    static let tracker = Color(hex: 0xFF8A80)
+    static let tracker = Color(hex: NightHex.trackerCoral)
     static let trackerFill = Color(hex: 0x2E1A1C)
     static let trackerOnAccent = Color(hex: 0x2A0E0C)
     static let trackerSelectedText = Color(hex: 0xFFB3AB)
@@ -54,12 +57,12 @@ enum Night {
     static let trackerMenuRow = Color(hex: 0x2A3550)
     static let trackerInset = Color(hex: 0x161D2C)
     static let trackerWell = Color(hex: 0x121826)
-    static let trackerAway = Color(hex: 0x3A4458)
+    static let trackerAway = Color(hex: NightHex.trackerAway)
     static let trackerNotLogged = Color(hex: 0x4A5570)
-    static let trackerEvent = Color(hex: 0x7FB8FF)
-    static let trackerEventFill = Color(hex: 0x15263A)
-    static let trackerRowSelected = Color(hex: 0x24304A)
-    static let trackerOK = Color(hex: NightHex.sprout)
+    static let trackerEvent = Color(hex: NightHex.trackerEvent)
+    static let trackerNowBorder = Color(hex: 0x4A2A2C)
+    static let trackerStopBorder = Color(hex: 0x5A3436)
+    static let trackerNowText = Color(hex: 0xC9B9B9)
 
     static func category(_ hex: UInt32) -> Color { Color(hex: hex) }
 

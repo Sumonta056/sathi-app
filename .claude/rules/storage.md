@@ -31,6 +31,7 @@ The base folder is `~/Library/Application Support/Sathi/` (`AppEnvironment.base`
 | `state.json` | `LiveState` | `FileStateStore` |
 | `history/YYYY-MM.json` | `[HistoryEvent]` of one month | `FileHistoryStore` |
 | `activities/YYYY-MM.json` | `{"schemaVersion":1,"value":[Activity]}` of one month; unknown items and fields are kept | `FileActivityStore` |
+| `activities/YYYY-MM.backup.json` | Copy of a month file before the one-time merge of old rows (business rule 11d); never overwritten, never listed as a month | `FileActivityStore.backup` |
 | `migrated-v1` | The text `1`. Not JSON. | `LegacyMigrator` |
 | `<file>.corrupt` | A file that did not decode | `JSONFiles` |
 
@@ -61,7 +62,7 @@ The base folder is `~/Library/Application Support/Sathi/` (`AppEnvironment.base`
 - Every stored `Date` goes through `Date.wholeSecond` (`Models/Date+WholeSecond.swift`). ISO 8601 keeps only whole seconds, so memory and disk then hold the same value.
 - `HistoryEvent.init` and `HistoryEvent.init(from:)` round the date.
 - `LiveState.init(from:)` rounds `lastWaterDone`, `streakReset`, and the dates of `meditationSession`.
-- The Engine rounds `clock.now` before it stores a time (`Engine+Actions.swift`, `Engine+Export.swift`).
+- The Engine rounds `clock.now` before it stores a time (`Engine+Actions.swift`, `Engine+TrackerExport.swift`).
 - A new stored `Date` field must round in its `init(from:)` and at the place that sets it.
 
 ## 5. Decoding defaults
@@ -124,6 +125,6 @@ There is no retry timer. The value stays pending until a later write succeeds:
 ## 10. Gregorian dates in the user's time zone
 
 - Storage, reports, streaks, and export build their calendar with `Calendar.gregorian(in:)` (`Models/Calendar+Days.swift`).
-- Users: `FileHistoryStore`, `ReportBuilder`, `StreakCalculator`, `ReportScreenBuilder`, `ExportNames`.
+- Users: `FileHistoryStore`, `ReportBuilder`, `StreakCalculator`, `ReportsOverviewBuilder`, `ExportNames`.
 - Pass the user's calendar in. Keep only its time zone. Never use the system calendar kind for a file name or a range.
 - Month file names use the format `%04d-%02d` from Gregorian year and month.

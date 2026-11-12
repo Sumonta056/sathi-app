@@ -7,6 +7,11 @@ enum ActivityColors {
         return Night.category(found.colorHex)
     }
 
+    static func hex(_ category: String?, in categories: [ActivityCategory]) -> UInt32 {
+        guard let category, let found = categories.first(where: { $0.name == category }) else { return NightHex.trackerCoral }
+        return found.colorHex
+    }
+
     static func color(_ segment: ActivitySegment, in categories: [ActivityCategory]) -> Color {
         switch segment.kind {
         case .work: return color(segment.activity?.category, in: categories)

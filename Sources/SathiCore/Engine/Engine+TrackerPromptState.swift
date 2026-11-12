@@ -14,6 +14,7 @@ extension Engine {
         s.running = data.live.tracker.running
         s.lastActivity = data.live.tracker.lastActivity
         s.resume = p.resume
+        s.doneAt = p.doneAt
         s.recents = recentActivities
         s.categories = activityCategories
         s.calendars = calendarChoices()
@@ -22,13 +23,15 @@ extension Engine {
         s.calendar = calendar
         s.askEveryMinutes = trackerPrefs.askEveryMinutes
         s.shortcut = trackerPrefs.shortcut
-        if let from = p.switchFrom { s.switchTimes = SwitchTimes.chips(from: from, to: n, calendar: calendar) }
+        s.switchTimes = promptSwitchTimes(p, now: n)
+        if kind == .whatNow { s.lastEnded = lastEndedActivity(before: n) }
         if kind == .stillOnIt { s.waitedMinutes = AskTime.waitedMinutes(shownAt: p.shownAt, now: n) }
         if kind == .welcomeBack {
             s.away = trackerRuntime.lastAway
             s.loggedWhileAway = trackerRuntime.loggedWhileAway
-            s.places = awayPlaces
+            s.stoppedByAway = trackerRuntime.endedByAway?.text
         }
+        s.places = awayPlaces
         if kind == .whatNow || kind == .center { s.runningEvent = unloggedRunningEvent() }
         fillEventAsk(&s)
         s.actions = promptActions()
@@ -74,7 +77,7 @@ extension Engine {
 
     private func promptActions() -> TrackerPromptActions {
         var a = TrackerPromptActions()
-        a.start = { [weak self] draft, at in self?.startActivity(draft, switchAt: at) }
+        a.start = { [weak self] draft, at in self?.startActivity(draft, switchAt: at) ?? false }
         a.skip = { [weak self] at in self?.skipTrackerPrompt(switchAt: at) }
         a.stillOn = { [weak self] minutes in self?.stillOnIt(minutes: minutes) }
         a.stillOnLate = { [weak self] in self?.stillOnItLate() }
@@ -84,6 +87,7 @@ extension Engine {
         a.iWasHere = { [weak self] in self?.iWasHere() }
         a.pickPlace = { [weak self] place in self?.setAwayPlace(place) }
         a.pickPlaceName = { [weak self] name in self?.setAwayPlace(named: name) }
+        a.goAway = { [weak self] place, name in self?.goAway(place: place, name: name) }
         a.addPlace = { [weak self] name in self?.addAwayPlace(name) }
         a.notAttending = { [weak self] id in self?.notAttendingEvent(id) }
         a.answerEvent = { [weak self] yes in self?.answerEventAsk(yes) }

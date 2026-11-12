@@ -27,6 +27,7 @@ package final class SpyCalendarWriter: CalendarWriter {
     package var readable: [CalendarChoice]?
     package var eventsValue: [CalendarEventInfo] = []
     package var nextDeleteResult = true
+    package var deleteResults: [String: Bool] = [:]
     package private(set) var deleted: [String] = []
     package private(set) var eventReads: [DateInterval] = []
 
@@ -58,7 +59,7 @@ package final class SpyCalendarWriter: CalendarWriter {
     @discardableResult
     package func delete(eventID: String) -> Bool {
         deleted.append(eventID)
-        return nextDeleteResult
+        return deleteResults[eventID] ?? nextDeleteResult
     }
 
     package func readableCalendars() -> [CalendarChoice] { readable ?? choices }

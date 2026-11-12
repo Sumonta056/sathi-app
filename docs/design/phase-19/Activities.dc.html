@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Activities</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1000px; height: 1000px; box-sizing: border-box; padding: 28px 32px; background: #121826; color: #EEF2FA; font-family: Figtree, system-ui, sans-serif; display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; align-items: center; gap: 12px;">
+    <h1 style="margin: 0; font-size: 28px; font-weight: 800; flex-grow: 1;">Activities</h1>
+    <div style="display: flex; background: #1A2233; border: 1px solid #263049; border-radius: 10px; padding: 3px;">
+      <span style="padding: 6px 14px; border-radius: 7px; background: #1E2840; font-weight: 700; font-size: 13px;">Day</span>
+      <span style="padding: 6px 14px; font-size: 13px; color: #9AA6BF; font-weight: 600;">Week</span>
+      <span style="padding: 6px 14px; font-size: 13px; color: #9AA6BF; font-weight: 600;">Month</span>
+    </div>
+    <button style="width: 32px; height: 32px; border-radius: 8px; border: 1px solid #263049; background: #1A2233; color: #EEF2FA;" aria-label="Previous day">‹</button>
+    <span style="font-weight: 700; font-size: 14px;">Today, 11 Nov</span>
+    <button style="width: 32px; height: 32px; border-radius: 8px; border: 1px solid #263049; background: #1A2233; color: #5A6680;" aria-label="Next day">›</button>
+    <button style="height: 32px; padding: 0 14px; border-radius: 8px; border: 1px solid #263049; background: #1A2233; color: #EEF2FA; font-family: inherit; font-weight: 700;">Export</button>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px;">
+    <div style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px;">
+      <div style="display: flex; align-items: baseline; gap: 8px;"><b style="font-size: 24px;">12h 37m</b><span style="font-size: 12px; color: #9AA6BF;">logged · 10 categories</span></div>
+      <div style="height: 14px; border-radius: 5px; overflow: hidden; display: flex; gap: 2px;"><i style="flex: 25; background: #FF9FB8;"></i><i style="flex: 23; background: #FF7A6B;"></i><i style="flex: 17; background: #A99CF5;"></i><i style="flex: 10; background: #4F8BF5;"></i><i style="flex: 9; background: #F5B36B;"></i><i style="flex: 7; background: #FF5A5F;"></i><i style="flex: 4; background: #5FD39A;"></i><i style="flex: 2; background: #4CC3F5;"></i><i style="flex: 1; background: #CDEF5A;"></i><i style="flex: 1; background: #F2A64A;"></i></div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; font-size: 13px;">
+        <div style="display: flex; flex-direction: column;">
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #FF9FB8;"></i>Break<b style="text-align: right;">3h 6m</b><span style="color: #9AA6BF; text-align: right;">25%</span></span>
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #FF7A6B;"></i>Coding Hobby<b style="text-align: right;">2h 53m</b><span style="color: #9AA6BF; text-align: right;">23%</span></span>
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #A99CF5;"></i>Coding Client<b style="text-align: right;">2h 8m</b><span style="color: #9AA6BF; text-align: right;">17%</span></span>
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #4F8BF5;"></i>Client Meeting<b style="text-align: right;">1h 12m</b><span style="color: #9AA6BF; text-align: right;">10%</span></span>
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #F5B36B;"></i>Client Work<b style="text-align: right;">1h 10m</b><span style="color: #9AA6BF; text-align: right;">9%</span></span>
+        </div>
+        <div style="display: flex; flex-direction: column;">
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #FF5A5F;"></i>Coding<b style="text-align: right;">55m</b><span style="color: #9AA6BF; text-align: right;">7%</span></span>
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #5FD39A;"></i>Learning<b style="text-align: right;">32m</b><span style="color: #9AA6BF; text-align: right;">4%</span></span>
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #4CC3F5;"></i>Organizing<b style="text-align: right;">15m</b><span style="color: #9AA6BF; text-align: right;">2%</span></span>
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0; border-bottom: 1px solid #222B40;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #CDEF5A;"></i>Gym<b style="text-align: right;">11m</b><span style="color: #9AA6BF; text-align: right;">1%</span></span>
+          <span style="display: grid; grid-template-columns: 10px 1fr 56px 34px; gap: 8px; align-items: center; padding: 5px 0;"><i style="width: 10px; height: 10px; border-radius: 3px; background: #F2A64A;"></i>Reading<b style="text-align: right;">10m</b><span style="color: #9AA6BF; text-align: right;">1%</span></span>
+        </div>
+      </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
+      <div style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 12px 14px;"><div style="font-size: 11px; color: #9AA6BF; font-weight: 700;">Total logged</div><div style="font-size: 20px; font-weight: 800; margin-top: 4px;">12h 37m</div><div style="font-size: 11px; color: #5FD39A; margin-top: 2px;">+48m vs yesterday</div></div>
+      <div style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 12px 14px;"><div style="font-size: 11px; color: #9AA6BF; font-weight: 700;">Focus work</div><div style="font-size: 20px; font-weight: 800; margin-top: 4px;">8h 18m</div><div style="font-size: 11px; color: #9AA6BF; margin-top: 2px;">66% of the day</div></div>
+      <div style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 12px 14px;"><div style="font-size: 11px; color: #9AA6BF; font-weight: 700;">Away</div><div style="font-size: 20px; font-weight: 800; margin-top: 4px;">1h 4m</div><div style="font-size: 11px; color: #9AA6BF; margin-top: 2px;">3 times · Lunch</div></div>
+      <div style="background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 12px 14px;"><div style="font-size: 11px; color: #9AA6BF; font-weight: 700;">Activities</div><div style="font-size: 20px; font-weight: 800; margin-top: 4px;">18</div><div style="font-size: 11px; color: #9AA6BF; margin-top: 2px;">Top: Break</div></div>
+    </div>
+  </div>
+
+  <div style="flex-grow: 1; min-height: 0; background: #1A2233; border: 1px solid #263049; border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; overflow: hidden;">
+    <div style="display: flex; align-items: center; gap: 10px;"><span style="font-weight: 800; font-size: 15px; flex-grow: 1;">Timeline</span><span style="font-size: 12px; color: #9AA6BF;">18 activities · 1 gap</span><button style="height: 30px; padding: 0 12px; border-radius: 7px; border: 1px solid #4A2A2C; background: #2E1A1C; color: #FF8A80; font-family: inherit; font-weight: 700;">+ Add activity</button></div>
+    <div style="height: 20px; border-radius: 6px; background: #161D2C; display: flex; gap: 2px; padding: 3px; box-sizing: border-box;">
+      <i style="flex: 150; border-radius: 4px; background: #FF9FB8;"></i><i style="flex: 20; border-radius: 4px; background: #FF5A5F;"></i><i style="flex: 15; border-radius: 4px; background: #4CC3F5;"></i><i style="flex: 32; border-radius: 4px; background: #5FD39A;"></i><i style="flex: 125; border-radius: 4px; background: #A99CF5;"></i><i style="flex: 15; border-radius: 4px; border: 1px dashed #5A6680;"></i><i style="flex: 45; border-radius: 4px; background: #4F8BF5;"></i><i style="flex: 29; border-radius: 4px; background: #3A4458;"></i><i style="flex: 50; border-radius: 4px; background: #FF5A5F;"></i><i style="flex: 270; border-radius: 4px; background: #FF7A6B;"></i><i style="flex: 90;"></i>
+    </div>
+    <div style="display: flex; justify-content: space-between; font-size: 10px; color: #7784A0; margin-top: -6px;"><span>7 AM</span><span>11</span><span>3 PM</span><span>7</span><span>11 PM</span></div>
+
+    <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: {{cols}}; gap: 16px;">
+      <div style="display: grid; grid-template-columns: 62px 1fr; column-gap: 10px; row-gap: 6px; align-content: start; font-size: 13px;">
+        <span style="color: #7784A0; font-size: 11px; padding-top: 8px;">7:00 AM</span>
+        <div style="height: 68px; border-radius: 9px; background: #2A1C25; box-shadow: inset 4px 0 0 #FF9FB8; padding: 9px 10px 9px 14px; box-sizing: border-box; display: flex; gap: 10px; align-items: flex-start;">
+          <div style="flex-grow: 1; min-width: 0;"><div style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Wake up · morning routine and breakfast</div><div style="display: flex; gap: 8px; align-items: center; font-size: 11px; color: #C9D2E3; margin-top: 4px;"><span>7:00 – 9:30 AM</span><span style="padding: 1px 7px; border-radius: 5px; background: #3A2530; color: #FF9FB8; font-weight: 700;">Break</span></div></div>
+          <b style="white-space: nowrap;">2h 30m</b>
+          <button aria-label="Edit Wake up" onClick="{{openEdit}}" style="width: 28px; height: 28px; border-radius: 7px; border: 1px solid #4A2E3D; background: #1A2233; color: #C9D2E3; display: flex; align-items: center; justify-content: center; padding: 0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg></button>
+        </div>
+        <span style="color: #7784A0; font-size: 11px; padding-top: 8px;">9:30 AM</span>
+        <div style="height: 44px; border-radius: 9px; background: #2E1D1C; box-shadow: inset 4px 0 0 #FF5A5F; padding: 0 10px 0 14px; box-sizing: border-box; display: flex; gap: 10px; align-items: center;">
+          <div style="flex-grow: 1; min-width: 0;"><div style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Starting the day! Plan tasks and check mail</div><div style="display: flex; gap: 8px; font-size: 11px; color: #C9D2E3;"><span>9:30 – 9:50 AM</span><span style="color: #FF5A5F; font-weight: 700;">Coding</span></div></div>
+          <b>20m</b>
+          <button aria-label="Edit Starting the day" onClick="{{openEdit}}" style="width: 28px; height: 28px; border-radius: 7px; border: 1px solid #4A2A2C; background: #1A2233; color: #C9D2E3; display: flex; align-items: center; justify-content: center; padding: 0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg></button>
+        </div>
+        <span style="color: #7784A0; font-size: 11px; padding-top: 8px;">9:50 AM</span>
+        <div style="height: 44px; border-radius: 9px; background: #15263A; box-shadow: inset 4px 0 0 #4CC3F5; padding: 0 10px 0 14px; box-sizing: border-box; display: flex; gap: 10px; align-items: center;">
+          <div style="flex-grow: 1; min-width: 0;"><div style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Cleanup Mac files and old downloads</div><div style="display: flex; gap: 8px; font-size: 11px; color: #C9D2E3;"><span>9:50 – 10:05 AM</span><span style="color: #4CC3F5; font-weight: 700;">Organizing</span></div></div>
+          <b>15m</b>
+          <button aria-label="Edit Cleanup" onClick="{{openEdit}}" style="width: 28px; height: 28px; border-radius: 7px; border: 1px solid #1F3A55; background: #1A2233; color: #C9D2E3; display: flex; align-items: center; justify-content: center; padding: 0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg></button>
+        </div>
+        <span style="color: #7784A0; font-size: 11px; padding-top: 8px;">10:05 AM</span>
+        <div style="height: 44px; border-radius: 9px; background: #172A22; box-shadow: inset 4px 0 0 #5FD39A; padding: 0 10px 0 14px; box-sizing: border-box; display: flex; gap: 10px; align-items: center;">
+          <div style="flex-grow: 1; min-width: 0;"><div style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Newsletter: AI Subscriptions round-up</div><div style="display: flex; gap: 8px; font-size: 11px; color: #C9D2E3;"><span>10:05 – 10:37 AM</span><span style="color: #5FD39A; font-weight: 700;">Learning</span></div></div>
+          <b>32m</b>
+          <button aria-label="Edit Newsletter" onClick="{{openEdit}}" style="width: 28px; height: 28px; border-radius: 7px; border: 1px solid #23463A; background: #1A2233; color: #C9D2E3; display: flex; align-items: center; justify-content: center; padding: 0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg></button>
+        </div>
+        <span style="color: #7784A0; font-size: 11px; padding-top: 8px;">10:37 AM</span>
+        <div style="height: 60px; border-radius: 9px; background: #211F38; box-shadow: inset 4px 0 0 #A99CF5; outline: {{selOutline}}; padding: 8px 10px 8px 14px; box-sizing: border-box; display: flex; gap: 10px; align-items: flex-start;">
+          <div style="flex-grow: 1; min-width: 0;"><div style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Code review: login page fix</div><div style="display: flex; gap: 8px; align-items: center; font-size: 11px; color: #C9D2E3; margin-top: 4px;"><span>10:37 AM – 12:42 PM</span><span style="padding: 1px 7px; border-radius: 5px; background: #2E2A4C; color: #A99CF5; font-weight: 700;">Coding Client</span><span style="display: flex; gap: 4px; align-items: center; color: #7FB8FF;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>Work</span></div></div>
+          <b style="white-space: nowrap;">2h 5m</b>
+          <button aria-label="Edit Code review" onClick="{{openEdit}}" style="width: 28px; height: 28px; border-radius: 7px; border: 1px solid #36305A; background: #1A2233; color: #C9D2E3; display: flex; align-items: center; justify-content: center; padding: 0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg></button>
+        </div>
+        <span style="color: #7784A0; font-size: 11px; padding-top: 6px;">12:42 PM</span>
+        <div style="height: 32px; border-radius: 8px; border: 1px dashed #3A4458; padding: 0 10px 0 14px; box-sizing: border-box; display: flex; gap: 10px; align-items: center; color: #9AA6BF; font-size: 12px;">
+          <span style="flex-grow: 1;">Not logged · 12:42 – 12:57 PM</span><b style="color: #C9D2E3;">15m</b>
+          <button aria-label="Fill this gap" style="width: 28px; height: 24px; border-radius: 6px; border: 1px solid #4A2A2C; background: #2E1A1C; color: #FF8A80; font-weight: 800; padding: 0;">+</button>
+        </div>
+        <span style="color: #7784A0; font-size: 11px; padding-top: 8px;">12:57 PM</span>
+        <div style="height: 44px; border-radius: 9px; background: #15233F; box-shadow: inset 4px 0 0 #4F8BF5; padding: 0 10px 0 14px; box-sizing: border-box; display: flex; gap: 10px; align-items: center;">
+          <div style="flex-grow: 1; min-width: 0;"><div style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Team standup</div><div style="display: flex; gap: 8px; font-size: 11px; color: #C9D2E3;"><span>12:57 – 1:42 PM</span><span style="color: #4F8BF5; font-weight: 700;">Client Meeting</span><span style="color: #7FB8FF;">· Work</span></div></div>
+          <b>45m</b>
+          <button aria-label="Edit Scrum" onClick="{{openEdit}}" style="width: 28px; height: 28px; border-radius: 7px; border: 1px solid #22355A; background: #1A2233; color: #C9D2E3; display: flex; align-items: center; justify-content: center; padding: 0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg></button>
+        </div>
+        <span style="color: #7784A0; font-size: 11px; padding-top: 8px;">1:42 PM</span>
+        <div style="height: 40px; border-radius: 9px; background: #1A2233; border: 1px solid #263049; box-shadow: inset 4px 0 0 #3A4458; padding: 0 10px 0 14px; box-sizing: border-box; display: flex; gap: 10px; align-items: center; color: #9AA6BF;">
+          <div style="flex-grow: 1; min-width: 0;"><span style="font-weight: 700;">Away · Lunch</span> <span style="font-size: 11px;">· 1:42 – 2:11 PM</span></div>
+          <b>29m</b>
+          <button aria-label="Edit Away" onClick="{{openEdit}}" style="width: 28px; height: 28px; border-radius: 7px; border: 1px solid #263049; background: #161D2C; color: #C9D2E3; display: flex; align-items: center; justify-content: center; padding: 0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg></button>
+        </div>
+      </div>
+
+      <sc-if value="{{editing}}" hint-placeholder-val="{{false}}">
+        <section aria-label="Edit activity" style="background: #161D2C; border: 1px solid #36305A; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; align-self: start;">
+          <div style="display: flex; align-items: center; gap: 8px;"><i style="width: 4px; height: 20px; border-radius: 2px; background: #A99CF5;"></i><b style="font-size: 15px; flex-grow: 1;">Edit activity</b><button aria-label="Close" onClick="{{closeEdit}}" style="width: 26px; height: 26px; border-radius: 6px; border: 1px solid #263049; background: #1A2233; color: #C9D2E3; padding: 0;">×</button></div>
+          <label style="display: flex; flex-direction: column; gap: 5px; font-size: 11px; color: #9AA6BF; font-weight: 800;">NAME<input value="Code review: login page fix" style="height: 34px; border-radius: 7px; border: 1px solid #2C3650; background: #121826; color: #EEF2FA; padding: 0 10px; font-family: inherit; font-size: 13px;"></label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; font-size: 11px; color: #9AA6BF; font-weight: 800;">
+            <div>START<div style="margin-top: 4px; height: 32px; border-radius: 6px; border: 1px solid #2C3650; background: #121826; color: #EEF2FA; display: flex; align-items: center; justify-content: center; font-size: 12px;">10:37 AM</div></div>
+            <div>END<div style="margin-top: 4px; height: 32px; border-radius: 6px; border: 1px solid #2C3650; background: #121826; color: #EEF2FA; display: flex; align-items: center; justify-content: center; font-size: 12px;">12:42 PM</div></div>
+            <div>LENGTH<div style="margin-top: 4px; height: 32px; border-radius: 6px; background: #211F38; color: #A99CF5; display: flex; align-items: center; justify-content: center; font-size: 12px;">2h 5m</div></div>
+          </div>
+          <div style="display: flex; gap: 5px; font-size: 11px;"><span style="padding: 4px 8px; border-radius: 6px; border: 1px solid #2C3650;">15m</span><span style="padding: 4px 8px; border-radius: 6px; border: 1px solid #2C3650;">30m</span><span style="padding: 4px 8px; border-radius: 6px; border: 1px solid #2C3650;">1h</span><span style="padding: 4px 8px; border-radius: 6px; border: 1px solid #2C3650;">2h</span><span style="color: #7784A0; align-self: center;">sets the end</span></div>
+          <div style="font-size: 11px; color: #9AA6BF; font-weight: 800;">CATEGORY</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 5px; font-size: 11px;">
+            <span style="padding: 5px 8px; border-radius: 6px; background: #A99CF5; color: #0D1220; font-weight: 800;">Coding Client</span><span style="padding: 5px 8px; border-radius: 6px; border: 1px solid #2C3650;">Coding</span><span style="padding: 5px 8px; border-radius: 6px; border: 1px solid #2C3650;">Coding Hobby</span><span style="padding: 5px 8px; border-radius: 6px; border: 1px solid #2C3650;">Client Work</span><span style="padding: 5px 8px; border-radius: 6px; border: 1px solid #2C3650;">Client Meeting</span><span style="padding: 5px 8px; border-radius: 6px; border: 1px solid #2C3650;">Learning</span><span style="padding: 5px 8px; border-radius: 6px; border: 1px solid #2C3650;">Organizing</span><span style="padding: 5px 8px; border-radius: 6px; border: 1px solid #2C3650;">Break</span><span style="padding: 5px 8px; border-radius: 6px; border: 1px solid #2C3650;">Gym</span><span style="padding: 5px 8px; border-radius: 6px; border: 1px solid #2C3650;">Reading</span><span style="padding: 5px 8px; border-radius: 6px; border: 1px dashed #2C3650; color: #9AA6BF;">None</span>
+          </div>
+          <div style="font-size: 11px; color: #9AA6BF; font-weight: 800;">CALENDAR</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 5px; font-size: 11px;"><span style="padding: 5px 8px; border-radius: 6px; border: 1px solid #2C3650;">Do not add</span><span style="padding: 5px 8px; border-radius: 6px; background: #7FB8FF; color: #0D1220; font-weight: 800;">Work</span><span style="padding: 5px 8px; border-radius: 6px; border: 1px solid #2C3650;">Personal</span><span style="padding: 5px 8px; border-radius: 6px; border: 1px solid #2C3650;">Sathi</span></div>
+          <div style="display: flex; gap: 6px; padding-top: 6px; border-top: 1px solid #263049;">
+            <button style="height: 32px; padding: 0 10px; border-radius: 7px; border: 1px solid #5A3436; background: none; color: #FF8A80; font-family: inherit; font-weight: 700;">Delete</button>
+            <span style="flex-grow: 1;"></span>
+            <button onClick="{{closeEdit}}" style="height: 32px; padding: 0 10px; border-radius: 7px; border: 1px solid #263049; background: #1A2233; color: #EEF2FA; font-family: inherit; font-weight: 700;">Cancel</button>
+            <button onClick="{{closeEdit}}" style="height: 32px; padding: 0 14px; border-radius: 7px; border: none; background: #FF8A80; color: #2A0E0C; font-family: inherit; font-weight: 800;">Save</button>
+          </div>
+        </section>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"editing":{"editor":"boolean","default":false},"$preview":{"width":1000,"height":1000}}'>
+class Component extends DCLogic {
+renderVals() {
+const editing = this.state && this.state.editing !== undefined ? this.state.editing : (this.props.editing ?? false);
+return {
+editing: editing,
+cols: editing ? "minmax(0, 1fr) 330px" : "minmax(0, 1fr)",
+selOutline: editing ? "2px solid #A99CF5" : "none",
+openEdit: () => this.setState({ editing: true }),
+closeEdit: () => this.setState({ editing: false })
+};
+}
+}
+</script>
+</body>
+</html>

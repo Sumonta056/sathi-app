@@ -8,58 +8,45 @@ struct ReportChartView: View {
 
     var body: some View {
         let color = Night.accent(habit)
-        VStack(alignment: .leading, spacing: UIMetrics.sectionSpacing) {
-            if chart.goal != nil { legend }
-            Chart {
-                ForEach(chart.bars) { bar in
-                    BarMark(
-                        x: .value("Bucket", String(bar.id)),
-                        y: .value("Amount", bar.value),
-                        width: .ratio(UIMetrics.chartBarFill)
-                    )
-                    .cornerRadius(UIMetrics.chartBarRadius)
-                    .foregroundStyle(bar.metGoal ? color : color.opacity(UIMetrics.chartDimOpacity))
-                }
-                if let goal = chart.goal {
-                    RuleMark(y: .value("Goal", goal))
-                        .lineStyle(goalStroke)
-                        .foregroundStyle(Night.muted)
-                }
-            }
-            .chartXAxis {
-                AxisMarks { value in
-                    AxisValueLabel {
-                        Text(verbatim: label(value.as(String.self)))
-                            .font(Typography.badge)
-                            .foregroundStyle(Night.faint)
+        Chart {
+            ForEach(chart.bars) { bar in
+                BarMark(
+                    x: .value("Bucket", String(bar.id)),
+                    y: .value("Amount", bar.value),
+                    width: .ratio(UIMetrics.chartBarFill)
+                )
+                .cornerRadius(UIMetrics.chartBarRadius)
+                .foregroundStyle(bar.metGoal ? color : color.opacity(UIMetrics.chartDimOpacity))
+                .annotation(position: .top) {
+                    if bar.value > 0 {
+                        Text(verbatim: Self.valueText(bar, habit: habit, hasGoal: chart.goal != nil))
+                            .font(Typography.tracker(UIMetrics.reportsBarLabelFont, bar.metGoal ? .heavy : .semibold))
+                            .foregroundStyle(bar.metGoal ? Night.text : Night.muted)
                     }
                 }
             }
-            .chartYAxis {
-                AxisMarks { _ in
-                    AxisGridLine().foregroundStyle(Night.divider)
-                    AxisValueLabel().foregroundStyle(Night.faint)
+            if let goal = chart.goal {
+                RuleMark(y: .value("Goal", goal))
+                    .lineStyle(Self.goalStroke)
+                    .foregroundStyle(Night.faint)
+            }
+        }
+        .chartXAxis {
+            AxisMarks { value in
+                AxisValueLabel {
+                    Text(verbatim: label(value.as(String.self)))
+                        .font(Typography.badge)
+                        .foregroundStyle(Night.faint)
                 }
             }
         }
+        .chartYAxis(.hidden)
     }
 
-    private var legend: some View {
-        HStack(spacing: UIMetrics.dotSpacing) {
-            Path { p in
-                p.move(to: .zero)
-                p.addLine(to: CGPoint(x: UIMetrics.chartLegendWidth, y: 0))
-            }
-            .stroke(Night.muted, style: goalStroke)
-            .frame(width: UIMetrics.chartLegendWidth, height: UIMetrics.chartGoalLine)
-            Text(verbatim: "Daily goal")
-                .font(Typography.hint)
-                .foregroundStyle(Night.muted)
-        }
-    }
+    static let goalStroke = StrokeStyle(lineWidth: UIMetrics.chartGoalLine, dash: UIMetrics.chartGoalDash)
 
-    private var goalStroke: StrokeStyle {
-        StrokeStyle(lineWidth: UIMetrics.chartGoalLine, dash: UIMetrics.chartGoalDash)
+    static func valueText(_ bar: ReportBar, habit: HabitID, hasGoal: Bool) -> String {
+        Copywriter.reportsBarValue(habit, bar.value, metGoal: hasGoal && bar.metGoal)
     }
 
     private func label(_ id: String?) -> String {

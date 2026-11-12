@@ -1,0 +1,44 @@
+import SwiftUI
+
+extension UIMetrics {
+    static let todayPageSpacing: CGFloat = 20
+    static let todayDateFont: CGFloat = 13
+    static let todayDateTracking: CGFloat = 0.52
+    static let todayTitleFont: CGFloat = 28
+    static let todayHeaderGap: CGFloat = 4
+    static let todayButtonGap: CGFloat = 10
+    static let todayButtonHeight: CGFloat = 36
+    static let todayButtonPadding: CGFloat = 14
+    static let todayButtonRadius: CGFloat = 10
+    static let todayButtonFont: CGFloat = 13
+    static let todayCardRadius: CGFloat = 16
+    static let todayNowPadding = EdgeInsets(top: 18, leading: 20, bottom: 18, trailing: 20)
+    static let todayNowGap: CGFloat = 18
+    static let todayNowRing: CGFloat = 52
+    static let todayNowRingLine: CGFloat = 4
+    static let todayNowRingFont: CGFloat = 13
+    static let todayNowTextGap: CGFloat = 4
+    static let todayNowLabelFont: CGFloat = 11
+    static let todayNowLabelTracking: CGFloat = 0.88
+    static let todayNowTitleFont: CGFloat = 19
+    static let todayNowDetailFont: CGFloat = 13
+    static let todayNowButtonHeight: CGFloat = 38
+    static let todayNowButtonPadding: CGFloat = 16
+    static let todayGridGap: CGFloat = 14
+    static let todayBuddyColumns = 4
+    static let todayBuddyPadding: CGFloat = 16
+    static let todayBuddyGap: CGFloat = 10
+    static let todayBuddyNameFont: CGFloat = 15
+    static let todayBuddyKindFont: CGFloat = 12
+    static let todayBuddyValueFont: CGFloat = 26
+    static let todayBuddyUnitFont: CGFloat = 15
+    static let todayBuddyStatusFont: CGFloat = 12
+    static let todayBarHeight: CGFloat = 6
+    static let todayBarRadius: CGFloat = 3
+    static let todayLowerWeights: [CGFloat] = [1.7, 1]
+    static let todayPanelPadding = EdgeInsets(top: 18, leading: 20, bottom: 18, trailing: 20)
+    static let todayPanelTitleFont: CGFloat = 15
+    static let todayPanelNoteFont: CGFloat = 13
+    static let todayRibbonHeight: CGFloat = 28
+    static let todayRibbonRadius: CGFloat = 8
+}

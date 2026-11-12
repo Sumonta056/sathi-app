@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sathi · Today</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#A99CF5}a:hover{color:#C9C0FF}
+</style>
+</helmet>
+<div style="width: 1200px; height: 760px; box-sizing: border-box; display: flex; background: #121826; color: #EEF2FA; font-family: Figtree, system-ui, sans-serif; border-radius: 12px; overflow: hidden; border: 1px solid #263049;">
+  <nav aria-label="Sections" style="width: 210px; flex-shrink: 0; background: #0D1220; display: flex; flex-direction: column; padding: 14px 12px; box-sizing: border-box; gap: 4px; border-right: 1px solid #222B40;">
+    <div style="display: flex; gap: 8px; padding: 2px 4px 22px;">
+      <span style="width: 12px; height: 12px; border-radius: 6px; background: #FF5F57;"></span>
+      <span style="width: 12px; height: 12px; border-radius: 6px; background: #FEBC2E;"></span>
+      <span style="width: 12px; height: 12px; border-radius: 6px; background: #28C840;"></span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 8px 18px;">
+      <span style="width: 28px; height: 28px; border-radius: 9px; background: #4CC3F5; display: block;"></span>
+      <span style="font-weight: 800; font-size: 18px;">Sathi</span>
+    </div>
+    <a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: #1E2840; color: #EEF2FA; text-decoration: none; font-weight: 600; font-size: 14px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path></svg>Today</a>
+    <a href="Activities.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #9AA6BF; text-decoration: none; font-weight: 500; font-size: 14px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h13"></path></svg>Activities</a>
+    <a href="Reports.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #9AA6BF; text-decoration: none; font-weight: 500; font-size: 14px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"></path></svg>Reports</a>
+    <a href="Settings.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #9AA6BF; text-decoration: none; font-weight: 500; font-size: 14px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"></path></svg>Settings</a>
+    <div style="flex-grow: 1;"></div>
+    <div style="padding: 12px; border-radius: 12px; background: #1A2233; border: 1px solid #263049; font-size: 12px; color: #9AA6BF; display: flex; flex-direction: column; gap: 4px;">
+      <span style="color: #FF8A80; font-weight: 700; letter-spacing: .06em; font-size: 11px;">TRACKER ON</span>
+      <span>9:00 – 18:00 · asks every 30 min</span>
+    </div>
+  </nav>
+
+  <main style="flex: 1; min-width: 0; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px;">
+    <header style="display: flex; align-items: flex-end; justify-content: space-between;">
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-size: 13px; color: #8C99B3; font-weight: 600; letter-spacing: .04em;">TUESDAY, 11 NOVEMBER</span>
+        <h1 style="margin: 0; font-size: 28px; font-weight: 800;">Good afternoon</h1>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button style="font: inherit; font-size: 13px; font-weight: 600; color: #EEF2FA; background: #1A2233; border: 1px solid #263049; border-radius: 10px; padding: 0 14px; height: 36px;">Quick reminder</button>
+        <button style="font: inherit; font-size: 13px; font-weight: 600; color: #EEF2FA; background: #1A2233; border: 1px solid #263049; border-radius: 10px; padding: 0 14px; height: 36px;">Take a break</button>
+      </div>
+    </header>
+
+    <section aria-label="Now" style="background: #2E1A1C; border: 1px solid #4A2A2C; border-radius: 16px; padding: 18px 20px; display: flex; align-items: center; gap: 18px;">
+      <div style="width: 52px; height: 52px; border-radius: 26px; border: 4px solid #FF8A80; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; color: #FFB3AB;">42m</div>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: .08em; color: #FF8A80;">NOW</span>
+        <span style="font-size: 19px; font-weight: 700;">Code review · Sathi tracker PR</span>
+        <span style="font-size: 13px; color: #C9B9B9;">Work · since 14:10 · Still on it? at 15:10</span>
+      </div>
+      <button style="font: inherit; font-size: 13px; font-weight: 700; color: #2A0E0C; background: #FF8A80; border: 0; border-radius: 10px; padding: 0 16px; height: 38px;">Switch</button>
+      <button style="font: inherit; font-size: 13px; font-weight: 600; color: #FFB3AB; background: transparent; border: 1px solid #5A3436; border-radius: 10px; padding: 0 16px; height: 38px;">Stop</button>
+    </section>
+
+    <section aria-label="Buddies" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px;">
+      <div style="background: #1A2233; border: 1px solid #263049; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-weight: 700;">Fota</span><span style="font-size: 12px; color: #4CC3F5;">Water</span></div>
+        <span style="font-size: 26px; font-weight: 800;">5<span style="font-size: 15px; color: #9AA6BF; font-weight: 600;"> / 8 glasses</span></span>
+        <div style="height: 6px; border-radius: 3px; background: #222B40;"><div style="width: 62%; height: 6px; border-radius: 3px; background: #4CC3F5;"></div></div>
+        <span style="font-size: 12px; color: #9AA6BF;">Next at 15:30</span>
+      </div>
+      <div style="background: #1A2233; border: 1px solid #263049; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-weight: 700;">Boi</span><span style="font-size: 12px; color: #F2A64A;">Reading</span></div>
+        <span style="font-size: 26px; font-weight: 800;">20<span style="font-size: 15px; color: #9AA6BF; font-weight: 600;"> / 20 min</span></span>
+        <div style="height: 6px; border-radius: 3px; background: #F2A64A;"></div>
+        <span style="font-size: 12px; color: #5FD39A; font-weight: 600;">✓ Goal met</span>
+      </div>
+      <div style="background: #1A2233; border: 1px solid #263049; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-weight: 700;">Shanti</span><span style="font-size: 12px; color: #A99CF5;">Calm</span></div>
+        <span style="font-size: 26px; font-weight: 800;">0<span style="font-size: 15px; color: #9AA6BF; font-weight: 600;"> / 1 session</span></span>
+        <div style="height: 6px; border-radius: 3px; background: #222B40;"></div>
+        <span style="font-size: 12px; color: #9AA6BF;">Next at 16:00 · <a href="#">Breathe now</a></span>
+      </div>
+      <div style="background: #1A2233; border: 1px solid #263049; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-weight: 700;">Shokti</span><span style="font-size: 12px; color: #CDEF5A;">Gym</span></div>
+        <span style="font-size: 26px; font-weight: 800;">10<span style="font-size: 15px; color: #9AA6BF; font-weight: 600;"> / 20 min</span></span>
+        <div style="height: 6px; border-radius: 3px; background: #222B40;"><div style="width: 50%; height: 6px; border-radius: 3px; background: #CDEF5A;"></div></div>
+        <span style="font-size: 12px; color: #9AA6BF;">Session 3 of 4 at 16:40</span>
+      </div>
+    </section>
+
+    <div style="display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 14px; flex: 1; min-height: 0;">
+      <section aria-label="Today so far" style="background: #1A2233; border: 1px solid #263049; border-radius: 16px; padding: 18px 20px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; justify-content: space-between;"><span style="font-weight: 700;">Today so far</span><span style="font-size: 13px; color: #9AA6BF;">5h 12m logged</span></div>
+        <div style="display: flex; height: 28px; border-radius: 8px; overflow: hidden; gap: 2px;">
+          <div style="flex: 50; background: #FF8A80;"></div>
+          <div style="flex: 30; background: #C9B8FF;"></div>
+          <div style="flex: 90; background: #FF8A80;"></div>
+          <div style="flex: 35; background: #3A4458;"></div>
+          <div style="flex: 60; background: #7FB8FF;"></div>
+          <div style="flex: 42; background: #FF8A80;"></div>
+          <div style="flex: 233; background: #161D2C;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 11px; color: #7784A0;"><span>9:00</span><span>11:00</span><span>13:00</span><span>15:00</span><span>17:00</span><span>18:00</span></div>
+        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+          <div style="display: flex; gap: 10px; align-items: center;"><span style="width: 8px; height: 8px; border-radius: 4px; background: #FF8A80;"></span><span style="flex: 1;">Work</span><span style="color: #9AA6BF;">3h 02m</span></div>
+          <div style="display: flex; gap: 10px; align-items: center;"><span style="width: 8px; height: 8px; border-radius: 4px; background: #7FB8FF;"></span><span style="flex: 1;">Calendar · Design sync</span><span style="color: #9AA6BF;">1h 00m</span></div>
+          <div style="display: flex; gap: 10px; align-items: center;"><span style="width: 8px; height: 8px; border-radius: 4px; background: #C9B8FF;"></span><span style="flex: 1;">Meeting</span><span style="color: #9AA6BF;">30m</span></div>
+          <div style="display: flex; gap: 10px; align-items: center;"><span style="width: 8px; height: 8px; border-radius: 4px; background: #3A4458;"></span><span style="flex: 1;">Away · Lunch</span><span style="color: #9AA6BF;">35m</span></div>
+        </div>
+      </section>
+      <section aria-label="Coming up" style="background: #1A2233; border: 1px solid #263049; border-radius: 16px; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
+        <span style="font-weight: 700;">Coming up</span>
+        <div style="display: flex; gap: 12px; font-size: 13px;"><span style="width: 44px; color: #9AA6BF;">15:10</span><span style="color: #FF8A80;">Still on it?</span></div>
+        <div style="display: flex; gap: 12px; font-size: 13px;"><span style="width: 44px; color: #9AA6BF;">15:30</span><span>Fota · water</span></div>
+        <div style="display: flex; gap: 12px; font-size: 13px;"><span style="width: 44px; color: #9AA6BF;">16:00</span><span>Shanti · breathe</span></div>
+        <div style="display: flex; gap: 12px; font-size: 13px;"><span style="width: 44px; color: #9AA6BF;">17:00</span><span style="color: #FF9FB8;">Call the bank</span></div>
+        <div style="display: flex; gap: 12px; font-size: 13px;"><span style="width: 44px; color: #9AA6BF;">22:00</span><span>Day summary</span></div>
+      </section>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":760}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -30,8 +30,6 @@ extension UIMetrics {
     static let switchSpringDamping: Double = 0.55
 
     static let rowPadding = EdgeInsets(top: 14, leading: 18, bottom: 14, trailing: 18)
-    static let heroPadding = EdgeInsets(top: 18, leading: 20, bottom: 18, trailing: 20)
-    static let heroSpacing: CGFloat = 18
     static let labelTracking: CGFloat = 1
 
     static let pillStyleHeight: CGFloat = 44

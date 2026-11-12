@@ -29,14 +29,21 @@ package struct ReportBuilder: Sendable {
     }
 
     package func build(_ range: ReportRange, now: Date, events: [HistoryEvent], prefs: Prefs) -> Report {
-        let span = interval(range, containing: now)
+        build(kind: range, span: interval(range, containing: now), now: now, events: events, prefs: prefs)
+    }
+
+    package func build(_ range: StatsRange, now: Date, events: [HistoryEvent], prefs: Prefs) -> Report {
+        build(kind: range.kind, span: range.interval, now: now, events: events, prefs: prefs)
+    }
+
+    private func build(kind: ReportRange, span: DateInterval, now: Date, events: [HistoryEvent], prefs: Prefs) -> Report {
         let inside = events.filter { span.start <= $0.date && $0.date < span.end }
-        let slots = range == .day ? hourSlots(span) : daySlots(span)
+        let slots = kind == .day ? hourSlots(span) : daySlots(span)
         let days = daySlots(span).filter { $0.start <= now }
         let habits = HabitID.allCases.map { id in
             habitReport(id, prefs: prefs, events: inside, slots: slots, days: days)
         }
-        return Report(range: range, interval: span, habits: habits)
+        return Report(range: kind, interval: span, habits: habits)
     }
 
     private func habitReport(_ id: HabitID, prefs: Prefs, events: [HistoryEvent], slots: [DateInterval], days: [DateInterval]) -> HabitReport {

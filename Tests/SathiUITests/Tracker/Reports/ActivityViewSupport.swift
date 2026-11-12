@@ -28,3 +28,10 @@ extension ActivityViewSupport {
         at(d, h, m).addingTimeInterval(TimeInterval(s))
     }
 }
+
+extension ActivityViewSupport {
+    static let calendars = [
+        CalendarChoice(id: "work", title: "Work", account: "Gmail", colorHex: 0x4285F4),
+        CalendarChoice(id: "home", title: "Personal", account: "iCloud", colorHex: 0x34A853)
+    ]
+}

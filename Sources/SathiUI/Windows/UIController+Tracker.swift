@@ -4,21 +4,49 @@ import SwiftUI
 
 extension UIController {
     package func showTrackerPrompt(_ kind: PromptKind) {
-        if let shown = trackerPromptKind { closeTrackerPrompt(shown) }
-        guard let engine, let state = engine.trackerPromptState(kind),
-              let h = trackerHosting(TrackerPromptContent(state: state)) else { return }
-        let takesKeys = Self.trackerPromptTakesKeyboard(engine.trackerPrompt, byUser: engine.trackerPromptByUser)
-        let p = kind.isCorner ? placeTrackerCorner(h, onCancel: Self.cancelAction(state)) : presentTrackerCentered(h)
+        guard let engine, let state = engine.trackerPromptState(kind) else { return }
+        let prompt = engine.trackerPrompt
+        let model = keptPromptModel(for: prompt) ?? newPromptModel(state)
+        let content = TrackerPromptContent(state: state, model: model)
+        guard let p = replacePromptContent(content) ?? trackerHosting(content).map(presentTrackerCentered) else { return }
         trackerPromptPanel = p
         trackerPromptKind = kind
-        trackerPromptHasKeys = takesKeys
-        if takesKeys { takeKeyboard(p) }
+        trackerPromptShown = prompt
+        trackerPromptModel = model
+        if engine.trackerPromptTakesKeyboard, !trackerPromptHasKeys {
+            trackerPromptHasKeys = true
+            takeKeyboard(p)
+        }
+    }
+
+    private func keptPromptModel(for prompt: PromptState?) -> ActivityPromptModel? {
+        guard trackerPromptPanel != nil, prompt != nil, prompt == trackerPromptShown,
+              let model = trackerPromptModel, !model.answered else { return nil }
+        return model
+    }
+
+    private func newPromptModel(_ state: TrackerPromptState) -> ActivityPromptModel {
+        let model = ActivityPromptModel(state)
+        guard trackerPromptPanel != nil, let old = trackerPromptModel, !old.answered,
+              state.kind != .eventAsk, trackerPromptKind != .eventAsk else { return model }
+        model.carry(from: old)
+        return model
+    }
+
+    private func replacePromptContent(_ content: some View) -> NSPanel? {
+        guard let p = trackerPromptPanel, let h = p.contentView as? FirstClickHostingView<AnyView>,
+              let root = trackerRoot(content) else { return nil }
+        h.rootView = root
+        p.setContentSize(h.fittingSize)
+        return p
     }
 
     package func closeTrackerPrompt(_ kind: PromptKind) {
         guard trackerPromptKind == kind, let p = trackerPromptPanel else { return }
         trackerPromptPanel = nil
         trackerPromptKind = nil
+        trackerPromptShown = nil
+        trackerPromptModel = nil
         trackerPromptHasKeys = false
         closeTrackerPanel(p)
         DispatchQueue.main.async { [weak self, weak p] in self?.handBackKeyboard(from: p) }
@@ -34,7 +62,7 @@ extension UIController {
         closeTrackerNote()
         let state = engine?.trackerNoteState() ?? TrackerNoteState(note: note, calendarTitle: nil, category: nil)
         guard let h = trackerHosting(TrackerNoteView(state: state)) else { return }
-        trackerNotePanel = placeTrackerCorner(h, onCancel: {})
+        trackerNotePanel = presentTrackerNote(h)
         trackerNoteTask = Task { @MainActor [weak self] in
             try? await Task.sleep(nanoseconds: UInt64(Timing.eventNoteShow * Double(NSEC_PER_SEC)))
             guard !Task.isCancelled else { return }
@@ -60,23 +88,6 @@ extension UIController {
         guard let p = trackerEndOfDayPanel else { return }
         trackerEndOfDayPanel = nil
         closeTrackerPanel(p)
-    }
-
-    static func trackerPromptTakesKeyboard(_ prompt: PromptState?, byUser: Bool) -> Bool {
-        guard let prompt else { return false }
-        switch prompt.kind {
-        case .center, .welcomeBack: return true
-        case .whatNow: return byUser && (prompt.switchFrom != nil || prompt.resume != nil)
-        case .stillOnIt, .eventAsk: return false
-        }
-    }
-
-    private static func cancelAction(_ state: TrackerPromptState) -> () -> Void {
-        switch state.kind {
-        case .center, .welcomeBack: return { state.actions.close() }
-        case .whatNow: return {}
-        case .stillOnIt, .eventAsk: return {}
-        }
     }
 
     private func takeKeyboard(_ p: NSPanel) {

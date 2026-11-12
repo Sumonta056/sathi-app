@@ -8,8 +8,8 @@ import Testing
 @MainActor
 @Suite("Settings tab width")
 struct SettingsTabWidthTests {
-    private static let column = UIMetrics.settingsSize.width - UIMetrics.sidebarWidth
-        - UIMetrics.contentPadding.leading - UIMetrics.contentPadding.trailing
+    private static let column = UIMetrics.mainWindowMinSize.width - UIMetrics.mainSidebarWidth
+        - UIMetrics.mainContentPadding.leading - UIMetrics.mainContentPadding.trailing
 
     private func width(of view: some View) -> CGFloat {
         let h = EngineHarness {
@@ -27,9 +27,13 @@ struct SettingsTabWidthTests {
         #expect(width(of: HabitTab(id: id)) <= Self.column)
     }
 
-    @Test func generalAndAddBuddyTabsFitTheContentColumn() {
+    @Test(arguments: SettingsPage.all)
+    func everySettingsPageFitsTheContentColumn(page: SettingsPage) {
+        #expect(width(of: SettingsPageView(page: page)) <= Self.column + UIMetrics.mainContentPadding.leading + UIMetrics.mainContentPadding.trailing)
+    }
+
+    @Test func generalTabFitsTheContentColumn() {
         #expect(width(of: GeneralTab()) <= Self.column)
-        #expect(width(of: AddBuddyTab()) <= Self.column)
     }
 
     @Test(arguments: [Limits.dailyGoalGlasses.lowerBound, Limits.dailyGoalGlasses.upperBound])

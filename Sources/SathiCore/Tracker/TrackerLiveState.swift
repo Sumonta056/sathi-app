@@ -5,6 +5,7 @@ package struct TrackerLiveState: Codable, Equatable, Sendable {
     package var prompt: PromptState?
     package var awaySince: Date?
     package var awayCause: AwayCause?
+    package var awayPlan: AwayPlan?
     package var lastInput: Date?
     package var lastEndOfDay: DayKey?
     package var lastActivity: ActivityDraft?
@@ -21,6 +22,7 @@ extension TrackerLiveState {
         prompt = c.lenient(.prompt, or: PromptState?.none)
         awaySince = c.lenient(.awaySince, or: Date?.none)?.wholeSecond
         awayCause = c.lenient(.awayCause, or: String?.none).flatMap(AwayCause.init(rawValue:))
+        awayPlan = c.lenient(.awayPlan, or: AwayPlan?.none)
         lastInput = c.lenient(.lastInput, or: Date?.none)?.wholeSecond
         lastEndOfDay = c.lenient(.lastEndOfDay, or: DayKey?.none)
         lastActivity = c.lenient(.lastActivity, or: ActivityDraft?.none)

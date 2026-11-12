@@ -82,8 +82,9 @@ extension Engine {
         requestTick()
     }
 
-    package func openSettings() { presenter.showSettings() }
-    package func openReports() { presenter.showReports() }
+    package func openMain(_ page: MainPage) { presenter.showMain(page) }
+    package func openSettings(_ page: SettingsPage = .general) { openMain(.settings(page)) }
+    package func openReports() { openMain(.reports) }
 
     package func play(_ name: SoundName) {
         guard data.prefs.general.soundOn else { return }

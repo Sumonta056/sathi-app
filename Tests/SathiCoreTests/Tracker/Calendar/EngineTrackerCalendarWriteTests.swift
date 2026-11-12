@@ -58,27 +58,6 @@ struct EngineTrackerCalendarWriteTests {
         #expect(h.running?.text == "Next")
     }
 
-    @Test func saveRetriesTheEventForANotInCalendarRow() {
-        let h = EngineHarness.tracker(at: wed(10))
-        h.calendarWriter.nextSaveResult = .failed
-        startWithCalendar(h)
-        h.clock.advance(minutes: 20)
-        h.start("Next")
-        let id = h.saved[0].id
-        #expect(h.engine.saveActivityToCalendar(id) == false)
-        h.calendarWriter.nextSaveResult = nil
-        #expect(h.engine.saveActivityToCalendar(id))
-        #expect(h.saved.first?.eventID == "e3")
-        #expect(h.calendarWriter.saved.last?.end == wed(10, 20))
-    }
-
-    @Test func saveDoesNothingForAnActivityWithoutACalendarOrWithAnEvent() {
-        let h = EngineHarness.tracker(at: wed(10))
-        let a = stored(h)
-        #expect(h.engine.saveActivityToCalendar(a.id) == false)
-        #expect(h.calendarWriter.saved.isEmpty)
-    }
-
     @Test func aReportEditUpdatesTheEvent() {
         let h = EngineHarness.tracker(at: wed(12))
         let a = stored(h)
@@ -113,14 +92,6 @@ struct EngineTrackerCalendarWriteTests {
         let a = stored(h)
         h.engine.deleteActivity(a.id)
         #expect(h.calendarWriter.deleted == ["ev9"])
-        #expect(h.saved.isEmpty)
-    }
-
-    @Test func aMissingEventOnDeleteStillDeletesTheActivity() {
-        let h = EngineHarness.tracker(at: wed(12))
-        h.calendarWriter.nextDeleteResult = false
-        let a = stored(h)
-        h.engine.deleteActivity(a.id)
         #expect(h.saved.isEmpty)
     }
 

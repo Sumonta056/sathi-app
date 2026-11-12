@@ -67,15 +67,15 @@ struct EngineGymMinutesTests {
         #expect(Copywriter.daySummaryValue(.gym, done: 5, goal: 20) == GoalText(done: "5", rest: "of 20 min"))
     }
 
-    @Test func theReportTileCountsNewMinutes() throws {
+    @Test func theReportDayCellCountsNewMinutes() throws {
         let h = gymHarness(at: day(2026, 3, 4, 10)) {
             $0.live.gymMinutesSince = day(2026, 3, 4, 7)
             $0.events = [.done(.gym, 7, at: day(2026, 3, 4, 9))]
         }
-        let tile = try #require(h.engine.reportScreen(.day, selected: .gym).tiles.first { $0.habit == .gym })
-        #expect(tile.value == "7")
-        #expect(tile.unit == "min today")
-        #expect(tile.percent == 35)
+        let today = StatsRange.containing(h.clock.now, kind: .day, calendar: h.engine.calendar)
+        let row = try #require(h.engine.reportsOverview(today).rows.first { $0.habit == .gym })
+        #expect(row.cells.first?.text == "7m")
+        #expect(row.cells.first?.state == .some)
     }
 
     @Test func noDoneTodayShowsTheFirstIdea() {

@@ -34,7 +34,7 @@ struct ActivityPlaceNameStorageTests {
     }
 
     private func csv(_ items: [Activity]) -> [String] {
-        ActivityMonthExporter.csv(ActivityMonth(key: key, items: items), timeZone: zone.timeZone)
+        ActivityRangeExporter.csv(items, timeZone: zone.timeZone)
             .split(separator: "\n", omittingEmptySubsequences: true).map(String.init)
     }
 
@@ -114,13 +114,5 @@ struct ActivityPlaceNameStorageTests {
         #expect(lines[1].hasSuffix(",away,,Away · Other,other"))
         #expect(lines[2].hasSuffix(",away,,Away · Break,break"))
         #expect(lines[3].hasSuffix(",away,,Away,"))
-    }
-
-    @Test func theMonthJSONExportHoldsTheName() throws {
-        let month = ActivityMonth(key: key, items: [away(name: "Doctor")])
-        let data = ActivityMonthExporter.json(month, exportedAt: zone.date(2026, 12, 1, 8))
-        let json = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
-        let items = try #require(json["items"] as? [[String: Any]])
-        #expect(items.map { $0["awayPlaceName"] as? String } == ["Doctor"])
     }
 }

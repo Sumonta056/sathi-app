@@ -13,6 +13,11 @@ package enum StorageKeys {
     package static let exportBackupPrefix = "Sathi-backup-"
     package static let exportSummaryPrefix = "Sathi-summary-"
     package static let exportActivitiesPrefix = "Sathi-activities-"
+    package static let exportHistoryRangePrefix = "sathi-history-"
+    package static let exportActivitiesRangePrefix = "sathi-activities-"
     package static let corruptSuffix = ".corrupt"
+    package static let backupSuffix = ".backup"
+    package static let tempSuffix = ".tmp"
     package static let migrationMarker = "migrated-v1"
+    package static let sidebarOpen = "sathi.ui.sidebarOpen"
 }

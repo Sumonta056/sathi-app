@@ -14,7 +14,6 @@ package enum Limits {
     package static let headlineGreatPercent = 100
     package static let headlineGoodPercent = 50
     package static let monthLabelEvery = 5
-    package static let streakLevelMid = 0.5
 
     package static let glassStep: Double = 0.25
     package static let minimumLog: Double = 0.25
@@ -57,6 +56,8 @@ package enum Limits {
     package static let readingURLMax = 2048
     package static let quickTextMax = 80
     package static let quickMax = 20
+    package static let comingUpMax = 6
+    package static let todayCategoryRows = 4
     package static let quickChips = [5, 15, 30, 60]
     package static let quickNoteTextMax = 24
     package static let blockLengths = [15, 30, 40, 45, 60, 120]
@@ -72,6 +73,7 @@ package enum Limits {
     package static let activityLengths = [15, 30, 60]
     package static let askOffsets = [0, 5, 15]
     package static let recentMax = 10
+    package static let recentShown = 6
     package static let trackerAskChips = [10, 15, 20, 30, 60]
     package static let idleChips = [10, 20, 30, 60]
     package static let categoryMax = 12
@@ -84,7 +86,6 @@ package enum Limits {
     package static let trackerUsualLengthDefault = 30
     package static let idleDefault = 30
     package static let switchStepMinutes = 5
-    package static let switchChipsBeforeGrid = 4
     package static let monthlyTopTexts = 3
     package static let spaceKeyCode: UInt32 = 49
     package static let firstCopyNumber = 2

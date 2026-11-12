@@ -4,10 +4,10 @@ extension Engine {
     package var awayPlaces: [String] { data.prefs.tracker.awayPlaces }
 
     @discardableResult
-    package func addAwayPlace(_ name: String) -> Bool {
+    package func addAwayPlace(_ name: String, tagsLastAway: Bool = true) -> Bool {
         guard let next = AwayPlaceList.adding(name, to: awayPlaces), let added = next.last else { return false }
         data.prefs.tracker.awayPlaces = next
-        if data.live.tracker.prompt?.kind == .welcomeBack { setAwayPlace(named: added) }
+        if tagsLastAway, data.live.tracker.prompt?.kind == .welcomeBack { setAwayPlace(named: added) }
         return true
     }
 
@@ -33,6 +33,6 @@ extension Engine {
         }
         trackerRuntime.lastAway?.place = place
         trackerRuntime.lastAway?.placeName = name
-        objectWillChange.send()
+        storesChanged()
     }
 }

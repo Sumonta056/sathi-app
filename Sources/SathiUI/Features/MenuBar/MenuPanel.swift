@@ -6,14 +6,18 @@ package struct MenuPanel: View {
     package init() {}
 
     package var body: some View {
-        VStack(alignment: .leading, spacing: UIMetrics.menuSpacing) {
-            MenuHeader()
+        VStack(alignment: .leading, spacing: UIMetrics.quickPanelSpacing) {
+            QuickHeader()
+            QuickNowRow()
+            TimeBlockCard()
             if e.pausedUntil != nil { NapBanner() }
-            MenuCards()
-            MenuFooter()
+            QuickBuddyList()
+            QuickActionRow()
+            OpenSathiButton()
+            QuickLinks()
         }
-        .padding(UIMetrics.menuPadding)
-        .frame(width: UIMetrics.menuWidth)
+        .padding(UIMetrics.quickPanelPadding)
+        .frame(width: UIMetrics.quickPanelWidth)
         .fixedSize(horizontal: false, vertical: true)
         .background(GeometryReader { g in MenuWindowFit(height: g.size.height) })
         .background(Night.bg)

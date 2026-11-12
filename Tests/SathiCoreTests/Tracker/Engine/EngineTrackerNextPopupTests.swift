@@ -36,9 +36,4 @@ struct EngineTrackerNextPopupTests {
         h.engine.data.live.tracker.running?.askAt = wed(10, 20)
         #expect(h.engine.trackerNextPopup == wed(10, 30))
     }
-
-    @Test func theNextPopupTextNamesTheTime() {
-        #expect(Copywriter.trackerNextAsk(wed(15, 53), calendar: .current) == "Next ask " + Copywriter.trackerClock(wed(15, 53), calendar: .current))
-        #expect(Copywriter.trackerSinceFor(wed(15, 1), now: wed(15, 53), calendar: .current).hasSuffix(" · 52 min"))
-    }
 }

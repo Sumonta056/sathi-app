@@ -4,16 +4,9 @@ import SwiftUI
 struct ReadingSettingsTab: View {
     @EnvironmentObject var e: Engine
 
-    private static let copy = HeroCopy(
-        eyebrow: "BOI · READING",
-        title: "A few pages before bed",
-        hint: "Boi peeks in from the corner when it is time to read.",
-        switchLabel: "Reading reminders"
-    )
-
     var body: some View {
         let engine = e
-        HabitSettingsPage(habit: .reading, copy: Self.copy) {
+        HabitSettingsPage(habit: .reading) {
             SettingsSection("When") { ReadingWhenCard() }
             SettingsSection("What to read") { ReadingListCard() }
             DaysOffCard(habit: .reading)

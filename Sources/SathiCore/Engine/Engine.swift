@@ -6,7 +6,7 @@ package final class Engine: ObservableObject {
     @Published package var data: Persisted {
         didSet {
             if streakInputsChanged(from: oldValue) { clearStreakCache() }
-            if enabledHabits(oldValue.prefs) != enabledHabits(data.prefs) { reportCache = nil }
+            if enabledHabits(oldValue.prefs) != enabledHabits(data.prefs) { allStreakCache = nil }
             if oldValue.prefs.scheduleKey != data.prefs.scheduleKey {
                 let changed = Set(HabitID.allCases.filter { oldValue.prefs.scheduleKey($0) != data.prefs.scheduleKey($0) })
                 reschedule(turnedOff: turnedOffToday(from: oldValue.prefs), changed: changed)
@@ -49,7 +49,7 @@ package final class Engine: ObservableObject {
     let activityStore: ActivityStore
     let presence: PresenceMonitor
     let hotkeys: HotkeyRegistrar
-    let calendar: Calendar
+    package let calendar: Calendar
 
     var timer: Timer?
     var isRunning = false
@@ -58,11 +58,11 @@ package final class Engine: ObservableObject {
     var forced: Set<HabitID> = []
     var celebrateToken = UUID()
     var streakCache: [HabitID: Int] = [:]
-    var longestCache: [HabitID: Int] = [:]
     var streakCacheDay: Date?
-    var reportCache: ReportScreenCache?
+    var allStreakCache: AllStreakCache?
     var breathCueMark: Date?
     var minuteTickMark: Date?
+    var storeRevision = 0
     var trackerRuntime = TrackerRuntime() {
         didSet { if oldValue.away != trackerRuntime.away { syncAwayDetails() } }
     }
@@ -147,4 +147,9 @@ package final class Engine: ObservableObject {
 
     package func phase(_ id: HabitID) -> Phase { activities[id]?.phase ?? .idle }
     package func isActive(_ id: HabitID) -> Bool { activities[id] != nil }
+
+    func storesChanged() {
+        storeRevision += 1
+        objectWillChange.send()
+    }
 }

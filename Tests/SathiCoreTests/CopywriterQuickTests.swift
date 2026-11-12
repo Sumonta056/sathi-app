@@ -29,7 +29,6 @@ struct CopywriterQuickTests {
 
     @Test func noSnoozeLine() {
         #expect(Copywriter.quickNoSnooze == "No snoozes left. It stays until you tap Done.")
-        #expect(Copywriter.quickToolTitle == "Reminder")
         #expect(Copywriter.quickToolButton == "Add a quick reminder")
     }
 

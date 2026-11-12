@@ -1,7 +1,6 @@
 import SwiftUI
 
 extension UIMetrics {
-    static let quickVisibleRows = 4
     static let quickRowHeight: CGFloat = 52
     static let quickPillWidth: CGFloat = 58
     static let quickPillRadius: CGFloat = 8

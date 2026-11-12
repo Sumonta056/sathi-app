@@ -66,6 +66,10 @@ _Avoid_: Start override, backdate, correction
 The one popup at the screen center that asks "What are you doing now?". Its top line tells the reason: time to ask, shortcut, activity ends, back from Away, or a calendar event starts. It stays on screen until the user answers, taps Keep going, or taps Skip.
 _Avoid_: Check-in, nudge, reminder, bubble, corner prompt, center prompt, Still on it popup
 
+**Reason**:
+Why the activity prompt shows: time to ask, shortcut, activity ends, back from Away, or a calendar event. It sets the prompt's color, tag, and buttons.
+_Avoid_: kind, type, mode
+
 ## Breathing
 
 **Breathing session**:

@@ -51,4 +51,16 @@ struct CornerStackTests {
         #expect(ui.corner.isEmpty)
         #expect(ui.cornerScreen == nil)
     }
+
+    @Test func aTrackerPromptIsNeverInTheCorner() throws {
+        let h = EngineHarness.tracker(at: day(2026, 3, 4, 10))
+        let ui = controller(h)
+        ui.showBubble(.water, .nudge)
+        ui.showTrackerPrompt(.whatNow)
+        let prompt = try #require(ui.trackerPromptPanel)
+        #expect(!ui.corner.contains { $0 === prompt })
+        ui.closeTrackerPrompt(.whatNow)
+        #expect(ui.corner.count == 1)
+        ui.closeBubble(.water)
+    }
 }

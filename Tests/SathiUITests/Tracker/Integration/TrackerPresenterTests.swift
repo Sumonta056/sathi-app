@@ -19,16 +19,16 @@ struct TrackerPresenterTests {
         ActivityDraft(text: "Code review", category: "Coding", length: .minutes(30), askOffsetMinutes: 0, quiet: quiet)
     }
 
-    @Test func whatNowShowsInTheCornerWithoutTakingTheKeyboard() throws {
+    @Test func whatNowShowsAtTheCenterWithoutTakingTheKeyboard() throws {
         let (h, ui) = setUp { $0.engine.tick() }
         #expect(h.engine.trackerPrompt?.kind == .whatNow)
         ui.showTrackerPrompt(.whatNow)
         let p = try #require(ui.trackerPromptPanel)
-        #expect(ui.corner.contains { $0 === p })
-        #expect(p.becomesKeyOnlyIfNeeded)
+        #expect(!ui.corner.contains { $0 === p })
         #expect(!p.isKeyWindow)
+        #expect(!ui.trackerPromptHasKeys)
         #expect(p.frame.width > 0 && p.frame.height > 0)
-        #expect(!UIController.trackerPromptTakesKeyboard(h.engine.trackerPrompt, byUser: h.engine.trackerPromptByUser))
+        #expect(!h.engine.trackerPromptTakesKeyboard)
         ui.closeTrackerPrompt(.whatNow)
         #expect(ui.trackerPromptPanel == nil)
         #expect(ui.corner.isEmpty)
@@ -39,12 +39,13 @@ struct TrackerPresenterTests {
         h.engine.startActivity(draft())
         h.engine.doneActivity()
         #expect(h.engine.trackerPrompt?.kind == .whatNow)
-        #expect(UIController.trackerPromptTakesKeyboard(h.engine.trackerPrompt, byUser: h.engine.trackerPromptByUser))
+        #expect(h.engine.trackerPromptTakesKeyboard)
     }
 
-    @Test func stillOnItNeverTakesTheKeyboard() {
-        let prompt = PromptState(kind: .stillOnIt, shownAt: day(2026, 3, 4, 10), askTime: day(2026, 3, 4, 10))
-        #expect(!UIController.trackerPromptTakesKeyboard(prompt, byUser: true))
+    @Test func welcomeBackNoLongerTakesTheKeyboard() {
+        let (h, _) = setUp()
+        h.engine.data.live.tracker.prompt = PromptState(kind: .welcomeBack, shownAt: day(2026, 3, 4, 10), askTime: day(2026, 3, 4, 10))
+        #expect(!h.engine.trackerPromptTakesKeyboard)
     }
 
     @Test func centerPanelShowsInTheMiddleOutsideTheCorner() throws {
@@ -53,40 +54,77 @@ struct TrackerPresenterTests {
         ui.showTrackerPrompt(.center)
         let p = try #require(ui.trackerPromptPanel)
         #expect(!ui.corner.contains { $0 === p })
-        #expect(UIController.trackerPromptTakesKeyboard(h.engine.trackerPrompt, byUser: h.engine.trackerPromptByUser))
+        #expect(h.engine.trackerPromptTakesKeyboard)
+        #expect(ui.trackerPromptHasKeys)
         ui.closeTrackerPrompt(.center)
         #expect(ui.trackerPromptPanel == nil)
     }
 
-    @Test func trackerPromptSitsBelowBuddyPopupsThatOpenLater() throws {
+    @Test func buddyPopupsNeverShareTheCornerWithTheTrackerPrompt() throws {
         let (h, ui) = setUp { $0.engine.tick() }
         ui.showTrackerPrompt(.whatNow)
         ui.showBubble(.meditation, .nudge)
         let tracker = try #require(ui.trackerPromptPanel)
         let buddy = try #require(ui.bubbles[.meditation])
+        #expect(ui.corner.count == 1)
         #expect(ui.corner.first === buddy)
-        #expect(ui.corner.last === tracker)
-        #expect(tracker.frame.maxY < buddy.frame.maxY || tracker.frame.maxX < buddy.frame.minX)
+        #expect(!ui.corner.contains { $0 === tracker })
         ui.closeBubble(.meditation)
         ui.closeTrackerPrompt(h.engine.trackerPrompt?.kind ?? .whatNow)
     }
 
-    @Test func onlyOneTrackerPromptPanelAtATime() {
+    @Test func aNewReasonReplacesTheContentOfTheSamePanel() throws {
         let (h, ui) = setUp { $0.engine.tick() }
         ui.showTrackerPrompt(.whatNow)
+        let first = try #require(ui.trackerPromptPanel)
+        let center = NSPoint(x: first.frame.midX, y: first.frame.midY)
+        h.engine.data.live.tracker.prompt = PromptState(kind: .stillOnIt, shownAt: h.clock.now, askTime: h.clock.now)
+        ui.showTrackerPrompt(.stillOnIt)
+        #expect(ui.trackerPromptPanel === first)
+        #expect(ui.trackerPromptKind == .stillOnIt)
+        #expect(first.isVisible)
+        #expect(abs(first.frame.midX - center.x) < 1)
+        #expect(abs(first.frame.midY - center.y) < 1)
+        ui.closeTrackerPrompt(.stillOnIt)
+        #expect(ui.trackerPromptPanel == nil)
+    }
+
+    @Test func theShortcutOverAScheduledPromptKeepsThePanelAndTakesTheKeyboard() throws {
+        let (h, ui) = setUp { $0.engine.tick() }
+        ui.showTrackerPrompt(.whatNow)
+        let first = try #require(ui.trackerPromptPanel)
+        #expect(!ui.trackerPromptHasKeys)
         h.engine.openTrackerPanel()
         ui.showTrackerPrompt(.center)
+        #expect(ui.trackerPromptPanel === first)
         #expect(ui.trackerPromptKind == .center)
-        #expect(ui.corner.isEmpty)
+        #expect(ui.trackerPromptHasKeys)
+        ui.trackerReturnApp = nil
         ui.closeTrackerPrompt(.center)
     }
 
-    @Test func noteShowsInTheCornerAndCloses() {
+    @Test func aReRenderOfTheSamePromptKeepsTheDraft() throws {
+        let (h, ui) = setUp { $0.engine.tick() }
+        ui.showTrackerPrompt(.whatNow)
+        let model = try #require(ui.trackerPromptModel)
+        model.draft.text = "Typed by hand"
+        ui.showTrackerPrompt(.whatNow)
+        #expect(ui.trackerPromptModel === model)
+        #expect(ui.trackerPromptModel?.draft.text == "Typed by hand")
+        h.engine.data.live.tracker.prompt = PromptState(kind: .stillOnIt, shownAt: h.clock.now, askTime: h.clock.now)
+        ui.showTrackerPrompt(.stillOnIt)
+        #expect(ui.trackerPromptModel !== model)
+        #expect(ui.trackerPromptModel?.draft.text == "Typed by hand")
+        ui.closeTrackerPrompt(.stillOnIt)
+    }
+
+    @Test func noteShowsAtTheCenterOutsideTheCornerAndCloses() throws {
         let (h, ui) = setUp()
         let event = CalendarEventInfo(id: "e1", title: "Standup", start: day(2026, 3, 4, 10), end: day(2026, 3, 4, 10, 15), calendarID: "c")
         ui.showTrackerNote(.event(event))
-        #expect(ui.trackerNotePanel != nil)
-        #expect(ui.corner.count == 1)
+        let note = try #require(ui.trackerNotePanel)
+        #expect(ui.corner.isEmpty)
+        #expect(!note.canBecomeKey)
         ui.closeTrackerNote()
         #expect(ui.trackerNotePanel == nil)
         #expect(ui.corner.isEmpty)

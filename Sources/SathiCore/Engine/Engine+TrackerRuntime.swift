@@ -7,7 +7,6 @@ struct TrackerRuntime: Equatable {
     var endOfDayDue: DayKey?
     var presenceStarted = false
     var registeredShortcut: KeyShortcut?
-    var reportDay: DayKey?
     var promptByUser = false
     var sessionTimedOut = false
     var whatNowAt: Date?
@@ -29,6 +28,11 @@ struct TrackerRuntime: Equatable {
     var endedByAway: RunningActivity? {
         get { away.endedByAway }
         set { away.endedByAway = newValue }
+    }
+
+    var endedMergedInto: Activity? {
+        get { away.endedMergedInto }
+        set { away.endedMergedInto = newValue }
     }
 
     var loggedWhileAway: [Activity] {

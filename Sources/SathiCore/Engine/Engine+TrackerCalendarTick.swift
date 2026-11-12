@@ -25,7 +25,7 @@ extension Engine {
         if let kind = data.live.tracker.prompt?.kind, kind == .whatNow || kind == .stillOnIt || kind == .eventAsk {
             clearTrackerPrompt()
         }
-        objectWillChange.send()
+        storesChanged()
     }
 
     func eventDraft(_ e: CalendarEventInfo, category: String?, from start: Date) -> ActivityDraft {

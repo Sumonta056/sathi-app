@@ -16,7 +16,7 @@ Then read `.claude/skills/write-unit-tests/SKILL.md` and `.claude/rules/testing.
 Your brief gives you the approved plan and the test paths. Also read:
 
 1. `CLAUDE.md`.
-2. The fakes and helpers in `Tests/SathiTestSupport/`, so that you reuse them: `EngineHarness`, `FakeClock`, `SpyPresenter`, `SpySoundPlayer`, `InMemoryStateStore`, `InMemoryHistoryStore`, `SpyFileExporter`, `FixedZone`, and the file helpers in `TestFiles.swift`.
+2. The fakes and helpers in `Tests/SathiTestSupport/`, so that you reuse them: `EngineHarness`, `FakeClock`, `SpyPresenter`, `SpySoundPlayer`, `InMemoryStateStore`, `InMemoryHistoryStore`, `FixedZone`, and the file helpers in `TestFiles.swift`.
 3. `.claude/rules/storage.md` when the change touches saved data or files.
 4. The existing suite you add to.
 5. The current source file, if it exists. Use it only to learn names and structure. Never copy its outputs into expected values.
@@ -28,7 +28,7 @@ Your brief gives you the approved plan and the test paths. Also read:
    - Engine behavior: `EngineHarness`.
    - Files: a temp folder from `makeTempFolder()`, `delay: 3600`, and `flush()` before you read the file back.
    - Write or read failures: `setPermissions` with a `defer` restore. Assert no overwrite and a write on the next `flush()`.
-   - History logic: `InMemoryHistoryStore`. Export: `SpyFileExporter`.
+   - History logic: `InMemoryHistoryStore`. Calendar writes: `SpyCalendarWriter`.
    - Day starts, DST, month edges, file names: `FixedZone`. Never the system time zone.
 3. Write the tests.
 4. Run `./scripts/test.sh "<Suite name>"`.

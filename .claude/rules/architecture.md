@@ -26,10 +26,8 @@ The Engine talks to the outside world only through protocols in `Sources/SathiCo
 | `SoundPlayer` | `SystemSoundPlayer` (SathiUI) | `SpySoundPlayer` |
 | `SessionAudio` | `BreathAudioPlayer` (SathiUI) | `SpySessionAudio` |
 | `ReminderPresenter` | `UIController` (SathiUI) | `SpyPresenter` |
-| `FileExporter` | none yet (the Export menu was removed in 5h; see `docs/ROADMAP.md` Later) | `SpyFileExporter` |
-| `SummaryRenderer` | none yet (the PDF renderer was removed in 5h) | `SpySummaryRenderer` |
 
-To add a new side effect (notifications, analytics, file export), add a port protocol in Core, a real impl in UI or Platform, and a fake in `Tests/SathiTestSupport`.
+To add a new side effect (notifications, analytics), add a port protocol in Core, a real impl in UI or Platform, and a fake in `Tests/SathiTestSupport`.
 
 ## Where new code goes
 

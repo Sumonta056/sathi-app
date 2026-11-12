@@ -41,9 +41,10 @@ struct ActivityTextTests {
         ]
     }
 
-    @Test func monthlyMatchesRule36() throws {
-        let month = try #require(MonthKey(year: 2026, month: 3))
-        let lines = ActivityMonthText.make(march, month: month, calendar: Fix.calendar).split(separator: "\n").map(String.init)
+    @Test func monthlyMatchesRule36() {
+        let range = StatsRange.containing(Fix.at(4, 12), kind: .month, calendar: Fix.calendar)
+        let title = Copywriter.rangeTitle(range, now: Fix.at(4, 12), calendar: Fix.calendar)
+        let lines = ActivityRangeText.make(march, title: title, calendar: Fix.calendar).split(separator: "\n").map(String.init)
         #expect(lines == [
             "March 2026 · 2 days tracked · 4 h 20 min",
             "Average 2 h 10 min a day",

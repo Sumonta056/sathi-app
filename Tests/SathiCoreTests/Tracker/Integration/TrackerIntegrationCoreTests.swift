@@ -34,7 +34,6 @@ struct TrackerIntegrationCoreTests {
     }
 
     @Test func eventAskCopySaysYesAndNoteLengthComesFromTiming() {
-        #expect(Copywriter.trackerYesLogIt == "Yes")
         let line = Copywriter.trackerEventEnded("Standup", at: wed(10), calendar: .current)
         #expect(line.hasSuffix("closes in \(Int(Timing.eventNoteShow / Timing.minute)) min."))
     }

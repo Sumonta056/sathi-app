@@ -23,12 +23,16 @@ struct WebsiteShots {
 
     @Test func settings() throws {
         let h = harness()
-        try save(SettingsView(tab: .habit(.water)).frame(height: UIMetrics.settingsSize.height), "settings", h)
+        try save(
+            SettingsPageView(page: .habit(.water)).frame(width: UIMetrics.mainWindowMinSize.width, height: UIMetrics.mainWindowMinSize.height),
+            "settings",
+            h
+        )
     }
 
     @Test func reports() throws {
         let h = harness()
-        try save(ReportsView().frame(width: UIMetrics.settingsSize.width, height: UIMetrics.settingsSize.height), "reports", h)
+        try save(ReportsPage().frame(width: UIMetrics.mainWindowMinSize.width, height: UIMetrics.mainWindowMinSize.height), "reports", h)
     }
 
     @Test func waterBubble() throws {

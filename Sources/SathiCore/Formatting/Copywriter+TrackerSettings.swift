@@ -2,8 +2,10 @@ import Foundation
 
 extension Copywriter {
     package static let trackerPlacesLabel = "Away places"
-    package static let trackerPlacesHint = "Your own answers for \"Where were you?\""
-    package static let trackerPlacesEmpty = "Add a place in the Welcome back popup."
+    package static let trackerPlacesHint = "They show in the Away row of every popup and in Welcome back."
+    package static let trackerPlacesBuiltIn = "Built in"
+    package static let trackerPlacesYours = "Yours"
+    package static let trackerPlacesAdd = "+ Add place"
 
     package static func trackerRemovePlace(_ name: String) -> String { "Remove " + name }
     package static let daysOffTitle = "Days off"
@@ -12,9 +14,6 @@ extension Copywriter {
     package static let trackerDaysOffHint = "Sathi stays quiet on these days."
     package static let trackerNoCalendars = "No calendars found on this Mac."
     package static let trackerNewCategory = "New category"
-    package static let trackerSidebarGroup = "MY DAY"
-    package static let trackerNewBadge = "NEW"
-    package static let trackerSettingsTitle = "Activity tracker"
     package static let trackerSettingsSubtitle =
         "Sathi asks what you are doing and keeps your day. It is quiet on days off and when you take a break."
     package static let trackerOnLabel = "Tracker on"

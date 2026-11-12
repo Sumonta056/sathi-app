@@ -146,24 +146,21 @@ let streak = StreakCalculator(calendar: buddhist)
 - It records what the code asks for: `appended`, `ranges`, `allEventsCalls`, `flushes`. Call `clearRanges()` to reset `ranges`.
 - Set `failFlush = true` to simulate a failed write. `InMemoryStateStore` has the same flag.
 
-`SpyFileExporter`, from `EngineExportTests.aCancelledDestinationWritesNothingAndReadsNoHistory`:
+`SpyCalendarWriter`, from `EngineTrackerCalendarSafetyTests.doNotAddKeepsTheEventWhenTheDeleteFails`:
 
 ```swift
-@Test(arguments: ExportFormat.allCases)
-func aCancelledDestinationWritesNothingAndReadsNoHistory(_ format: ExportFormat) async {
-    let h = harness()
-    h.history.clearRanges()
-    let spy = SpyFileExporter(url: nil)
-    let outcome = await h.engine.export(format, screen: h.engine.reportScreen(.week, selected: .water), to: spy, renderer: SpySummaryRenderer())
-    #expect(outcome == .cancelled)
-    #expect(spy.requests.count == 1)
-    #expect(h.history.allEventsCalls == 0)
+@Test func doNotAddKeepsTheEventWhenTheDeleteFails() {
+    let h = EngineHarness.tracker(at: wed(12))
+    h.calendarWriter.nextDeleteResult = false
+    let a = stored(h)
+    #expect(h.engine.editActivity(a.id, edit(.none)) == .calendarUnchanged(a.id))
+    #expect(h.saved.first?.calendarID == "work")
+    #expect(h.saved.first?.eventID == "ev9")
 }
 ```
 
-- `SpyFileExporter(url: nil)` is a cancel. Give it a URL in a temp folder to test a save.
-- `spy.requests` holds each `suggestedName` and `format`. Use `onAsk` to act while the panel is "open".
-- Decode a JSON backup with `DecodedBackup.decode(_:)`.
+- `EngineHarness.tracker(at:)` builds an Engine with the tracker on and an `InMemoryActivityStore`; `h.saved` reads back the saved activities.
+- `SpyCalendarWriter` records `saved`, `updated`, and `deleted`. Set `nextSaveResult` or `nextDeleteResult` (or `deleteResults` per event) to simulate a failure.
 
 ## Dates and time zones
 

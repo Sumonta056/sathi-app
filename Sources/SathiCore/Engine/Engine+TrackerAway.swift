@@ -13,8 +13,9 @@ extension Engine {
         let r = data.live.tracker.running
         let keeps = r.map { keepsThroughAway($0, cause: cause, at: at) } ?? false
         trackerRuntime.endedByAway = pendingDoneAt == nil && !keeps ? r : nil
+        trackerRuntime.endedMergedInto = nil
         if let r, !keeps {
-            let end = cause == .onBreak ? at : AskTime.awayEnd(start: r.start, confirmedUntil: r.confirmedUntil, awayStart: at)
+            let end = cause.endsAtOnce ? at : AskTime.awayEnd(start: r.start, confirmedUntil: r.confirmedUntil, awayStart: at)
             endRunningOnInterrupt(at: end, interrupt: at)
         }
         clearTrackerPrompt()
@@ -25,9 +26,11 @@ extension Engine {
         guard let since = data.live.tracker.awaySince else { return }
         let back = max(since, end.wholeSecond)
         let cause = data.live.tracker.awayCause ?? .locked
-        let place: AwayPlace? = cause == .onBreak ? .breakTime : nil
+        let plan = data.live.tracker.awayPlan
+        let place: AwayPlace? = plan?.place ?? (cause == .onBreak ? .breakTime : nil)
         data.live.tracker.awaySince = nil
         data.live.tracker.awayCause = nil
+        data.live.tracker.awayPlan = nil
         data.live.tracker.lastInput = back
         var eventSpan: DateInterval?
         if let r = data.live.tracker.running, r.kind == .buddy, trackerSessionRuns { return requestTick() }
@@ -38,11 +41,16 @@ extension Engine {
         }
         let items = trackerHours.clip(DateInterval(start: since, end: back))
             .flatMap { SpanCut.cut($0, removing: (eventSpan.map { [$0] } ?? []) + loggedSpans(from: since, to: back)) }
-            .map { Activity(kind: .away, text: Copywriter.trackerAwayText(place), start: $0.start, end: $0.end, awayPlace: place) }
+            .map {
+                Activity(
+                    kind: .away, text: Copywriter.trackerAwayText(place, name: plan?.name),
+                    start: $0.start, end: $0.end, awayPlace: place, awayPlaceName: plan?.name
+                )
+            }
             .filter { $0.length >= Timing.activityMinimum }
         items.forEach(storeActivity)
         trackerRuntime.awayItems = items.map(\.id)
-        trackerRuntime.lastAway = AwaySpan(start: since, end: back, cause: cause, place: place)
+        trackerRuntime.lastAway = AwaySpan(start: since, end: back, cause: cause, place: place, placeName: plan?.name)
         trackerRuntime.loggedWhileAway = logEventsWhileAway(from: since, to: back)
         if welcomes, trackerHours.isInside(back) {
             setTrackerPrompt(PromptState(kind: .welcomeBack, shownAt: back, askTime: back))
@@ -62,9 +70,9 @@ extension Engine {
         let t = data.live.tracker
         guard !trackerActiveSessionRuns else { return }
         if let since = t.awaySince {
-            guard t.awayCause == .idle else { return }
+            guard let grace = t.awayCause?.inputGrace else { return }
             let input = n.addingTimeInterval(-presence.secondsSinceLastInput()).wholeSecond
-            if input > since { returnFromAway(at: input) }
+            if input > since, input >= since.addingTimeInterval(grace) { returnFromAway(at: input) }
             return
         }
         guard let last = idleSince else {
@@ -105,7 +113,12 @@ extension Engine {
         trackerRuntime.awayItems = []
         trackerRuntime.lastAway = nil
         guard var r = trackerRuntime.endedByAway else { return }
-        if let old = removeStoredActivity(r.id) { calendarActivityDeleted(old) }
+        if let before = trackerRuntime.endedMergedInto {
+            replaceStoredActivity(before.id) { calendarActivityEdited(from: $0, to: before) }
+        } else if let old = removeStoredActivity(r.id) {
+            calendarActivityDeleted(old)
+        }
+        trackerRuntime.endedMergedInto = nil
         let n = clock.now.wholeSecond
         r.lastAnswer = n
         r.askAt = n.addingTimeInterval(trackerAskEvery)
@@ -123,7 +136,7 @@ extension Engine {
     }
 
     private func keepsThroughAway(_ r: RunningActivity, cause: AwayCause, at: Date) -> Bool {
-        guard cause != .onBreak, pendingDoneAt == nil else { return false }
+        guard !cause.endsAtOnce, pendingDoneAt == nil else { return false }
         if r.kind == .buddy { return trackerSessionRuns }
         return r.kind == .event && at < r.confirmedUntil
     }

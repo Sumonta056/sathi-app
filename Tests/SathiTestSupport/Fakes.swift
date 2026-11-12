@@ -30,7 +30,7 @@ package final class SpyPresenter: ReminderPresenter {
         case showLock(HabitID), closeLock
         case showSession(HabitID), closeSession(HabitID)
         case showCelebration, closeCelebration
-        case showSettings, showReports
+        case showMain(MainPage)
         case showSnoozed(HabitID, Date)
         case showDaySummary, closeDaySummary
         case showQuick(UUID, Level), closeQuick(UUID), showQuickLock(UUID), showQuickSnoozed(String, Date)
@@ -57,8 +57,7 @@ package final class SpyPresenter: ReminderPresenter {
     package func closeSession(_ id: HabitID) { calls.append(.closeSession(id)) }
     package func showCelebration() { calls.append(.showCelebration) }
     package func closeCelebration() { calls.append(.closeCelebration) }
-    package func showSettings() { calls.append(.showSettings) }
-    package func showReports() { calls.append(.showReports) }
+    package func showMain(_ page: MainPage) { calls.append(.showMain(page)) }
     package func showSnoozed(_ id: HabitID, until: Date) { calls.append(.showSnoozed(id, until)) }
     package func showDaySummary() { calls.append(.showDaySummary) }
     package func closeDaySummary() { calls.append(.closeDaySummary) }

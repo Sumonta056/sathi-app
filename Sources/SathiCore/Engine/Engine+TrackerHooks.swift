@@ -34,6 +34,7 @@ extension Engine {
             closeTrackerEndOfDay()
             data.live.tracker.awaySince = nil
             data.live.tracker.awayCause = nil
+            data.live.tracker.awayPlan = nil
             stopTrackerPlatform()
         } else if new.isOn && isRunning {
             startTrackerPlatform()

@@ -45,16 +45,6 @@ struct TrackerFixRoundTests {
         #expect(h.engine.trackerPromptByUser)
     }
 
-    @Test func theAskedReportDayIsTakenOnce() {
-        let h = EngineHarness.tracker(at: wed(10))
-        let d = DayKey(wed(10), calendar: .current)
-        h.engine.openActivityReport(d)
-        #expect(h.engine.takeActivityReportDay() == d)
-        #expect(h.engine.takeActivityReportDay() == nil)
-        h.engine.openActivityReport(d)
-        #expect(h.engine.takeActivityReportDay() == d)
-    }
-
     @Test func aFileWithStartAfterEndRepairsOnlyTheEnd() throws {
         let t = try tracker(#"{"startMinutes":1140,"endMinutes":600}"#)
         #expect(t.startMinutes == 1140)
@@ -74,19 +64,5 @@ struct TrackerFixRoundTests {
         #expect(t.startMinutes == 480 - Limits.scheduleSlotMinutes)
         t.setEnd(0)
         #expect(t.startMinutes < t.endMinutes)
-    }
-
-    @Test func exportNeverOverwritesAFileInTheFolder() throws {
-        let item = Activity(text: "Code review", category: "Coding", start: wed(9), end: wed(10))
-        let h = EngineHarness.tracker(at: wed(12), activities: [item])
-        let folder = makeTempFolder()
-        let month = MonthKey(wed(9), calendar: .current)
-        let old = folder.appendingPathComponent(ActivityMonthExporter.fileName(month, format: .json))
-        try writeText("old", to: old)
-        let urls = h.engine.exportActivityMonth(month, to: folder)
-        #expect(readText(old) == "old")
-        #expect(urls.count == 2)
-        #expect(urls.contains { $0.lastPathComponent.hasSuffix(" (2).json") })
-        try? FileManager.default.removeItem(at: folder)
     }
 }

@@ -24,9 +24,8 @@ struct ReportDaysOffShadeTests {
             $0.prefs.water.weekdays = workdays
             $0.events = [.done(.water, 2, at: day(2026, 3, 7, 12))]
         }
-        let month = h.engine.reportScreen(.month, selected: .water).calendar
-        let saturday = try #require(month.cells.first { $0.day == 7 })
-        #expect(saturday.isOff)
-        #expect(saturday.level == 0)
+        let range = StatsRange.containing(day(2026, 3, 9), kind: .month, calendar: .current)
+        let saturday = try #require(h.engine.buddyMonth(range, habit: .water).cells.first { $0.day == 7 })
+        #expect(saturday.state == .off)
     }
 }
