@@ -50,9 +50,20 @@ extension Engine {
         let stop = max(r.start, min(end, calendar.nextDay(after: r.start)))
         var item = r.activity(until: stop)
         guard item.length >= Timing.activityMinimum else { return nil }
+        if let previous = storedActivities(on: item.start).last, ActivityMerge.canMerge(previous, item) {
+            return extendStored(previous, with: item)
+        }
         if item.kind != .buddy { item = savingToCalendar(item) }
         storeActivity(item)
         return item
+    }
+
+    private func extendStored(_ previous: Activity, with item: Activity) -> Activity {
+        var joined = calendarActivityEdited(from: previous, to: ActivityMerge.joined(previous, item))
+        joined = savingToCalendar(joined)
+        removeStoredActivity(previous.id)
+        storeActivity(joined)
+        return joined
     }
 
     func storeActivity(_ item: Activity) {
