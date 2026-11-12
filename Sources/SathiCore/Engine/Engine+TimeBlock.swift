@@ -38,6 +38,7 @@ extension Engine {
         block.calendarTitle = calendarTitle(calendarID)
         data.live.timeBlock = block
         data.prefs.timeBlock.lastLength = length
+        trackerBlockStarted()
         presenter.closeBlockStart()
         if usesBlockWidget { presenter.showBlockWidget() }
         requestTick()

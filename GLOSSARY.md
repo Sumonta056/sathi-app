@@ -2,6 +2,20 @@
 
 Sathi is a macOS menu bar companion. Buddies remind the user about habits, and the user can track where their time goes.
 
+## App
+
+**Main window**:
+The one window of Sathi, with a sidebar. It holds Today, Activities, Reports, and Settings. Sathi shows in the Dock while it is open.
+_Avoid_: Dashboard, app view, Settings window, Reports window
+
+**Quick panel**:
+The small panel that opens from the menu bar icon. It shows the status of the buddies and the running activity, and it opens the main window.
+_Avoid_: Menu, popover, dropdown
+
+**Range**:
+The span of days that Reports and Activities show: Day, Week, or Month. Each range compares with the range before it.
+_Avoid_: Period, window, timeframe
+
 ## Time tracking
 
 **Time block**:
@@ -23,6 +37,34 @@ _Avoid_: Timer window, overlay, HUD
 **Target calendar**:
 The calendar in the macOS Calendar app that receives the event for a finished time block.
 _Avoid_: Account, destination
+
+**Daily activity tracker**:
+The feature that asks the user at set times what they are doing now, keeps the answers for the day, and shows them in a report. It is separate from time blocks.
+_Avoid_: Time tracker, timesheet, journal, check-in (the time block uses it)
+
+**Activity**:
+One thing that the user did, with a short text, an optional category, a start, and an end. Only one activity runs at a time. A new activity ends the one before it.
+_Avoid_: Task, entry, event, time block
+
+**Expected length**:
+The time that the user thinks an activity will take. When it passes, Sathi asks if the user is still on it. The activity does not end by itself.
+_Avoid_: Planned length (a time block ends at it), duration, estimate
+
+**Away**:
+Time when the Mac is locked, asleep, closed, or idle for the idle limit. Away ends the running activity. When the user comes back, Sathi asks where they were. The user can name it or ignore the question.
+_Avoid_: Break (Take a break pauses reminders), idle, gap
+
+**Not logged**:
+Time that has no activity and is not Away, for example when the user says they stopped earlier than the prompt.
+_Avoid_: Unknown, empty, gap
+
+**Switch time**:
+The moment the user moved from one activity to the next. The user picks it after Done, when Sathi learned about the change late. It ends the old activity and starts the new one.
+_Avoid_: Start override, backdate, correction
+
+**Activity prompt**:
+The one popup at the screen center that asks "What are you doing now?". Its top line tells the reason: time to ask, shortcut, activity ends, back from Away, or a calendar event starts. It stays on screen until the user answers, taps Keep going, or taps Skip.
+_Avoid_: Check-in, nudge, reminder, bubble, corner prompt, center prompt, Still on it popup
 
 ## Breathing
 

@@ -41,6 +41,7 @@ package final class SpyPresenter: ReminderPresenter {
     }
 
     package private(set) var calls: [Call] = []
+    package internal(set) var trackerCalls: [TrackerCall] = []
 
     package var blockNotes: [BlockNote] {
         calls.compactMap { if case let .showBlockNote(note) = $0 { note } else { nil } }

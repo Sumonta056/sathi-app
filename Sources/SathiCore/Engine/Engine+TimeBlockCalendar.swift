@@ -2,7 +2,7 @@ import Foundation
 
 extension Engine {
     package func calendarChoices() -> [CalendarChoice] {
-        if let cached = calendarChoicesCache { return cached }
+        if let cached = calendarChoicesCache, !cached.isEmpty { return cached }
         let fresh = calendarWriter.calendars()
         calendarChoicesCache = fresh
         return fresh
@@ -43,6 +43,7 @@ extension Engine {
             return
         }
         data.live.timeBlock = nil
+        trackerBlockSaved(b, end: end)
         waitingCalendarPick = nil
         presenter.closeBlockCalendarGone()
         requestTick()
@@ -56,6 +57,7 @@ extension Engine {
             return false
         }
         data.live.timeBlock = nil
+        trackerBlockSaved(b, end: end)
         return true
     }
 

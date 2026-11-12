@@ -4,7 +4,7 @@ import SathiCore
 
 @MainActor
 package final class EventKitCalendarWriter: CalendarWriter {
-    private lazy var store = EKEventStore()
+    lazy var store = EKEventStore()
 
     package init() {}
 
@@ -95,7 +95,7 @@ package final class EventKitCalendarWriter: CalendarWriter {
         return .saved(eventID: event.eventIdentifier ?? "")
     }
 
-    private static func hex(of color: CGColor?) -> UInt32 {
+    static func hex(of color: CGColor?) -> UInt32 {
         guard let color,
               let srgb = NSColor(cgColor: color)?.usingColorSpace(.sRGB) else { return 0 }
         return CalendarMapping.hex(

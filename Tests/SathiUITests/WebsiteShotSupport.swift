@@ -50,7 +50,7 @@ enum Shots {
         }
     }
 
-    static func save(_ view: some View, _ name: String, _ h: EngineHarness) throws {
+    static func save(_ view: some View, _ name: String, _ h: EngineHarness, settle: TimeInterval = 0) throws {
         let host = NSHostingView(rootView: view.environmentObject(h.engine).environment(\.colorScheme, .dark))
         host.frame = CGRect(origin: .zero, size: host.fittingSize)
         let window = NSWindow(contentRect: host.frame, styleMask: .borderless, backing: .buffered, defer: false)
@@ -58,6 +58,7 @@ enum Shots {
         window.backgroundColor = .clear
         window.contentView = host
         host.layoutSubtreeIfNeeded()
+        if settle > 0 { RunLoop.current.run(until: Date.now.addingTimeInterval(settle)) }
         host.display()
         let rep = try #require(host.bitmapImageRepForCachingDisplay(in: host.bounds))
         host.cacheDisplay(in: host.bounds, to: rep)

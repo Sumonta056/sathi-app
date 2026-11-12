@@ -183,6 +183,24 @@ Full rules are in `docs/specs/phase-13-time-blocks.md`.
 15. Restart: the block is saved in `state.json` and continues. Deadlines that passed while Sathi was closed run at the next tick (an auto-end saves with the planned end).
 16. Pauses, weekdays, and days off do not affect a time block. No new timer: `upcomingDeadlines()` adds the planned end, the check-in, the cap, and the next minute change of the status text.
 
+## Activity tracker
+
+Full rules are in `docs/specs/phase-17-activity-tracker.md`.
+
+1. Not a habit: no streak, goal, `HabitID`, history event, or day summary row. Off by default. Only 1 activity runs; a new one ends the old one now. Shorter than 60 s is not saved.
+2. It asks only inside tracker hours, on tracker days, with no break, no time block, and no full-screen lock showing.
+3. Prompts A (corner, What now?), C (corner, Still on it?), B (center, shortcut or menu), D (center, after Away). None goes away by itself. A and C never take the keyboard unless the user clicks in them.
+3a. C shows every "Ask every" minutes for a work activity: first at the earlier of `start + askEvery` and `start + expected length + ask offset`. A change of "Ask every" applies at once to the pending ask time.
+4. Done in C opens A with a "Started" row (switch time): 5-minute chips from the last answer time to now, default Now. The picked time ends the old activity and starts the new one. Unconfirmed time is never added to an activity.
+5. Away (lock, sleep, lid, idle limit) ends the activity. D asks "Where were you?" first (optional; built-in places and up to 8 user-made places), then what to do next. An activity from a calendar event runs on through Away to the earlier of the event end and the return. A buddy session activity runs on through Away while its session exists (no D during the session). Not logged is never stored.
+6. Activities never cross midnight. The end-of-day popup shows 1 time a day.
+7. Calendar events (opt-in, ticked calendars only): at an event start Sathi logs it and shows a 1-min note (or asks first, by setting). While away it logs it with no question and shows it in D. It skips all-day, declined, and Sathi-written events; Free events count. Category: the last pick for that event title, else the calendar's category (default: the calendar name).
+8. Buddy sessions (reading, breathing, gym) end the running activity and log their own. No prompt asks during a session. When a session ends, A asks with a "Continue {last activity}" button. Water and quick reminders make no activity.
+9. Quiet time ("No popups until it ends"): no tracker or buddy popups until the expected end. Buddy reminders wait and show after it. Quick reminders still show. A and C never take the keyboard.
+10. Storage: `activities/YYYY-MM.json`, kept forever. Reports and copy texts are built from it on demand.
+11. Report: Away rows have Edit (place, start, end) and Delete. An edit or a past activity that crosses midnight is refused.
+12. "Add to calendar" row in A and B, by calendar access. Not asked: the row is active and a tick asks macOS for access; after "Allow" the row ticks the default calendar. Denied: the row shows "Open System Settings" in place of the calendar menu and has no tick. Allowed with no writable calendar: the row is dim, takes no click, and shows "No calendars found on this Mac." Allowed with calendars: a tick picks the default calendar and the menu changes it.
+
 ## Breathing session
 
 1. A breathing session runs the selected pattern (`MeditationPrefs.style`). The card shows the time left (m:ss), never a round count.

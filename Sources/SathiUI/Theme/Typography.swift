@@ -20,6 +20,8 @@ enum Typography {
     static let pillTime = rounded(UIMetrics.fontPillTime, .black).monospacedDigit()
     static let pillHint = rounded(UIMetrics.fontPillHint, .semibold)
 
+    static func tracker(_ size: CGFloat, _ weight: Font.Weight) -> Font { rounded(size, weight) }
+
     private static func rounded(_ size: CGFloat, _ weight: Font.Weight) -> Font {
         .system(size: size, weight: weight, design: .rounded)
     }

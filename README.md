@@ -69,7 +69,7 @@ Write a one-off note such as "Call mom" and pick when it shows: 5 min, 15 min, 3
 
 ## Time blocks
 
-Track your work in the macOS Calendar app. Tap **Time block** in the menu, type a title, pick a length (15, 30, 40, 45, 60, or 120 min, or Open), and pick a calendar. When the block ends, Sathi saves 1 event to that calendar. A planned block asks "Done" or "+15 min". An open block checks in every 2 hours. The menu bar shows the minutes, and an optional pill in the corner shows a live timer. You can drag the pill. For 4 seconds after Start, the pill shows **Undo**. Settings has a Time blocks page for the default calendar, the display, and the sound. Sathi asks for calendar access the first time and never reads your events.
+Track your work in the macOS Calendar app. Tap **Time block** in the menu, type a title, pick a length (15, 30, 40, 45, 60, or 120 min, or Open), and pick a calendar. When the block ends, Sathi saves 1 event to that calendar. A planned block asks "Done" or "+15 min". An open block checks in every 2 hours. The menu bar shows the minutes, and an optional pill in the corner shows a live timer. You can drag the pill. For 4 seconds after Start, the pill shows **Undo**. Settings has a Time blocks page for the default calendar, the display, and the sound. Sathi asks for calendar access the first time.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/block-start.png" alt="New time block popup: length chips from Open to 2 hours, a calendar menu, and a Start button" width="428" />
@@ -95,11 +95,20 @@ Each buddy has its own level: Gentle, Nudgy, or Strict. At Strict, any buddy loc
 
 See [every reminder on the website](https://sumonta056.github.io/sathi-app/#gallery): the thank-you cards, the reading timer, the breathing session, and more.
 
+## Activity tracker
+
+Keep a log of your work day without a stopwatch. Turn it on in Settings → My day → Activity tracker (it is off by default). Inside your tracker hours a calm corner popup asks **What now?**: type what you do, or pick a recent activity, and pick a length. **Still on it?** asks every "Ask every" minutes, or when the length is up if that is sooner. Answer Yes, pick more time, or tap Done and pick when you switched. The popups never take the keyboard from the app you type in. Press ⌃⌥⌘Space (or **Log activity** in the menu) to log from anywhere.
+
+Sathi notices when you are away (screen lock, sleep, or no input for 30 min) and asks **Welcome back** when you return. It never adds time that you did not confirm. With your permission it can write an activity to a calendar, and it can log events from the calendars you tick, so meetings log themselves. Buddy sessions log their own activity. A **No popups until it ends** switch keeps every popup quiet while you focus.
+
+Reports → Activities shows each day and month: a timeline, totals by category, a standup text to copy, and an export to JSON and CSV. When tracker hours end, an end-of-day popup shows your day.
+
 ## Reports and settings
 
 - The Reports window shows each habit by day, week, or month, with a chart, a streak calendar, your best day, and your longest streak.
 - Each buddy has its own Settings page. Water: interval, active hours, container, goal, strictness. Reading: time, weekdays, session length, style, reading list, strictness. Meditation: daily goal, session length, interval, active hours, breathing style, strictness, and a Sound card for the voice guide, music, bell, tick, and a preview. Gym: sessions a day, session length, work hours, work days, your workout ideas (add or remove, 1 to 8), strictness. You pick times on a grid in 5-minute steps. Every buddy also has its own weekdays and a list of days off (pick them on a month calendar): on a day off that buddy stays quiet, and the day never breaks its streak.
 - The General tab holds your name, snooze length, snooze limit, when no answer counts as a snooze, sound, the day summary, quick reminders, and open at login.
+- The Activity tracker page holds hours, days and days off, ask time, usual length, Away after, categories, calendars to write and read, the shortcut, the end-of-day popup, and the sound.
 - The Time blocks page holds calendar access, the default calendar, menu bar or corner pill, and the sound.
 
 <p align="center">
@@ -108,7 +117,7 @@ See [every reminder on the website](https://sumonta056.github.io/sathi-app/#gall
 
 ## Privacy
 
-Sathi makes no network requests. All data stays on your Mac in `~/Library/Application Support/Sathi/`. Time blocks are the only exception: with your permission, Sathi writes each block as an event to the calendar you pick, through macOS Calendar, and that calendar's account can sync it.
+Sathi makes no network requests. All data stays on your Mac in `~/Library/Application Support/Sathi/`. Calendars are the only exception: with your permission, Sathi writes time blocks and tracker activities as events to the calendar you pick, through macOS Calendar, and that calendar's account can sync it. If you turn on calendar reading, Sathi reads events only from the calendars you tick, only on this Mac. Activities are saved in `activities/YYYY-MM.json`.
 
 | File | Holds |
 |---|---|

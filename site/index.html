@@ -73,7 +73,7 @@
           {
             "@type": "Question",
             "name": "Does Sathi send my data anywhere?",
-            "acceptedAnswer": { "@type": "Answer", "text": "No. Sathi makes no network requests. Your settings and history stay in ~/Library/Application Support/Sathi/ on your Mac. If you use time blocks, Sathi writes each block as an event to the macOS calendar you pick, and that calendar's account can sync it." }
+            "acceptedAnswer": { "@type": "Answer", "text": "No. Sathi makes no network requests. Your settings and history stay in ~/Library/Application Support/Sathi/ on your Mac. With your permission, Sathi writes time blocks and tracker activities as events to the macOS calendar you pick, and that calendar's account can sync it. Sathi reads events only from the calendars you tick, only on this Mac, and only if you turn calendar reading on." }
           },
           {
             "@type": "Question",
@@ -93,7 +93,12 @@
           {
             "@type": "Question",
             "name": "How do time blocks work?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Tap Time block in the menu, type what you work on, and pick a length or Open. When the block ends, Sathi saves 1 event to the macOS Calendar calendar you pick. Sathi asks for calendar access the first time and never reads your events." }
+            "acceptedAnswer": { "@type": "Answer", "text": "Tap Time block in the menu, type what you work on, and pick a length or Open. When the block ends, Sathi saves 1 event to the macOS Calendar calendar you pick. Sathi asks for calendar access the first time. Sathi reads events only from the calendars you tick, only on this Mac, and only if you turn calendar reading on." }
+          },
+          {
+            "@type": "Question",
+            "name": "How does the activity tracker work?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Turn it on in Settings, My day, Activity tracker. It is off by default. Inside your tracker hours a calm corner popup asks what you do now, and it asks if you are still on it every Ask every minutes, or when the length is up if that is sooner. The popups never take the keyboard from the app you type in. Sathi never adds time that you did not confirm, and Reports, Activities shows each day and month." }
           },
           {
             "@type": "Question",
@@ -187,6 +192,7 @@
             <li><b>Shanti</b> counts each breath round for you</li>
             <li><b>Shokti</b> suggests 1 short workout, and <b>Next idea</b> shows another</li>
             <li>A <b>time block</b> lands in your macOS Calendar when it ends</li>
+            <li>The <b>activity tracker</b> asks what you do, and never takes the keyboard</li>
           </ul>
 
           <div class="g-bar" role="tablist" aria-label="Reminder">
@@ -220,6 +226,12 @@
             <button role="tab" aria-selected="false" aria-controls="p-block-pill" id="t-block-pill" data-shot="block-pill" tabindex="-1">Pill</button>
             <button role="tab" aria-selected="false" aria-controls="p-block-done" id="t-block-done" data-shot="block-done" tabindex="-1">End</button>
             <button role="tab" aria-selected="false" aria-controls="p-block-settings" id="t-block-settings" data-shot="block-settings" tabindex="-1">Settings</button>
+            </div>
+            <div class="g-set" role="presentation"><span class="g-group c-tracker">Tracker</span>
+            <button role="tab" aria-selected="false" aria-controls="p-tracker-what-now" id="t-tracker-what-now" data-shot="tracker-what-now" tabindex="-1">What now?</button>
+            <button role="tab" aria-selected="false" aria-controls="p-tracker-still-on" id="t-tracker-still-on" data-shot="tracker-still-on" tabindex="-1">Still on it?</button>
+            <button role="tab" aria-selected="false" aria-controls="p-tracker-end-of-day" id="t-tracker-end-of-day" data-shot="tracker-end-of-day" tabindex="-1">Your day</button>
+            <button role="tab" aria-selected="false" aria-controls="p-tracker-report" id="t-tracker-report" data-shot="tracker-report" tabindex="-1">Report</button>
             </div>
             <div class="g-set" role="presentation"><span class="g-group">App</span>
             <button role="tab" aria-selected="false" aria-controls="p-menu-bar" id="t-menu-bar" data-shot="menu-bar" tabindex="-1">Menu bar</button>
@@ -308,7 +320,23 @@
             </figure>
             <figure class="g-panel pos-center" role="tabpanel" id="p-block-settings" aria-labelledby="t-block-settings" style="--w: 59.7%" hidden>
               <img src="screenshots/block-settings.png" alt="Time blocks settings: calendar access allowed, a default calendar list grouped by account, menu bar only or corner widget, and a sound switch" width="1780" height="1240" loading="lazy" />
-              <figcaption><b>Settings.</b> Pick the default calendar, the menu bar or a corner pill, and the sound. Sathi never reads your events.</figcaption>
+              <figcaption><b>Settings.</b> Pick the default calendar, the menu bar or a corner pill, and the sound.</figcaption>
+            </figure>
+            <figure class="g-panel pos-corner" role="tabpanel" id="p-tracker-what-now" aria-labelledby="t-tracker-what-now" style="--w: 31.1%" hidden>
+              <img src="screenshots/tracker-what-now.png" alt="What now? popup at 10:30 AM: a text field, a Recent dropdown, length chips, a Category dropdown, Ask me chips, Add to calendar, a No popups until it ends switch, and Start and Skip" width="856" height="986" loading="lazy" />
+              <figcaption><b>What now?</b> Inside your tracker hours, type what you do or pick a recent activity, and pick a length. It never takes the keyboard.</figcaption>
+            </figure>
+            <figure class="g-panel pos-corner" role="tabpanel" id="p-tracker-still-on" aria-labelledby="t-tracker-still-on" style="--w: 31.1%" hidden>
+              <img src="screenshots/tracker-still-on.png" alt="Still on it? popup at 2:00 PM for Fix login bug, Coding since 1:15 PM, with Yes, 15 min more, ask in 5 or 30 min, Done, and Skip" width="856" height="544" loading="lazy" />
+              <figcaption><b>Still on it?</b> Sathi asks every Ask every minutes. Answer Yes, pick more time, or tap Done and pick when you switched.</figcaption>
+            </figure>
+            <figure class="g-panel pos-center" role="tabpanel" id="p-tracker-end-of-day" aria-labelledby="t-tracker-end-of-day" style="--w: 56.9%" hidden>
+              <img src="screenshots/tracker-end-of-day.png" alt="End-of-day popup: 7 h 45 min of real work, 9 activities, a timeline from 9 to 18, totals by category, and Copy for standup" width="1640" height="990" loading="lazy" />
+              <figcaption><b>Your day.</b> When tracker hours end, a popup shows your day: a timeline, totals by category, and a standup text to copy.</figcaption>
+            </figure>
+            <figure class="g-panel pos-center" role="tabpanel" id="p-tracker-report" aria-labelledby="t-tracker-report" style="--w: 59.7%" hidden>
+              <img src="screenshots/tracker-report.png" alt="Reports, Activities, Day: real work, top category, activities with 2 from the calendar, Away, a timeline with a lunch break, and the activity log" width="1720" height="1328" loading="lazy" />
+              <figcaption><b>Report.</b> Reports, Activities shows each day and month. Meetings from the calendars you tick log themselves.</figcaption>
             </figure>
             <figure class="g-panel pos-menu" role="tabpanel" id="p-menu-bar" aria-labelledby="t-menu-bar" style="--w: 26.4%" hidden>
               <img src="screenshots/menu-bar.png" alt="Menu bar popover: one row per buddy with a ring, the next reminder, and an action button, then Reminder and Time block buttons, and a Take a break menu" width="760" height="946" loading="lazy" />
@@ -435,7 +463,7 @@
               <li>15, 30, 40, 45, 60, or 120 minutes, or Open</li>
               <li>The menu bar shows the minutes, or a pill shows a live timer</li>
               <li>At the end: Done or +15 min. Open blocks check in every 2 hours</li>
-              <li>Sathi never reads your events</li>
+              <li>Reads events only from the calendars you tick, if you turn it on</li>
             </ul>
             <a class="more" href="#gallery" data-show="block-start">See time blocks →</a>
           </div>
@@ -447,6 +475,24 @@
         </div>
 
         <div class="wrap feature">
+          <div class="f-txt">
+            <h3><span class="dot tracker"></span>Activity tracker</h3>
+            <p>Keep a log of your work day without a stopwatch. A calm corner popup asks what you do, and Reports shows each day and month.</p>
+            <ul class="checks">
+              <li>Off by default. Turn it on in Settings, My day</li>
+              <li>The popups never take the keyboard. Press ⌃⌥⌘Space to log from anywhere</li>
+              <li>It never adds time that you did not confirm</li>
+              <li>Meetings from the calendars you tick log themselves</li>
+            </ul>
+            <a class="more" href="#gallery" data-show="tracker-what-now">See the activity tracker →</a>
+          </div>
+          <div class="f-shot stack">
+            <img src="screenshots/tracker-what-now.png" alt="What now? popup with recent activities" width="856" height="986" loading="lazy" />
+            <img src="screenshots/tracker-still-on.png" alt="Still on it? popup for Fix login bug" width="856" height="544" loading="lazy" />
+          </div>
+        </div>
+
+        <div class="wrap feature flip">
           <div class="f-txt">
             <h3><span class="dot sprout"></span>Your day at a glance</h3>
             <p>Every evening at 10 PM, a calm corner popup shows how each buddy did today. It says congratulations when every goal is met.</p>
@@ -462,7 +508,7 @@
           </div>
         </div>
 
-        <div class="wrap feature flip">
+        <div class="wrap feature">
           <div class="f-txt">
             <h3><span class="dot sprout"></span>Reports and streaks</h3>
             <p>See your week at a glance, and keep the streak calendar green.</p>
@@ -478,7 +524,7 @@
           </div>
         </div>
 
-        <div class="wrap feature">
+        <div class="wrap feature flip">
           <div class="f-txt">
             <h3><span class="dot sprout"></span>Settings on one page per buddy</h3>
             <p>Turn a buddy on or off with one switch, and tune it to your day.</p>
@@ -517,11 +563,12 @@
         <div class="two">
           <div class="panel">
             <h3>Your habits stay on your Mac</h3>
-            <p class="muted">Sathi makes no network requests. No account, no analytics, no cloud. Your data is plain JSON in <code>~/Library/Application Support/Sathi/</code>. Time blocks are the only exception: with your permission, each block becomes an event in the macOS calendar you pick.</p>
+            <p class="muted">Sathi makes no network requests. No account, no analytics, no cloud. Your data is plain JSON in <code>~/Library/Application Support/Sathi/</code>. Calendars are the only exception: with your permission, Sathi writes time blocks and tracker activities as events to the calendar you pick. If you turn on calendar reading, Sathi reads events only from the calendars you tick, only on this Mac.</p>
             <table>
               <tr><td><code>prefs.json</code></td><td>Your settings</td></tr>
               <tr><td><code>state.json</code></td><td>Live state, such as the bottle level</td></tr>
               <tr><td><code>history/YYYY-MM.json</code></td><td>Each done, snooze, and skip, kept forever</td></tr>
+              <tr><td><code>activities/YYYY-MM.json</code></td><td>Your tracker activities, kept forever</td></tr>
             </table>
           </div>
           <div class="panel">
@@ -591,7 +638,7 @@ cd sathi-app
           </details>
           <details>
             <summary>Does Sathi send my data anywhere?</summary>
-            <p>No. Sathi makes no network requests. Your settings and history stay in ~/Library/Application Support/Sathi/ on your Mac. If you use time blocks, Sathi writes each block as an event to the macOS calendar you pick, and that calendar's account can sync it.</p>
+            <p>No. Sathi makes no network requests. Your settings and history stay in ~/Library/Application Support/Sathi/ on your Mac. With your permission, Sathi writes time blocks and tracker activities as events to the macOS calendar you pick, and that calendar's account can sync it. Sathi reads events only from the calendars you tick, only on this Mac, and only if you turn calendar reading on.</p>
           </details>
           <details>
             <summary>Which Macs can run Sathi?</summary>
@@ -607,7 +654,11 @@ cd sathi-app
           </details>
           <details>
             <summary>How do time blocks work?</summary>
-            <p>Tap Time block in the menu, type what you work on, and pick a length or Open. When the block ends, Sathi saves 1 event to the macOS Calendar calendar you pick. Sathi asks for calendar access the first time and never reads your events.</p>
+            <p>Tap Time block in the menu, type what you work on, and pick a length or Open. When the block ends, Sathi saves 1 event to the macOS Calendar calendar you pick. Sathi asks for calendar access the first time. Sathi reads events only from the calendars you tick, only on this Mac, and only if you turn calendar reading on.</p>
+          </details>
+          <details>
+            <summary>How does the activity tracker work?</summary>
+            <p>Turn it on in Settings, My day, Activity tracker. It is off by default. Inside your tracker hours a calm corner popup asks what you do now, and it asks if you are still on it every Ask every minutes, or when the length is up if that is sooner. The popups never take the keyboard from the app you type in. Sathi never adds time that you did not confirm, and Reports, Activities shows each day and month.</p>
           </details>
           <details>
             <summary>Does Sathi slow down my Mac?</summary>

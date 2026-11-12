@@ -8,6 +8,7 @@ package struct Prefs: Codable, Equatable, Sendable {
     package var gym = GymPrefs()
     package var quick = QuickPrefs()
     package var timeBlock = TimeBlockPrefs()
+    package var tracker = TrackerPrefs()
 
     package init() {}
 
@@ -101,5 +102,6 @@ extension Prefs {
         gym = try c.value(.gym, or: d.gym)
         quick = c.lenient(.quick, or: d.quick)
         timeBlock = c.lenient(.timeBlock, or: d.timeBlock)
+        tracker = c.lenient(.tracker, or: d.tracker)
     }
 }

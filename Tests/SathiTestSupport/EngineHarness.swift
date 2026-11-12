@@ -16,8 +16,15 @@ package struct EngineHarness {
     package let links: SpyLinkOpener
     package let calendarWriter: SpyCalendarWriter
     package let audio: SpySessionAudio
+    package let activities: InMemoryActivityStore
+    package let presence: FakePresenceMonitor
+    package let hotkeys: SpyHotkeyRegistrar
 
-    package init(at start: Date = day(2026, 3, 4, 10), configure: (inout Persisted) -> Void = { _ in }) {
+    package init(
+        at start: Date = day(2026, 3, 4, 10),
+        activities: InMemoryActivityStore = InMemoryActivityStore(),
+        configure: (inout Persisted) -> Void = { _ in }
+    ) {
         var state = Persisted()
         configure(&state)
         clock = FakeClock(start)
@@ -28,6 +35,9 @@ package struct EngineHarness {
         links = SpyLinkOpener()
         calendarWriter = SpyCalendarWriter()
         audio = SpySessionAudio()
+        self.activities = activities
+        presence = FakePresenceMonitor()
+        hotkeys = SpyHotkeyRegistrar()
         engine = Engine(
             store: store,
             history: history,
@@ -36,7 +46,10 @@ package struct EngineHarness {
             presenter: presenter,
             links: links,
             calendarWriter: calendarWriter,
-            audio: audio
+            audio: audio,
+            activityStore: activities,
+            presence: presence,
+            hotkeys: hotkeys
         )
         engine.tick()
     }

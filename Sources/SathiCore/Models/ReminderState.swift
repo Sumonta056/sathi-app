@@ -11,7 +11,7 @@ package enum Phase: Equatable, Sendable {
     case session
 }
 
-package enum Activity: Equatable, Sendable {
+package enum HabitActivity: Equatable, Sendable {
     case bubble(Level, copy: Copy, ignoreDeadline: Date)
     case lock
     case session(Session)

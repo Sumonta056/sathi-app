@@ -12,6 +12,7 @@ extension Engine {
         guard pausable(id), let s = session(id), s.isPaused else { return }
         activities[id] = .session(s.resumed(at: clock.now))
         sessionResumed(id)
+        trackerSessionResumed()
         requestTick()
     }
 

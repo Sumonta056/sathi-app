@@ -44,6 +44,24 @@ enum Night {
     static let block = Color(hex: 0x5ED6C4)
     static let blockFill = Color(hex: 0x142A2A)
     static let blockBorder = Color(hex: 0x1F4744)
+    static let tracker = Color(hex: 0xFF8A80)
+    static let trackerFill = Color(hex: 0x2E1A1C)
+    static let trackerOnAccent = Color(hex: 0x2A0E0C)
+    static let trackerSelectedText = Color(hex: 0xFFB3AB)
+    static let trackerTile = tracker.opacity(0.14)
+    static let trackerSelectedFill = tracker.opacity(0.16)
+    static let trackerMenu = Color(hex: 0x1E2840)
+    static let trackerMenuRow = Color(hex: 0x2A3550)
+    static let trackerInset = Color(hex: 0x161D2C)
+    static let trackerWell = Color(hex: 0x121826)
+    static let trackerAway = Color(hex: 0x3A4458)
+    static let trackerNotLogged = Color(hex: 0x4A5570)
+    static let trackerEvent = Color(hex: 0x7FB8FF)
+    static let trackerEventFill = Color(hex: 0x15263A)
+    static let trackerRowSelected = Color(hex: 0x24304A)
+    static let trackerOK = Color(hex: NightHex.sprout)
+
+    static func category(_ hex: UInt32) -> Color { Color(hex: hex) }
 
     static func accent(_ id: HabitID) -> Color {
         switch id {

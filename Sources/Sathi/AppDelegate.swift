@@ -10,5 +10,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ notification: Notification) {
         AppEnvironment.stateStore.flush()
         AppEnvironment.historyStore.flush()
+        AppEnvironment.activityStore.flush()
     }
 }

@@ -6,11 +6,13 @@ extension Engine {
         isRunning = true
         restoreBlock()
         restoreMeditationSession()
+        restoreTracker()
         tick()
     }
 
     package func stop() {
         isRunning = false
+        stopTracker()
         timer?.invalidate()
         timer = nil
     }
@@ -23,12 +25,13 @@ extension Engine {
             endIfExpired(id)
         }
         tickBreath()
-        if pausedUntil == nil { presentDueHabits() }
+        if pausedUntil == nil && !trackerHoldsBuddyPopups { presentDueHabits() }
         lockWaitingHabit()
         tickQuick()
         refreshCalendarAccessIfDue()
         tickBlock()
         showDaySummaryIfDue()
+        tickTracker()
         updateStatus()
         scheduleNextTick()
     }
@@ -68,7 +71,7 @@ extension Engine {
     }
 
     private func upcomingDeadlines() -> [Date] {
-        var deadlines: [Date] = quickDeadlines + blockDeadlines + breathDeadlines
+        var deadlines: [Date] = quickDeadlines + blockDeadlines + breathDeadlines + trackerDeadlines
         if let p = pausedUntil { deadlines.append(p) }
         if let s = nextDaySummary { deadlines.append(s) }
         for id in HabitID.allCases {
