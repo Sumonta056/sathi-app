@@ -11,7 +11,7 @@ struct PromptCommands {
 
     func start() {
         guard !model.answered else { return }
-        if let pick = model.awayPick, screen.reason != .event {
+        if let pick = model.goingAway(on: screen) {
             model.answered = true
             actions.goAway(pick.place, pick.name)
             return

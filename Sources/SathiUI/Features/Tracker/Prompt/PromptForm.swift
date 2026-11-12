@@ -14,7 +14,7 @@ struct PromptForm: View {
             VStack(alignment: .leading, spacing: UIMetrics.promptRowGap) {
                 PromptBoxRow(label: Copywriter.trackerCategory) { PromptCategoryBoxes(model: model, categories: state.categories) }
                     .modifier(PromptDimmed(on: goingAway))
-                if !isEvent {
+                if screen.allowsAway {
                     PromptBoxRow(label: Copywriter.trackerAway, labelTop: 0, labelColor: Night.sproutLight) {
                         PromptAwayRow(model: model, form: model.places, state: state)
                     }
@@ -35,7 +35,7 @@ struct PromptForm: View {
         }
     }
 
-    private var goingAway: Bool { !isEvent && model.awayPick != nil }
+    private var goingAway: Bool { model.goingAway(on: screen) != nil }
 
     private var isEvent: Bool { screen.reason == .event }
 

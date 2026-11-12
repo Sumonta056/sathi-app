@@ -8,7 +8,15 @@ struct PromptAwayPick: Equatable {
     var label: String { name ?? Copywriter.trackerAwayPlace(place) }
 }
 
+extension ActivityPromptScreen {
+    var allowsAway: Bool { reason != .event && reason != .back }
+}
+
 extension ActivityPromptModel {
+    func goingAway(on screen: ActivityPromptScreen) -> PromptAwayPick? {
+        screen.allowsAway ? awayPick : nil
+    }
+
     var awaySwitch: Binding<Bool> {
         Binding(get: { self.awayOn }, set: { self.turnAway($0) })
     }

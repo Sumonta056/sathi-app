@@ -12,6 +12,10 @@ struct ActivityPromptView: View {
         self.model = model ?? ActivityPromptModel(state)
     }
 
+    private var goingAway: Bool { model.goingAway(on: screen) != nil }
+
+    private var startedChoices: [Date] { goingAway ? [] : screen.startedChoices }
+
     private var commands: PromptCommands { PromptCommands(state: state, screen: screen, model: model) }
 
     var body: some View {
@@ -21,6 +25,7 @@ struct ActivityPromptView: View {
             Night.promptCardLine.frame(height: UIMetrics.promptBorder)
             HStack(spacing: 0) {
                 PromptRecentPane(model: model, state: state)
+                    .modifier(PromptDimmed(on: goingAway))
                 Night.promptCardLine.frame(width: UIMetrics.promptBorder)
                 formColumn(commands)
             }
@@ -37,11 +42,11 @@ struct ActivityPromptView: View {
         VStack(alignment: .leading, spacing: UIMetrics.promptBodyGap) {
             PromptForm(model: model, state: state, screen: screen, onSubmit: commands.start)
             Spacer(minLength: 0)
-            if model.showsStarted, !screen.startedChoices.isEmpty {
-                PromptStartedBoxes(model: model, choices: screen.startedChoices, calendar: state.calendar)
+            if model.showsStarted, !startedChoices.isEmpty {
+                PromptStartedBoxes(model: model, choices: startedChoices, calendar: state.calendar)
             }
             HStack(spacing: UIMetrics.promptFooterGap) {
-                PromptStartedLink(model: model, choices: screen.startedChoices, calendar: state.calendar)
+                PromptStartedLink(model: model, choices: startedChoices, calendar: state.calendar)
                 PromptFooter(screen: screen, commands: commands)
             }
         }

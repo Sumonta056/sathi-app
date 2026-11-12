@@ -14,6 +14,7 @@ struct PromptAwayRow: View {
                 Text(verbatim: Copywriter.activityPromptAwaySwitch)
                     .font(Typography.tracker(UIMetrics.promptRowFont, .medium))
                     .foregroundStyle(Night.chipText)
+                    .accessibilityHidden(true)
             }
             if model.awayOn { chips }
             if model.awayOn, model.awayAdding {

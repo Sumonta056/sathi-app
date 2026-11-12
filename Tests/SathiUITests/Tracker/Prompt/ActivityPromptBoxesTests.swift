@@ -115,9 +115,8 @@ struct ActivityPromptBoxesTests {
         let sut = try Prompt.view(Reasons.withKeep(kind))
         #expect(Prompt.hasText(sut, "Ask me"))
         #expect(Prompt.hasText(sut, "Quiet"))
-        #expect(sut.findAll(BuddySwitch.self).map { (try? $0.actualView().label) ?? "" } == [
-            Copywriter.activityPromptAwaySwitch, Copywriter.trackerQuietSwitch
-        ])
+        let away = kind == .welcomeBack ? [] : [Copywriter.activityPromptAwaySwitch]
+        #expect(sut.findAll(BuddySwitch.self).map { (try? $0.actualView().label) ?? "" } == away + [Copywriter.trackerQuietSwitch])
         #expect(try !sut.find(LazyTextField.self).isDisabled())
     }
 

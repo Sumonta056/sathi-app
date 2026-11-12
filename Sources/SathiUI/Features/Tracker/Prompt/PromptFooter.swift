@@ -18,7 +18,7 @@ struct PromptFooter: View {
             }
             .buttonStyle(TrackerPressStyle())
             .modifier(PromptKey.skip)
-            if let keep = screen.keepLabel {
+            if let keep = screen.keepLabel, awayPick == nil {
                 Button(action: commands.keep) {
                     Text(verbatim: keep)
                         .font(Typography.tracker(UIMetrics.promptButtonFont, .semibold))
@@ -49,7 +49,7 @@ struct PromptFooter: View {
         .fixedSize()
     }
 
-    private var awayPick: PromptAwayPick? { commands.model.awayPick }
+    private var awayPick: PromptAwayPick? { commands.model.goingAway(on: screen) }
 
     private var startLabel: String {
         awayPick.map { Copywriter.activityPromptGoAway($0.label) } ?? screen.startLabel

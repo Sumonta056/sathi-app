@@ -24,7 +24,7 @@ struct ActivityPromptAwayTests {
         [Copywriter.trackerFor, Copywriter.trackerAskMe, Copywriter.trackerCalendar, Copywriter.activityPromptQuiet]
     }
 
-    @Test(arguments: [PromptKind.whatNow, .center, .stillOnIt, .welcomeBack])
+    @Test(arguments: [PromptKind.whatNow, .center, .stillOnIt])
     func theToggleIsOffByDefaultAndShowsNoPlaces(_ kind: PromptKind) throws {
         let sut = try Prompt.view(Reasons.withKeep(kind))
         #expect(Prompt.has(sut, "tracker.away.toggle"))
