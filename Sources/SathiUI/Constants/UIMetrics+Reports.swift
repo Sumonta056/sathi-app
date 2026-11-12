@@ -20,5 +20,8 @@ extension UIMetrics {
 }
 
 extension UIMetrics {
-    static let activitiesTextLines = 12
+    static let activitiesSheetWidth: CGFloat = 520
+    static let activitiesSheetTextHeight: CGFloat = 320
+    static let activitiesSheetGap: CGFloat = 14
+    static let activitiesSheetPadding: CGFloat = 22
 }

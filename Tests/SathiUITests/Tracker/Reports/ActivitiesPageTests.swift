@@ -38,8 +38,8 @@ struct ActivitiesPageTests {
     @Test func dayShowsTheLogRowsAndTheStandupCopy() throws {
         let (sut, _) = try page()
         #expect(MenuFind.hasText(sut, containing: "Fix login bug"))
-        #expect(throws: Never.self) { try sut.find(text: Copywriter.activitiesStandupTitle) }
-        #expect(throws: Never.self) { try Find.button(sut, holding: Copywriter.activitiesCopy) }
+        #expect(Find.lacks(sut, text: Copywriter.activitiesStandupTitle))
+        #expect(throws: Never.self) { try Find.button(sut, holding: Copywriter.activitiesStandupButton) }
         #expect(throws: Never.self) { try sut.find(text: Copywriter.activitiesAdd) }
     }
 
@@ -76,12 +76,14 @@ struct ActivitiesPageTests {
         #expect(MenuFind.texts(sut).contains("+2h 0m vs last week"))
     }
 
-    @Test func weekShowsTheCategoryTableAndTheCopyCard() throws {
+    @Test func weekShowsTheCategoryTableAndTheSummaryButton() throws {
         let (sut, _) = try page(range: .week)
         let texts = MenuFind.texts(sut)
         #expect(texts.contains("Coding"))
         #expect(texts.contains("logged · 2 categories"))
-        #expect(throws: Never.self) { try Find.button(sut, holding: Copywriter.activitiesCopy) }
+        #expect(throws: Never.self) { try Find.button(sut, holding: Copywriter.activitiesSummaryButton) }
+        #expect(Find.lacks(sut, text: Copywriter.activitiesStandupButton))
+        #expect(Find.lacks(sut, text: Copywriter.activitiesCopy))
     }
 
     @Test func monthShowsOneRowForEachDay() throws {
@@ -103,22 +105,6 @@ struct ActivitiesPageTests {
         let row = try sut.find(ActivityMonthRowView.self) { try $0.actualView().row?.day == DayKey(day(2026, 3, 2, 12), calendar: .current) }
         try row.find(ViewType.Button.self).tap()
         #expect(opened == DayKey(day(2026, 3, 2, 12), calendar: .current))
-    }
-
-    @Test func copyGivesTheRangeText() throws {
-        var copied: String?
-        var actions = ActivityRangeActions()
-        actions.copy = { copied = $0 }
-        let h = EngineHarness.tracker(at: now, activities: activities())
-        let range = h.engine.currentRange(.week)
-        let days = h.engine.activityDays(in: range)
-        let view = ActivityRangeView(
-            range: range, days: days, stats: h.engine.activityRange(range),
-            categories: ActivityCategory.defaults, calendar: h.engine.rangeCalendar, now: now, actions: actions
-        )
-        try Find.button(view.inspect(), holding: Copywriter.activitiesCopy).tap()
-        let title = Copywriter.rangeTitle(range, now: now, calendar: h.engine.rangeCalendar)
-        #expect(copied == ActivityRangeText.make(days, title: title, calendar: h.engine.rangeCalendar))
     }
 
     @Test func trackerOffWithNoActivitiesSaysSoAndOffersTurnOn() throws {

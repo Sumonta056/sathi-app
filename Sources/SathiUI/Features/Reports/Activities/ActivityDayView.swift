@@ -23,10 +23,6 @@ struct ActivityDayView: View {
                     calendarNames: calendarNames, actions: actions, editing: editing
                 )
                 .id(day.day)
-                ActivityTextCard(
-                    title: Copywriter.activitiesStandupTitle,
-                    text: ActivityStandupText.make(day, calendar: calendar), copy: actions.copy
-                )
             }
             .padding(.bottom, UIMetrics.reportsGap)
         }

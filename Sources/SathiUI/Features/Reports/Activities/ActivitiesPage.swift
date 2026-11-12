@@ -40,8 +40,26 @@ struct ActivitiesPage: View {
                 .foregroundStyle(Night.text)
             Spacer(minLength: 0)
             RangeBar(range: Binding(get: { range }, set: { picked = $0 }), now: e.now, calendar: e.rangeCalendar)
+            textButton(range)
             ActivitiesExportButton(range: range)
         }
+    }
+
+    @ViewBuilder private func textButton(_ range: StatsRange) -> some View {
+        let isDay = range.kind == .day
+        ActivitiesTextButton(
+            label: isDay ? Copywriter.activitiesStandupButton : Copywriter.activitiesSummaryButton,
+            title: isDay ? Copywriter.activitiesStandupTitle : Copywriter.activitiesRangeTextTitle,
+            copyLabel: isDay ? Copywriter.activitiesCopyStandup : Copywriter.activitiesCopy
+        ) { sheetText(range) }
+    }
+
+    private func sheetText(_ range: StatsRange) -> String {
+        let page = memo.value(range, range: range, engine: e) { $0.activitiesPage($1) }
+        let calendar = e.rangeCalendar
+        if let day = page.day { return ActivityStandupText.make(day, calendar: calendar) }
+        let title = Copywriter.rangeTitle(range, now: e.now, calendar: calendar)
+        return ActivityRangeText.make(page.days, title: title, calendar: calendar)
     }
 
     @ViewBuilder private func content(_ range: StatsRange) -> some View {

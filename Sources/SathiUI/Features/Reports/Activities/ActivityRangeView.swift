@@ -23,11 +23,6 @@ struct ActivityRangeView: View {
                         Divider().overlay(Night.divider)
                     }
                 }
-                ActivityTextCard(
-                    title: Copywriter.activitiesRangeTextTitle,
-                    text: ActivityRangeText.make(days, title: Copywriter.rangeTitle(range, now: now, calendar: calendar), calendar: calendar),
-                    copy: actions.copy
-                )
             }
             .padding(.bottom, UIMetrics.reportsGap)
         }

@@ -22,12 +22,10 @@ struct ActivityDayViewTests {
         try sut.inspect().find(ViewType.Button.self) { try $0.labelView().find(text: title) != nil }.tap()
     }
 
-    @Test func copyGivesTheStandupText() throws {
-        var copied: String?
-        var actions = ActivityDayActions()
-        actions.copy = { copied = $0 }
-        try press(view(actions), "Copy")
-        #expect(copied == ActivityStandupText.make(Fix.day(), calendar: Fix.calendar))
+    @Test func theDayViewHasNoTextCard() throws {
+        let sut = try view().inspect()
+        #expect(Find.lacks(sut, text: Copywriter.activitiesStandupTitle))
+        #expect(Find.lacks(sut, text: Copywriter.activitiesCopy))
     }
 
     @Test func theTopRowShowsTheTableAndTheFourTiles() throws {

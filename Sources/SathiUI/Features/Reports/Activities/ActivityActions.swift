@@ -12,10 +12,8 @@ struct ActivityDayActions {
     var edit: (ActivityID, ActivityEdit) -> ActivityEditResult = { _, _ in .notFound }
     var add: (ActivityEdit) -> ActivityEditResult = { _ in .notFound }
     var delete: (ActivityID) -> Bool = { _ in true }
-    var copy: (String) -> Void = ActivityPasteboard.copy
 }
 
 struct ActivityRangeActions {
     var openDay: (DayKey) -> Void = { _ in }
-    var copy: (String) -> Void = ActivityPasteboard.copy
 }
