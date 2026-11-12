@@ -93,7 +93,7 @@ extension Copywriter {
 
     package static func reportsCategorySummary(_ table: CategoryTable, kind: ReportRange) -> String {
         let previous = table.rows.compactMap(\.previousSeconds)
-        let count = "logged · " + categoryCount(table.rows.count)
+        let count = "logged · " + categoryCount(table.categoryRowCount)
         guard !previous.isEmpty else { return count }
         let change = RangeChange(current: table.totalSeconds, previous: previous.reduce(0, +), hasData: true)
         return rangeChange(change, kind: kind) { categoryTableHours($0) }

@@ -32,6 +32,26 @@ struct ActivityPromptWhereTests {
         #expect(!Prompt.hasText(sut, "Break"))
     }
 
+    @Test func carryKeepsTheAwayPickWhenTheNewScreenAllowsIt() {
+        let old = ActivityPromptModel(Reasons.withKeep(.whatNow))
+        old.turnAway(true)
+        old.pickAway(named: "Gym")
+        let new = ActivityPromptModel(Reasons.withKeep(.center))
+        new.carry(from: old)
+        #expect(new.awayOn)
+        #expect(new.awayPick == PromptAwayPick(place: .other, name: "Gym"))
+    }
+
+    @Test func carryDropsTheAwayPickWhenTheNewScreenHasNoAway() {
+        let old = ActivityPromptModel(Reasons.withKeep(.whatNow))
+        old.turnAway(true)
+        old.pickAway(.walk)
+        let new = ActivityPromptModel(back())
+        new.carry(from: old)
+        #expect(!new.awayOn)
+        #expect(new.awayPick == nil)
+    }
+
     @Test func aTapSavesThePlaceAtOnceAndFillsTheBox() throws {
         let calls = PromptCalls()
         let s = back(calls)

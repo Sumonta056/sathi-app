@@ -3,6 +3,7 @@ import Foundation
 extension Engine {
     func mergeOldRowsOnce() {
         guard !data.prefs.tracker.mergedOldRows else { return }
+        defer { activityStore.releaseUnused() }
         let keep = rowsInAwayUndo()
         var done = true
         for key in activityStore.savedMonths() {

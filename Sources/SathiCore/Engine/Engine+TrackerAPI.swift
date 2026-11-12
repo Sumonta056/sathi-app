@@ -145,6 +145,7 @@ extension Engine {
         trackerRuntime.lastAway = nil
         trackerRuntime.awayItems = []
         trackerRuntime.endedByAway = nil
+        trackerRuntime.endedMergedInto = nil
         trackerRuntime.loggedWhileAway = []
     }
 }

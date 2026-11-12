@@ -27,6 +27,14 @@ struct EngineTrackerGoAwayEdgeTests {
         #expect(h.engine.nextTickDelay() == Timing.idleTickMax)
     }
 
+    @Test func goAwayWithTheTrackerOffDoesNothing() {
+        let h = EngineHarness.tracker(at: wed(10)) { $0.prefs.tracker.isOn = false }
+        h.engine.goAway(place: .walk, name: nil)
+        #expect(h.tracker.awaySince == nil)
+        #expect(h.tracker.awayPlan == nil)
+        #expect(h.saved.isEmpty)
+    }
+
     @Test func aBreakDuringAChosenAwayEndsWithThePlannedPlace() {
         let h = goneAway()
         h.clock.advance(minutes: 5)

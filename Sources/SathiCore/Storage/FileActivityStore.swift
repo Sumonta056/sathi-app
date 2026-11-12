@@ -42,13 +42,24 @@ package final class FileActivityStore: ActivityStore, @unchecked Sendable {
             let files = FileManager.default
             guard !files.fileExists(atPath: target.path) else { return true }
             guard files.fileExists(atPath: url(key).path) else { return JSONFiles.write(contents(key), to: target) }
-            return (try? files.copyItem(at: url(key), to: target)) != nil
+            let temp = folder.appendingPathComponent(UUID().uuidString + StorageKeys.tempSuffix)
+            defer { try? files.removeItem(at: temp) }
+            guard (try? files.copyItem(at: url(key), to: temp)) != nil else { return false }
+            return (try? files.moveItem(at: temp, to: target)) != nil
         }
     }
 
     @discardableResult
     package func flush() -> Bool {
         queue.sync { writeDirty() }
+    }
+
+    package func releaseUnused() {
+        queue.sync { dropReadOnlyMonths() }
+    }
+
+    private func dropReadOnlyMonths() {
+        cache = cache.filter { $0.key == currentMonth || dirty.contains($0.key) }
     }
 
     private func rounded(_ item: Activity) -> Activity {
@@ -90,7 +101,7 @@ package final class FileActivityStore: ActivityStore, @unchecked Sendable {
             guard let file = cache[key], JSONFiles.write(file, to: url(key)) else { continue }
             dirty.remove(key)
         }
-        cache = cache.filter { $0.key == currentMonth || dirty.contains($0.key) }
+        dropReadOnlyMonths()
         return dirty.isEmpty
     }
 

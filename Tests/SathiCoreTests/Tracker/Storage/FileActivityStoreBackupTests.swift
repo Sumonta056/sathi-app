@@ -40,6 +40,25 @@ struct FileActivityStoreBackupTests {
         #expect(readText(backupFile) == fileWithUnknowns)
     }
 
+    @Test func noTemporaryFileStaysAfterABackup() throws {
+        let s = store()
+        s.save(ActivityMonth(key: key, items: [item("Plan")]))
+        s.flush()
+        #expect(s.backup(key))
+        let names = try FileManager.default.contentsOfDirectory(atPath: folder.path).sorted()
+        #expect(names == ["2026-11.backup.json", "2026-11.json"])
+    }
+
+    @Test func releasingUnusedMonthsDropsWhatWasOnlyRead() throws {
+        try writeText(fileWithUnknowns, to: file)
+        let s = store()
+        #expect(s.month(key).items.map(\.text) == ["Plan"])
+        try writeText(fileWithUnknowns.replacingOccurrences(of: "Plan", with: "Changed"), to: file)
+        #expect(s.month(key).items.map(\.text) == ["Plan"])
+        s.releaseUnused()
+        #expect(s.month(key).items.map(\.text) == ["Changed"])
+    }
+
     @Test func backupFilesAreNotListedAsMonths() {
         let s = store()
         s.save(ActivityMonth(key: key, items: [item("Plan")]))

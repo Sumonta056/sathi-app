@@ -66,7 +66,7 @@ struct TrackerPlacesRowTests {
         #expect(try ids(row(h)) == [prefix + "Doctor", prefix + "Gym"])
     }
 
-    @Test func removingTheLastPlaceShowsTheEmptyText() throws {
+    @Test func removingTheLastPlaceHidesYours() throws {
         let h = harness(["Doctor"])
         try tap(row(h), prefix + "Doctor")
         #expect(h.store.prefs.tracker.awayPlaces == [])

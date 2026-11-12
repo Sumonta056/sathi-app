@@ -71,6 +71,16 @@ struct CopywriterReportsV2Tests {
         #expect(Copywriter.reportsCategorySummary(fresh, kind: .week) == "logged · 1 category")
     }
 
+    @Test func awayPlacesDoNotCountAsCategories() {
+        let table = CategoryTable([
+            CategoryTableInput(name: "Work", colorHex: 0, seconds: 7200),
+            CategoryTableInput(name: "Lunch · Away", colorHex: 0, seconds: 600, isAway: true),
+            CategoryTableInput(name: "Walk · Away", colorHex: 0, seconds: 300, isAway: true)
+        ])
+        #expect(table.rows.count == 3)
+        #expect(Copywriter.reportsCategorySummary(table, kind: .week) == "logged · 1 category")
+    }
+
     @Test func weekdaysStartOnMonday() {
         #expect(Copywriter.reportsWeekdays == ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
     }

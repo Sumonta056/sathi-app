@@ -14,6 +14,7 @@ final class ActivityPromptModel: ObservableObject {
     @Published var awayNewName = ""
     let places: PromptWhereForm
     private let nowChoice: Date?
+    private let allowsAway: Bool
     var answered = false
     private var asking = false
 
@@ -21,7 +22,9 @@ final class ActivityPromptModel: ObservableObject {
         var draft = state.draft
         if let event = state.event, state.kind == .eventAsk, draft.text.isEmpty { draft.text = event.title }
         self.draft = draft
-        nowChoice = ActivityPromptBuilder.screen(state).startedChoices.last
+        let screen = ActivityPromptBuilder.screen(state)
+        nowChoice = screen.startedChoices.last
+        allowsAway = screen.allowsAway
         started = nowChoice
         calendars = TrackerCalendarInfo(access: state.calendarAccess, calendars: state.calendars, defaultID: state.defaultCalendarID)
         places = PromptWhereForm(state)
@@ -34,6 +37,9 @@ final class ActivityPromptModel: ObservableObject {
     func carry(from old: ActivityPromptModel) {
         draft.text = old.draft.text
         draft.category = old.draft.category
+        guard allowsAway else { return }
+        awayOn = old.awayOn
+        awayPick = old.awayPick
     }
 
     func fill(_ recent: RecentActivity) {
