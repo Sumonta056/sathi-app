@@ -27,7 +27,7 @@ Sources/
     Today/         TodayScreen, TodayShare, ComingUpList
     Quick/         QuickReminder, QuickPrefs, QuickTime, QuickActivity
     TimeBlock/     TimeBlock, TimeBlockLength, TimeBlockPrefs
-    Tracker/       Activity, ActivityKind, ActivityCategory(+List), ActivityDraft, ActivityEdit, ActivityDay, AwayPlaceList, ActivityMonth, RunningActivity, AwayPlace, AwaySpan, TrackerPrefs(+Hours), TrackerLiveState, PromptKind, PromptState, TrackerPromptState, TrackerPromptActions, TrackerCalendarInfo, TrackerNote(+State), TrackerEndOfDayState, EventMode, KeyShortcut, MonthKey, Rules/ (AskTime, SwitchTimes, TrackerHours, RecentList, ActivityEditCheck), Calendar/ (EventRules, EventCategoryRule, SpanCut)
+    Tracker/       Activity, ActivityKind, ActivityCategory(+List), ActivityDraft, ActivityEdit, ActivityDay, AwayPlan, AwayPlaceList, ActivityMonth, RunningActivity, AwayPlace, AwaySpan, TrackerPrefs(+Hours), TrackerLiveState, PromptKind, PromptState, TrackerPromptState, TrackerPromptActions, TrackerCalendarInfo, TrackerNote(+State), TrackerEndOfDayState, EventMode, KeyShortcut, MonthKey, Rules/ (AskTime, SwitchTimes, TrackerHours, RecentList, ActivityEditCheck, ActivityMerge, StoredRowsMerge), Calendar/ (EventRules, EventCategoryRule, SpanCut)
     Constants/     Timing, Limits, StorageKeys, SoundName
     Scheduling/    EscalationPolicy (bubble/lock), TickPlanner (timer delay)
     Stats/         Stats (daily totals), GymLegacyMinutes, StreakCalculator, ReportBuilder + Report, ReportChart + ReportChartBuilder, BuddyDayJudge, AllBuddiesStreak, ReportsOverview + ReportsOverviewBuilder, StreakMonthBuilder, BuddyTabReport, BuddyRangeBuilder + BuddyRangeReport, CategoryTable, RangeChange, StatsRange, ActivityDayOverview, ActivityRangeStats, ActivityGaps, DaySummary
@@ -35,7 +35,7 @@ Sources/
     Formatting/    Fmt, Copywriter (+Reading, +Meditation, +Gym, +DaySummary, +Quick, +TimeBlock, +TimeBlockPopups, +TimeBlockSettings, +TimeBlockView)
     Ports/         Clock, StateStore, HistoryStore, SoundPlayer, SessionAudio, ReminderPresenter, CalendarWriter (+CalendarEventInfo, event read), LinkOpener, ActivityStore, PresenceMonitor, HotkeyRegistrar
     Storage/       JSONFiles, FileSlot, FileStateStore, FileHistoryStore, FileActivityStore, MonthEvents, MonthActivities, RawJSON, LegacyMigrator, Legacy/ (v1 shapes)
-    Engine/        Engine (+Loop, +Actions, +Session, +SessionPause, +SessionRestore, +Breath, +Corner, +Display, +Menu, +History, +Reports, +ReportsV2, +RangeReports, +ActivitiesOverview, +Today, +DaySummary, +Quick, +QuickLoop, +TimeBlock, +TimeBlockLoop, +TimeBlockCalendar, +TimeBlockDisplay, +TimeBlockMenu, +Tracker* (API, Loop, Log, Away, Places, Hooks, Runtime, PromptState, Categories, ReportAPI, Export, Calendar, CalendarRead, CalendarTick, CalendarWrite, CalendarAway, CalendarRuntime)), StatusModel
+    Engine/        Engine (+Loop, +Actions, +Session, +SessionPause, +SessionRestore, +Breath, +Corner, +Display, +Menu, +History, +Reports, +ReportsV2, +RangeReports, +ActivitiesOverview, +Today, +DaySummary, +Quick, +QuickLoop, +TimeBlock, +TimeBlockLoop, +TimeBlockCalendar, +TimeBlockDisplay, +TimeBlockMenu, +Tracker* (API, Loop, Log, Away, Places, Hooks, Runtime, PromptState, Categories, ReportAPI, Export, Calendar, CalendarRead, CalendarTick, CalendarWrite, CalendarAway, CalendarRuntime, GoAway, Tidy)), StatusModel
   SathiUI/       SwiftUI + AppKit. Views and windows only.
     Constants/     UIMetrics (+Bubble, +Components, +Corner, +Lock, +Meditation, +Breath, +Menu, +Quick, +Reports, +Settings, +TimeBlock, +TimeBlockSettings, +CategoryTable, +ReportsV2, +ActivitiesV2, +TodayV2, +Sidebar), TimeSlots
     Theme/         NightPalette (Night tokens), Typography, ButtonStyles, GhostButton, ProgressBar, Shake, ShakeSound, Color+Hex, BreathFont, RGB
@@ -56,7 +56,7 @@ site/             GitHub Pages website: index.html, site.css, screenshots/, og.p
 .github/          workflows/ ci.yml (lint, test, site check), pages.yml (deploy site/), release.yml (tag → DMG on GitHub Release)
 ```
 
-Data lives in `~/Library/Application Support/Sathi/`: `prefs.json`, `state.json`, `history/YYYY-MM.json`, `activities/YYYY-MM.json`.
+Data lives in `~/Library/Application Support/Sathi/`: `prefs.json`, `state.json`, `history/YYYY-MM.json`, `activities/YYYY-MM.json`, `activities/YYYY-MM.backup.json` (one copy of a month made before the old-rows merge).
 
 Dependency direction: `Sathi → SathiUI → SathiCore`. Never the other way.
 
