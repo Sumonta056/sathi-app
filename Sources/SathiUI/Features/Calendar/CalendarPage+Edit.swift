@@ -27,15 +27,8 @@ extension CalendarPage {
         }
     }
 
-    var gridActions: CalendarGridActions {
-        let engine = e
-        let focus = $focus
-        var a = CalendarGridActions()
-        a.slot = { day, slot, y in
-            focus.wrappedValue = CalendarPageFocus(popover: CalendarPopoverTarget(day: day, y: y, form: Self.newEvent(at: slot, engine: engine)))
-        }
-        a.block = { day, block, y in Self.tap(block, day: day, y: y, engine: engine, focus: &focus.wrappedValue) }
-        return a
+    func gridActions(kind: ReportRange) -> CalendarGridActions {
+        .page(kind: kind, engine: e, focus: $focus, selected: $selected, error: $mergeError)
     }
 
     @ViewBuilder func side(_ data: CalendarPageData, kind: ReportRange) -> some View {

@@ -10,6 +10,7 @@ struct CalendarDayColumn: View {
     let categories: [ActivityCategory]
     let calendar: Calendar
     var actions = CalendarGridActions()
+    var selected: Set<ActivityID> = []
     var popover: Binding<CalendarPopoverTarget?> = .constant(nil)
 
     var body: some View {
@@ -23,10 +24,11 @@ struct CalendarDayColumn: View {
                 ForEach(placed, id: \.block.id) { p in
                     let lane = width / CGFloat(max(1, p.lanes))
                     let y = math.y(for: p.span.start)
-                    Button { actions.block(day, p.block, y) } label: {
+                    Button { actions.press(day, p.block, y) } label: {
                         CalendarBlockView(
                             block: p.block, text: texts[p.block.id] ?? CalendarBlockText(time: "", spoken: p.block.title),
-                            height: math.height(p.span), categories: categories
+                            height: math.height(p.span), categories: categories,
+                            selected: CalendarMergePick.id(of: p.block).map(selected.contains) ?? false
                         )
                     }
                     .buttonStyle(.plain)

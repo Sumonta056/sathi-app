@@ -8,6 +8,7 @@ struct CalendarTimeGrid: View {
     let calendar: Calendar
     let categories: [ActivityCategory]
     var actions = CalendarGridActions()
+    var selected: Set<ActivityID> = []
     var popover: Binding<CalendarPopoverTarget?> = .constant(nil)
 
     static let hourLabels = (0 ..< Limits.calendarGridHours).map {
@@ -49,7 +50,7 @@ struct CalendarTimeGrid: View {
                         CalendarDayColumn(
                             day: day, placed: CalendarBlockLayout.place(data.blocks, within: math.interval), texts: data.texts,
                             math: math, now: day == today ? now : nil, categories: categories, calendar: calendar,
-                            actions: actions, popover: popover
+                            actions: actions, selected: selected, popover: popover
                         )
                         .overlay(alignment: .leading) { Night.divider.frame(width: UIMetrics.calendarLine) }
                     }

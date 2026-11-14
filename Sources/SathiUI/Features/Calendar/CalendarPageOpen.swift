@@ -1,3 +1,4 @@
+import AppKit
 import SathiCore
 import SwiftUI
 
@@ -26,4 +27,14 @@ struct CalendarPageFocus {
 struct CalendarGridActions {
     var slot: (DayKey, Date, CGFloat) -> Void = { _, _, _ in }
     var block: (DayKey, CalendarBlock, CGFloat) -> Void = { _, _, _ in }
+    var toggle: ((ActivityID) -> Void)?
+    var command: () -> Bool = { NSEvent.modifierFlags.contains(.command) }
+
+    func press(_ day: DayKey, _ block: CalendarBlock, _ y: CGFloat) {
+        if let toggle, let id = CalendarMergePick.id(of: block), command() {
+            toggle(id)
+        } else {
+            self.block(day, block, y)
+        }
+    }
 }

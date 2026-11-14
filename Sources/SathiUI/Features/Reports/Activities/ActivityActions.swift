@@ -27,6 +27,15 @@ extension ActivityDayActions {
         a.delete = { engine.deleteActivity($0) }
         return a
     }
+
+    static func merging(_ engine: Engine) -> ActivityDayActions {
+        var a = ActivityDayActions.engine(engine)
+        a.mergeCheck = { engine.mergeCheck($0) }
+        a.merge = { engine.mergeActivities($0) }
+        a.undoMerge = { engine.undoMerge() }
+        a.clearMergeUndo = { engine.clearMergeUndo() }
+        return a
+    }
 }
 
 struct ActivityRangeActions {

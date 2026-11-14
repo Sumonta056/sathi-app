@@ -6,6 +6,8 @@ struct CalendarPage: View {
     @State private var picked: CalendarPageRange?
     @State private var memo = RangeMemo<CalendarPageRange, CalendarPageData>()
     @State var focus: CalendarPageFocus
+    @State var selected: Set<ActivityID> = []
+    @State var mergeError: String?
     @EnvironmentObject var e: Engine
 
     init(day: DayKey? = nil, range: CalendarPageRange? = nil, editing: CalendarActivityEdit? = nil) {
@@ -27,7 +29,12 @@ struct CalendarPage: View {
         }
         .onDisappear { e.calendarPageClosed() }
         .onChange(of: day) { _ in picked = nil }
-        .onChange(of: range) { _ in focus = CalendarPageFocus() }
+        .onChange(of: range) { _ in
+            focus = CalendarPageFocus()
+            selected = []
+            mergeError = nil
+            e.clearMergeUndo()
+        }
     }
 
     private var shown: CalendarPageRange {
@@ -42,11 +49,12 @@ struct CalendarPage: View {
             let data = memo.value(range, end: range.interval.end, engine: e) { $0.calendarPage($1) }
             HStack(alignment: .top, spacing: UIMetrics.calendarSideGap) {
                 VStack(alignment: .leading, spacing: UIMetrics.calendarSideGap) {
-                    if range.kind != .day { CalendarStatsLine(stats: data.stats, kind: range.kind) }
+                    if range.kind != .day { CalendarStatsLine(stats: data.stats, kind: range.kind) } else { strip(data) }
                     grid(range, data)
                 }
                 side(data, kind: range.kind)
             }
+            .onChange(of: data.blocks) { selected = CalendarMergePick.pruned(selected, in: CalendarMergePick.rows($0)) }
         } else {
             CalendarAccessGate()
         }
@@ -60,9 +68,16 @@ struct CalendarPage: View {
         } else {
             CalendarTimeGrid(
                 range: range, data: data, now: e.now, calendar: e.rangeCalendar, categories: e.activityCategories,
-                actions: gridActions, popover: $focus.popover
+                actions: gridActions(kind: range.kind), selected: range.kind == .day ? selected : [], popover: $focus.popover
             )
         }
+    }
+
+    private func strip(_ data: CalendarPageData) -> some View {
+        CalendarMergeStrip(
+            rows: CalendarMergePick.rows(data.blocks), calendar: e.rangeCalendar, canUndo: e.mergeUndo != nil,
+            actions: .merging(e), selected: $selected, error: $mergeError
+        )
     }
 
     private func binding(_ range: CalendarPageRange) -> Binding<CalendarPageRange> {

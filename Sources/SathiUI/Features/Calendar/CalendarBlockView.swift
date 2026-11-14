@@ -6,6 +6,11 @@ struct CalendarBlockView: View {
     let text: CalendarBlockText
     let height: CGFloat
     let categories: [ActivityCategory]
+    var selected = false
+
+    static func border(selected: Bool) -> CGFloat {
+        selected ? UIMetrics.calendarSelectedBorder : UIMetrics.cardBorder
+    }
 
     static func showsText(height: CGFloat) -> Bool { height >= UIMetrics.calendarBlockMinHeight }
 
@@ -18,7 +23,8 @@ struct CalendarBlockView: View {
             .frame(maxWidth: .infinity, alignment: .topLeading)
             .frame(height: max(height, UIMetrics.calendarBarMinHeight), alignment: .topLeading)
             .background(shape.fill(look.fill))
-            .overlay(shape.strokeBorder(look.stroke ?? .clear, lineWidth: UIMetrics.cardBorder))
+            .overlay(shape.strokeBorder(selected ? Night.tracker : (look.stroke ?? .clear), lineWidth: Self.border(selected: selected)))
+            .accessibilityAddTraits(selected ? .isSelected : [])
             .clipShape(shape)
             .accessibilityElement(children: .combine)
             .accessibilityLabel(text.spoken)

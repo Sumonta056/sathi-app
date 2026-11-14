@@ -88,13 +88,7 @@ struct ActivitiesPage: View {
     }
 
     private var dayActions: ActivityDayActions {
-        let engine = e
-        var a = ActivityDayActions.engine(engine)
-        a.mergeCheck = { engine.mergeCheck($0) }
-        a.merge = { engine.mergeActivities($0) }
-        a.undoMerge = { engine.undoMerge() }
-        a.clearMergeUndo = { engine.clearMergeUndo() }
-        return a
+        ActivityDayActions.merging(e)
     }
 
     private var rangeActions: ActivityRangeActions {
