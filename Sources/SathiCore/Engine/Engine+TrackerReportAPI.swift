@@ -27,6 +27,7 @@ extension Engine {
 
     @discardableResult
     package func editActivity(_ id: ActivityID, _ edit: ActivityEdit) -> ActivityEditResult {
+        clearMergeUndo()
         guard let old = storedActivity(id), old.kind != .timeBlock else { return .notFound }
         let edit = old.kind == .away ? awayEdit(edit.wholeSeconds) : edit.wholeSeconds
         if let problem = ActivityEditCheck.problem(edit, others: busySpans(near: edit, except: id), calendar: calendar) { return problem }
@@ -56,6 +57,7 @@ extension Engine {
 
     @discardableResult
     package func addPastActivity(_ edit: ActivityEdit) -> ActivityEditResult {
+        clearMergeUndo()
         let edit = edit.wholeSeconds
         if let problem = ActivityEditCheck.problem(edit, others: busySpans(near: edit, except: nil), calendar: calendar) { return problem }
         if edit.end > clock.now { return .inFuture }
@@ -77,6 +79,7 @@ extension Engine {
 
     @discardableResult
     package func deleteActivity(_ id: ActivityID) -> Bool {
+        clearMergeUndo()
         guard let old = storedActivity(id), calendarActivityDeleted(old) else { return false }
         removeStoredActivity(id)
         return true

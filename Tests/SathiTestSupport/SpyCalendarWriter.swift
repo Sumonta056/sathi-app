@@ -21,6 +21,7 @@ package final class SpyCalendarWriter: CalendarWriter {
     package private(set) var calendarsCalls = 0
     package var nextSaveResult: CalendarSaveResult?
     package var nextUpdateResult: CalendarSaveResult?
+    package var updateResultQueue: [CalendarSaveResult] = []
     package private(set) var saved: [CalendarEventDraft] = []
     package private(set) var updated: [(String, CalendarEventDraft)] = []
     package private(set) var requestCount = 0
@@ -53,6 +54,7 @@ package final class SpyCalendarWriter: CalendarWriter {
 
     package func update(eventID: String, draft: CalendarEventDraft) -> CalendarSaveResult {
         updated.append((eventID, draft))
+        if !updateResultQueue.isEmpty { return updateResultQueue.removeFirst() }
         return nextUpdateResult ?? .saved(eventID: eventID)
     }
 

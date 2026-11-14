@@ -19,6 +19,8 @@ struct ActivityTimelineList: View {
     let calendar: Calendar
     var calendarNames: [String: String] = [:]
     var editing: ActivityEditTarget?
+    var selected: Set<ActivityID> = []
+    var onToggle: (ActivityID) -> Void = { _ in }
     var onEdit: (ActivityID) -> Void = { _ in }
     var onFill: (DateInterval) -> Void = { _ in }
     var onDelete: (ActivityID) -> Void = { _ in }
@@ -35,6 +37,7 @@ struct ActivityTimelineList: View {
                         .foregroundStyle(Night.faint)
                         .frame(width: UIMetrics.activitiesTimeWidth, alignment: .leading)
                         .padding(.top, UIMetrics.activitiesTimeTop)
+                    selectColumn(row)
                     content(row)
                 }
             }
@@ -52,6 +55,20 @@ struct ActivityTimelineList: View {
         case let .activity(a, _): return a.start
         case let .gap(i): return i.start
         }
+    }
+
+    private func selectColumn(_ row: ActivityLogRow) -> some View {
+        Group {
+            if case let .activity(a, running) = row, !running {
+                ActivitySelectBox(
+                    on: selected.contains(a.id), label: Copywriter.mergeSelectLabel(a.kind == .away ? a.awayText : a.text)
+                ) { onToggle(a.id) }
+            } else {
+                Color.clear
+            }
+        }
+        .frame(width: UIMetrics.mergeBoxColumn, height: UIMetrics.mergeBox)
+        .padding(.top, UIMetrics.activitiesTimeTop)
     }
 
     @ViewBuilder private func content(_ row: ActivityLogRow) -> some View {

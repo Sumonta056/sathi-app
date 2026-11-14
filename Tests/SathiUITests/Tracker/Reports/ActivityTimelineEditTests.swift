@@ -19,7 +19,8 @@ final class ActivityTimelineEditTests {
         return ActivityTimelineCard(
             day: day, count: ActivityDayStats(day).count, gaps: ActivityGaps.spans(day, now: .distantFuture, isTrackerDay: true),
             categories: ActivityCategory.defaults,
-            calendar: Fix.calendar, calendars: Fix.calendars, calendarNames: [:], actions: actions, editing: binding
+            calendar: Fix.calendar, calendars: Fix.calendars, calendarNames: [:], actions: actions, editing: binding,
+            selected: .constant([]), mergeError: .constant(nil)
         )
     }
 
