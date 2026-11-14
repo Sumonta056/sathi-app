@@ -16,10 +16,16 @@ package struct CalendarPageRange: Equatable, Sendable {
         var cal = Calendar.gregorian(in: calendar.timeZone)
         cal.firstWeekday = calendar.firstWeekday
         let pageDay = CalendarPageDay.key(holding: date, calendar: cal)
-        return containing(day: pageDay, kind: kind, calendar: cal)
+        return make(day: pageDay, kind: kind, calendar: cal)
     }
 
-    private static func containing(day pageDay: DayKey, kind: ReportRange, calendar cal: Calendar) -> CalendarPageRange {
+    package static func containing(day pageDay: DayKey, kind: ReportRange, calendar: Calendar) -> CalendarPageRange {
+        var cal = Calendar.gregorian(in: calendar.timeZone)
+        cal.firstWeekday = calendar.firstWeekday
+        return make(day: pageDay, kind: kind, calendar: cal)
+    }
+
+    private static func make(day pageDay: DayKey, kind: ReportRange, calendar cal: Calendar) -> CalendarPageRange {
         let stats = StatsRange.containing(pageDay.start(in: cal), kind: kind, calendar: cal)
         let days = stats.days.map { DayKey($0.start, calendar: cal) }
         let first = days.first ?? pageDay
@@ -72,7 +78,7 @@ package struct CalendarPageRange: Equatable, Sendable {
     private func shifted(by step: Int) -> CalendarPageRange {
         let stats = StatsRange.containing(firstStart, kind: kind, calendar: calendar)
         let moved = step < 0 ? stats.previous : stats.next
-        return .containing(day: DayKey(moved.interval.start, calendar: calendar), kind: kind, calendar: calendar)
+        return .make(day: DayKey(moved.interval.start, calendar: calendar), kind: kind, calendar: calendar)
     }
 
     private var firstStart: Date {

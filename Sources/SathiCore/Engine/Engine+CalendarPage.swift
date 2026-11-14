@@ -6,12 +6,24 @@ package struct CalendarPageData: Equatable, Sendable {
     package var blocks: [CalendarBlock]
     package var stats: CalendarPageStats
     package var monthCells: [[CalendarMonthCell]]
+    package var texts: [String: CalendarBlockText]
+}
+
+package struct CalendarBlockText: Equatable, Sendable {
+    package var time: String
+    package var spoken: String
+
+    package init(time: String, spoken: String) {
+        self.time = time
+        self.spoken = spoken
+    }
 }
 
 extension Engine {
     package func calendarPage(_ range: CalendarPageRange) -> CalendarPageData {
-        let readable = calendarAccess == .allowed ? calendarWriter.readableCalendars() : []
-        let events = pageEvents(range, calendars: shownCalendars(readable))
+        let read = pageRead(range)
+        let readable = read.readable
+        let events = read.events
         let tracks = data.prefs.tracker.isOn
         let rows = tracks ? pageActivities(range.interval) : []
         let running = tracks ? pageRunning(range.interval) : nil
@@ -34,8 +46,29 @@ extension Engine {
             allDay: all.filter(\.isAllDay),
             blocks: all.filter { !$0.isAllDay },
             stats: CalendarPageStats.make(events: events, activities: tracked, interval: range.interval),
-            monthCells: cells
+            monthCells: cells,
+            texts: Dictionary(all.map { ($0.id, text(of: $0)) }) { first, _ in first }
         )
+    }
+
+    private func text(of b: CalendarBlock) -> CalendarBlockText {
+        let i = b.interval
+        return CalendarBlockText(
+            time: Copywriter.trackerSpan(i.start, i.end, calendar: calendar),
+            spoken: Copywriter.calendarBlockSpoken(b.title, i.start, i.end, calendar: calendar)
+        )
+    }
+
+    private func pageRead(_ range: CalendarPageRange) -> CalendarPageRead {
+        let key = CalendarPageReadKey(
+            interval: range.interval, stores: storeRevision,
+            hidden: data.prefs.calendarPage.hiddenCalendarIDs, access: calendarAccess
+        )
+        if let cached = calendarPageRead, cached.key == key { return cached }
+        let readable = calendarAccess == .allowed ? calendarWriter.readableCalendars() : []
+        let read = CalendarPageRead(key: key, readable: readable, events: pageEvents(range, calendars: shownCalendars(readable)))
+        calendarPageRead = read
+        return read
     }
 
     private func pageEvents(_ range: CalendarPageRange, calendars: [CalendarChoice]) -> [CalendarEventInfo] {

@@ -108,3 +108,14 @@ struct CalendarPageRangeTests {
         #expect(range.monthWeeks.count == 5)
     }
 }
+
+@Suite("CalendarPageRange from a day")
+struct CalendarPageRangeDayTests {
+    @Test func dayKeyOpensThatDay() {
+        let cal = FixedZone.berlin.calendar
+        let thu = DayKey(FixedZone.berlin.date(2026, 11, 12), calendar: cal)
+        let range = CalendarPageRange.containing(day: thu, kind: .day, calendar: cal)
+        #expect(range.days == [thu])
+        #expect(CalendarPageRange.containing(day: thu, kind: .week, calendar: cal).days.contains(thu))
+    }
+}

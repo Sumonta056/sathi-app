@@ -8,6 +8,12 @@ struct CalendarTimeGrid: View {
     let calendar: Calendar
     let categories: [ActivityCategory]
 
+    static let hourLabels = (0 ..< Limits.calendarGridHours).map {
+        Copywriter.calendarHourLabel(hour: (Limits.calendarPageDayStartHour + $0) % Limits.calendarGridHours)
+    }
+
+    var initialRow: Int { range.initialScrollRow(now: now) }
+
     var body: some View {
         let today = CalendarPageDay.key(holding: now, calendar: calendar)
         let columns = range.days.map { CalendarGridMath(day: $0, calendar: calendar, hourHeight: UIMetrics.calendarHourHeight) }
@@ -36,10 +42,10 @@ struct CalendarTimeGrid: View {
         ScrollViewReader { proxy in
             ScrollView(.vertical) {
                 HStack(alignment: .top, spacing: 0) {
-                    labels(columns.first)
+                    labels
                     ForEach(Array(zip(range.days, columns)), id: \.0) { day, math in
                         CalendarDayColumn(
-                            placed: CalendarBlockLayout.place(data.blocks, within: math.interval),
+                            placed: CalendarBlockLayout.place(data.blocks, within: math.interval), texts: data.texts,
                             math: math, now: day == today ? now : nil, categories: categories, calendar: calendar
                         )
                         .overlay(alignment: .leading) { Night.divider.frame(width: UIMetrics.calendarLine) }
@@ -47,15 +53,15 @@ struct CalendarTimeGrid: View {
                 }
                 .background(alignment: .top) { hourLines }
             }
-            .onAppear { proxy.scrollTo(range.initialScrollRow(now: now), anchor: .top) }
+            .onAppear { proxy.scrollTo(initialRow, anchor: .top) }
             .onChange(of: range) { proxy.scrollTo($0.initialScrollRow(now: now), anchor: .top) }
         }
     }
 
-    private func labels(_ math: CalendarGridMath?) -> some View {
+    private var labels: some View {
         VStack(spacing: 0) {
-            ForEach(Array((math?.rows ?? []).enumerated()), id: \.offset) { row, start in
-                Text(verbatim: Copywriter.calendarHourLabel(start, calendar: calendar))
+            ForEach(Array(Self.hourLabels.enumerated()), id: \.offset) { row, label in
+                Text(verbatim: label)
                     .font(Typography.tracker(UIMetrics.calendarHourFont, .semibold))
                     .foregroundStyle(Night.faint)
                     .padding(.top, UIMetrics.calendarColumnInset)

@@ -1,5 +1,5 @@
 import Foundation
-import SathiCore
+@testable import SathiCore
 import SathiTestSupport
 @testable import SathiUI
 import SwiftUI
@@ -21,8 +21,15 @@ struct CalendarBlockViewTests {
         )
     }
 
+    private var text: CalendarBlockText {
+        CalendarBlockText(
+            time: Copywriter.trackerSpan(start, end, calendar: cal),
+            spoken: Copywriter.calendarBlockSpoken("Design review", start, end, calendar: cal)
+        )
+    }
+
     private func view(_ style: CalendarBlockStyle, height: CGFloat) throws -> InspectableView<ViewType.ClassifiedView> {
-        try CalendarBlockView(block: block(style), height: height, categories: [], calendar: cal).inspect()
+        try CalendarBlockView(block: block(style), text: text, height: height, categories: []).inspect()
     }
 
     @Test func textNeedsTheMinimumHeight() {
@@ -41,6 +48,11 @@ struct CalendarBlockViewTests {
         let sut = try view(.activity(category: nil), height: UIMetrics.calendarTimeRangeMinHeight)
         #expect(throws: Never.self) { try sut.find(text: "Design review") }
         #expect(throws: Never.self) { try sut.find(text: Copywriter.trackerSpan(start, end, calendar: cal)) }
+    }
+
+    @Test func shortBlockStillSpeaksTitleAndTime() throws {
+        let sut = try view(.away, height: UIMetrics.calendarBlockMinHeight - 1)
+        #expect(throws: Never.self) { try sut.find(viewWithAccessibilityLabel: text.spoken) }
     }
 
     @Test func middleBlockShowsTitleOnly() throws {

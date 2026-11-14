@@ -27,7 +27,7 @@ struct CalendarMonthCellView: View {
                 }
             }
             .padding(UIMetrics.calendarMonthPadding)
-            .frame(maxWidth: .infinity, minHeight: UIMetrics.calendarMonthCellMinHeight, alignment: .topLeading)
+            .frame(maxWidth: .infinity, minHeight: UIMetrics.calendarMonthCellMinHeight, maxHeight: .infinity, alignment: .topLeading)
             .background(cell.isToday ? Night.trackerSelectedFill : .clear)
             .opacity(cell.inRange ? 1 : UIMetrics.calendarOutsideOpacity)
             .contentShape(Rectangle())

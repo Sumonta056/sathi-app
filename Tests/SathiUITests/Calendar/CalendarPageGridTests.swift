@@ -36,6 +36,13 @@ struct CalendarPageGridTests {
         #expect(sut.findAll(where: { (try? $0.accessibilityIdentifier()) == "calendar.now" }).count == 1)
     }
 
+    @Test func dayArgumentOpensThatDay() throws {
+        let h = harness()
+        let thu = DayKey(day(2026, 3, 5), calendar: h.engine.rangeCalendar)
+        let sut = try CalendarPage(day: thu).environmentObject(h.engine).inspect()
+        #expect(throws: Never.self) { try sut.find(text: "Thu 5 Mar") }
+    }
+
     @Test func monthShowsTheMonthGrid() throws {
         let sut = try page(.month, harness())
         #expect(throws: Never.self) { try sut.find(viewWithAccessibilityIdentifier: "calendar.month.today") }

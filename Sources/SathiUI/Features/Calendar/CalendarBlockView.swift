@@ -3,9 +3,9 @@ import SwiftUI
 
 struct CalendarBlockView: View {
     let block: CalendarBlock
+    let text: CalendarBlockText
     let height: CGFloat
     let categories: [ActivityCategory]
-    let calendar: Calendar
 
     static func showsText(height: CGFloat) -> Bool { height >= UIMetrics.calendarBlockMinHeight }
 
@@ -21,7 +21,7 @@ struct CalendarBlockView: View {
             .overlay(shape.strokeBorder(look.stroke ?? .clear, lineWidth: UIMetrics.cardBorder))
             .clipShape(shape)
             .accessibilityElement(children: .combine)
-            .accessibilityLabel(block.title)
+            .accessibilityLabel(text.spoken)
     }
 
     @ViewBuilder private func content(_ look: CalendarBlockLook) -> some View {
@@ -31,7 +31,7 @@ struct CalendarBlockView: View {
                     .font(Typography.tracker(UIMetrics.calendarBlockFont, .bold))
                     .lineLimit(1)
                 if Self.showsTimeRange(height: height) {
-                    Text(verbatim: Copywriter.trackerSpan(block.interval.start, block.interval.end, calendar: calendar))
+                    Text(verbatim: text.time)
                         .font(Typography.tracker(UIMetrics.calendarBlockTimeFont, .medium))
                         .opacity(UIMetrics.calendarTimeOpacity)
                         .lineLimit(1)

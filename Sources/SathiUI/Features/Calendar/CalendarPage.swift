@@ -31,7 +31,7 @@ struct CalendarPage: View {
         if let picked { return picked }
         let calendar = e.rangeCalendar
         guard let day else { return .containing(e.now, kind: .day, calendar: calendar) }
-        return .containing(day.start(in: calendar), kind: .day, calendar: calendar)
+        return .containing(day: day, kind: .day, calendar: calendar)
     }
 
     @ViewBuilder private func content(_ range: CalendarPageRange) -> some View {

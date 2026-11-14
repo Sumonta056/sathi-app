@@ -30,7 +30,6 @@ extension UIMetrics {
     static let calendarActivityTint: Double = 0.28
     static let calendarTimeOpacity: Double = 0.8
     static let calendarGridRadius: CGFloat = 14
-    static let calendarGridMaxHeight: CGFloat = 640
     static let calendarDayHeaderHeight: CGFloat = 34
     static let calendarDayHeaderFont: CGFloat = 12
     static let calendarDayCircle: CGFloat = 22
@@ -40,7 +39,6 @@ extension UIMetrics {
     static let calendarChipGap: CGFloat = 3
     static let calendarChipPadding = EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)
     static let calendarChipRadius: CGFloat = 4
-    static let calendarNowDot: CGFloat = 7
     static let calendarNowPillFont: CGFloat = 9
     static let calendarNowPillPadding = EdgeInsets(top: 1, leading: 4, bottom: 1, trailing: 4)
     static let calendarMonthPadding: CGFloat = 6

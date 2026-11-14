@@ -4,8 +4,7 @@ extension Copywriter {
     package static let calendarAllDay = "All day"
     package static let calendarMidday = "Midday"
 
-    package static func calendarHourLabel(_ date: Date, calendar: Calendar) -> String {
-        let hour = Calendar.gregorian(in: calendar.timeZone).component(.hour, from: date)
+    package static func calendarHourLabel(hour: Int) -> String {
         let half = Limits.calendarGridHours / 2
         if hour == half { return calendarMidday }
         let shown = hour % half == 0 ? half : hour % half
@@ -17,8 +16,16 @@ extension Copywriter {
     }
 
     package static func calendarWeekday(_ day: DayKey, calendar: Calendar) -> String {
-        rangeDate(day.start(in: calendar), "EEE", calendar.timeZone)
+        let g = Calendar.gregorian(in: calendar.timeZone)
+        let index = g.component(.weekday, from: day.start(in: g)) - 1
+        return calendarWeekdayNames[index]
     }
+
+    package static func calendarBlockSpoken(_ title: String, _ start: Date, _ end: Date, calendar: Calendar) -> String {
+        title + ", " + trackerClock(start, calendar: calendar) + " to " + trackerClock(end, calendar: calendar)
+    }
+
+    private static let calendarWeekdayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
     package static func calendarDayNumber(_ day: DayKey, calendar: Calendar) -> String {
         let g = Calendar.gregorian(in: calendar.timeZone)
