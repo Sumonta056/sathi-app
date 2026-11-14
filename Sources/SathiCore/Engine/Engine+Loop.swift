@@ -14,6 +14,7 @@ extension Engine {
     package func stop() {
         isRunning = false
         stopTracker()
+        calendarPageClosed()
         timer?.invalidate()
         timer = nil
     }

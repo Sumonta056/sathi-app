@@ -30,7 +30,8 @@ enum AppEnvironment {
             audio: BreathAudioPlayer(),
             activityStore: activityStore,
             presence: SystemPresenceMonitor(),
-            hotkeys: CarbonHotkeyRegistrar()
+            hotkeys: CarbonHotkeyRegistrar(),
+            calendarChanges: EventKitCalendarChangeSource()
         )
         presenter.engine = engine
         return engine

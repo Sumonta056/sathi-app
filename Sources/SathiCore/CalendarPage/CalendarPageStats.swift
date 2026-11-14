@@ -42,7 +42,7 @@ package struct CalendarPageStats: Equatable, Sendable {
     }
 
     private static func planned(_ events: [CalendarEventInfo], in interval: DateInterval) -> TimeInterval {
-        let spans = events.filter { !$0.isAllDay }
+        let spans = events.filter { !$0.isAllDay && !$0.declined }
             .map { (max($0.start, interval.start), min($0.end, interval.end)) }
             .filter { $0.0 < $0.1 }
             .sorted { $0.0 < $1.0 }

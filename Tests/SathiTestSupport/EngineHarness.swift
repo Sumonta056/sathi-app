@@ -19,6 +19,7 @@ package struct EngineHarness {
     package let activities: InMemoryActivityStore
     package let presence: FakePresenceMonitor
     package let hotkeys: SpyHotkeyRegistrar
+    package let calendarChanges: FakeCalendarChangeSource
 
     package init(
         at start: Date = day(2026, 3, 4, 10),
@@ -38,6 +39,7 @@ package struct EngineHarness {
         self.activities = activities
         presence = FakePresenceMonitor()
         hotkeys = SpyHotkeyRegistrar()
+        calendarChanges = FakeCalendarChangeSource()
         engine = Engine(
             store: store,
             history: history,
@@ -49,7 +51,8 @@ package struct EngineHarness {
             audio: audio,
             activityStore: activities,
             presence: presence,
-            hotkeys: hotkeys
+            hotkeys: hotkeys,
+            calendarChanges: calendarChanges
         )
         engine.tick()
     }
