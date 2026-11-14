@@ -46,7 +46,8 @@ Two tracks:
 
 ### C5. Sync
 1. Sathi reads events when the page opens, when the range changes, and when macOS posts `EKEventStoreChanged`. No repeating timer.
-2. While the page is closed, the Calendar page does no work. (The tracker's own event reads do not change.)
+2. While the page is closed, the Calendar page does no work. The tracker listens to calendar changes on its own while it is on and ticks at least 1 calendar (also with the page closed); a change only marks its event cache stale and asks for a tick. The page part (calendar list, rebuild) runs only while the page is open. One observer at most, kept while the page or the tracker needs it.
+   - Ruling R1 (updated): a page event write and any `EKEventStoreChanged` mark the tracker's event cache stale (`trackerCalendarRuntime.readAt = nil`). The tracker's event rules do not change. The page does its work only while it is open.
 3. A change in Apple Calendar shows on an open page without user action.
 
 ### C6. Create and edit events
