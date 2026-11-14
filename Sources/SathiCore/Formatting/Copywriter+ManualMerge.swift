@@ -24,3 +24,7 @@ extension Copywriter {
         "\(count) rows become 1, \(quickClock(start, calendar: calendar)) to \(quickClock(end, calendar: calendar))"
     }
 }
+
+extension Copywriter {
+    package static func mergeSelectLabel(_ title: String) -> String { "Select \(title)" }
+}

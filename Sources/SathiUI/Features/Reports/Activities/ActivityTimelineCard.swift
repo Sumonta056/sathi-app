@@ -10,7 +10,10 @@ struct ActivityTimelineCard: View {
     let calendars: [CalendarChoice]
     let calendarNames: [String: String]
     let actions: ActivityDayActions
+    var canUndo = false
     @Binding var editing: ActivityEditTarget?
+    @Binding var selected: Set<ActivityID>
+    @Binding var mergeError: String?
 
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: UIMetrics.activitiesTileRadius, style: .continuous)
@@ -22,9 +25,15 @@ struct ActivityTimelineCard: View {
                 height: UIMetrics.activitiesLaneHeight, radius: UIMetrics.activitiesLaneRadius, showsLabels: false
             )
             ActivityAxis(hours: day.hours, calendar: calendar)
+            if ActivityMergeBar.shows(selected: selected, canUndo: canUndo, error: mergeError) {
+                ActivityMergeBar(
+                    check: selected.isEmpty ? nil : actions.mergeCheck(selected), calendar: calendar, canUndo: canUndo,
+                    actions: actions, selected: $selected, error: $mergeError
+                )
+            }
             ActivityTimelineList(
                 rows: rows, categories: categories, calendar: calendar, calendarNames: calendarNames,
-                editing: editing, onEdit: { editing = .activity($0) }, onFill: { editing = .add($0) },
+                editing: editing, selected: selected, onToggle: toggle, onEdit: { editing = .activity($0) }, onFill: { editing = .add($0) },
                 onDelete: { _ = actions.delete($0) }
             )
         }
@@ -32,6 +41,12 @@ struct ActivityTimelineCard: View {
         .frame(maxWidth: .infinity, alignment: .topLeading)
         .background(shape.fill(Night.card))
         .overlay(shape.strokeBorder(Night.border, lineWidth: UIMetrics.cardBorder))
+    }
+
+    private func toggle(_ id: ActivityID) {
+        if selected.contains(id) { selected.remove(id) } else { selected.insert(id) }
+        mergeError = nil
+        actions.clearMergeUndo()
     }
 
     private func header(_ rows: [ActivityLogRow]) -> some View {

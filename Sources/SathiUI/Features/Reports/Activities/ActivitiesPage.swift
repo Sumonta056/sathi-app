@@ -67,7 +67,7 @@ struct ActivitiesPage: View {
             ActivityDayView(
                 day: day, overview: overviewMemo.value(range, range: range, engine: e) { $0.activityDayOverview($1) },
                 categories: e.activityCategories, calendar: calendar, calendars: e.calendarChoices(),
-                calendarNames: e.activityCalendarTitles, actions: dayActions
+                calendarNames: e.activityCalendarTitles, actions: dayActions, canUndo: e.mergeUndo != nil
             )
         } else if let stats = page.stats {
             ActivityRangeView(
@@ -93,6 +93,10 @@ struct ActivitiesPage: View {
         a.edit = { engine.editActivity($0, $1) }
         a.add = { engine.addPastActivity($0) }
         a.delete = { engine.deleteActivity($0) }
+        a.mergeCheck = { engine.mergeCheck($0) }
+        a.merge = { engine.mergeActivities($0) }
+        a.undoMerge = { engine.undoMerge() }
+        a.clearMergeUndo = { engine.clearMergeUndo() }
         return a
     }
 

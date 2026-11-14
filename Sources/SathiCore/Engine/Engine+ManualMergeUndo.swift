@@ -10,7 +10,7 @@ extension Engine {
     package func undoMerge() -> ManualMergeUndoResult {
         guard let undo = mergeUndo else { return .gone }
         mergeUndo = nil
-        guard clock.now < undo.until, storedActivity(undo.merged.id) == undo.merged else { return .gone }
+        guard clock.now < undo.until, mergedRowIsUnchanged(undo.merged) else { return .gone }
         var rows = undo.before
         var clean = true
         if let kept = undo.keptEventRow, let eventID = undo.merged.eventID {
@@ -38,7 +38,12 @@ extension Engine {
         requestTick()
     }
 
-    func clearMergeUndo() {
+    private func mergedRowIsUnchanged(_ merged: Activity) -> Bool {
+        defer { activityStore.releaseUnused() }
+        return activityStore.month(MonthKey(merged.start, calendar: calendar)).items.first { $0.id == merged.id } == merged
+    }
+
+    package func clearMergeUndo() {
         if mergeUndo != nil { mergeUndo = nil }
     }
 

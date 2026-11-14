@@ -9,7 +9,10 @@ struct ActivityDayView: View {
     var calendars: [CalendarChoice] = []
     var calendarNames: [String: String] = [:]
     var actions = ActivityDayActions()
+    var canUndo = false
     @State var editing: ActivityEditTarget?
+    @State var selected: Set<ActivityID> = []
+    @State var mergeError: String?
 
     var body: some View {
         HStack(alignment: .top, spacing: UIMetrics.activitiesGap) {
@@ -21,7 +24,8 @@ struct ActivityDayView: View {
                     }
                     ActivityTimelineCard(
                         day: day, count: overview.count, gaps: overview.gapSpans, categories: categories, calendar: calendar,
-                        calendars: calendars, calendarNames: calendarNames, actions: actions, editing: $editing
+                        calendars: calendars, calendarNames: calendarNames, actions: actions, canUndo: canUndo,
+                        editing: $editing, selected: $selected, mergeError: $mergeError
                     )
                 }
                 .padding(.bottom, UIMetrics.reportsGap)
@@ -34,6 +38,11 @@ struct ActivityDayView: View {
                 .frame(width: UIMetrics.activitiesEditWidth)
             }
         }
-        .onChange(of: day.day) { _ in editing = nil }
+        .onChange(of: day.day) { _ in
+            editing = nil
+            selected = []
+            mergeError = nil
+            actions.clearMergeUndo()
+        }
     }
 }
