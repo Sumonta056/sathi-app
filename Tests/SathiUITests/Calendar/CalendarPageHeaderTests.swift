@@ -55,11 +55,10 @@ struct CalendarPageHeaderTests {
         #expect(b.range == box(.month, at: day(2026, 10, 12, 10)).range)
     }
 
-    @Test func nextStaysEnabledOnTheRangeThatHoldsNow() throws {
-        for kind in ReportRange.allCases {
-            let sut = try header(box(kind))
-            #expect(try !Find.button(sut, label: "Next").isDisabled())
-        }
+    @Test func nextHasNoFutureLimitFromAFarFutureRange() throws {
+        let b = box(.week, at: day(2030, 1, 10, 10))
+        try Find.button(header(b), label: "Next").tap()
+        #expect(b.range == box(.week, at: day(2030, 1, 17, 10)).range)
     }
 
     @Test func todayResetsToTheRangeHoldingNow() throws {

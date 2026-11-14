@@ -18,6 +18,11 @@ struct CalendarPage: View {
             content(range)
         }
         .padding(UIMetrics.mainContentPadding)
+        .onAppear {
+            e.refreshCalendarAccess()
+            e.calendarPageOpened()
+        }
+        .onDisappear { e.calendarPageClosed() }
         .onChange(of: day) { _ in picked = nil }
     }
 

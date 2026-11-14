@@ -29,7 +29,7 @@ struct CalendarPageHeader: View {
                     .font(Typography.tracker(UIMetrics.mainPageTitleFont, .heavy))
                     .foregroundStyle(Night.text)
                 Text(verbatim: title.year)
-                    .font(Typography.tracker(UIMetrics.calendarTitleYearFont, .regular))
+                    .font(Typography.tracker(UIMetrics.mainPageTitleFont, .regular))
                     .foregroundStyle(Night.muted)
             }
             .lineLimit(1)

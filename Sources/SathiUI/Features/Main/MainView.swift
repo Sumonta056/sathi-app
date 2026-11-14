@@ -15,6 +15,9 @@ struct MainView: View {
         }
         .frame(minWidth: UIMetrics.mainWindowMinSize.width, minHeight: UIMetrics.mainWindowMinSize.height)
         .ignoresSafeArea()
+        .onAppear { route.settle(calendarOn: e.data.prefs.calendarPage.isOn) }
+        .onChange(of: e.data.prefs.calendarPage.isOn) { route.settle(calendarOn: $0) }
+        .onChange(of: route.page) { _ in route.settle(calendarOn: e.data.prefs.calendarPage.isOn) }
     }
 
     @ViewBuilder private func calendarPage(_ day: DayKey?) -> some View {
