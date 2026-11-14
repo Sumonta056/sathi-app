@@ -68,6 +68,7 @@ extension Engine {
         let readable = calendarAccess == .allowed ? calendarWriter.readableCalendars() : []
         let read = CalendarPageRead(key: key, readable: readable, events: pageEvents(range, calendars: shownCalendars(readable)))
         calendarPageRead = read
+        calendarPageEventsByID = Dictionary(read.events.map { ($0.id, $0) }) { first, _ in first }
         return read
     }
 

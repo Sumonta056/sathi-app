@@ -67,6 +67,7 @@ package final class EventKitCalendarWriter: CalendarWriter {
         guard access == .allowed,
               let event = store.event(withIdentifier: eventID),
               let calendar = writableCalendar(draft.calendarID) else { return .calendarMissing }
+        guard !EventKitCalendarReaderMapping.isLocked(event) else { return .failed }
         apply(draft, calendar: calendar, to: event)
         return commit(event)
     }

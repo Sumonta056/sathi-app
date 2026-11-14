@@ -8,6 +8,8 @@ package struct CalendarEventInfo: Equatable, Hashable, Identifiable, Sendable {
     package var calendarID: String
     package var isAllDay: Bool
     package var declined: Bool
+    package var isRepeating: Bool
+    package var hasGuests: Bool
 
     package init(
         id: String,
@@ -16,7 +18,9 @@ package struct CalendarEventInfo: Equatable, Hashable, Identifiable, Sendable {
         end: Date,
         calendarID: String,
         isAllDay: Bool = false,
-        declined: Bool = false
+        declined: Bool = false,
+        isRepeating: Bool = false,
+        hasGuests: Bool = false
     ) {
         self.id = id
         self.title = title
@@ -25,5 +29,9 @@ package struct CalendarEventInfo: Equatable, Hashable, Identifiable, Sendable {
         self.calendarID = calendarID
         self.isAllDay = isAllDay
         self.declined = declined
+        self.isRepeating = isRepeating
+        self.hasGuests = hasGuests
     }
+
+    package var isReadOnlyInSathi: Bool { isRepeating || hasGuests }
 }

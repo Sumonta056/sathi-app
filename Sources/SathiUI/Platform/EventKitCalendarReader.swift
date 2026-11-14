@@ -6,6 +6,7 @@ extension EventKitCalendarWriter {
     package func delete(eventID: String) -> Bool {
         guard !eventID.isEmpty, access == .allowed else { return false }
         guard let event = store.event(withIdentifier: eventID) else { return true }
+        guard !EventKitCalendarReaderMapping.isLocked(event) else { return false }
         do {
             try store.remove(event, span: .thisEvent, commit: true)
         } catch {
