@@ -25,6 +25,7 @@ package final class SpyCalendarWriter: CalendarWriter {
     package private(set) var updated: [(String, CalendarEventDraft)] = []
     package private(set) var requestCount = 0
     package var readable: [CalendarChoice]?
+    package private(set) var readableCalls = 0
     package var eventsValue: [CalendarEventInfo] = []
     package var nextDeleteResult = true
     package var deleteResults: [String: Bool] = [:]
@@ -71,7 +72,10 @@ package final class SpyCalendarWriter: CalendarWriter {
         return ok
     }
 
-    package func readableCalendars() -> [CalendarChoice] { readable ?? choices }
+    package func readableCalendars() -> [CalendarChoice] {
+        readableCalls += 1
+        return readable ?? choices
+    }
 
     package func events(from start: Date, to end: Date, calendarIDs: [String]) -> [CalendarEventInfo] {
         eventReads.append(DateInterval(start: start, end: max(start, end)))

@@ -25,6 +25,7 @@ Framework: Swift Testing (`import Testing`, `@Suite`, `@Test`, `#expect`). UI: V
 - Assert window effects through `h.presenter.calls`, sounds through `h.sound.played`, saves through `h.store.prefs` and `h.store.live`.
 - UI test: `try View().environmentObject(h.engine).inspect().find(text:)` or `.find(button:).tap()`, then assert on `h.engine`.
 - ViewInspector does not run `onAppear` or update `@State` after a tap. Test state-driven branches by building the view in that state, or move the decision into a static function and test it directly (see `ReadingWeekRow.isLit`).
+- In views tested with ViewInspector, declare `@EnvironmentObject` after all `@State` properties. ViewInspector injects the object by scanning the view's bytes from the end, and a nil `@State` placed after it can be corrupted (a crash in a later test).
 - Use parameterized tests (`@Test(arguments:)`) for tables of inputs.
 - Expected values come from the requirement, not from running the code.
 - Never weaken or delete a test to make it pass. If the requirement changed, change the test in a separate, explained step.

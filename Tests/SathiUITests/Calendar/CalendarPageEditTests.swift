@@ -41,6 +41,45 @@ struct CalendarPageEditTests {
         #expect(open == .activity(CalendarActivityEdit(day: key, target: .activity(coding.id))))
     }
 
+    private func runningHarness() throws -> (EngineHarness, CalendarBlock) {
+        let h = harness()
+        h.engine.startActivity(ActivityDraft(text: "Focus", length: .minutes(60)))
+        h.advance(minutes: 20)
+        let running = try #require(h.engine.calendarPage(range(h, .day)).blocks.first {
+            if case .activity(_, running: true) = $0.source { true } else { false }
+        })
+        return (h, running)
+    }
+
+    @Test func theRunningBlockOpensNothing() throws {
+        let (h, running) = try runningHarness()
+        #expect(CalendarPage.open(running, engine: h.engine) == nil)
+    }
+
+    @Test func aClickOnTheRunningBlockStoresNoTarget() throws {
+        let (h, running) = try runningHarness()
+        let key = DayKey(day(2026, 3, 4, 12), calendar: h.engine.rangeCalendar)
+        var focus = CalendarPageFocus()
+        CalendarPage.tap(running, day: key, y: 0, engine: h.engine, focus: &focus)
+        #expect(focus.editing == nil)
+        #expect(focus.popover == nil)
+        h.engine.startActivity(ActivityDraft(text: "Next", length: .minutes(30)))
+        let sut = try CalendarPage(range: range(h, .day), editing: focus.editing).environmentObject(h.engine).inspect()
+        #expect((try? sut.find(ActivityEditPanel.self)) == nil)
+    }
+
+    @Test func aClickOnAStoredActivityOpensItsPanel() throws {
+        let h = harness()
+        let key = DayKey(day(2026, 3, 4, 12), calendar: h.engine.rangeCalendar)
+        var focus = CalendarPageFocus()
+        try CalendarPage.tap(block(h, "Coding"), day: key, y: 0, engine: h.engine, focus: &focus)
+        #expect(focus.editing?.target == .activity(coding.id))
+        #expect(focus.popover == nil)
+        try CalendarPage.tap(block(h, "Standup"), day: key, y: 40, engine: h.engine, focus: &focus)
+        #expect(focus.editing == nil)
+        #expect(focus.popover?.form == h.engine.calendarPageForm(for: standup))
+    }
+
     @Test func anEmptySlotOpensANewEventAtTheSlot() {
         let h = harness()
         let form = CalendarPage.newEvent(at: day(2026, 3, 4, 14, 20), engine: h.engine)

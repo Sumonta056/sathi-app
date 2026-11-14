@@ -18,6 +18,11 @@ struct CalendarPopoverTarget: Identifiable {
     let form: CalendarEventForm
 }
 
+struct CalendarPageFocus {
+    var popover: CalendarPopoverTarget?
+    var editing: CalendarActivityEdit?
+}
+
 struct CalendarGridActions {
     var slot: (DayKey, Date, CGFloat) -> Void = { _, _, _ in }
     var block: (DayKey, CalendarBlock, CGFloat) -> Void = { _, _, _ in }

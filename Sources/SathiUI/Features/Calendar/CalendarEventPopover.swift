@@ -2,10 +2,10 @@ import SathiCore
 import SwiftUI
 
 struct CalendarEventPopover: View {
-    @EnvironmentObject var e: Engine
     @State var form: CalendarEventForm
     @State var failure: String?
     let onClose: () -> Void
+    @EnvironmentObject var e: Engine
 
     init(form: CalendarEventForm, failure: String? = nil, onClose: @escaping () -> Void) {
         _form = State(initialValue: form)

@@ -14,7 +14,7 @@ extension Engine {
     package func shownCalendarGroups() -> [ShownCalendarGroup] {
         let hidden = data.prefs.calendarPage.hiddenCalendarIDs
         var groups: [ShownCalendarGroup] = []
-        for choice in calendarWriter.readableCalendars() {
+        for choice in calendarPageRead?.readable ?? calendarWriter.readableCalendars() {
             let item = ShownCalendar(choice: choice, isShown: !hidden.contains(choice.id))
             if let i = groups.firstIndex(where: { $0.account == choice.account }) {
                 groups[i].calendars.append(item)

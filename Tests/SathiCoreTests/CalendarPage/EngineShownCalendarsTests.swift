@@ -20,6 +20,16 @@ struct EngineShownCalendarsTests {
         return h.engine.calendarPage(range).blocks.map(\.title).sorted()
     }
 
+    @Test func groupsComeFromThePageReadWithNoNewCalendarRead() {
+        let h = harness()
+        _ = titles(h)
+        let reads = h.calendarWriter.readableCalls
+        h.engine.setCalendarShown("home", false)
+        let groups = h.engine.shownCalendarGroups()
+        #expect(h.calendarWriter.readableCalls == reads)
+        #expect(groups.flatMap(\.calendars).map(\.isShown) == [true, false])
+    }
+
     @Test func everyReadableCalendarIsShownAtFirst() {
         let h = harness()
         #expect(h.engine.shownCalendarIDs == ["work", "home"])

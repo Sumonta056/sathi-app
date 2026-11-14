@@ -37,4 +37,16 @@ struct CalendarShownListTests {
         #expect(try !sut.find(viewWithAccessibilityIdentifier: "calendar.shown.home").accessibilityTraits().contains(.isSelected))
         #expect(try sut.find(viewWithAccessibilityIdentifier: "calendar.shown.work").accessibilityTraits().contains(.isSelected))
     }
+
+    @Test func aRenderReadsNoCalendarsAfterThePageBuild() throws {
+        let h = EngineHarness(at: day(2026, 3, 4, 12))
+        _ = h.engine.calendarPage(.containing(day(2026, 3, 4, 12), kind: .day, calendar: h.engine.rangeCalendar))
+        let readable = h.calendarWriter.readableCalls
+        let calendars = h.calendarWriter.calendarsCalls
+        for _ in 0 ..< 2 {
+            #expect(throws: Never.self) { try list(h).find(text: "Home") }
+        }
+        #expect(h.calendarWriter.readableCalls == readable)
+        #expect(h.calendarWriter.calendarsCalls == calendars)
+    }
 }

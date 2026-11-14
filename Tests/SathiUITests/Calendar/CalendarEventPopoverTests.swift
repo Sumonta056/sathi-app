@@ -120,4 +120,19 @@ struct CalendarEventPopoverTests {
         let late = h.engine.calendarPageNewEvent(at: day(2026, 3, 5, 1, 30))
         #expect(throws: Never.self) { try popover(h, late).find(text: "Wed 4 Mar") }
     }
+
+    @Test func aRenderReadsNoCalendars() throws {
+        var repeating = standup
+        repeating.isRepeating = true
+        let h = harness([standup, repeating])
+        _ = h.engine.calendarPageWritableCalendars
+        let readable = h.calendarWriter.readableCalls
+        let calendars = h.calendarWriter.calendarsCalls
+        for _ in 0 ..< 2 {
+            #expect(throws: Never.self) { try popover(h, newForm(h)).find(text: "Gmail Work") }
+            #expect(throws: Never.self) { try popover(h, h.engine.calendarPageForm(for: repeating)).find(text: "Gmail Work") }
+        }
+        #expect(h.calendarWriter.readableCalls == readable)
+        #expect(h.calendarWriter.calendarsCalls == calendars)
+    }
 }

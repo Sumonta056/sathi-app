@@ -5,14 +5,13 @@ struct CalendarPage: View {
     let day: DayKey?
     @State private var picked: CalendarPageRange?
     @State private var memo = RangeMemo<CalendarPageRange, CalendarPageData>()
-    @State var popover: CalendarPopoverTarget?
-    @State var editing: CalendarActivityEdit?
+    @State var focus: CalendarPageFocus
     @EnvironmentObject var e: Engine
 
     init(day: DayKey? = nil, range: CalendarPageRange? = nil, editing: CalendarActivityEdit? = nil) {
         self.day = day
         _picked = State(initialValue: range)
-        _editing = State(initialValue: editing)
+        _focus = State(initialValue: CalendarPageFocus(editing: editing))
     }
 
     var body: some View {
@@ -28,10 +27,7 @@ struct CalendarPage: View {
         }
         .onDisappear { e.calendarPageClosed() }
         .onChange(of: day) { _ in picked = nil }
-        .onChange(of: range) { _ in
-            popover = nil
-            editing = nil
-        }
+        .onChange(of: range) { _ in focus = CalendarPageFocus() }
     }
 
     private var shown: CalendarPageRange {
@@ -64,7 +60,7 @@ struct CalendarPage: View {
         } else {
             CalendarTimeGrid(
                 range: range, data: data, now: e.now, calendar: e.rangeCalendar, categories: e.activityCategories,
-                actions: gridActions, popover: $popover
+                actions: gridActions, popover: $focus.popover
             )
         }
     }
