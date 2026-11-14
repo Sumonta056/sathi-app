@@ -1,7 +1,7 @@
 import Foundation
 
 package enum ManualMergeBlock: Equatable, Sendable {
-    case tooFew, notStored, differentDays, eventRow, buddyRow, timeBlockRow, namedAway, rowBetween
+    case tooFew, notStored, differentDays, eventRow, buddyRow, timeBlockRow, namedAway, rowBetween, awayUndo
 }
 
 package struct ManualMergePlan: Equatable, Sendable {

@@ -3,16 +3,21 @@ import SathiCore
 
 extension EventKitCalendarWriter {
     @discardableResult
-    package func delete(eventID: String) -> Bool {
-        guard !eventID.isEmpty, access == .allowed else { return false }
-        guard let event = store.event(withIdentifier: eventID) else { return true }
-        guard !EventKitCalendarReaderMapping.isLocked(event) else { return false }
+    package func delete(eventID: String) -> CalendarDeleteResult {
+        guard !eventID.isEmpty, access == .allowed else { return .failed }
+        guard let event = store.event(withIdentifier: eventID) else { return .deleted }
+        guard !EventKitCalendarReaderMapping.isLocked(event) else { return .locked }
         do {
             try store.remove(event, span: .thisEvent, commit: true)
         } catch {
-            return false
+            return .failed
         }
-        return true
+        return .deleted
+    }
+
+    package func isLocked(eventID: String) -> Bool {
+        guard !eventID.isEmpty, access == .allowed, let event = store.event(withIdentifier: eventID) else { return false }
+        return EventKitCalendarReaderMapping.isLocked(event)
     }
 
     package func readableCalendars() -> [CalendarChoice] {

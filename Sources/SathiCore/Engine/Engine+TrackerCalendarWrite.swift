@@ -19,7 +19,7 @@ extension Engine {
         case .keep:
             return (calendarActivityEdited(from: old, to: new), .ok)
         case .none:
-            if let oldEvent, !calendarWriter.delete(eventID: oldEvent) { return (calendarActivityEdited(from: old, to: new), .unchanged) }
+            if let oldEvent, calendarWriter.delete(eventID: oldEvent) != .deleted { return (calendarActivityEdited(from: old, to: new), .unchanged) }
             var a = new
             a.calendarID = nil
             a.eventID = nil
@@ -42,8 +42,8 @@ extension Engine {
             return (oldEvent == nil ? a : calendarActivityEdited(from: old, to: new), .unchanged)
         }
         guard let oldEvent else { return (a, .ok) }
-        if calendarWriter.delete(eventID: oldEvent) { return (a, .ok) }
-        guard calendarWriter.delete(eventID: written) else { return (a, .oldEventKept) }
+        if calendarWriter.delete(eventID: oldEvent) == .deleted { return (a, .ok) }
+        guard calendarWriter.delete(eventID: written) == .deleted else { return (a, .oldEventKept) }
         return (calendarActivityEdited(from: old, to: new), .unchanged)
     }
 
@@ -59,6 +59,6 @@ extension Engine {
     @discardableResult
     func calendarActivityDeleted(_ activity: Activity) -> Bool {
         guard let eventID = activity.eventID, !eventID.isEmpty else { return true }
-        return calendarWriter.delete(eventID: eventID)
+        return calendarWriter.delete(eventID: eventID) != .failed
     }
 }

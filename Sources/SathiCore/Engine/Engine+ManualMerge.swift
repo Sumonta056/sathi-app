@@ -19,7 +19,11 @@ extension Engine {
             }
         }
         let rows = days.flatMap(storedActivities)
-        return ManualMergeCheck.check(ids, dayRows: rows, calendar: calendar)
+        let check = ManualMergeCheck.check(ids, dayRows: rows, calendar: calendar)
+        guard case let .ok(plan) = check else { return check }
+        let held = rowsInAwayUndo()
+        guard (plan.rows + plan.removedAway).allSatisfy({ !held.contains($0.id) }) else { return .blocked(.awayUndo) }
+        return check
     }
 
     @discardableResult

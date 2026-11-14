@@ -13,6 +13,7 @@ struct ActivityDayActions {
     var add: (ActivityEdit) -> ActivityEditResult = { _ in .notFound }
     var delete: (ActivityID) -> Bool = { _ in true }
     var mergeCheck: (Set<ActivityID>) -> ManualMergeCheck = { _ in .blocked(.tooFew) }
+    var mergeHeld: () -> Set<ActivityID> = { [] }
     var merge: (Set<ActivityID>) -> ManualMergeResult = { _ in .blocked(.tooFew) }
     var undoMerge: () -> ManualMergeUndoResult = { .gone }
     var clearMergeUndo: () -> Void = {}
@@ -31,6 +32,7 @@ extension ActivityDayActions {
     static func merging(_ engine: Engine) -> ActivityDayActions {
         var a = ActivityDayActions.engine(engine)
         a.mergeCheck = { engine.mergeCheck($0) }
+        a.mergeHeld = { engine.rowsInAwayUndo() }
         a.merge = { engine.mergeActivities($0) }
         a.undoMerge = { engine.undoMerge() }
         a.clearMergeUndo = { engine.clearMergeUndo() }

@@ -134,7 +134,7 @@ struct CalendarEventPopoverTests {
         var closed = false
         try popover(h, form) { closed = true }.find(button: "Save").tap()
         #expect(!closed)
-        #expect(h.calendarWriter.updated.isEmpty)
+        #expect(h.calendarWriter.timesUpdated.isEmpty)
     }
 
     @Test func theDateChipFollowsTheSixAMDay() throws {

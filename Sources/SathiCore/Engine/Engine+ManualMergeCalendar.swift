@@ -11,12 +11,14 @@ extension Engine {
         var merged = plan.merged
         guard let kept = plan.keptEventRow, let eventID = kept.eventID else { return .ready(merged) }
         guard let calendarID = kept.calendarID else { return .failed }
+        let ids = [eventID] + plan.droppedEventRows.compactMap(\.eventID)
+        guard !ids.contains(where: calendarWriter.isLocked) else { return .failed }
         let draft = CalendarEventDraft(calendarID: calendarID, title: merged.text, start: merged.start, end: merged.end)
         guard case let .saved(saved) = calendarWriter.update(eventID: eventID, draft: draft) else { return .failed }
         if !saved.isEmpty { merged.eventID = saved }
         var deleted: [Activity] = []
         for row in plan.droppedEventRows {
-            guard let id = row.eventID, calendarWriter.delete(eventID: id) else {
+            guard let id = row.eventID, calendarWriter.delete(eventID: id) == .deleted else {
                 let clean = restoreEvents(kept: kept, eventID: merged.eventID ?? eventID, deleted: deleted)
                 return clean ? .failed : .partlyChanged
             }

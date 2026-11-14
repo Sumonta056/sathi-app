@@ -22,6 +22,7 @@ extension EngineHarness {
     }
 
     var writerCalls: Int {
-        calendarWriter.saved.count + calendarWriter.updated.count + calendarWriter.deleted.count
+        calendarWriter.saved.count + calendarWriter.updated.count + calendarWriter.timesUpdated.count
+            + calendarWriter.deleted.count
     }
 }

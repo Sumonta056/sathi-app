@@ -87,7 +87,7 @@ struct EngineCalendarPageWriteGuardTests {
         f.start = day(2026, 3, 4, 9)
         f.end = day(2026, 3, 4, 10)
         #expect(h.engine.saveCalendarPageEvent(f) == .saved("e1"))
-        #expect(h.calendarWriter.updated.first?.1.start == day(2026, 3, 4, 9))
+        #expect(h.calendarWriter.timesUpdated.first?.1.start == day(2026, 3, 4, 9))
     }
 
     @Test func editFindsTheEventByAFreshReadWithoutAPageBuild() {

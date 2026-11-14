@@ -48,7 +48,7 @@ extension Engine {
                 continue
             }
             switch movedEventEnd(last, to: row.end) {
-            case let .moved(moved) where calendarWriter.delete(eventID: drop):
+            case let .moved(moved) where calendarWriter.delete(eventID: drop) == .deleted:
                 out[out.count - 1] = ActivityMerge.joined(moved, row)
             case let .moved(moved):
                 complete = false
@@ -88,7 +88,7 @@ extension Engine {
         }
     }
 
-    private func rowsInAwayUndo() -> Set<ActivityID> {
+    package func rowsInAwayUndo() -> Set<ActivityID> {
         let away = data.live.tracker.away
         return Set(away.awayItems + away.loggedWhileAway.map(\.id) + [away.endedMergedInto?.id].compactMap { $0 })
     }

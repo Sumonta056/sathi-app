@@ -56,7 +56,7 @@ struct ActivityTimelineCard: View {
 
     private var mergeCheck: ManualMergeCheck? {
         guard !selected.isEmpty else { return nil }
-        return memo.value(selected, rows: day.activities, make: actions.mergeCheck)
+        return memo.value(selected, rows: day.activities, held: actions.mergeHeld(), make: actions.mergeCheck)
     }
 
     private func header(_ rows: [ActivityLogRow]) -> some View {

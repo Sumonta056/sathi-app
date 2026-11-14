@@ -75,7 +75,7 @@ struct EngineTrackerContractTests {
         ]
         let got = w.events(from: day(2026, 11, 9), to: day(2026, 11, 10), calendarIDs: ["work"])
         #expect(got.map(\.id) == ["a"])
-        #expect(w.delete(eventID: "a"))
+        #expect(w.delete(eventID: "a") == .deleted)
         #expect(w.deleted == ["a"])
     }
 }

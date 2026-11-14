@@ -40,9 +40,9 @@ struct EngineCalendarPageEventsTests {
         let result = h.engine.saveCalendarPageEvent(f)
         #expect(result == .saved("e1"))
         #expect(h.calendarWriter.saved.isEmpty)
-        #expect(h.calendarWriter.updated.map(\.0) == ["e1"])
+        #expect(h.calendarWriter.timesUpdated.map(\.0) == ["e1"])
         let draft = CalendarEventDraft(calendarID: "home", title: "Plan v2", start: day(2026, 3, 4, 15), end: day(2026, 3, 4, 16))
-        #expect(h.calendarWriter.updated.first?.1 == draft)
+        #expect(h.calendarWriter.timesUpdated.first?.1 == draft)
         #expect(h.engine.data.prefs.calendarPage.lastCalendarID == "home")
     }
 
@@ -97,7 +97,7 @@ struct EngineCalendarPageEventsTests {
         h.showPage([pageEvent(repeating: true)])
         let f = h.engine.calendarPageForm(for: pageEvent(repeating: true))
         #expect(h.engine.saveCalendarPageEvent(f) == .invalid)
-        #expect(h.calendarWriter.updated.isEmpty)
+        #expect(h.calendarWriter.timesUpdated.isEmpty)
     }
 
     @Test func emptySavedIDIsAFailure() {

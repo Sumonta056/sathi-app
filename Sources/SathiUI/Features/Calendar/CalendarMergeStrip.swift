@@ -25,6 +25,6 @@ struct CalendarMergeStrip: View {
 
     private var check: ManualMergeCheck? {
         guard !selected.isEmpty else { return nil }
-        return memo.value(selected, rows: rows, make: actions.mergeCheck)
+        return memo.value(selected, rows: rows, held: actions.mergeHeld(), make: actions.mergeCheck)
     }
 }

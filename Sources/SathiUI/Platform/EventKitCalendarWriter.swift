@@ -59,16 +59,26 @@ package final class EventKitCalendarWriter: CalendarWriter {
     package func save(_ draft: CalendarEventDraft) -> CalendarSaveResult {
         guard let calendar = writableCalendar(draft.calendarID) else { return .calendarMissing }
         let event = EKEvent(eventStore: store)
-        apply(draft, calendar: calendar, to: event)
+        EventKitEventEdit.applyNew(draft, calendar: calendar, to: event)
         return commit(event)
     }
 
     package func update(eventID: String, draft: CalendarEventDraft) -> CalendarSaveResult {
+        edit(eventID, draft, apply: EventKitEventEdit.applyNew)
+    }
+
+    package func updateEventTimes(eventID: String, draft: CalendarEventDraft) -> CalendarSaveResult {
+        edit(eventID, draft, apply: EventKitEventEdit.applyTimes)
+    }
+
+    private func edit(
+        _ eventID: String, _ draft: CalendarEventDraft, apply: (CalendarEventDraft, EKCalendar, EKEvent) -> Void
+    ) -> CalendarSaveResult {
         guard access == .allowed,
               let event = store.event(withIdentifier: eventID),
               let calendar = writableCalendar(draft.calendarID) else { return .calendarMissing }
         guard !EventKitCalendarReaderMapping.isLocked(event) else { return .lockedEvent }
-        apply(draft, calendar: calendar, to: event)
+        apply(draft, calendar, event)
         return commit(event)
     }
 
@@ -77,14 +87,6 @@ package final class EventKitCalendarWriter: CalendarWriter {
               let calendar = store.calendar(withIdentifier: id),
               calendar.allowsContentModifications else { return nil }
         return calendar
-    }
-
-    private func apply(_ draft: CalendarEventDraft, calendar: EKCalendar, to event: EKEvent) {
-        event.title = draft.title
-        event.calendar = calendar
-        event.startDate = draft.start
-        event.endDate = draft.end
-        event.alarms = nil
     }
 
     private func commit(_ event: EKEvent) -> CalendarSaveResult {

@@ -24,6 +24,7 @@ package final class SpyCalendarWriter: CalendarWriter {
     package var updateResultQueue: [CalendarSaveResult] = []
     package private(set) var saved: [CalendarEventDraft] = []
     package private(set) var updated: [(String, CalendarEventDraft)] = []
+    package private(set) var timesUpdated: [(String, CalendarEventDraft)] = []
     package private(set) var requestCount = 0
     package var readable: [CalendarChoice]?
     package private(set) var readableCalls = 0
@@ -72,13 +73,27 @@ package final class SpyCalendarWriter: CalendarWriter {
         return result
     }
 
+    package func updateEventTimes(eventID: String, draft: CalendarEventDraft) -> CalendarSaveResult {
+        timesUpdated.append((eventID, draft))
+        writeOrder.append("times \(eventID)")
+        if lockedEventIDs.contains(eventID) { return .lockedEvent }
+        let result = nextUpdateResult ?? .saved(eventID: eventID)
+        if mirrorsWrites, case .saved = result, let i = eventsValue.firstIndex(where: { $0.id == eventID }) {
+            eventsValue[i] = info(eventID, draft)
+        }
+        return result
+    }
+
+    package func isLocked(eventID: String) -> Bool { lockedEventIDs.contains(eventID) }
+
     @discardableResult
-    package func delete(eventID: String) -> Bool {
+    package func delete(eventID: String) -> CalendarDeleteResult {
         deleted.append(eventID)
         writeOrder.append("delete \(eventID)")
+        if lockedEventIDs.contains(eventID) { return .locked }
         let ok = deleteResults[eventID] ?? nextDeleteResult
         if mirrorsWrites, ok { eventsValue.removeAll { $0.id == eventID } }
-        return ok
+        return ok ? .deleted : .failed
     }
 
     package func readableCalendars() -> [CalendarChoice] {

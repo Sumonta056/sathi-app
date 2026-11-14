@@ -17,6 +17,7 @@ extension Copywriter {
         case .timeBlockRow: "A time block cannot merge."
         case .namedAway: "An Away with a place is in the way."
         case .rowBetween: "Another activity sits between them."
+        case .awayUndo: "Wait until the Welcome back question is answered."
         }
     }
 
