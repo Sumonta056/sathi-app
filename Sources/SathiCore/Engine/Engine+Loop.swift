@@ -8,6 +8,7 @@ extension Engine {
         restoreMeditationSession()
         mergeOldRowsOnce()
         restoreTracker()
+        syncCalendarChangeListener()
         tick()
     }
 
@@ -15,6 +16,7 @@ extension Engine {
         isRunning = false
         stopTracker()
         calendarPageClosed()
+        syncCalendarChangeListener()
         timer?.invalidate()
         timer = nil
     }
