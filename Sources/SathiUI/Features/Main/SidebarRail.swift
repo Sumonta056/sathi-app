@@ -15,6 +15,9 @@ struct SidebarRail: View {
                 VStack(spacing: UIMetrics.sidebarRailSpacing) {
                     pageButton(Copywriter.mainPageToday, "sun.max", route.page == .today) { route.page = .today }
                     pageButton(Copywriter.mainPageActivities, "list.bullet", isActivities) { route.page = .activities(nil) }
+                    if e.data.prefs.calendarPage.isOn {
+                        pageButton(Copywriter.calendarPageTitle, "calendar", isCalendar) { route.page = .calendar(nil) }
+                    }
                     pageButton(Copywriter.mainPageReports, "chart.bar", route.page == .reports) { route.page = .reports }
                     Rectangle().fill(Night.border)
                         .frame(width: UIMetrics.sidebarRailDividerWidth, height: UIMetrics.dividerHeight)
@@ -98,6 +101,11 @@ struct SidebarRail: View {
         }
         .help(Copywriter.sidebarGitHub)
         .accessibilityLabel(Copywriter.sidebarGitHub)
+    }
+
+    private var isCalendar: Bool {
+        if case .calendar = route.page { return true }
+        return false
     }
 
     private var isActivities: Bool {
