@@ -34,6 +34,7 @@ package final class SpyCalendarWriter: CalendarWriter {
     package private(set) var eventReads: [DateInterval] = []
     package var mirrorsWrites = false
     package var lockedEventIDs: Set<String> = []
+    package private(set) var writeOrder: [String] = []
 
     package init() {}
 
@@ -52,6 +53,7 @@ package final class SpyCalendarWriter: CalendarWriter {
 
     package func save(_ draft: CalendarEventDraft) -> CalendarSaveResult {
         saved.append(draft)
+        writeOrder.append("save")
         let result = nextSaveResult ?? .saved(eventID: "e\(saved.count)")
         if mirrorsWrites, case let .saved(id) = result { eventsValue.append(info(id, draft)) }
         return result
@@ -59,6 +61,7 @@ package final class SpyCalendarWriter: CalendarWriter {
 
     package func update(eventID: String, draft: CalendarEventDraft) -> CalendarSaveResult {
         updated.append((eventID, draft))
+        writeOrder.append("update \(eventID)")
         if lockedEventIDs.contains(eventID) { return .lockedEvent }
         let result = updateResultQueue.isEmpty
             ? (nextUpdateResult ?? .saved(eventID: eventID))
@@ -72,6 +75,7 @@ package final class SpyCalendarWriter: CalendarWriter {
     @discardableResult
     package func delete(eventID: String) -> Bool {
         deleted.append(eventID)
+        writeOrder.append("delete \(eventID)")
         let ok = deleteResults[eventID] ?? nextDeleteResult
         if mirrorsWrites, ok { eventsValue.removeAll { $0.id == eventID } }
         return ok
