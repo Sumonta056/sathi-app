@@ -1,16 +1,12 @@
 import Foundation
 
 enum StoredRowsMerge {
-    static func merged(_ month: ActivityMonth, calendar: Calendar, keep: Set<ActivityID>) -> ActivityMonth? {
+    static func days(_ month: ActivityMonth, calendar: Calendar) -> [[Activity]] {
         let days = Dictionary(grouping: month.items) { calendar.startOfDay(for: $0.start) }
-        var changed = false
-        var items: [Activity] = []
-        for dayStart in days.keys.sorted() {
-            let rows = days[dayStart] ?? []
-            let out = rows.contains { keep.contains($0.id) } ? rows : ActivityMerge.merged(rows)
-            if out.count != rows.count { changed = true }
-            items += out
-        }
-        return changed ? ActivityMonth(key: month.key, items: items) : nil
+        return days.keys.sorted().map { (days[$0] ?? []).sorted { $0.start < $1.start } }
+    }
+
+    static func canMerge(_ rows: [Activity]) -> Bool {
+        zip(rows, rows.dropFirst()).contains { ActivityMerge.canMerge($0, $1) }
     }
 }
