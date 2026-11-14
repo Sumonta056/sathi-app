@@ -30,6 +30,7 @@ package final class SpyCalendarWriter: CalendarWriter {
     package var deleteResults: [String: Bool] = [:]
     package private(set) var deleted: [String] = []
     package private(set) var eventReads: [DateInterval] = []
+    package var mirrorsWrites = false
 
     package init() {}
 
@@ -48,18 +49,26 @@ package final class SpyCalendarWriter: CalendarWriter {
 
     package func save(_ draft: CalendarEventDraft) -> CalendarSaveResult {
         saved.append(draft)
-        return nextSaveResult ?? .saved(eventID: "e\(saved.count)")
+        let result = nextSaveResult ?? .saved(eventID: "e\(saved.count)")
+        if mirrorsWrites, case let .saved(id) = result { eventsValue.append(info(id, draft)) }
+        return result
     }
 
     package func update(eventID: String, draft: CalendarEventDraft) -> CalendarSaveResult {
         updated.append((eventID, draft))
-        return nextUpdateResult ?? .saved(eventID: eventID)
+        let result = nextUpdateResult ?? .saved(eventID: eventID)
+        if mirrorsWrites, case .saved = result, let i = eventsValue.firstIndex(where: { $0.id == eventID }) {
+            eventsValue[i] = info(eventID, draft)
+        }
+        return result
     }
 
     @discardableResult
     package func delete(eventID: String) -> Bool {
         deleted.append(eventID)
-        return deleteResults[eventID] ?? nextDeleteResult
+        let ok = deleteResults[eventID] ?? nextDeleteResult
+        if mirrorsWrites, ok { eventsValue.removeAll { $0.id == eventID } }
+        return ok
     }
 
     package func readableCalendars() -> [CalendarChoice] { readable ?? choices }
@@ -69,5 +78,9 @@ package final class SpyCalendarWriter: CalendarWriter {
         return eventsValue
             .filter { calendarIDs.contains($0.calendarID) && $0.start < end && $0.end > start }
             .sorted { $0.start < $1.start }
+    }
+
+    private func info(_ id: String, _ draft: CalendarEventDraft) -> CalendarEventInfo {
+        CalendarEventInfo(id: id, title: draft.title, start: draft.start, end: draft.end, calendarID: draft.calendarID)
     }
 }
