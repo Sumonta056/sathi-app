@@ -27,16 +27,22 @@ package struct CalendarEventForm: Equatable, Sendable {
     }
 
     package func withTimes(startMinutes: Int, endMinutes: Int, calendar: Calendar) -> CalendarEventForm {
-        let date = calendar.startOfDay(for: start)
+        let g = Calendar.gregorian(in: calendar.timeZone)
+        let pageDate = CalendarPageDay.key(holding: start, calendar: g).start(in: g)
         var f = self
-        f.start = Self.time(startMinutes, on: date, calendar: calendar)
-        let endDate = endMinutes < startMinutes ? calendar.date(byAdding: .day, value: 1, to: date) ?? date : date
-        f.end = Self.time(endMinutes, on: endDate, calendar: calendar)
+        f.start = Self.time(startMinutes, on: Self.date(of: startMinutes, pageDate: pageDate, calendar: g), calendar: g)
+        let end = Self.time(endMinutes, on: Self.date(of: endMinutes, pageDate: pageDate, calendar: g), calendar: g)
+        f.end = end < f.start ? g.date(byAdding: .day, value: 1, to: end) ?? end : end
         return f
     }
 
     package var canSave: Bool {
         !readOnly && calendarID != nil && CalendarEventText.clean(title) != nil && end > start
+    }
+
+    private static func date(of minutes: Int, pageDate: Date, calendar: Calendar) -> Date {
+        let dayStart = Limits.calendarPageDayStartHour * Int(Timing.hour / Timing.minute)
+        return minutes < dayStart ? calendar.nextDay(after: pageDate) : pageDate
     }
 
     private static func time(_ minutes: Int, on date: Date, calendar: Calendar) -> Date {

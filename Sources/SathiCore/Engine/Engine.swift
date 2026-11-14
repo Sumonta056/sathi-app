@@ -69,6 +69,7 @@ package final class Engine: ObservableObject {
     }
     var trackerCalendarRuntime = TrackerCalendarRuntime()
     var calendarPageOpen = false
+    var calendarPageEventsByID: [String: CalendarEventInfo] = [:]
 
     package init(
         store: StateStore,

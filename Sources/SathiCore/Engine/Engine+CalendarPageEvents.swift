@@ -35,9 +35,12 @@ extension Engine {
 
     package func saveCalendarPageEvent(_ f: CalendarEventForm) -> CalendarPageWriteResult {
         guard f.canSave, let calendarID = f.calendarID, let title = CalendarEventText.clean(f.title) else { return .invalid }
+        if let id = f.eventID, calendarPageEditableEvent(id, around: DateInterval(start: f.start, end: f.end)) == nil {
+            return .invalid
+        }
         let draft = CalendarEventDraft(calendarID: calendarID, title: title, start: f.start.wholeSecond, end: f.end.wholeSecond)
         let result = f.eventID.map { calendarWriter.update(eventID: $0, draft: draft) } ?? calendarWriter.save(draft)
-        guard case let .saved(id) = result else { return .failed }
+        guard case let .saved(id) = result, !id.isEmpty else { return .failed }
         data.prefs.calendarPage.lastCalendarID = calendarID
         calendarPageWritten()
         return .saved(id)
@@ -45,7 +48,8 @@ extension Engine {
 
     @discardableResult
     package func deleteCalendarPageEvent(_ id: String) -> Bool {
-        guard calendarWriter.delete(eventID: id) else { return false }
+        guard calendarPageEditableEvent(id, around: nil) != nil, calendarWriter.delete(eventID: id) else { return false }
+        calendarPageEventsByID[id] = nil
         calendarPageWritten()
         return true
     }

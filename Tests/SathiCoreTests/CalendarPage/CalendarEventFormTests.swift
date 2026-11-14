@@ -81,6 +81,34 @@ struct CalendarEventFormTests {
         #expect(f.end == zone.date(2026, 3, 4, 10, 30))
     }
 
+    @Test func earlyStartBelongsToTheNextDateOfThePageDay() {
+        let slot = CalendarEventForm.newEvent(at: zone.date(2026, 3, 4, 23, 45), calendarID: "work", calendar: zone.calendar)
+        let f = slot.withTimes(startMinutes: 30, endMinutes: 60, calendar: zone.calendar)
+        #expect(f.start == zone.date(2026, 3, 5, 0, 30))
+        #expect(f.end == zone.date(2026, 3, 5, 1))
+    }
+
+    @Test func lateStartKeepsThePageDayAndEarlyEndGoesToTheNextDate() {
+        let slot = CalendarEventForm.newEvent(at: zone.date(2026, 3, 4, 23, 45), calendarID: "work", calendar: zone.calendar)
+        let f = slot.withTimes(startMinutes: 23 * 60, endMinutes: 60, calendar: zone.calendar)
+        #expect(f.start == zone.date(2026, 3, 4, 23))
+        #expect(f.end == zone.date(2026, 3, 5, 1))
+    }
+
+    @Test func formAfterMidnightAnchorsOnItsPageDay() {
+        let base = form(start: zone.date(2026, 3, 5, 0, 30), end: zone.date(2026, 3, 5, 1))
+        let f = base.withTimes(startMinutes: 9 * 60, endMinutes: 10 * 60, calendar: zone.calendar)
+        #expect(f.start == zone.date(2026, 3, 4, 9))
+        #expect(f.end == zone.date(2026, 3, 4, 10))
+    }
+
+    @Test func endBeforeAnEarlyStartMovesToTheNextDate() {
+        let base = form(start: zone.date(2026, 3, 4, 14), end: zone.date(2026, 3, 4, 15))
+        let f = base.withTimes(startMinutes: 5 * 60, endMinutes: 4 * 60, calendar: zone.calendar)
+        #expect(f.start == zone.date(2026, 3, 5, 5))
+        #expect(f.end == zone.date(2026, 3, 6, 4))
+    }
+
     @Test func readOnlyCannotSave() {
         #expect(!form(start: zone.date(2026, 3, 4, 14), end: zone.date(2026, 3, 4, 15), readOnly: true).canSave)
     }

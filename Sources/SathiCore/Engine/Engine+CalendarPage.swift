@@ -12,6 +12,7 @@ extension Engine {
     package func calendarPage(_ range: CalendarPageRange) -> CalendarPageData {
         let readable = calendarAccess == .allowed ? calendarWriter.readableCalendars() : []
         let events = pageEvents(range, calendars: shownCalendars(readable))
+        calendarPageEventsByID = Dictionary(events.map { ($0.id, $0) }) { first, _ in first }
         let tracks = data.prefs.tracker.isOn
         let rows = tracks ? pageActivities(range.interval) : []
         let running = tracks ? pageRunning(range.interval) : nil

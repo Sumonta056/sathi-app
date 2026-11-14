@@ -12,13 +12,6 @@ struct EngineCalendarPageEventsTests {
         return f
     }
 
-    private func info(_ id: String = "e1", calendar: String = "work", repeating: Bool = false, guests: Bool = false) -> CalendarEventInfo {
-        var e = CalendarEventInfo(id: id, title: "Plan", start: day(2026, 3, 4, 15), end: day(2026, 3, 4, 16), calendarID: calendar)
-        e.isRepeating = repeating
-        e.hasGuests = guests
-        return e
-    }
-
     @Test func createSavesOneEventAndNoActivity() {
         let h = EngineHarness.tracker(at: day(2026, 3, 4, 10))
         let result = h.engine.saveCalendarPageEvent(design(h))
@@ -40,7 +33,8 @@ struct EngineCalendarPageEventsTests {
 
     @Test func editUpdatesTheEvent() {
         let h = EngineHarness(at: day(2026, 3, 4, 10))
-        var f = h.engine.calendarPageForm(for: info())
+        h.showPage([pageEvent()])
+        var f = h.engine.calendarPageForm(for: pageEvent())
         f.title = "Plan v2"
         f.calendarID = "home"
         let result = h.engine.saveCalendarPageEvent(f)
@@ -54,7 +48,7 @@ struct EngineCalendarPageEventsTests {
 
     @Test func editFormHasTheEventValues() {
         let h = EngineHarness(at: day(2026, 3, 4, 10))
-        let f = h.engine.calendarPageForm(for: info())
+        let f = h.engine.calendarPageForm(for: pageEvent())
         #expect(f == CalendarEventForm(
             eventID: "e1", title: "Plan", start: day(2026, 3, 4, 15), end: day(2026, 3, 4, 16), calendarID: "work", readOnly: false
         ))
@@ -62,12 +56,14 @@ struct EngineCalendarPageEventsTests {
 
     @Test func deleteRemovesTheEvent() {
         let h = EngineHarness(at: day(2026, 3, 4, 10))
+        h.showPage([pageEvent()])
         #expect(h.engine.deleteCalendarPageEvent("e1"))
         #expect(h.calendarWriter.deleted == ["e1"])
     }
 
     @Test func failedDeleteReturnsFalse() {
         let h = EngineHarness(at: day(2026, 3, 4, 10))
+        h.showPage([pageEvent()])
         h.calendarWriter.nextDeleteResult = false
         #expect(!h.engine.deleteCalendarPageEvent("e1"))
     }
@@ -81,8 +77,9 @@ struct EngineCalendarPageEventsTests {
 
     @Test func missingCalendarOnUpdateIsAFailure() {
         let h = EngineHarness(at: day(2026, 3, 4, 10))
+        h.showPage([pageEvent()])
         h.calendarWriter.nextUpdateResult = .calendarMissing
-        #expect(h.engine.saveCalendarPageEvent(h.engine.calendarPageForm(for: info())) == .failed)
+        #expect(h.engine.saveCalendarPageEvent(h.engine.calendarPageForm(for: pageEvent())) == .failed)
         #expect(h.calendarWriter.saved.isEmpty)
         #expect(h.engine.data.prefs.calendarPage.lastCalendarID == nil)
     }
@@ -97,9 +94,30 @@ struct EngineCalendarPageEventsTests {
 
     @Test func readOnlyFormWritesNothing() {
         let h = EngineHarness(at: day(2026, 3, 4, 10))
-        let f = h.engine.calendarPageForm(for: info(repeating: true))
+        h.showPage([pageEvent(repeating: true)])
+        let f = h.engine.calendarPageForm(for: pageEvent(repeating: true))
         #expect(h.engine.saveCalendarPageEvent(f) == .invalid)
         #expect(h.calendarWriter.updated.isEmpty)
+    }
+
+    @Test func emptySavedIDIsAFailure() {
+        let h = EngineHarness(at: day(2026, 3, 4, 10))
+        h.calendarWriter.nextSaveResult = .saved(eventID: "")
+        #expect(h.engine.saveCalendarPageEvent(design(h)) == .failed)
+        #expect(h.engine.data.prefs.calendarPage.lastCalendarID == nil)
+    }
+
+    @Test func successfulWriteRequestsATick() {
+        let h = EngineHarness(at: day(2026, 3, 4, 10))
+        h.engine.start()
+        defer { h.engine.stop() }
+        h.calendarWriter.nextSaveResult = .failed
+        let idle = h.engine.timer
+        _ = h.engine.saveCalendarPageEvent(design(h))
+        #expect(h.engine.timer === idle)
+        h.calendarWriter.nextSaveResult = nil
+        _ = h.engine.saveCalendarPageEvent(design(h))
+        #expect(h.engine.timer !== idle)
     }
 
     @Test func openInCalendarOpensTheEventLink() {

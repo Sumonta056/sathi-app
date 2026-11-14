@@ -6,13 +6,6 @@ import Testing
 @MainActor
 @Suite("Engine calendar page form")
 struct EngineCalendarPageFormTests {
-    private func info(_ id: String = "e1", calendar: String = "work", repeating: Bool = false, guests: Bool = false) -> CalendarEventInfo {
-        var e = CalendarEventInfo(id: id, title: "Plan", start: day(2026, 3, 4, 15), end: day(2026, 3, 4, 16), calendarID: calendar)
-        e.isRepeating = repeating
-        e.hasGuests = guests
-        return e
-    }
-
     @Test func defaultIsTheLastUsedCalendar() {
         let h = EngineHarness(at: day(2026, 3, 4, 10)) { $0.prefs.calendarPage.lastCalendarID = "home" }
         h.calendarWriter.defaultID = "work"
@@ -54,12 +47,12 @@ struct EngineCalendarPageFormTests {
 
     @Test func repeatingEventIsReadOnly() {
         let h = EngineHarness(at: day(2026, 3, 4, 10))
-        #expect(h.engine.calendarPageForm(for: info(repeating: true)).readOnly)
+        #expect(h.engine.calendarPageForm(for: pageEvent(repeating: true)).readOnly)
     }
 
     @Test func eventWithGuestsIsReadOnly() {
         let h = EngineHarness(at: day(2026, 3, 4, 10))
-        #expect(h.engine.calendarPageForm(for: info(guests: true)).readOnly)
+        #expect(h.engine.calendarPageForm(for: pageEvent(guests: true)).readOnly)
     }
 
     @Test func eventInAReadOnlyCalendarIsReadOnly() {
@@ -67,13 +60,13 @@ struct EngineCalendarPageFormTests {
         h.calendarWriter.readable = h.calendarWriter.choices + [
             CalendarChoice(id: "holidays", title: "Holidays", account: "iCloud", colorHex: 0)
         ]
-        #expect(h.engine.calendarPageForm(for: info(calendar: "holidays")).readOnly)
-        #expect(!h.engine.calendarPageForm(for: info()).readOnly)
+        #expect(h.engine.calendarPageForm(for: pageEvent(calendar: "holidays")).readOnly)
+        #expect(!h.engine.calendarPageForm(for: pageEvent()).readOnly)
     }
 
     @Test func allDayEventIsReadOnly() {
         let h = EngineHarness(at: day(2026, 3, 4, 10))
-        var e = info()
+        var e = pageEvent()
         e.isAllDay = true
         #expect(h.engine.calendarPageForm(for: e).readOnly)
     }

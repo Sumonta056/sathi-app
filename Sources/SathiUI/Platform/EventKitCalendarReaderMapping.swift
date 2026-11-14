@@ -6,6 +6,10 @@ enum EventKitCalendarReaderMapping {
         !calendarIDs.isEmpty && end > start
     }
 
+    static func isLocked(_ event: EKEvent) -> Bool {
+        event.hasRecurrenceRules || event.isDetached || event.hasAttendees
+    }
+
     static func info(_ event: EKEvent) -> CalendarEventInfo? {
         guard let id = event.eventIdentifier,
               let calendarID = event.calendar?.calendarIdentifier else { return nil }
@@ -18,7 +22,7 @@ enum EventKitCalendarReaderMapping {
             calendarID: calendarID,
             isAllDay: event.isAllDay,
             declined: declined,
-            isRepeating: event.hasRecurrenceRules,
+            isRepeating: event.hasRecurrenceRules || event.isDetached,
             hasGuests: event.hasAttendees
         )
     }
