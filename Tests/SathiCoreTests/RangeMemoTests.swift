@@ -112,6 +112,28 @@ struct RangeMemoTests {
         #expect(c.builds == 3)
     }
 
+    @Test func calendarPageMemoUsesTheRangeEnd() {
+        let h = breathing()
+        let memo = RangeMemo<CalendarPageRange, Int>()
+        let c = Counter()
+        let current = CalendarPageRange.containing(h.clock.now, kind: .week, calendar: h.engine.calendar)
+        let past = current.previous.previous
+        let read = { (r: CalendarPageRange) in
+            _ = memo.value(r, end: r.interval.end, engine: h.engine) { _, _ in
+                c.builds += 1
+                return 0
+            }
+        }
+        read(past)
+        tick(h, seconds: 120)
+        read(past)
+        #expect(c.builds == 1)
+        read(current)
+        tick(h, seconds: 60)
+        read(current)
+        #expect(c.builds == 3)
+    }
+
     @Test func activitiesPageBuildsTheDaysOnce() {
         let h = EngineHarness.tracker(at: day(2026, 3, 4, 10))
         h.engine.startActivity(ActivityDraft(text: "Spec", length: .minutes(30)))
