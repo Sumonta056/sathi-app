@@ -33,6 +33,7 @@ extension Engine {
         tickBlock()
         showDaySummaryIfDue()
         tickTracker()
+        expireMergeUndo()
         updateStatus()
         scheduleNextTick()
     }
@@ -72,7 +73,7 @@ extension Engine {
     }
 
     private func upcomingDeadlines() -> [Date] {
-        var deadlines: [Date] = quickDeadlines + blockDeadlines + breathDeadlines + trackerDeadlines
+        var deadlines: [Date] = quickDeadlines + blockDeadlines + breathDeadlines + trackerDeadlines + mergeDeadlines
         if let p = pausedUntil { deadlines.append(p) }
         if let s = nextDaySummary { deadlines.append(s) }
         for id in HabitID.allCases {

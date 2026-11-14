@@ -36,6 +36,7 @@ package final class Engine: ObservableObject {
     @Published package internal(set) var blockCheckInShowing = false
     @Published package internal(set) var waitingCalendarPick: String?
     @Published package internal(set) var calendarAccess: CalendarAccess
+    @Published package internal(set) var mergeUndo: ManualMergeUndo?
 
     package let status = StatusModel()
     let store: StateStore

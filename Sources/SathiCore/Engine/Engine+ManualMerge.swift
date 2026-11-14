@@ -36,6 +36,7 @@ extension Engine {
             }
             let removing = Set(plan.rows.map(\.id) + plan.removedAway.map(\.id))
             replaceDayRows(removing: removing, with: merged)
+            recordMergeUndo(plan, merged: merged)
             return .merged(merged.id)
         }
     }
