@@ -87,4 +87,24 @@ struct CalendarPageTrackerSyncTests {
         h.at(wed(15))
         #expect(h.reacted(to: "x1", mode))
     }
+
+    @Test(arguments: [EventMode.askFirst, .logAndTell])
+    func aLaterStoreChangeGivesNoSecondReaction(_ mode: EventMode) {
+        let h = EngineHarness.syncedPage(mode)
+        h.calendarWriter.eventsValue.append(meeting("x1", from: wed(14), to: wed(14, 30)))
+        h.calendarChanges.fire()
+        h.at(wed(14))
+        #expect(h.reacted(to: "x1", mode))
+        let prompts = h.trackerShows.count
+        let notes = h.notes.count
+        let logged = h.saved.count { $0.sourceEventID == "x1" }
+        h.calendarWriter.eventsValue = [meeting("x1", "Standup moved", from: wed(14), to: wed(14, 45))]
+        h.calendarChanges.fire()
+        h.at(wed(14, 1))
+        h.calendarChanges.fire()
+        h.at(wed(14, 2))
+        #expect(h.trackerShows.count == prompts)
+        #expect(h.notes.count == notes)
+        #expect(h.saved.count { $0.sourceEventID == "x1" } == logged)
+    }
 }
