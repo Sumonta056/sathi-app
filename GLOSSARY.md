@@ -66,6 +66,18 @@ _Avoid_: Start override, backdate, correction
 The one popup at the screen center that asks "What are you doing now?". Its top line tells the reason: time to ask, shortcut, activity ends, back from Away, or a calendar event starts. It stays on screen until the user answers, taps Keep going, or taps Skip.
 _Avoid_: Check-in, nudge, reminder, bubble, corner prompt, center prompt, Still on it popup
 
+**Calendar page**:
+The experimental page of the main window that shows calendar events and activities together on one time grid, by Day, Week, or Month. It is off until the user turns it on.
+_Avoid_: Calendar view, planner, schedule, agenda
+
+**Calendar event**:
+One entry in the macOS Calendar app. It is a plan. It is not an activity, but Sathi can log it as one when it starts.
+_Avoid_: Meeting, appointment, activity, time block
+
+**Shown calendars**:
+The calendars whose events the Calendar page shows. All calendars are shown at first. This list is separate from the calendars that the tracker logs.
+_Avoid_: Ticked calendars (the tracker logs those), visible calendars, filters
+
 **Reason**:
 Why the activity prompt shows: time to ask, shortcut, activity ends, back from Away, or a calendar event. It sets the prompt's color, tag, and buttons.
 _Avoid_: kind, type, mode

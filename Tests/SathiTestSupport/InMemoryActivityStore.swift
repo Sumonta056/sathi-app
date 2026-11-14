@@ -6,6 +6,7 @@ package final class InMemoryActivityStore: ActivityStore, @unchecked Sendable {
     package private(set) var saves = 0
     package private(set) var reads: [MonthKey] = []
     package private(set) var flushes = 0
+    package private(set) var releases = 0
     package private(set) var backups: [MonthKey: ActivityMonth] = [:]
     package var failFlush = false
     package var failBackup = false
@@ -44,5 +45,9 @@ package final class InMemoryActivityStore: ActivityStore, @unchecked Sendable {
     package func flush() -> Bool {
         flushes += 1
         return !failFlush
+    }
+
+    package func releaseUnused() {
+        releases += 1
     }
 }

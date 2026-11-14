@@ -67,6 +67,7 @@ extension Engine {
     }
 
     func replaceStoredActivity(_ id: ActivityID, with make: (Activity) -> Activity) {
+        if mergeUndo?.merged.id == id { mergeUndo = nil }
         for key in activityStore.savedMonths().reversed() {
             var month = activityStore.month(key)
             guard let i = month.items.firstIndex(where: { $0.id == id }) else { continue }

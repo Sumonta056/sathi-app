@@ -1,0 +1,39 @@
+import SathiCore
+import SathiTestSupport
+@testable import SathiUI
+import SwiftUI
+import Testing
+import ViewInspector
+
+@MainActor
+@Suite("Calendar access gate")
+struct CalendarAccessGateTests {
+    private func gate(_ access: CalendarAccess) throws -> (EngineHarness, InspectableView<ViewType.ClassifiedView>) {
+        let h = EngineHarness()
+        h.calendarWriter.access = access
+        h.engine.refreshCalendarAccess()
+        return try (h, hosted(CalendarAccessGate(), h).inspect())
+    }
+
+    @Test func notAskedShowsAllowCalendarAccess() throws {
+        let (_, sut) = try gate(.notAsked)
+        #expect(throws: Never.self) { try sut.find(text: "Allow calendar access") }
+        #expect(Find.lacks(sut, text: "Open System Settings"))
+    }
+
+    @Test func deniedShowsOpenSystemSettingsAndOpensThePrivacyPane() throws {
+        let (h, sut) = try gate(.denied)
+        #expect(throws: Never.self) { try sut.find(text: "Open System Settings") }
+        #expect(Find.lacks(sut, text: "Allow calendar access"))
+        try Find.button(sut, holding: "Open System Settings").tap()
+        let url = "x-apple.systempreferences:com.apple.preference.security?Privacy_Calendars"
+        #expect(h.links.opened.map(\.absoluteString) == [url])
+    }
+
+    @Test func notAskedTapAsksForAccess() async throws {
+        let (h, sut) = try gate(.notAsked)
+        try Find.button(sut, holding: "Allow calendar access").tap()
+        await Task.yield()
+        #expect(h.calendarWriter.access != .denied)
+    }
+}

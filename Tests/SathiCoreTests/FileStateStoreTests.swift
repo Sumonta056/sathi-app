@@ -102,4 +102,12 @@ struct FileStateStoreTests {
         expected.water.intervalMinutes = 60
         #expect(FileStateStore(base: base).loadPrefs() == expected)
     }
+
+    @Test func partialPrefsFileWithOnlyCalendarPageKeepsTheOtherDefaults() throws {
+        try writeText(#"{"schemaVersion":1,"value":{"calendarPage":{"isOn":true,"hiddenCalendarIDs":["a"]}}}"#, to: prefsURL)
+        var expected = Prefs()
+        expected.calendarPage.isOn = true
+        expected.calendarPage.hiddenCalendarIDs = ["a"]
+        #expect(FileStateStore(base: base).loadPrefs() == expected)
+    }
 }

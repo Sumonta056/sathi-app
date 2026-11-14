@@ -26,7 +26,7 @@ struct EventKitCalendarReaderTests {
     @Test("an empty event id is never deleted and an empty id list reads nothing")
     func emptyInputs() {
         let writer = EventKitCalendarWriter()
-        #expect(!writer.delete(eventID: ""))
+        #expect(writer.delete(eventID: "") == .failed)
         #expect(writer.events(from: start, to: start.addingTimeInterval(60), calendarIDs: []).isEmpty)
     }
 }

@@ -36,6 +36,7 @@ package final class Engine: ObservableObject {
     @Published package internal(set) var blockCheckInShowing = false
     @Published package internal(set) var waitingCalendarPick: String?
     @Published package internal(set) var calendarAccess: CalendarAccess
+    @Published package internal(set) var mergeUndo: ManualMergeUndo?
 
     package let status = StatusModel()
     let store: StateStore
@@ -49,6 +50,7 @@ package final class Engine: ObservableObject {
     let activityStore: ActivityStore
     let presence: PresenceMonitor
     let hotkeys: HotkeyRegistrar
+    let calendarChanges: CalendarChangeSource
     package let calendar: Calendar
 
     var timer: Timer?
@@ -67,6 +69,10 @@ package final class Engine: ObservableObject {
         didSet { if oldValue.away != trackerRuntime.away { syncAwayDetails() } }
     }
     var trackerCalendarRuntime = TrackerCalendarRuntime()
+    var calendarPageOpen = false
+    var calendarPageRead: CalendarPageRead?
+    var calendarChangesListening = false
+    var calendarPageEventsByID: [String: CalendarEventInfo] = [:]
 
     package init(
         store: StateStore,
@@ -80,7 +86,8 @@ package final class Engine: ObservableObject {
         audio: SessionAudio = SilentSessionAudio(),
         activityStore: ActivityStore = NoActivityStore(),
         presence: PresenceMonitor = NoPresenceMonitor(),
-        hotkeys: HotkeyRegistrar = NoHotkeyRegistrar()
+        hotkeys: HotkeyRegistrar = NoHotkeyRegistrar(),
+        calendarChanges: CalendarChangeSource = NoCalendarChangeSource()
     ) {
         let n = clock.now
         var loaded = Persisted()
@@ -104,6 +111,7 @@ package final class Engine: ObservableObject {
         self.activityStore = activityStore
         self.presence = presence
         self.hotkeys = hotkeys
+        self.calendarChanges = calendarChanges
         calendarAccess = calendarWriter.access
         data = loaded
         now = n

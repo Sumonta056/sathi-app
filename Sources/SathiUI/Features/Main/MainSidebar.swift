@@ -2,6 +2,7 @@ import SathiCore
 import SwiftUI
 
 struct MainSidebar: View {
+    @EnvironmentObject var e: Engine
     @ObservedObject var route: MainRoute
     @Binding var isOpen: Bool
 
@@ -26,6 +27,11 @@ struct MainSidebar: View {
                     }
                     MainSidebarItem(title: Copywriter.mainPageActivities, icon: "list.bullet", isSelected: isActivities) {
                         route.page = .activities(nil)
+                    }
+                    if e.data.prefs.calendarPage.isOn {
+                        MainSidebarItem(title: Copywriter.calendarPageTitle, icon: "calendar", isSelected: isCalendar) {
+                            route.page = .calendar(nil)
+                        }
                     }
                     MainSidebarItem(title: Copywriter.mainPageReports, icon: "chart.bar", isSelected: route.page == .reports) {
                         route.page = .reports
@@ -55,6 +61,11 @@ struct MainSidebar: View {
 
     private var isActivities: Bool {
         if case .activities = route.page { return true }
+        return false
+    }
+
+    private var isCalendar: Bool {
+        if case .calendar = route.page { return true }
         return false
     }
 

@@ -30,6 +30,12 @@ struct EngineMainPageTests {
         #expect(h.presenter.calls.last == .showMain(.today))
     }
 
+    @Test func openMainShowsTheCalendarPage() {
+        let h = EngineHarness()
+        h.engine.openMain(.calendar(nil))
+        #expect(h.presenter.calls.last == .showMain(.calendar(nil)))
+    }
+
     @Test func openActivityReportShowsThatDayAndClosesTheEndOfDayPopup() {
         let h = EngineHarness.tracker(at: wed(17, 50))
         h.engine.skipTrackerPrompt()

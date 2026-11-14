@@ -38,6 +38,14 @@ package enum CalendarSaveResult: Equatable, Sendable {
     case saved(eventID: String)
     case calendarMissing
     case failed
+
+    package static let lockedEvent = CalendarSaveResult.calendarMissing
+}
+
+package enum CalendarDeleteResult: Equatable, Sendable {
+    case deleted
+    case locked
+    case failed
 }
 
 @MainActor
@@ -48,8 +56,10 @@ package protocol CalendarWriter: AnyObject {
     func defaultCalendarID() -> String?
     func save(_ draft: CalendarEventDraft) -> CalendarSaveResult
     func update(eventID: String, draft: CalendarEventDraft) -> CalendarSaveResult
+    func updateEventTimes(eventID: String, draft: CalendarEventDraft) -> CalendarSaveResult
+    func isLocked(eventID: String) -> Bool
     @discardableResult
-    func delete(eventID: String) -> Bool
+    func delete(eventID: String) -> CalendarDeleteResult
     func readableCalendars() -> [CalendarChoice]
     func events(from start: Date, to end: Date, calendarIDs: [String]) -> [CalendarEventInfo]
 }

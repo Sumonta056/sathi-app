@@ -193,6 +193,20 @@ Branch: `feat/app-window` (worktree `../Sathi-app-window`)
 - [ ] 16 Docs, website shots, Definition of done
 - Open questions (defaults in the spec): Q1 time blocks in the quick panel, Q2 "Add a buddy" page, Q3 login-item detection, Q4 Keep going minutes.
 
+## Phase 21: Calendar page and manual merge
+
+Spec: `docs/specs/phase-21-calendar-page.md`
+Plan: `docs/superpowers/plans/phase-21-calendar-page.md` (Track 1 C1–C10, Track 2 M1–M5, integration I1–I2)
+Branch: `feat/calendar-page` (worktree `.worktrees/calendar`)
+
+- [x] Rules and words (business-logic "Calendar page", Activity tracker rule 11f)
+- [x] Track 1: Calendar page (experimental, off by default): switch, Day / Week / Month on a 6 AM to 6 AM grid, no duplicates, display join, shown calendars, sync on `EKEventStoreChanged` with no timer, create / edit / delete events, tracker agreement (C7), statistics
+- [x] Track 2: manual merge on the Activities page Day view: check, calendar update then delete, rollback, undo
+- [x] I1: Merge on the Calendar page Day view (⌘-click)
+- [x] I2: cross-track acceptance tests, deferred fixes (page resets, refused-save line, memory release on close, locked time-block event), docs, checks
+- [ ] User: hand tests (real `EKEventStoreChanged`, `ical://ekevent` link, merge with real calendar events), `perf.sh --windows`, merge to `main`, push
+- [ ] Website (later; the page is experimental)
+
 ## Later
 
 - Days off: a lock or Nudgy bubble that shows at 23:58 stays after midnight into a day off (only a settings change closes it, rule 11). Close it at the first tick of a new day if users notice
