@@ -1,5 +1,6 @@
 import Foundation
 @testable import SathiCore
+import SathiTestSupport
 import Testing
 
 @Suite("CalendarBlockLayout")
@@ -46,5 +47,54 @@ struct CalendarBlockLayoutTests {
 
     @Test func allDayBlocksAreExcluded() {
         #expect(CalendarBlockLayout.place([block("a", 0, 30, allDay: true)]).isEmpty)
+    }
+}
+
+@Suite("CalendarBlockLayout page-day cut")
+struct CalendarBlockLayoutCutTests {
+    let cal = FixedZone.berlin.calendar
+    var z: FixedZone { FixedZone.berlin }
+
+    func block(_ id: String, _ start: Date, _ end: Date, style: CalendarBlockStyle = .activity(category: nil)) -> CalendarBlock {
+        CalendarBlock(
+            id: id, title: id, interval: DateInterval(start: start, end: end), style: style,
+            source: .event(CalendarEventInfo(id: id, title: id, start: start, end: end, calendarID: "c")),
+            isAllDay: false, activityIDs: []
+        )
+    }
+
+    func page(_ d: Int) -> DateInterval {
+        CalendarPageDay.interval(of: DayKey(z.date(2026, 11, d), calendar: cal), calendar: cal)
+    }
+
+    @Test func blockAcrossSixAMIsCutForEachColumn() {
+        let b = block("a", z.date(2026, 11, 12, 4), z.date(2026, 11, 12, 8))
+        let wednesday = CalendarBlockLayout.place([b], within: page(11))
+        let thursday = CalendarBlockLayout.place([b], within: page(12))
+        #expect(wednesday.map(\.span) == [DateInterval(start: z.date(2026, 11, 12, 4), end: z.date(2026, 11, 12, 6))])
+        #expect(thursday.map(\.span) == [DateInterval(start: z.date(2026, 11, 12, 6), end: z.date(2026, 11, 12, 8))])
+        #expect(wednesday.first?.block.interval == b.interval)
+    }
+
+    @Test func joinedBlockAcrossSixAMIsCut() {
+        let b = block("j", z.date(2026, 11, 12, 5, 30), z.date(2026, 11, 12, 7), style: .joined(category: "Work"))
+        #expect(CalendarBlockLayout.place([b], within: page(12)).map(\.span.start) == [z.date(2026, 11, 12, 6)])
+        #expect(CalendarBlockLayout.place([b], within: page(11)).map(\.span.end) == [z.date(2026, 11, 12, 6)])
+    }
+
+    @Test func blockOutsideTheColumnIsDropped() {
+        let b = block("x", z.date(2026, 11, 12, 9), z.date(2026, 11, 12, 10))
+        #expect(CalendarBlockLayout.place([b], within: page(11)).isEmpty)
+    }
+
+    @Test func zeroLengthBlockAtTheColumnStartStays() {
+        let b = block("z", z.date(2026, 11, 12, 6), z.date(2026, 11, 12, 6))
+        #expect(CalendarBlockLayout.place([b], within: page(12)).count == 1)
+        #expect(CalendarBlockLayout.place([b], within: page(11)).isEmpty)
+    }
+
+    @Test func blockInsideKeepsItsSpan() {
+        let b = block("i", z.date(2026, 11, 12, 9), z.date(2026, 11, 12, 10))
+        #expect(CalendarBlockLayout.place([b], within: page(12)).map(\.span) == [b.interval])
     }
 }
