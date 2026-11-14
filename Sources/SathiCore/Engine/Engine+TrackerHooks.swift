@@ -39,6 +39,7 @@ extension Engine {
         } else if new.isOn && isRunning {
             startTrackerPlatform()
         }
+        syncCalendarChangeListener()
         requestTick()
     }
 

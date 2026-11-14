@@ -1,10 +1,12 @@
 import Foundation
 
 extension Engine {
+    var trackerWantsCalendarChanges: Bool { isRunning && trackerPrefs.isOn && readsCalendarEvents }
+
     package func calendarPageOpened() {
         if !calendarPageOpen {
             calendarPageOpen = true
-            calendarChanges.start { [weak self] in self?.calendarStoreChanged() }
+            syncCalendarChangeListener()
         }
         refreshCalendarAccess()
         storesChanged()
@@ -13,14 +15,26 @@ extension Engine {
     package func calendarPageClosed() {
         guard calendarPageOpen else { return }
         calendarPageOpen = false
-        calendarChanges.stop()
+        syncCalendarChangeListener()
+    }
+
+    func syncCalendarChangeListener() {
+        let wants = calendarPageOpen || trackerWantsCalendarChanges
+        guard wants != calendarChangesListening else { return }
+        calendarChangesListening = wants
+        if wants {
+            calendarChanges.start { [weak self] in self?.calendarStoreChanged() }
+        } else {
+            calendarChanges.stop()
+        }
     }
 
     func calendarStoreChanged() {
-        guard calendarPageOpen else { return }
-        refreshCalendarChoices()
         markTrackerEventsStale()
-        storesChanged()
+        if calendarPageOpen {
+            refreshCalendarChoices()
+            storesChanged()
+        }
         requestTick()
     }
 
