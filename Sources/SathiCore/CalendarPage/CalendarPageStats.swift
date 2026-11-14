@@ -14,11 +14,13 @@ package struct CalendarPageStats: Equatable, Sendable {
     package var tracked: TimeInterval
     package var planned: TimeInterval
     package var byCategory: [CalendarCategoryTime]
+    package var away: TimeInterval
 
-    package init(tracked: TimeInterval = 0, planned: TimeInterval = 0, byCategory: [CalendarCategoryTime] = []) {
+    package init(tracked: TimeInterval = 0, planned: TimeInterval = 0, byCategory: [CalendarCategoryTime] = [], away: TimeInterval = 0) {
         self.tracked = tracked
         self.planned = planned
         self.byCategory = byCategory
+        self.away = away
     }
 
     package static func make(events: [CalendarEventInfo], activities: [Activity], interval: DateInterval) -> CalendarPageStats {
@@ -33,7 +35,8 @@ package struct CalendarPageStats: Equatable, Sendable {
         return CalendarPageStats(
             tracked: categories.reduce(0) { $0 + $1.seconds },
             planned: planned(events, in: interval),
-            byCategory: categories
+            byCategory: categories,
+            away: activities.filter { $0.kind == .away }.reduce(0) { $0 + clipped($1.start, $1.end, to: interval) }
         )
     }
 

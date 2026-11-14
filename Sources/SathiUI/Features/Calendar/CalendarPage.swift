@@ -2,14 +2,17 @@ import SathiCore
 import SwiftUI
 
 struct CalendarPage: View {
-    @EnvironmentObject var e: Engine
     let day: DayKey?
     @State private var picked: CalendarPageRange?
     @State private var memo = RangeMemo<CalendarPageRange, CalendarPageData>()
+    @State var popover: CalendarPopoverTarget?
+    @State var editing: CalendarActivityEdit?
+    @EnvironmentObject var e: Engine
 
-    init(day: DayKey? = nil, range: CalendarPageRange? = nil) {
+    init(day: DayKey? = nil, range: CalendarPageRange? = nil, editing: CalendarActivityEdit? = nil) {
         self.day = day
         _picked = State(initialValue: range)
+        _editing = State(initialValue: editing)
     }
 
     var body: some View {
@@ -25,6 +28,10 @@ struct CalendarPage: View {
         }
         .onDisappear { e.calendarPageClosed() }
         .onChange(of: day) { _ in picked = nil }
+        .onChange(of: range) { _ in
+            popover = nil
+            editing = nil
+        }
     }
 
     private var shown: CalendarPageRange {
@@ -37,15 +44,28 @@ struct CalendarPage: View {
     @ViewBuilder private func content(_ range: CalendarPageRange) -> some View {
         if e.calendarAccess == .allowed {
             let data = memo.value(range, end: range.interval.end, engine: e) { $0.calendarPage($1) }
-            if range.kind == .month {
-                ScrollView(.vertical) {
-                    CalendarMonthGrid(cells: data.monthCells, range: binding(range), calendar: e.rangeCalendar, categories: e.activityCategories)
+            HStack(alignment: .top, spacing: UIMetrics.calendarSideGap) {
+                VStack(alignment: .leading, spacing: UIMetrics.calendarSideGap) {
+                    if range.kind != .day { CalendarStatsLine(stats: data.stats, kind: range.kind) }
+                    grid(range, data)
                 }
-            } else {
-                CalendarTimeGrid(range: range, data: data, now: e.now, calendar: e.rangeCalendar, categories: e.activityCategories)
+                side(data, kind: range.kind)
             }
         } else {
             CalendarAccessGate()
+        }
+    }
+
+    @ViewBuilder private func grid(_ range: CalendarPageRange, _ data: CalendarPageData) -> some View {
+        if range.kind == .month {
+            ScrollView(.vertical) {
+                CalendarMonthGrid(cells: data.monthCells, range: binding(range), calendar: e.rangeCalendar, categories: e.activityCategories)
+            }
+        } else {
+            CalendarTimeGrid(
+                range: range, data: data, now: e.now, calendar: e.rangeCalendar, categories: e.activityCategories,
+                actions: gridActions, popover: $popover
+            )
         }
     }
 

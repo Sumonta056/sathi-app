@@ -87,14 +87,7 @@ struct ActivitiesPage: View {
         }
     }
 
-    private var dayActions: ActivityDayActions {
-        let engine = e
-        var a = ActivityDayActions()
-        a.edit = { engine.editActivity($0, $1) }
-        a.add = { engine.addPastActivity($0) }
-        a.delete = { engine.deleteActivity($0) }
-        return a
-    }
+    private var dayActions: ActivityDayActions { .engine(e) }
 
     private var rangeActions: ActivityRangeActions {
         var a = ActivityRangeActions()

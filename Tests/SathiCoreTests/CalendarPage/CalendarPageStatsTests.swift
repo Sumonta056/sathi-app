@@ -53,6 +53,17 @@ struct CalendarPageStatsTests {
         #expect(stats.tracked == 55 * 60)
     }
 
+    @Test func awayIsCountedApart() {
+        let rows = [
+            row(.work, "Focus", zone.date(2026, 3, 4, 10), zone.date(2026, 3, 4, 10, 45)),
+            row(.away, nil, zone.date(2026, 3, 4, 10, 45), zone.date(2026, 3, 4, 11)),
+            row(.away, nil, zone.date(2026, 3, 5, 5, 50), zone.date(2026, 3, 5, 6, 30))
+        ]
+        let stats = CalendarPageStats.make(events: [], activities: rows, interval: wedDay)
+        #expect(stats.away == 25 * 60)
+        #expect(stats.tracked == 45 * 60)
+    }
+
     @Test func rowAcrossTheEndCountsOnlyInside() {
         let rows = [row(.work, nil, zone.date(2026, 3, 5, 5, 30), zone.date(2026, 3, 5, 6, 30))]
         let stats = CalendarPageStats.make(events: [], activities: rows, interval: wedDay)

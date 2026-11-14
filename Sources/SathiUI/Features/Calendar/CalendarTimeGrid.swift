@@ -7,6 +7,8 @@ struct CalendarTimeGrid: View {
     let now: Date
     let calendar: Calendar
     let categories: [ActivityCategory]
+    var actions = CalendarGridActions()
+    var popover: Binding<CalendarPopoverTarget?> = .constant(nil)
 
     static let hourLabels = (0 ..< Limits.calendarGridHours).map {
         Copywriter.calendarHourLabel(hour: (Limits.calendarPageDayStartHour + $0) % Limits.calendarGridHours)
@@ -45,8 +47,9 @@ struct CalendarTimeGrid: View {
                     labels
                     ForEach(Array(zip(range.days, columns)), id: \.0) { day, math in
                         CalendarDayColumn(
-                            placed: CalendarBlockLayout.place(data.blocks, within: math.interval), texts: data.texts,
-                            math: math, now: day == today ? now : nil, categories: categories, calendar: calendar
+                            day: day, placed: CalendarBlockLayout.place(data.blocks, within: math.interval), texts: data.texts,
+                            math: math, now: day == today ? now : nil, categories: categories, calendar: calendar,
+                            actions: actions, popover: popover
                         )
                         .overlay(alignment: .leading) { Night.divider.frame(width: UIMetrics.calendarLine) }
                     }
