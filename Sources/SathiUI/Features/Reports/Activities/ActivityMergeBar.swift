@@ -33,6 +33,10 @@ struct ActivityMergeBar: View {
         result == .restoredCalendarFailed ? Copywriter.mergeUndoCalendarFailed : nil
     }
 
+    static func pruned(_ selected: Set<ActivityID>, in activities: [Activity]) -> Set<ActivityID> {
+        selected.intersection(activities.map(\.id))
+    }
+
     static func shows(selected: Set<ActivityID>, canUndo: Bool, error: String?) -> Bool {
         !selected.isEmpty || canUndo || error != nil
     }

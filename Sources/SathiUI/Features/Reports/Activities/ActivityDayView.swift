@@ -38,6 +38,7 @@ struct ActivityDayView: View {
                 .frame(width: UIMetrics.activitiesEditWidth)
             }
         }
+        .onChange(of: day.activities) { selected = ActivityMergeBar.pruned(selected, in: $0) }
         .onChange(of: day.day) { _ in
             editing = nil
             selected = []

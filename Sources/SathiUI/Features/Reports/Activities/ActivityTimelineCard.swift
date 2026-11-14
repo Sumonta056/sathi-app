@@ -14,6 +14,7 @@ struct ActivityTimelineCard: View {
     @Binding var editing: ActivityEditTarget?
     @Binding var selected: Set<ActivityID>
     @Binding var mergeError: String?
+    @State private var memo = ActivityMergeCheckMemo()
 
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: UIMetrics.activitiesTileRadius, style: .continuous)
@@ -27,14 +28,14 @@ struct ActivityTimelineCard: View {
             ActivityAxis(hours: day.hours, calendar: calendar)
             if ActivityMergeBar.shows(selected: selected, canUndo: canUndo, error: mergeError) {
                 ActivityMergeBar(
-                    check: selected.isEmpty ? nil : actions.mergeCheck(selected), calendar: calendar, canUndo: canUndo,
+                    check: mergeCheck, calendar: calendar, canUndo: canUndo,
                     actions: actions, selected: $selected, error: $mergeError
                 )
             }
             ActivityTimelineList(
                 rows: rows, categories: categories, calendar: calendar, calendarNames: calendarNames,
                 editing: editing, selected: selected, onToggle: toggle, onEdit: { editing = .activity($0) }, onFill: { editing = .add($0) },
-                onDelete: { _ = actions.delete($0) }
+                onDelete: delete
             )
         }
         .padding(UIMetrics.activitiesCardPadding)
@@ -46,7 +47,16 @@ struct ActivityTimelineCard: View {
     private func toggle(_ id: ActivityID) {
         if selected.contains(id) { selected.remove(id) } else { selected.insert(id) }
         mergeError = nil
-        actions.clearMergeUndo()
+    }
+
+    private func delete(_ id: ActivityID) {
+        _ = actions.delete(id)
+        selected.remove(id)
+    }
+
+    private var mergeCheck: ManualMergeCheck? {
+        guard !selected.isEmpty else { return nil }
+        return memo.value(selected, rows: day.activities, make: actions.mergeCheck)
     }
 
     private func header(_ rows: [ActivityLogRow]) -> some View {
