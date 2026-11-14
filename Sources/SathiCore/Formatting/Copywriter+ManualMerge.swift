@@ -3,6 +3,7 @@ import Foundation
 extension Copywriter {
     package static let mergeButton = "Merge"
     package static let mergeCalendarFailed = "The calendar did not change, so Sathi did not merge."
+    package static let mergeCalendarPartly = "Sathi did not merge. Some calendar events may have changed; check the calendar."
     package static let mergeUndo = "Undo"
     package static let mergeUndoCalendarFailed = "The rows are back, but the calendar could not be put back."
 

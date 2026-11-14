@@ -4,15 +4,19 @@ package enum ManualMergeResult: Equatable {
     case merged(ActivityID)
     case blocked(ManualMergeBlock)
     case calendarFailed
+    case calendarPartlyChanged
 }
 
 extension Engine {
     package func mergeCheck(_ ids: Set<ActivityID>) -> ManualMergeCheck {
-        let found = activityStore.allActivities().filter { ids.contains($0.id) }
+        defer { activityStore.releaseUnused() }
+        var left = ids
         var days: [Date] = []
-        for row in found {
-            let day = calendar.startOfDay(for: row.start)
-            if !days.contains(day) { days.append(day) }
+        for key in activityStore.savedMonths().sorted(by: >) where !left.isEmpty {
+            for row in activityStore.month(key).items where left.remove(row.id) != nil {
+                let day = calendar.startOfDay(for: row.start)
+                if !days.contains(day) { days.append(day) }
+            }
         }
         let rows = days.flatMap(storedActivities)
         return ManualMergeCheck.check(ids, dayRows: rows, calendar: calendar)
@@ -24,7 +28,12 @@ extension Engine {
         case let .blocked(reason):
             return .blocked(reason)
         case let .ok(plan):
-            guard let merged = mergedEvents(plan) else { return .calendarFailed }
+            let merged: Activity
+            switch mergedEvents(plan) {
+            case let .ready(row): merged = row
+            case .failed: return .calendarFailed
+            case .partlyChanged: return .calendarPartlyChanged
+            }
             let removing = Set(plan.rows.map(\.id) + plan.removedAway.map(\.id))
             replaceDayRows(removing: removing, with: merged)
             return .merged(merged.id)
