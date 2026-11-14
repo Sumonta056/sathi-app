@@ -45,4 +45,13 @@ extension Engine {
     package func setCalendarPageOn(_ on: Bool) {
         data.prefs.calendarPage.isOn = on
     }
+
+    package func setCalendarSidePanelShown(_ shown: Bool) {
+        data.prefs.calendarPage.sidePanelShown = shown
+    }
+
+    package func setCalendarRowMinutes(_ minutes: Int) {
+        guard Limits.calendarRowMinutes.contains(minutes) else { return }
+        data.prefs.calendarPage.rowMinutes = minutes
+    }
 }

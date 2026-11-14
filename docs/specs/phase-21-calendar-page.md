@@ -13,7 +13,7 @@ Two tracks:
 ## Track 1: Calendar page
 
 ### C1. Place and switch
-1. New sidebar page "Calendar" in the main window, with a small "Experimental" tag.
+1. New sidebar page "Calendar" in the main window. The sidebar item and the rail icon have no tag; the word "experimental" shows only in the Settings switch (C1.2).
 2. Settings has a switch "Calendar page (experimental)". Default off. Off: the sidebar has no Calendar item. On: the item shows after Activities.
 3. The page works when the activity tracker is off. Then it shows only events.
 4. The page needs only calendar access. Not asked: the page shows "Allow calendar access" (asks macOS). Denied: "Open System Settings". This reuses the access states that Sathi already has.
@@ -21,14 +21,14 @@ Two tracks:
 
 ### C2. Views
 1. A segment control: Day, Week, Month. Buttons ‹, Today, ›. ‹ and › move by 1 day, 1 week, or 1 month.
-2. Day and Week: one time grid. Week has 7 columns from the region's first weekday (same rule as Reports and Activities ranges).
+2. Day and Week: one time grid. Week has 7 columns from Saturday (`Limits.calendarPageFirstWeekday` = 7, Gregorian), whatever the region, like the user's Apple Calendar. Reports and Activities ranges keep the region's first weekday.
 3. Week layout A: events and activities share one column. Blocks that overlap in time split the column width side by side.
-4. The grid has 24 rows of 1 hour, from the 6 AM row to the 5 AM row of the next date, and it scrolls vertically.
+4. The grid has 24 rows of 1 hour, from the 6 AM row to the 5 AM row of the next date, and it scrolls vertically (no scroll bar). Day and Week have a "Row" zoom in the header: "1 h" (base hour height), "30 min" (× 2, a faint half-hour line), "15 min" (× 4, faint lines every 15 min). Saved in `prefs.calendarPage.rowMinutes` (60/30/15, default 60, a bad value gives 60). Month ignores it. Slot clicks still round down to 15 min at every zoom.
 5. Calendar-page day: a day column and its totals cover 6:00 AM of that date to 6:00 AM of the next date (`Limits.calendarPageDayStartHour` = 6, a constant, not a setting). The page shows "6 AM to 6 AM" near the totals. Example: a row from 12:22 AM to 2:02 AM on Thursday shows at the bottom of the Wednesday column. Activities and Reports keep midnight.
 6. On open, the grid scrolls to the current time for a range that holds now, else to the 6 AM row.
 7. A red line marks the current time in a column for today.
 8. All-day events show in a row at the top of Day and Week. They are read-only.
-9. Month: a grid of weeks, first weekday as in C2.2. Each date cell shows its event chips (max `Limits.calendarMonthChipsShown`, then "+{n} more") and the tracked time of that calendar-page day. A click on a date opens the Day view of that date. Today has a highlight.
+9. Month: a grid of weeks, each row from Saturday as in C2.2. Each date cell shows its event chips (max `Limits.calendarMonthChipsShown`, then "+{n} more") and the tracked time of that calendar-page day. A click on a date opens the Day view of that date. Today has a highlight.
 10. A block shows title, and the time range when the block is tall enough. Very short blocks (less than the minimum height) show as a thin block without text.
 
 ### C3. What shows, and no duplicates
@@ -74,8 +74,9 @@ The tracker's event logic does not change. These tests prove that the Calendar p
 
 ### C8. Statistics
 1. For the shown range: time tracked (work activities), time planned (events, all-day excluded, overlap counted once), and time by category.
-2. Day: a side panel. Week and Month: a line above the grid and the side panel.
+2. Day, Week, and Month: a side panel, and a one-line summary in the top middle of the header ("Tracked 42 h 05 m · Planned 29 h 16 m", muted labels, bold values, never wraps). No line above the grid.
 3. No "events joined" number in this phase.
+4. A header button (icon `sidebar.right`, "Show side panel"/"Hide side panel") hides or shows the side panel. The grid takes the free width; the summary stays. Saved in `prefs.calendarPage.sidePanelShown` (default true; old prefs without it decode to true). The activity edit panel still opens while the side panel is hidden.
 
 ### C9. Performance
 1. No repeating timer. The page redraws on a store change, a range change, or the current-time line (at most 1 time per minute, only while the page is visible).

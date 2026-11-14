@@ -21,6 +21,8 @@ extension Copywriter {
     package static let calendarByCategory = "By category"
     package static let calendarTracked = "Tracked"
     package static let calendarPlannedEvents = "Planned events"
+    package static let calendarPlanned = "Planned"
+    package static let calendarSummaryGap = " · "
     package static let calendarAway = "Away"
     package static let calendarNothingTracked = "Nothing tracked yet."
 
@@ -35,8 +37,18 @@ extension Copywriter {
         "This " + kind.rawValue
     }
 
-    package static func calendarStatsLine(_ stats: CalendarPageStats, kind: ReportRange) -> String {
-        "Tracked this \(kind.rawValue): \(calendarHours(stats.tracked)) · Planned: \(calendarHours(stats.planned))"
+    package static func calendarSummary(_ stats: CalendarPageStats) -> String {
+        calendarTracked + " " + calendarHours(stats.tracked) + calendarSummaryGap + calendarPlanned + " " + calendarHours(stats.planned)
+    }
+
+    package static let calendarRowLabel = "Row"
+
+    package static func calendarRowOption(_ minutes: Int) -> String {
+        minutes >= Limits.minutesPerHour ? "\(minutes / Limits.minutesPerHour) h" : "\(minutes) min"
+    }
+
+    package static func calendarSidePanelLabel(shown: Bool) -> String {
+        shown ? "Hide side panel" : "Show side panel"
     }
 
     package static func calendarEventDate(_ day: DayKey, calendar: Calendar) -> String {

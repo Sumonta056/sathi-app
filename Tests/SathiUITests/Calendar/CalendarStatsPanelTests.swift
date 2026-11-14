@@ -48,8 +48,10 @@ struct CalendarStatsPanelTests {
         #expect(throws: Never.self) { try panel(.month).find(CalendarShownList.self) }
     }
 
-    @Test func theLineShowsTrackedAndPlanned() throws {
-        let line = try CalendarStatsLine(stats: stats, kind: .week).inspect()
-        #expect(throws: Never.self) { try line.find(text: "Tracked this week: 2 h 05 m · Planned: 40 m") }
+    @Test func theSummaryShowsTrackedAndPlannedInOneLine() throws {
+        let summary = try CalendarHeaderSummary(stats: stats).inspect()
+        let text = try summary.find(ViewType.Text.self)
+        #expect(try text.string() == "Tracked 2 h 05 m · Planned 40 m")
+        #expect(try text.lineLimit() == 1)
     }
 }

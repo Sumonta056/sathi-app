@@ -23,6 +23,12 @@ struct CalendarPageGridTests {
         return try CalendarPage(range: range).environmentObject(h.engine).inspect()
     }
 
+    @Test func monthGridHidesTheScrollBar() throws {
+        let sut = try page(.month, harness())
+        let scroll = try sut.find(CalendarMonthGrid.self).find(ViewType.ScrollView.self, relation: .parent)
+        #expect(try scroll.showsIndicators() == false)
+    }
+
     @Test func weekShowsTimedAndAllDayEvents() throws {
         let sut = try page(.week, harness())
         #expect(throws: Never.self) { try sut.find(text: "Standup") }
