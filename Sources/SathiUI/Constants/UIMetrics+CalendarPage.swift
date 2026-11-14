@@ -1,3 +1,4 @@
+import SathiCore
 import SwiftUI
 
 extension UIMetrics {
@@ -7,6 +8,12 @@ extension UIMetrics {
     static let calendarTodayPadding = EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
     static let calendarGateGap: CGFloat = 10
     static let calendarHourHeight: CGFloat = 48
+    static let calendarSubLineOpacity: Double = 0.45
+    static let calendarRowZoomGap: CGFloat = 6
+
+    static func calendarHourHeight(rowMinutes: Int) -> CGFloat {
+        calendarHourHeight * CGFloat(Limits.minutesPerHour / max(1, rowMinutes))
+    }
     static let calendarBlockMinHeight: CGFloat = 16
     static let calendarTimeRangeMinHeight: CGFloat = 34
     static let calendarAllDayHeight: CGFloat = 22

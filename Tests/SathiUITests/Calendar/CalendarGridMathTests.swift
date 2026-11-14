@@ -38,6 +38,29 @@ struct CalendarGridMathTests {
         #expect(math(12).height(i) == 1.5 * h)
     }
 
+    @Test(arguments: [(60, CGFloat(1)), (30, 2), (15, 4)])
+    func rowZoomScalesTheHourHeight(_ minutes: Int, _ scale: CGFloat) {
+        let base = UIMetrics.calendarHourHeight
+        let tall = UIMetrics.calendarHourHeight(rowMinutes: minutes)
+        #expect(tall == base * scale)
+        let m = CalendarGridMath(day: DayKey(z.date(2026, 11, 12), calendar: z.calendar), calendar: z.calendar, hourHeight: tall)
+        #expect(m.y(for: z.date(2026, 11, 12, 7, 30)) == 1.5 * base * scale)
+        #expect(m.slotStart(y: m.y(for: z.date(2026, 11, 12, 7, 40))) == z.date(2026, 11, 12, 7, 30))
+        #expect(m.slotStart(y: m.y(for: z.date(2026, 11, 12, 7, 59))) == z.date(2026, 11, 12, 7, 45))
+        #expect(m.slotStart(y: m.y(for: z.date(2026, 11, 13, 5, 50))) == z.date(2026, 11, 13, 5, 45))
+    }
+
+    @Test func tallerRowsShowTheTitleOfAShortBlock() {
+        let span = DateInterval(start: z.date(2026, 11, 12, 9), end: z.date(2026, 11, 12, 9, 15))
+        let key = DayKey(z.date(2026, 11, 12), calendar: z.calendar)
+        let heights = [60, 30, 15].map {
+            CalendarGridMath(day: key, calendar: z.calendar, hourHeight: UIMetrics.calendarHourHeight(rowMinutes: $0)).height(span)
+        }
+        #expect(!CalendarBlockView.showsText(height: heights[0]))
+        #expect(CalendarBlockView.showsText(height: heights[1]))
+        #expect(CalendarBlockView.showsTimeRange(height: heights[2]))
+    }
+
     @Test func fallBackDayKeepsWallClockRows() {
         let m = math(24, month: 10)
         #expect(m.y(for: z.date(2026, 10, 25, 5)) == 23 * h)

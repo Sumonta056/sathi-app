@@ -41,6 +41,12 @@ extension Copywriter {
         calendarTracked + " " + calendarHours(stats.tracked) + calendarSummaryGap + calendarPlanned + " " + calendarHours(stats.planned)
     }
 
+    package static let calendarRowLabel = "Row"
+
+    package static func calendarRowOption(_ minutes: Int) -> String {
+        minutes >= Limits.minutesPerHour ? "\(minutes / Limits.minutesPerHour) h" : "\(minutes) min"
+    }
+
     package static func calendarSidePanelLabel(shown: Bool) -> String {
         shown ? "Hide side panel" : "Show side panel"
     }

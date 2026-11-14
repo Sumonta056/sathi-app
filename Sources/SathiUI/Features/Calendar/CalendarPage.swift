@@ -22,8 +22,9 @@ struct CalendarPage: View {
         let sidePanelShown = e.data.prefs.calendarPage.sidePanelShown
         VStack(alignment: .leading, spacing: UIMetrics.reportsPageGap) {
             CalendarPageHeader(
-                range: binding(range), now: e.now, calendar: e.rangeCalendar, stats: data?.stats, sidePanelShown: sidePanelShown
-            ) { e.setCalendarSidePanelShown(!sidePanelShown) }
+                range: binding(range), now: e.now, calendar: e.rangeCalendar, stats: data?.stats, sidePanelShown: sidePanelShown,
+                toggleSidePanel: { e.setCalendarSidePanelShown(!sidePanelShown) }, rowMinutes: rowMinutes
+            )
             content(range, data)
         }
         .padding(UIMetrics.mainContentPadding)
@@ -66,7 +67,8 @@ struct CalendarPage: View {
         } else {
             CalendarTimeGrid(
                 range: range, data: data, now: e.now, calendar: e.rangeCalendar, categories: e.activityCategories,
-                actions: gridActions(kind: range.kind), selected: range.kind == .day ? selected : [], popover: $focus.popover
+                actions: gridActions(kind: range.kind), selected: range.kind == .day ? selected : [], popover: $focus.popover,
+                rowMinutes: e.data.prefs.calendarPage.rowMinutes
             )
         }
     }
@@ -76,6 +78,10 @@ struct CalendarPage: View {
             rows: CalendarMergePick.rows(data.blocks), calendar: e.rangeCalendar, canUndo: e.mergeUndo != nil,
             actions: .merging(e), selected: $selected, error: $mergeError
         )
+    }
+
+    private var rowMinutes: Binding<Int> {
+        Binding(get: { e.data.prefs.calendarPage.rowMinutes }, set: { e.setCalendarRowMinutes($0) })
     }
 
     private func binding(_ range: CalendarPageRange) -> Binding<CalendarPageRange> {

@@ -22,6 +22,11 @@ struct CalendarPageCopyTests {
         #expect(Copywriter.calendarPlanned == "Planned")
     }
 
+    @Test func rowStepsHaveShortNames() {
+        #expect(Copywriter.calendarRowLabel == "Row")
+        #expect(Limits.calendarRowMinutes.map(Copywriter.calendarRowOption) == ["1 h", "30 min", "15 min"])
+    }
+
     @Test func sidePanelButtonNamesTheAction() {
         #expect(Copywriter.calendarSidePanelLabel(shown: true) == "Hide side panel")
         #expect(Copywriter.calendarSidePanelLabel(shown: false) == "Show side panel")
