@@ -76,4 +76,35 @@ struct CalendarPageRangeTests {
         #expect(wed.initialScrollRow(now: monday.date(2026, 3, 5, 6, 0)) == 0)
         #expect(wed.initialScrollRow(now: monday.date(2026, 3, 9, 10, 0)) == 0)
     }
+
+    @Test func scrollRowOnDstDaysMatchesRows() throws {
+        for (raw, now) in [("2026-03-28", monday.date(2026, 3, 29, 4, 15)), ("2026-10-24", monday.date(2026, 10, 25, 4, 15))] {
+            let key = try #require(DayKey(raw: raw))
+            let range = CalendarPageRange.containing(
+                key.start(in: monday.calendar).addingTimeInterval(12 * 3600),
+                kind: .day,
+                calendar: monday.calendar
+            )
+            let rows = CalendarPageDay.hourStarts(of: key, calendar: monday.calendar)
+            let row = range.initialScrollRow(now: now)
+            #expect(row == 22)
+            #expect(rows[row] <= now)
+            #expect(rows[row + 1] > now)
+        }
+    }
+
+    @Test func rangesWithDifferentFirstWeekdayDiffer() {
+        let date = monday.date(2026, 3, 10, 12)
+        let a = CalendarPageRange.containing(date, kind: .month, calendar: monday.calendar)
+        let b = CalendarPageRange.containing(date, kind: .month, calendar: sunday.calendar)
+        #expect(a != b)
+        #expect(a == CalendarPageRange.containing(date, kind: .month, calendar: monday.calendar))
+    }
+
+    @Test func monthStartingOnFirstWeekdayHasNoLeadingDays() {
+        let range = CalendarPageRange.containing(sunday.date(2026, 3, 10, 12), kind: .month, calendar: sunday.calendar)
+        #expect(range.monthWeeks.first?.first?.raw == "2026-03-01")
+        #expect(range.monthWeeks.last?.last?.raw == "2026-04-04")
+        #expect(range.monthWeeks.count == 5)
+    }
 }

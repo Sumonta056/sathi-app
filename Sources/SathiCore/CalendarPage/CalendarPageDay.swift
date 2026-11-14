@@ -25,9 +25,14 @@ package enum CalendarPageDay {
 
     package static func hourStarts(of day: DayKey, calendar: Calendar) -> [Date] {
         let g = Calendar.gregorian(in: calendar.timeZone)
-        let start = interval(of: day, calendar: g).start
-        return (0 ..< Limits.calendarGridHours).compactMap {
-            g.date(byAdding: .hour, value: $0, to: start)
+        let midnight = day.start(in: g)
+        let nextMidnight = g.nextDay(after: midnight)
+        let first = Limits.calendarPageDayStartHour
+        return (0 ..< Limits.calendarGridHours).map { row in
+            let label = first + row
+            let base = label < Limits.calendarGridHours ? midnight : nextMidnight
+            let hour = label % Limits.calendarGridHours
+            return g.date(bySettingHour: hour, minute: 0, second: 0, of: base) ?? base
         }
     }
 

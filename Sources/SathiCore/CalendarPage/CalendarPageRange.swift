@@ -8,6 +8,8 @@ package struct CalendarPageRange: Equatable, Sendable {
 
     package static func == (lhs: CalendarPageRange, rhs: CalendarPageRange) -> Bool {
         lhs.kind == rhs.kind && lhs.days == rhs.days && lhs.interval == rhs.interval
+            && lhs.calendar.firstWeekday == rhs.calendar.firstWeekday
+            && lhs.calendar.timeZone == rhs.calendar.timeZone
     }
 
     package static func containing(_ date: Date, kind: ReportRange, calendar: Calendar) -> CalendarPageRange {
@@ -62,8 +64,9 @@ package struct CalendarPageRange: Equatable, Sendable {
 
     package func initialScrollRow(now: Date) -> Int {
         guard holds(now) else { return 0 }
-        let hour = calendar.component(.hour, from: now)
-        return (hour - Limits.calendarPageDayStartHour + Limits.calendarGridHours) % Limits.calendarGridHours
+        let day = CalendarPageDay.key(holding: now, calendar: calendar)
+        let rows = CalendarPageDay.hourStarts(of: day, calendar: calendar)
+        return rows.lastIndex { $0 <= now } ?? 0
     }
 
     private func shifted(by step: Int) -> CalendarPageRange {
