@@ -27,6 +27,29 @@ struct EngineCalendarPageDataTests {
         #expect(data.stats.planned == 60 * 60)
     }
 
+    @Test func trackerOffHidesSavedRows() {
+        let row = Activity(text: "Old", start: day(2026, 3, 4, 9), end: day(2026, 3, 4, 10))
+        let h = EngineHarness(at: day(2026, 3, 4, 12), activities: InMemoryActivityStore(activities: [row]))
+        h.calendarWriter.eventsValue = [event("e1", day(2026, 3, 4, 11))]
+        let data = h.engine.calendarPage(wednesday(h))
+        #expect(data.blocks.map(\.title) == ["e1"])
+        #expect(!hasActivityBlock(data))
+        #expect(data.stats.tracked == 0)
+        #expect(data.stats.byCategory.isEmpty)
+        let month = h.engine.calendarPage(wednesday(h, kind: .month))
+        #expect(month.monthCells.flatMap { $0 }.allSatisfy { $0.tracked == 0 })
+    }
+
+    @Test func declinedEventShowsButIsNotPlanned() {
+        let h = EngineHarness(at: day(2026, 3, 4, 12))
+        var declined = event("no", day(2026, 3, 4, 9))
+        declined.declined = true
+        h.calendarWriter.eventsValue = [declined]
+        let data = h.engine.calendarPage(wednesday(h))
+        #expect(data.blocks.map(\.title) == ["no"])
+        #expect(data.stats.planned == 0)
+    }
+
     @Test func readCoversTheRangeIntervalOnce() {
         let h = EngineHarness(at: day(2026, 3, 4, 12))
         let reads = h.calendarWriter.eventReads.count

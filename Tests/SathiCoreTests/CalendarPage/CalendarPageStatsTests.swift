@@ -35,6 +35,14 @@ struct CalendarPageStatsTests {
         #expect(stats.planned == 60 * 60)
     }
 
+    @Test func declinedEventIsNotPlanned() {
+        var declined = event("x", zone.date(2026, 3, 4, 12), zone.date(2026, 3, 4, 13))
+        declined.declined = true
+        let events = [declined, event("a", zone.date(2026, 3, 4, 10), zone.date(2026, 3, 4, 11))]
+        let stats = CalendarPageStats.make(events: events, activities: [], interval: wedDay)
+        #expect(stats.planned == 60 * 60)
+    }
+
     @Test func trackedLeavesOutAway() {
         let rows = [
             row(.work, "Focus", zone.date(2026, 3, 4, 10), zone.date(2026, 3, 4, 10, 45)),
