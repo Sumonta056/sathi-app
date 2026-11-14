@@ -43,7 +43,7 @@ struct CalendarTimeGrid: View {
 
     private func scroller(_ columns: [CalendarGridMath], today: DayKey) -> some View {
         ScrollViewReader { proxy in
-            ScrollView(.vertical) {
+            ScrollView(.vertical, showsIndicators: false) {
                 HStack(alignment: .top, spacing: 0) {
                     labels
                     ForEach(Array(zip(range.days, columns)), id: \.0) { day, math in

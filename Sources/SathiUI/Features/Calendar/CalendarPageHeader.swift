@@ -5,10 +5,14 @@ struct CalendarPageHeader: View {
     @Binding var range: CalendarPageRange
     let now: Date
     let calendar: Calendar
+    var stats: CalendarPageStats?
+    var sidePanelShown = true
+    var toggleSidePanel: () -> Void = {}
 
     var body: some View {
-        PageHeaderLayout(gap: UIMetrics.reportsGap) {
+        CalendarHeaderLayout(gap: UIMetrics.reportsGap) {
             titleBlock
+            if let stats { CalendarHeaderSummary(stats: stats) }
             HStack(spacing: UIMetrics.reportsGap) {
                 PillSegment(options: ReportRange.allCases, selected: kind, title: Copywriter.rangeSegment)
                 HStack(spacing: UIMetrics.rangeBarGap) {
@@ -16,6 +20,7 @@ struct CalendarPageHeader: View {
                     todayButton
                     arrow("chevron.right", Copywriter.rangeNext) { range = range.next }
                 }
+                arrow("sidebar.right", Copywriter.calendarSidePanelLabel(shown: sidePanelShown), action: toggleSidePanel)
             }
             .fixedSize()
         }

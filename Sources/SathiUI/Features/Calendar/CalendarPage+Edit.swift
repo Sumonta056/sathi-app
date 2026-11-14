@@ -38,7 +38,7 @@ extension CalendarPage {
                 calendars: e.calendarChoices(), calendarNames: e.activityCalendarTitles, actions: .engine(e), editing: editTarget
             )
             .frame(width: UIMetrics.activitiesEditWidth)
-        } else {
+        } else if e.data.prefs.calendarPage.sidePanelShown {
             ScrollView(.vertical, showsIndicators: false) {
                 CalendarStatsPanel(stats: data.stats, kind: kind, categories: e.activityCategories)
             }

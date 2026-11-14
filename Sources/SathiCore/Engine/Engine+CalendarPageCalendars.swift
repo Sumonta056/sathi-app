@@ -45,4 +45,8 @@ extension Engine {
     package func setCalendarPageOn(_ on: Bool) {
         data.prefs.calendarPage.isOn = on
     }
+
+    package func setCalendarSidePanelShown(_ shown: Bool) {
+        data.prefs.calendarPage.sidePanelShown = shown
+    }
 }

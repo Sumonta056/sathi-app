@@ -42,7 +42,7 @@ struct CopywriterCalendarPageTests {
         monday.firstWeekday = 2
         let range = CalendarPageRange.containing(day(2026, 12, 31, 10), kind: .week, calendar: monday)
         let t = Copywriter.calendarRangeTitle(range, calendar: monday)
-        #expect(t.main == "28 Dec to 3 Jan")
+        #expect(t.main == "26 Dec to 1 Jan")
         #expect(t.year == "2027")
     }
 }

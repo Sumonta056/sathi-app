@@ -29,10 +29,9 @@ struct MainSidebar: View {
                         route.page = .activities(nil)
                     }
                     if e.data.prefs.calendarPage.isOn {
-                        MainSidebarItem(
-                            title: Copywriter.calendarPageTitle, icon: "calendar", isSelected: isCalendar,
-                            tag: Copywriter.calendarExperimentalTag
-                        ) { route.page = .calendar(nil) }
+                        MainSidebarItem(title: Copywriter.calendarPageTitle, icon: "calendar", isSelected: isCalendar) {
+                            route.page = .calendar(nil)
+                        }
                     }
                     MainSidebarItem(title: Copywriter.mainPageReports, icon: "chart.bar", isSelected: route.page == .reports) {
                         route.page = .reports

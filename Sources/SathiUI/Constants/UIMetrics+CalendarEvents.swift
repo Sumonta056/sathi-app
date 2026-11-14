@@ -20,5 +20,5 @@ extension UIMetrics {
     static let calendarSideRowSpacing: CGFloat = 8
     static let calendarSideDot: CGFloat = 8
     static let calendarCheckSize: CGFloat = 13
-    static let calendarStatsLineFont: CGFloat = 12
+    static let calendarSummaryFont: CGFloat = 13
 }

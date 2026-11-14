@@ -26,10 +26,16 @@ struct CalendarSidebarTests {
         #expect(!shown.contains("Experimental"))
     }
 
-    @Test func calendarOnShowsAfterActivitiesWithTheTag() throws {
+    @Test func calendarOnShowsAfterActivitiesWithoutATag() throws {
         let shown = try texts(calendarOn(), MainRoute(.today))
         #expect(shown.filter(["Today", "Activities", "Calendar", "Reports"].contains) == ["Today", "Activities", "Calendar", "Reports"])
-        #expect(shown.contains("Experimental"))
+        #expect(!shown.contains("Experimental"))
+    }
+
+    @Test func railHasNoExperimentalTag() throws {
+        let rail = try sidebar(calendarOn(), MainRoute(.today), open: false).inspect()
+        let shown = rail.findAll(ViewType.Text.self).compactMap { try? $0.string() }
+        #expect(!shown.contains("Experimental"))
     }
 
     @Test func calendarTapShowsTheCalendarPage() throws {

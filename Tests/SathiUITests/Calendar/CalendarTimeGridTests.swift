@@ -33,6 +33,13 @@ struct CalendarTimeGridTests {
         #expect(throws: Never.self) { try sut.find(text: "2 AM") }
     }
 
+    @Test func gridHidesTheScrollBar() throws {
+        let now = z.date(2026, 11, 12, 15, 20)
+        let week = CalendarPageRange.containing(now, kind: .week, calendar: z.calendar)
+        let scroll = try grid(week, now: now).inspect().find(ViewType.ScrollView.self)
+        #expect(try scroll.showsIndicators() == false)
+    }
+
     @Test func initialRowIsTheRowOfNow() {
         let now = z.date(2026, 11, 12, 15, 20)
         let week = CalendarPageRange.containing(now, kind: .week, calendar: z.calendar)

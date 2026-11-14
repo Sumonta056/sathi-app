@@ -96,19 +96,14 @@ struct CalendarPageEditTests {
         #expect((try? sut.find(CalendarStatsPanel.self)) == nil)
     }
 
-    @Test func dayShowsThePanelAndNoLine() throws {
+    @Test func everyViewShowsThePanelAndTheHeaderSummaryAndNoLine() throws {
         let h = harness()
-        let sut = try CalendarPage(range: range(h, .day)).environmentObject(h.engine).inspect()
-        #expect(throws: Never.self) { try sut.find(CalendarStatsPanel.self) }
-        #expect((try? sut.find(CalendarStatsLine.self)) == nil)
-    }
-
-    @Test func weekAndMonthShowTheLineAndThePanel() throws {
-        let h = harness()
-        for kind in [ReportRange.week, .month] {
+        for kind in ReportRange.allCases {
             let sut = try CalendarPage(range: range(h, kind)).environmentObject(h.engine).inspect()
             #expect(throws: Never.self) { try sut.find(CalendarStatsPanel.self) }
-            #expect(throws: Never.self) { try sut.find(CalendarStatsLine.self) }
+            #expect(throws: Never.self) { try sut.find(CalendarPageHeader.self).find(CalendarHeaderSummary.self) }
+            let texts = sut.findAll(ViewType.Text.self).compactMap { try? $0.string() }
+            #expect(!texts.contains { $0.hasPrefix("Tracked this") })
         }
     }
 

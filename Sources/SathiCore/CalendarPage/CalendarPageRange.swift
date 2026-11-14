@@ -14,14 +14,14 @@ package struct CalendarPageRange: Equatable, Sendable {
 
     package static func containing(_ date: Date, kind: ReportRange, calendar: Calendar) -> CalendarPageRange {
         var cal = Calendar.gregorian(in: calendar.timeZone)
-        cal.firstWeekday = calendar.firstWeekday
+        cal.firstWeekday = Limits.calendarPageFirstWeekday
         let pageDay = CalendarPageDay.key(holding: date, calendar: cal)
         return make(day: pageDay, kind: kind, calendar: cal)
     }
 
     package static func containing(day pageDay: DayKey, kind: ReportRange, calendar: Calendar) -> CalendarPageRange {
         var cal = Calendar.gregorian(in: calendar.timeZone)
-        cal.firstWeekday = calendar.firstWeekday
+        cal.firstWeekday = Limits.calendarPageFirstWeekday
         return make(day: pageDay, kind: kind, calendar: cal)
     }
 

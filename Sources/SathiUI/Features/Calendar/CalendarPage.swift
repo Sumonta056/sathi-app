@@ -18,9 +18,13 @@ struct CalendarPage: View {
 
     var body: some View {
         let range = shown
+        let data = e.calendarAccess == .allowed ? memo.value(range, end: range.interval.end, engine: e) { $0.calendarPage($1) } : nil
+        let sidePanelShown = e.data.prefs.calendarPage.sidePanelShown
         VStack(alignment: .leading, spacing: UIMetrics.reportsPageGap) {
-            CalendarPageHeader(range: binding(range), now: e.now, calendar: e.rangeCalendar)
-            content(range)
+            CalendarPageHeader(
+                range: binding(range), now: e.now, calendar: e.rangeCalendar, stats: data?.stats, sidePanelShown: sidePanelShown
+            ) { e.setCalendarSidePanelShown(!sidePanelShown) }
+            content(range, data)
         }
         .padding(UIMetrics.mainContentPadding)
         .onAppear {
@@ -39,12 +43,11 @@ struct CalendarPage: View {
         return .containing(day: day, kind: .day, calendar: calendar)
     }
 
-    @ViewBuilder private func content(_ range: CalendarPageRange) -> some View {
-        if e.calendarAccess == .allowed {
-            let data = memo.value(range, end: range.interval.end, engine: e) { $0.calendarPage($1) }
+    @ViewBuilder private func content(_ range: CalendarPageRange, _ data: CalendarPageData?) -> some View {
+        if let data {
             HStack(alignment: .top, spacing: UIMetrics.calendarSideGap) {
                 VStack(alignment: .leading, spacing: UIMetrics.calendarSideGap) {
-                    if range.kind != .day { CalendarStatsLine(stats: data.stats, kind: range.kind) } else { strip(data) }
+                    if range.kind == .day { strip(data) }
                     grid(range, data)
                 }
                 side(data, kind: range.kind)
@@ -57,7 +60,7 @@ struct CalendarPage: View {
 
     @ViewBuilder private func grid(_ range: CalendarPageRange, _ data: CalendarPageData) -> some View {
         if range.kind == .month {
-            ScrollView(.vertical) {
+            ScrollView(.vertical, showsIndicators: false) {
                 CalendarMonthGrid(cells: data.monthCells, range: binding(range), calendar: e.rangeCalendar, categories: e.activityCategories)
             }
         } else {

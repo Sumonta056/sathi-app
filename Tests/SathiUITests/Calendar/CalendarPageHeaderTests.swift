@@ -76,6 +76,34 @@ struct CalendarPageHeaderTests {
         #expect(b.range.days == [DayKey(day(2026, 11, 11), calendar: cal)])
     }
 
+    @Test func showsTheSummaryForEveryView() throws {
+        let stats = CalendarPageStats(tracked: 42 * 3600 + 5 * 60, planned: 29 * 3600 + 16 * 60)
+        for kind in ReportRange.allCases {
+            let sut = try CalendarPageHeader(range: box(kind).binding, now: now, calendar: cal, stats: stats).inspect()
+            #expect(throws: Never.self) { try sut.find(text: "Tracked 42 h 05 m · Planned 29 h 16 m") }
+        }
+    }
+
+    @Test func noStatsShowsNoSummary() {
+        #expect((try? header(box(.week)).find(CalendarHeaderSummary.self)) == nil)
+    }
+
+    @Test func sidePanelButtonNamesTheActionAndTaps() throws {
+        var taps = 0
+        let shown = try CalendarPageHeader(range: box(.week).binding, now: now, calendar: cal, sidePanelShown: true) { taps += 1 }.inspect()
+        try Find.button(shown, label: "Hide side panel").tap()
+        let hidden = try CalendarPageHeader(range: box(.week).binding, now: now, calendar: cal, sidePanelShown: false) { taps += 1 }.inspect()
+        try Find.button(hidden, label: "Show side panel").tap()
+        #expect(taps == 2)
+    }
+
+    @Test func headerRowsKeepTheSummaryNextToTheTitleWhenNarrow() {
+        #expect(CalendarHeaderLayout.rows([200, 250, 300], width: 800, gap: 10) == [[0, 1, 2]])
+        #expect(CalendarHeaderLayout.rows([200, 250, 300], width: 700, gap: 10) == [[0, 1], [2]])
+        #expect(CalendarHeaderLayout.rows([200, 250, 300], width: 400, gap: 10) == [[0], [1], [2]])
+        #expect(CalendarHeaderLayout.rows([200, 300], width: 400, gap: 10) == [[0], [1]])
+    }
+
     @Test func showsTheSixAMNote() throws {
         #expect(throws: Never.self) { try header(box(.week)).find(text: "6 AM to 6 AM") }
     }

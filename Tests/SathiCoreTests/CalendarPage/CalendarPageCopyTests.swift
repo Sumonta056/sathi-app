@@ -16,10 +16,15 @@ struct CalendarPageCopyTests {
         #expect(Copywriter.calendarHours(59) == "0 m")
     }
 
-    @Test func statsLineNamesTheRange() {
-        let stats = CalendarPageStats(tracked: 21 * 3600 + 5 * 60, planned: 6 * 3600 + 40 * 60)
-        #expect(Copywriter.calendarStatsLine(stats, kind: .week) == "Tracked this week: 21 h 05 m · Planned: 6 h 40 m")
-        #expect(Copywriter.calendarStatsLine(stats, kind: .month) == "Tracked this month: 21 h 05 m · Planned: 6 h 40 m")
+    @Test func summaryUsesTheSameWordsForEveryRange() {
+        let stats = CalendarPageStats(tracked: 42 * 3600 + 5 * 60, planned: 29 * 3600 + 16 * 60)
+        #expect(Copywriter.calendarSummary(stats) == "Tracked 42 h 05 m · Planned 29 h 16 m")
+        #expect(Copywriter.calendarPlanned == "Planned")
+    }
+
+    @Test func sidePanelButtonNamesTheAction() {
+        #expect(Copywriter.calendarSidePanelLabel(shown: true) == "Hide side panel")
+        #expect(Copywriter.calendarSidePanelLabel(shown: false) == "Show side panel")
     }
 
     @Test func panelTitleNamesTheRange() {
