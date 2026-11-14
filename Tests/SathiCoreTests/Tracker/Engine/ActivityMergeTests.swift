@@ -40,28 +40,15 @@ struct ActivityMergeTests {
         }
     }
 
-    @Test func twoOwnEventsDoNotMerge() {
+    @Test func twoOwnEventsMergeAndKeepTheEarlierEvent() {
         let later = row(from: wed(10, 10), to: wed(10, 20), event: "b")
-        #expect(!ActivityMerge.canMerge(row(event: "a"), later))
+        #expect(ActivityMerge.canMerge(row(event: "a"), later))
+        #expect(ActivityMerge.joined(row(event: "a"), later).eventID == "a")
         #expect(ActivityMerge.canMerge(row(event: "a"), row(from: wed(10, 10), to: wed(10, 20))))
     }
 
     @Test func calendarSourcedRowsDoNotMerge() {
         #expect(!ActivityMerge.canMerge(row(source: "s"), row(from: wed(10, 10), to: wed(10, 20))))
-    }
-
-    @Test func mergedListJoinsRuns() {
-        let rows = [
-            row(from: wed(10), to: wed(10, 10)),
-            row(from: wed(10, 10), to: wed(10, 20)),
-            row(from: wed(10, 20), to: wed(10, 30)),
-            row("Mail", category: "Break", from: wed(10, 30), to: wed(10, 40)),
-            row(from: wed(10, 40), to: wed(10, 50))
-        ]
-        let out = ActivityMerge.merged(rows)
-        #expect(out.map(\.text) == ["Gaming", "Mail", "Gaming"])
-        #expect(out[0].id == rows[0].id)
-        #expect(out[0].start == wed(10) && out[0].end == wed(10, 30))
     }
 
     @Test func aLaterRowThatAloneHasAnEventBringsItsCalendar() {

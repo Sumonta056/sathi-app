@@ -10,7 +10,7 @@ struct FileActivityStoreBackupTests {
 
     private var folder: URL { base.appendingPathComponent("activities") }
     private var file: URL { folder.appendingPathComponent("2026-11.json") }
-    private var backupFile: URL { folder.appendingPathComponent("2026-11.backup.json") }
+    private var backupFile: URL { folder.appendingPathComponent("2026-11.backup2.json") }
     private var key: MonthKey { MonthKey(year: 2026, month: 11)! }
 
     private func store() -> FileActivityStore { FileActivityStore(base: base, delay: 3600) }
@@ -46,7 +46,7 @@ struct FileActivityStoreBackupTests {
         s.flush()
         #expect(s.backup(key))
         let names = try FileManager.default.contentsOfDirectory(atPath: folder.path).sorted()
-        #expect(names == ["2026-11.backup.json", "2026-11.json"])
+        #expect(names == ["2026-11.backup2.json", "2026-11.json"])
     }
 
     @Test func releasingUnusedMonthsDropsWhatWasOnlyRead() throws {

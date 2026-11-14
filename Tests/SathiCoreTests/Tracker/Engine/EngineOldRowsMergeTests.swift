@@ -55,12 +55,12 @@ struct EngineOldRowsMergeTests {
 
     @Test func thePassSetsTheFlagAndSavesPrefs() {
         let h = started(gaming(2))
-        #expect(h.engine.data.prefs.tracker.mergedOldRows)
-        #expect(h.store.prefs.tracker.mergedOldRows)
+        #expect(h.engine.data.prefs.tracker.mergedEventRows)
+        #expect(h.store.prefs.tracker.mergedEventRows)
     }
 
     @Test func thePassDoesNotRunWhenTheFlagIsSet() {
-        let h = started(gaming(4)) { $0.prefs.tracker.mergedOldRows = true }
+        let h = started(gaming(4)) { $0.prefs.tracker.mergedEventRows = true }
         #expect(h.activities.all.count == 4)
         #expect(h.activities.backups.isEmpty)
     }
@@ -71,9 +71,7 @@ struct EngineOldRowsMergeTests {
             row(mon(9, 10), mon(9, 20), text: "Coding", category: "Coding"),
             row(mon(9, 20), mon(9, 30)),
             row(mon(9, 32), mon(9, 40)),
-            row(mon(9, 40), mon(9, 50), category: "Work"),
-            row(mon(9, 50), mon(10), event: "a"),
-            row(mon(10), mon(10, 10), event: "b")
+            row(mon(9, 40), mon(9, 50), category: "Work")
         ]
         let h = started(rows)
         #expect(sorted(h) == rows)
@@ -104,7 +102,7 @@ struct EngineOldRowsMergeTests {
         let h = EngineHarness(at: wed(10), activities: store)
         h.engine.start()
         #expect(h.activities.all.count == 3)
-        #expect(!h.engine.data.prefs.tracker.mergedOldRows)
+        #expect(!h.engine.data.prefs.tracker.mergedEventRows)
     }
 
     @Test func aDayWithRowsInTheAwayUndoIsLeftAlone() {
@@ -147,24 +145,24 @@ struct EngineOldRowsMergeTests {
     }
 }
 
-@Suite("Tracker prefs merged old rows flag")
-struct TrackerMergedOldRowsFlagTests {
-    @Test func oldTrackerPrefsDecodeTheFlagAsFalse() throws {
-        let p = try JSONDecoder().decode(TrackerPrefs.self, from: Data(#"{"isOn":true}"#.utf8))
+@Suite("Tracker prefs merged event rows flag")
+struct TrackerMergedEventRowsFlagTests {
+    @Test func theOldMergedOldRowsKeyIsIgnoredAndTheFlagIsFalse() throws {
+        let p = try JSONDecoder().decode(TrackerPrefs.self, from: Data(#"{"isOn":true,"mergedOldRows":true}"#.utf8))
         #expect(p.isOn)
-        #expect(!p.mergedOldRows)
+        #expect(!p.mergedEventRows)
     }
 
     @Test func aWrongTypeFallsBackToFalseAndKeepsTheRest() throws {
-        let p = try JSONDecoder().decode(TrackerPrefs.self, from: Data(#"{"isOn":true,"mergedOldRows":"yes"}"#.utf8))
+        let p = try JSONDecoder().decode(TrackerPrefs.self, from: Data(#"{"isOn":true,"mergedEventRows":"yes"}"#.utf8))
         #expect(p.isOn)
-        #expect(!p.mergedOldRows)
+        #expect(!p.mergedEventRows)
     }
 
     @Test func theFlagRoundTrips() throws {
         var t = TrackerPrefs()
-        t.mergedOldRows = true
+        t.mergedEventRows = true
         let back = try JSONDecoder().decode(TrackerPrefs.self, from: JSONEncoder().encode(t))
-        #expect(back.mergedOldRows)
+        #expect(back.mergedEventRows)
     }
 }

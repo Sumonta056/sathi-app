@@ -22,14 +22,14 @@ package struct TrackerPrefs: Codable, Equatable, Sendable {
     package var categoryByCalendar: [String: String] = [:]
     package var eventCategoryByTitle: [String: String] = [:]
     package var awayPlaces: [String] = []
-    package var mergedOldRows = false
+    package var mergedEventRows = false
 
     package init() {}
 
     enum CodingKeys: String, CodingKey {
         case isOn, startMinutes, endMinutes, weekdays, daysOff, askEveryMinutes, usualLength, idleMinutes, categories
         case calendarOnByDefault, defaultCalendarID, shortcut, endOfDayOn, playsSound, readsEvents, quietByDefault
-        case readCalendarIDs, eventMode, categoryByCalendar, eventCategoryByTitle, awayPlaces, mergedOldRows
+        case readCalendarIDs, eventMode, categoryByCalendar, eventCategoryByTitle, awayPlaces, mergedEventRows
     }
 
     package var days: HabitDays { HabitDays(weekdays: weekdays, daysOff: daysOff) }
@@ -64,7 +64,7 @@ extension TrackerPrefs {
         categoryByCalendar = c.lenient(.categoryByCalendar, or: d.categoryByCalendar)
         eventCategoryByTitle = c.lenient(.eventCategoryByTitle, or: d.eventCategoryByTitle)
         awayPlaces = AwayPlaceList.clean(c.lenientArray(.awayPlaces))
-        mergedOldRows = c.lenient(.mergedOldRows, or: d.mergedOldRows)
+        mergedEventRows = c.lenient(.mergedEventRows, or: d.mergedEventRows)
     }
 
     package func encode(to encoder: Encoder) throws {
@@ -90,7 +90,7 @@ extension TrackerPrefs {
         try c.encode(categoryByCalendar, forKey: .categoryByCalendar)
         try c.encode(eventCategoryByTitle, forKey: .eventCategoryByTitle)
         try c.encode(awayPlaces, forKey: .awayPlaces)
-        try c.encode(mergedOldRows, forKey: .mergedOldRows)
+        try c.encode(mergedEventRows, forKey: .mergedEventRows)
     }
 
     private static func validTime(_ minutes: Int, or fallback: Int) -> Int {

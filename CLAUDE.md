@@ -56,7 +56,7 @@ site/             GitHub Pages website: index.html, site.css, screenshots/, og.p
 .github/          workflows/ ci.yml (lint, test, site check), pages.yml (deploy site/), release.yml (tag → DMG on GitHub Release)
 ```
 
-Data lives in `~/Library/Application Support/Sathi/`: `prefs.json`, `state.json`, `history/YYYY-MM.json`, `activities/YYYY-MM.json`, `activities/YYYY-MM.backup.json` (one copy of a month made before the old-rows merge).
+Data lives in `~/Library/Application Support/Sathi/`: `prefs.json`, `state.json`, `history/YYYY-MM.json`, `activities/YYYY-MM.json`, `activities/YYYY-MM.backup2.json` (one copy of a month made before the old-rows merge; an older `YYYY-MM.backup.json` from the first merge can also exist).
 
 Dependency direction: `Sathi → SathiUI → SathiCore`. Never the other way.
 
