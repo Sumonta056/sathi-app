@@ -17,7 +17,9 @@ enum EventKitCalendarReaderMapping {
             end: event.endDate,
             calendarID: calendarID,
             isAllDay: event.isAllDay,
-            declined: declined
+            declined: declined,
+            isRepeating: event.hasRecurrenceRules,
+            hasGuests: event.hasAttendees
         )
     }
 }
