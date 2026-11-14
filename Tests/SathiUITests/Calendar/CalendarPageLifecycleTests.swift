@@ -12,6 +12,23 @@ struct CalendarPageLifecycleTests {
         try hosted(CalendarPage(), h).inspect().find(ViewType.VStack.self)
     }
 
+    private func shownRange(_ view: CalendarPage, _ h: EngineHarness) throws -> CalendarPageRange {
+        try hosted(view, h).inspect().find(CalendarPageHeader.self).actualView().range
+    }
+
+    @Test func theSidebarOpensOnTheWeekThatHoldsNow() throws {
+        let h = EngineHarness()
+        let expected = CalendarPageRange.containing(h.engine.now, kind: .week, calendar: h.engine.rangeCalendar)
+        #expect(try shownRange(CalendarPage(), h) == expected)
+    }
+
+    @Test func aDayArgumentStillOpensThatDay() throws {
+        let h = EngineHarness()
+        let key = DayKey(h.engine.now, calendar: h.engine.rangeCalendar)
+        let expected = CalendarPageRange.containing(day: key, kind: .day, calendar: h.engine.rangeCalendar)
+        #expect(try shownRange(CalendarPage(day: key), h) == expected)
+    }
+
     @Test func appearStartsTheChangeSourceOnce() throws {
         let h = EngineHarness()
         let sut = try page(h)

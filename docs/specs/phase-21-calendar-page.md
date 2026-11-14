@@ -21,7 +21,7 @@ Two tracks:
 
 ### C2. Views
 1. A segment control: Day, Week, Month. Buttons ‹, Today, ›. ‹ and › move by 1 day, 1 week, or 1 month.
-2. Day and Week: one time grid. Week has 7 columns from Saturday (`Limits.calendarPageFirstWeekday` = 7, Gregorian), whatever the region, like the user's Apple Calendar. Reports and Activities ranges keep the region's first weekday.
+2. Day and Week: one time grid. Week has 7 columns from Saturday (`Limits.calendarPageFirstWeekday` = 7, Gregorian), whatever the region, like the user's Apple Calendar. Reports and Activities ranges keep the region's first weekday. The page opens on Week (the week that holds now); a click on a Month date opens that date in Day.
 3. Week layout A: events and activities share one column. Blocks that overlap in time split the column width side by side.
 4. The grid has 24 rows of 1 hour, from the 6 AM row to the 5 AM row of the next date, and it scrolls vertically (no scroll bar). Day and Week have a "Row" zoom in the header: "1 h" (base hour height), "30 min" (× 2, a faint half-hour line), "15 min" (× 4, faint lines every 15 min). Saved in `prefs.calendarPage.rowMinutes` (60/30/15, default 60, a bad value gives 60). Month ignores it. Slot clicks still round down to 15 min at every zoom.
 5. Calendar-page day: a day column and its totals cover 6:00 AM of that date to 6:00 AM of the next date (`Limits.calendarPageDayStartHour` = 6, a constant, not a setting). The page shows "6 AM to 6 AM" near the totals. Example: a row from 12:22 AM to 2:02 AM on Thursday shows at the bottom of the Wednesday column. Activities and Reports keep midnight.

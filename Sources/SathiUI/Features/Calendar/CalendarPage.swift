@@ -40,7 +40,7 @@ struct CalendarPage: View {
     private var shown: CalendarPageRange {
         if let picked { return picked }
         let calendar = e.rangeCalendar
-        guard let day else { return .containing(e.now, kind: .day, calendar: calendar) }
+        guard let day else { return .containing(e.now, kind: .week, calendar: calendar) }
         return .containing(day: day, kind: .day, calendar: calendar)
     }
 
