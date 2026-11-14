@@ -26,21 +26,21 @@ extension ManualMergeCheck {
               selected.allSatisfy({ calendar.isDate($0.start, inSameDayAs: day) }) else { return .blocked(.differentDays) }
         if let reason = selected.lazy.compactMap(Self.reason).first { return .blocked(reason) }
         let work = selected.filter { $0.kind == .work }
-        guard work.count >= Limits.manualMergeMinRows, let first = work.first, let last = work.last else {
+        guard work.count >= Limits.manualMergeMinRows, let first = work.first, let end = work.map(\.end).max() else {
             return .blocked(.tooFew)
         }
-        let span = DateInterval(start: first.start, end: max(first.start, last.end))
+        let span = DateInterval(start: first.start, end: max(first.start, end))
         var removed = selected.filter { $0.kind == .away }
         for other in dayRows where !ids.contains(other.id) && Self.overlaps(other, span) {
             if other.kind == .away, Self.isUnnamed(other) { removed.append(other); continue }
             return .blocked(Self.reason(other) ?? .rowBetween)
         }
-        return .ok(Self.plan(work, removed: removed, last: last))
+        return .ok(Self.plan(work, removed: removed, end: end))
     }
 
-    private static func plan(_ work: [Activity], removed: [Activity], last: Activity) -> ManualMergePlan {
+    private static func plan(_ work: [Activity], removed: [Activity], end: Date) -> ManualMergePlan {
         var merged = work[0]
-        merged.end = max(work[0].end, last.end)
+        merged.end = max(work[0].end, end)
         let withEvent = work.filter(ActivityMerge.hasEvent)
         if let kept = withEvent.first {
             merged.eventID = kept.eventID

@@ -67,6 +67,19 @@ struct ManualMergeTests {
         #expect(p.merged.id == a.id)
     }
 
+    @Test func mergedEndIsTheLatestEndOfAllWorkRows() throws {
+        let a = row("Code", 9, 10), b = row("Mail", 10, 13), c = row("Docs", 11, 12)
+        let p = try #require(plan(check([a, b, c], in: [a, b, c])))
+        #expect(p.merged.end == wed(13))
+    }
+
+    @Test func selectedUnnamedAwayOutsideTheWorkSpanIsRemoved() throws {
+        let a = row("Code", 9, 10), b = row("Mail", 11, 12), away = row("", 12, 13, kind: .away)
+        let p = try #require(plan(check([a, b, away], in: [a, b, away])))
+        #expect(p.removedAway.map(\.id) == [away.id])
+        #expect(p.merged.end == wed(12))
+    }
+
     @Test func oneRowIsTooFew() {
         let a = row("Code", 9, 10), b = row("Mail", 11, 12)
         #expect(block(check([a], in: [a, b])) == .tooFew)
