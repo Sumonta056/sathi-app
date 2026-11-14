@@ -9,6 +9,7 @@ package struct Prefs: Codable, Equatable, Sendable {
     package var quick = QuickPrefs()
     package var timeBlock = TimeBlockPrefs()
     package var tracker = TrackerPrefs()
+    package var calendarPage = CalendarPagePrefs()
 
     package init() {}
 
@@ -103,5 +104,6 @@ extension Prefs {
         quick = c.lenient(.quick, or: d.quick)
         timeBlock = c.lenient(.timeBlock, or: d.timeBlock)
         tracker = c.lenient(.tracker, or: d.tracker)
+        calendarPage = c.lenient(.calendarPage, or: d.calendarPage)
     }
 }

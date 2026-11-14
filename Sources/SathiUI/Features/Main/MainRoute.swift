@@ -8,4 +8,8 @@ final class MainRoute: ObservableObject {
     init(_ page: MainPage) {
         self.page = page
     }
+
+    func settle(calendarOn: Bool) {
+        if !calendarOn, case .calendar = page { page = .today }
+    }
 }

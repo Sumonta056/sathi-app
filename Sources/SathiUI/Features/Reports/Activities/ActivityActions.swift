@@ -18,6 +18,17 @@ struct ActivityDayActions {
     var clearMergeUndo: () -> Void = {}
 }
 
+@MainActor
+extension ActivityDayActions {
+    static func engine(_ engine: Engine) -> ActivityDayActions {
+        var a = ActivityDayActions()
+        a.edit = { engine.editActivity($0, $1) }
+        a.add = { engine.addPastActivity($0) }
+        a.delete = { engine.deleteActivity($0) }
+        return a
+    }
+}
+
 struct ActivityRangeActions {
     var openDay: (DayKey) -> Void = { _ in }
 }

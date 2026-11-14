@@ -52,6 +52,17 @@ struct MainViewTests {
         #expect(throws: Never.self) { try main(.today).find(TodayPage.self) }
     }
 
+    @Test func calendarRouteShowsTodayWhenTheSwitchIsOff() throws {
+        #expect(throws: Never.self) { try main(.calendar(nil)).find(TodayPage.self) }
+        #expect((try? main(.calendar(nil)).find(CalendarPage.self)) == nil)
+    }
+
+    @Test func calendarRouteShowsTheCalendarPageWhenOn() throws {
+        let h = EngineHarness { $0.prefs.calendarPage.isOn = true }
+        let sut = try MainView(route: MainRoute(.calendar(nil))).environmentObject(h.engine).inspect()
+        #expect(throws: Never.self) { try sut.find(CalendarPage.self) }
+    }
+
     @Test func routeChangeSwitchesThePage() throws {
         let route = MainRoute(.today)
         let view = MainView(route: route).environmentObject(EngineHarness().engine)

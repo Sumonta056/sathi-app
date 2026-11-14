@@ -3,6 +3,7 @@ import Foundation
 package enum MainPage: Equatable, Sendable {
     case today
     case activities(DayKey?)
+    case calendar(DayKey?)
     case reports
     case settings(SettingsPage)
 }

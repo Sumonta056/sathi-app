@@ -45,6 +45,13 @@ struct GeneralTab: View {
                 }
             }
             SettingsSection("Behaviour") { BehaviourCard() }
+            SettingsSection(Copywriter.calendarExperimentalTag) {
+                SettingsCard {
+                    SettingRow(label: Copywriter.calendarSettingLabel, hint: Copywriter.calendarSettingHint, showsDivider: false) {
+                        BuddySwitch(isOn: $e.data.prefs.calendarPage.isOn, accent: Night.sprout, label: "Calendar page")
+                    }
+                }
+            }
         }
     }
 }
