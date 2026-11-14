@@ -33,6 +33,7 @@ package final class SpyCalendarWriter: CalendarWriter {
     package private(set) var deleted: [String] = []
     package private(set) var eventReads: [DateInterval] = []
     package var mirrorsWrites = false
+    package var lockedEventIDs: Set<String> = []
 
     package init() {}
 
@@ -58,6 +59,7 @@ package final class SpyCalendarWriter: CalendarWriter {
 
     package func update(eventID: String, draft: CalendarEventDraft) -> CalendarSaveResult {
         updated.append((eventID, draft))
+        if lockedEventIDs.contains(eventID) { return .lockedEvent }
         let result = updateResultQueue.isEmpty
             ? (nextUpdateResult ?? .saved(eventID: eventID))
             : updateResultQueue.removeFirst()

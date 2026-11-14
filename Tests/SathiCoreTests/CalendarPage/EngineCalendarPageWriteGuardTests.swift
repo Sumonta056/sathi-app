@@ -29,7 +29,7 @@ struct EngineCalendarPageWriteGuardTests {
     @Test(arguments: refused)
     func saveRefusesAProtectedEvent(_ e: CalendarEventInfo) {
         let h = harness([e])
-        #expect(h.engine.saveCalendarPageEvent(open(e)) == .invalid)
+        #expect(h.engine.saveCalendarPageEvent(open(e)) == .refused)
         #expect(h.writerCalls == 0)
     }
 
@@ -42,7 +42,7 @@ struct EngineCalendarPageWriteGuardTests {
 
     @Test func saveRefusesAnEventThatIsNotFound() {
         let h = harness([])
-        #expect(h.engine.saveCalendarPageEvent(open(pageEvent())) == .invalid)
+        #expect(h.engine.saveCalendarPageEvent(open(pageEvent())) == .refused)
         #expect(h.writerCalls == 0)
     }
 
@@ -71,6 +71,13 @@ struct EngineCalendarPageWriteGuardTests {
         var f = open(pageEvent())
         f.readOnly = true
         #expect(h.engine.saveCalendarPageEvent(f) == .invalid)
+        #expect(h.writerCalls == 0)
+    }
+
+    @Test func saveRefusesAnEventThatBecameASeries() {
+        let h = harness([pageEvent()])
+        h.calendarWriter.eventsValue = [pageEvent(repeating: true)]
+        #expect(h.engine.saveCalendarPageEvent(open(pageEvent())) == .refused)
         #expect(h.writerCalls == 0)
     }
 

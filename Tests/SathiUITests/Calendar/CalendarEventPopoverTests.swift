@@ -113,6 +113,28 @@ struct CalendarEventPopoverTests {
         #expect(CalendarEventPopover.closes(after: .saved("x")))
         #expect(!CalendarEventPopover.closes(after: .failed))
         #expect(!CalendarEventPopover.closes(after: .invalid))
+        #expect(!CalendarEventPopover.closes(after: .refused))
+    }
+
+    @Test func aRefusedSaveShowsItsOwnLine() {
+        #expect(CalendarEventPopover.failureLine(after: .refused) == Copywriter.calendarEventChanged)
+        #expect(Copywriter.calendarEventChanged == "This event changed in Calendar and Sathi can't edit it now. Open it in Calendar.")
+    }
+
+    @Test func aFailedWriteShowsTheWriteFailureLine() {
+        #expect(CalendarEventPopover.failureLine(after: .failed) == Copywriter.calendarEventSaveFailed)
+        #expect(CalendarEventPopover.failureLine(after: .invalid) == Copywriter.calendarEventSaveFailed)
+        #expect(CalendarEventPopover.failureLine(after: .saved("x")) == nil)
+    }
+
+    @Test func aRefusedSaveKeepsThePopoverOpenAndWritesNothing() throws {
+        let h = harness([standup])
+        let form = h.engine.calendarPageForm(for: standup)
+        h.calendarWriter.eventsValue = []
+        var closed = false
+        try popover(h, form) { closed = true }.find(button: "Save").tap()
+        #expect(!closed)
+        #expect(h.calendarWriter.updated.isEmpty)
     }
 
     @Test func theDateChipFollowsTheSixAMDay() throws {

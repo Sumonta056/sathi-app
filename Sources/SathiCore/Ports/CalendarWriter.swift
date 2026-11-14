@@ -38,6 +38,8 @@ package enum CalendarSaveResult: Equatable, Sendable {
     case saved(eventID: String)
     case calendarMissing
     case failed
+
+    package static let lockedEvent = CalendarSaveResult.calendarMissing
 }
 
 @MainActor

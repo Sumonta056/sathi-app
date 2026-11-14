@@ -15,6 +15,7 @@ extension Copywriter {
     package static let calendarEventDelete = "Delete"
     package static let calendarOpenInCalendar = "Open in Calendar"
     package static let calendarEventSaveFailed = "Sathi could not save this event. Try again."
+    package static let calendarEventChanged = "This event changed in Calendar and Sathi can't edit it now. Open it in Calendar."
     package static let calendarEventDeleteFailed = "Sathi could not delete this event. Try again."
     package static let calendarShownTitle = "Shown calendars"
     package static let calendarByCategory = "By category"

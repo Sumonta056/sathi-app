@@ -15,6 +15,9 @@ extension Engine {
     package func calendarPageClosed() {
         guard calendarPageOpen else { return }
         calendarPageOpen = false
+        calendarPageRead = nil
+        calendarPageEventsByID = [:]
+        activityStore.releaseUnused()
         syncCalendarChangeListener()
     }
 

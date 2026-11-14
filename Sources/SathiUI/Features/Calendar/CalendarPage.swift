@@ -29,12 +29,7 @@ struct CalendarPage: View {
         }
         .onDisappear { e.calendarPageClosed() }
         .onChange(of: day) { _ in picked = nil }
-        .onChange(of: range) { _ in
-            focus = CalendarPageFocus()
-            selected = []
-            mergeError = nil
-            e.clearMergeUndo()
-        }
+        .modifier(CalendarRangeReset(range: range, focus: $focus, selected: $selected, error: $mergeError) { e.clearMergeUndo() })
     }
 
     private var shown: CalendarPageRange {
@@ -54,7 +49,7 @@ struct CalendarPage: View {
                 }
                 side(data, kind: range.kind)
             }
-            .onChange(of: data.blocks) { selected = CalendarMergePick.pruned(selected, in: CalendarMergePick.rows($0)) }
+            .modifier(CalendarSelectionPrune(blocks: data.blocks, selected: $selected, error: $mergeError))
         } else {
             CalendarAccessGate()
         }

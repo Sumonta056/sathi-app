@@ -4,6 +4,7 @@ package enum CalendarPageWriteResult: Equatable, Sendable {
     case saved(String)
     case failed
     case invalid
+    case refused
 }
 
 extension Engine {
@@ -36,7 +37,7 @@ extension Engine {
     package func saveCalendarPageEvent(_ f: CalendarEventForm) -> CalendarPageWriteResult {
         guard f.canSave, let calendarID = f.calendarID, let title = CalendarEventText.clean(f.title) else { return .invalid }
         if let id = f.eventID, calendarPageEditableEvent(id, around: DateInterval(start: f.start, end: f.end)) == nil {
-            return .invalid
+            return .refused
         }
         let draft = CalendarEventDraft(calendarID: calendarID, title: title, start: f.start.wholeSecond, end: f.end.wholeSecond)
         let result = f.eventID.map { calendarWriter.update(eventID: $0, draft: draft) } ?? calendarWriter.save(draft)

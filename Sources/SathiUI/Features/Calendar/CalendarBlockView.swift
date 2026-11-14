@@ -24,9 +24,9 @@ struct CalendarBlockView: View {
             .frame(height: max(height, UIMetrics.calendarBarMinHeight), alignment: .topLeading)
             .background(shape.fill(look.fill))
             .overlay(shape.strokeBorder(selected ? Night.tracker : (look.stroke ?? .clear), lineWidth: Self.border(selected: selected)))
-            .accessibilityAddTraits(selected ? .isSelected : [])
             .clipShape(shape)
             .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(selected ? .isSelected : [])
             .accessibilityLabel(text.spoken)
     }
 

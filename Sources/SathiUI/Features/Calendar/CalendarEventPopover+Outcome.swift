@@ -7,12 +7,21 @@ extension CalendarEventPopover {
         return false
     }
 
+    static func failureLine(after result: CalendarPageWriteResult) -> String? {
+        switch result {
+        case .saved: nil
+        case .refused: Copywriter.calendarEventChanged
+        case .failed, .invalid: Copywriter.calendarEventSaveFailed
+        }
+    }
+
     func save() {
         guard form.canSave else { return }
-        if Self.closes(after: e.saveCalendarPageEvent(form)) {
+        let result = e.saveCalendarPageEvent(form)
+        if Self.closes(after: result) {
             onClose()
         } else {
-            failure = Copywriter.calendarEventSaveFailed
+            failure = Self.failureLine(after: result)
         }
     }
 
