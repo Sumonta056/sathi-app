@@ -25,7 +25,6 @@ enum MainWindow {
         host.sizingOptions = []
         w.contentView = host
         w.setContentSize(UIMetrics.mainWindowSize)
-        w.center()
         return w
     }
 }
