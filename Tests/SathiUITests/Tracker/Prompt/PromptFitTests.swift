@@ -103,6 +103,14 @@ struct PromptFitTests {
         #expect(!PromptFit.overflows(content: 600, space: 0))
     }
 
+    @Test func aSizeWithinOnePointCountsAsTheSameSize() {
+        let fit = CGSize(width: 1040, height: 720)
+        #expect(PromptFit.sameSize(fit, CGSize(width: 1040.5, height: 719.4)))
+        #expect(PromptFit.sameSize(fit, CGSize(width: 1041, height: 721)))
+        #expect(!PromptFit.sameSize(fit, CGSize(width: 1040, height: 673)))
+        #expect(!PromptFit.sameSize(fit, CGSize(width: 968, height: 720)))
+    }
+
     @Test func aFrameInsideStaysWhereItIs() {
         #expect(clamp(100, 100) == CGPoint(x: 100, y: 100))
         #expect(clamp(20, 20) == CGPoint(x: 20, y: 20))

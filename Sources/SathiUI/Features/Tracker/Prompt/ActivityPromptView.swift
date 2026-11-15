@@ -5,12 +5,12 @@ struct ActivityPromptView: View {
     let state: TrackerPromptState
     let screen: ActivityPromptScreen
     let visible: CGRect
-    var onDrop: () -> Void = {}
+    var onDrop: () -> Bool = { true }
     @ObservedObject private var model: ActivityPromptModel
 
     init(
         state: TrackerPromptState, model: ActivityPromptModel? = nil,
-        visibleHeight: CGFloat? = nil, visibleWidth: CGFloat? = nil, onDrop: @escaping () -> Void = {}
+        visibleHeight: CGFloat? = nil, visibleWidth: CGFloat? = nil, onDrop: @escaping () -> Bool = { true }
     ) {
         self.state = state
         visible = CGRect(

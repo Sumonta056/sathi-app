@@ -5,7 +5,7 @@ struct TrackerPromptContent: View {
     let state: TrackerPromptState
     let model: ActivityPromptModel
     var visible: CGRect?
-    var onDrop: () -> Void = {}
+    var onDrop: () -> Bool = { true }
 
     var body: some View {
         ActivityPromptView(

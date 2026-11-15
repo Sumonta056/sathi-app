@@ -14,7 +14,7 @@ extension UIController {
         let screen = visible ?? trackerPromptPanel?.screen?.visibleFrame ?? activeScreen?.visibleFrame
         let content = TrackerPromptContent(
             state: state, model: model, visible: screen,
-            onDrop: { [weak self] in self?.dropTrackerPrompt() }
+            onDrop: { [weak self] in self?.dropTrackerPrompt() ?? true }
         )
         guard let p = replacePromptContent(content) ?? trackerHosting(content).map(presentTrackerCentered) else { return }
         if trackerPromptPanel !== p { watchTrackerMove(p) }

@@ -32,6 +32,7 @@ package final class UIController: ReminderPresenter {
     var trackerEndOfDayPanel: NSPanel?
     var trackerResizeTokens: [ObjectIdentifier: NSObjectProtocol] = [:]
     var trackerMoveToken: NSObjectProtocol?
+    var trackerUpMonitor: Any?
     private var locks: [NSWindow] = []
     var mainWindow: NSWindow?
     var mainRoute: MainRoute?

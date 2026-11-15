@@ -2,7 +2,7 @@ import AppKit
 import SwiftUI
 
 struct PromptDragHandle: NSViewRepresentable {
-    var onDrop: () -> Void
+    var onDrop: () -> Bool
 
     func makeNSView(context _: Context) -> PromptDragView {
         let v = PromptDragView()
@@ -16,7 +16,7 @@ struct PromptDragHandle: NSViewRepresentable {
 }
 
 final class PromptDragView: NSView {
-    var onDrop: () -> Void = {}
+    var onDrop: () -> Bool = { true }
     private var startOrigin: NSPoint?
 
     override var mouseDownCanMoveWindow: Bool { false }
@@ -36,7 +36,6 @@ final class PromptDragView: NSView {
 
     private func dropIfMoved() {
         guard let start = startOrigin, let window, window.frame.origin != start else { return }
-        startOrigin = nil
-        onDrop()
+        if onDrop() { startOrigin = nil }
     }
 }

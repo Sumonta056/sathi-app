@@ -16,6 +16,10 @@ enum PromptFit {
         space > 0 && content - space > UIMetrics.promptOverflowSlack
     }
 
+    static func sameSize(_ a: CGSize, _ b: CGSize) -> Bool {
+        abs(a.width - b.width) <= UIMetrics.promptSizeSlack && abs(a.height - b.height) <= UIMetrics.promptSizeSlack
+    }
+
     static func dropped(frame: CGRect, screens: [CGRect], margin: CGFloat) -> CGRect {
         guard let screen = screen(for: frame, in: screens) else { return frame }
         let origin = clamped(origin: frame.origin, size: frame.size, screen: screen, margin: margin)
