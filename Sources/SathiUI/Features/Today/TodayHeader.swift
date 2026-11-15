@@ -21,23 +21,40 @@ struct TodayHeader: View {
     let dateLine: String
     let greeting: String
 
+    @Environment(\.mainLayout) private var layout
+
     var body: some View {
-        HStack(alignment: .bottom) {
+        if layout.isNarrow {
             VStack(alignment: .leading, spacing: UIMetrics.todayHeaderGap) {
-                Text(verbatim: dateLine)
-                    .font(Typography.tracker(UIMetrics.todayDateFont, .semibold))
-                    .tracking(UIMetrics.todayDateTracking)
-                    .foregroundStyle(Night.label)
-                Text(verbatim: greeting)
-                    .font(Typography.tracker(UIMetrics.todayTitleFont, .heavy))
-                    .foregroundStyle(Night.text)
+                titles
+                buttons
             }
-            Spacer(minLength: 0)
-            HStack(spacing: UIMetrics.todayButtonGap) {
-                Button { e.openQuickAdd() } label: { Text(verbatim: Copywriter.todayQuickReminder) }
-                    .buttonStyle(TodayHeaderButton())
-                BreakMenu()
+        } else {
+            HStack(alignment: .bottom) {
+                titles
+                Spacer(minLength: 0)
+                buttons
             }
+        }
+    }
+
+    private var titles: some View {
+        VStack(alignment: .leading, spacing: UIMetrics.todayHeaderGap) {
+            Text(verbatim: dateLine)
+                .font(Typography.tracker(UIMetrics.todayDateFont, .semibold))
+                .tracking(UIMetrics.todayDateTracking)
+                .foregroundStyle(Night.label)
+            Text(verbatim: greeting)
+                .font(Typography.tracker(UIMetrics.todayTitleFont, .heavy))
+                .foregroundStyle(Night.text)
+        }
+    }
+
+    private var buttons: some View {
+        HStack(spacing: UIMetrics.todayButtonGap) {
+            Button { e.openQuickAdd() } label: { Text(verbatim: Copywriter.todayQuickReminder) }
+                .buttonStyle(TodayHeaderButton())
+            BreakMenu()
         }
     }
 }
