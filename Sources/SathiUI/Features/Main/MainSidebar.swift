@@ -2,24 +2,48 @@ import SathiCore
 import SwiftUI
 
 struct MainSidebar: View {
-    @EnvironmentObject var e: Engine
     @ObservedObject var route: MainRoute
     @Binding var isOpen: Bool
+    var openOverlay: () -> Void = {}
+    @Environment(\.mainLayout) private var layout
 
     var body: some View {
         Group {
-            if isOpen {
-                openList
+            if layout.isNarrow {
+                SidebarRail(route: route, toggle: openOverlay)
+            } else if isOpen {
+                MainSidebarList(route: route) { isOpen = false }
             } else {
                 SidebarRail(route: route) { isOpen = true }
             }
         }
         .animation(.easeInOut(duration: UIMetrics.sidebarAnimation), value: isOpen)
     }
+}
 
-    private var openList: some View {
+struct MainSidebarOverlay: View {
+    @ObservedObject var route: MainRoute
+    @Binding var isShown: Bool
+
+    var body: some View {
+        if isShown {
+            ZStack(alignment: .leading) {
+                MainDim { isShown = false }
+                MainSidebarList(route: route) { isShown = false }
+            }
+            .onChange(of: route.page) { _ in isShown = false }
+        }
+    }
+}
+
+struct MainSidebarList: View {
+    @EnvironmentObject var e: Engine
+    @ObservedObject var route: MainRoute
+    let close: () -> Void
+
+    var body: some View {
         VStack(alignment: .leading, spacing: UIMetrics.mainSidebarSpacing) {
-            MainLogo { isOpen = false }
+            MainLogo(close: close)
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: UIMetrics.mainSidebarSpacing) {
                     MainSidebarItem(title: Copywriter.mainPageToday, icon: "sun.max", isSelected: route.page == .today) {
