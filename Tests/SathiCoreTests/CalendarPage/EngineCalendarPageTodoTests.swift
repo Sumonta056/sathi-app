@@ -153,4 +153,14 @@ struct EngineCalendarPageTodoTests {
         await h.engine.todoRuntime.refreshTask?.value
         #expect(h.todos.readRequests.isEmpty)
     }
+
+    @Test func aFailedTickStillRefreshesFromTheStore() async {
+        let h = await loaded([timed("a")])
+        h.todos.nextResult = .failed
+        let before = h.todos.readRequests.count
+        h.engine.completeCalendarTodo("a")
+        await h.engine.todoRuntime.refreshTask?.value
+        #expect(h.todos.readRequests.count == before + 1)
+        #expect(sources(h.engine.calendarPage(h.calendarDay()).blocks) == [.todo("a")])
+    }
 }

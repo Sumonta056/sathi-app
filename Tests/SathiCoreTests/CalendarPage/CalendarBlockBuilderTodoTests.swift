@@ -71,4 +71,33 @@ struct CalendarBlockBuilderTodoTests {
         let blocks = build([makeTodo("late", due: due)])
         #expect(try #require(blocks.first).interval.start == zone.date(2026, 3, 4))
     }
+
+    private func pageDay(_ d: Int) -> DateInterval {
+        CalendarPageDay.interval(of: DayKey(zone.date(2026, 3, d), calendar: calendar), calendar: calendar)
+    }
+
+    private func timedAt(_ date: Date, in interval: DateInterval) -> Int {
+        CalendarBlockBuilder.todoBlocks(
+            [makeTodo("e", due: TodoDue(date: date, hasTime: true))],
+            colors: [:], interval: interval, calendar: calendar
+        ).count
+    }
+
+    @Test func oneAMBelongsToThePreviousPageDay() {
+        let due = zone.date(2026, 3, 5, 1)
+        #expect(timedAt(due, in: pageDay(4)) == 1)
+        #expect(timedAt(due, in: pageDay(5)) == 0)
+    }
+
+    @Test func fiveFiftyNineBelongsToThePreviousPageDay() {
+        let due = zone.date(2026, 3, 5, 5, 59)
+        #expect(timedAt(due, in: pageDay(4)) == 1)
+        #expect(timedAt(due, in: pageDay(5)) == 0)
+    }
+
+    @Test func sixAMBelongsToTheNewPageDay() {
+        let due = zone.date(2026, 3, 5, 6)
+        #expect(timedAt(due, in: pageDay(4)) == 0)
+        #expect(timedAt(due, in: pageDay(5)) == 1)
+    }
 }

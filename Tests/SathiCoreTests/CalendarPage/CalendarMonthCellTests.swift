@@ -59,4 +59,36 @@ struct CalendarMonthCellTests {
         #expect(cell("2026-03-01", in: list)?.inRange == true)
         #expect(cell("2026-03-01", in: list)?.chips.count == 1)
     }
+
+    func todoBlock(_ id: String, _ from: Date, allDay: Bool = false) -> CalendarBlock {
+        CalendarBlock(
+            id: "t-" + id, title: id, interval: DateInterval(start: from, end: from),
+            style: .todo(colorHex: 0xE58CF5), source: .todo(id), isAllDay: allDay, activityIDs: []
+        )
+    }
+
+    @Test func timedTodoShowsInItsPageDayCell() {
+        let list = cells([todoBlock("a", zone.date(2026, 3, 4, 15))])
+        #expect(cell("2026-03-04", in: list)?.chips.map(\.title) == ["a"])
+        #expect(cell("2026-03-05", in: list)?.chips.isEmpty == true)
+    }
+
+    @Test func lateNightTodoBelongsToThePreviousPageDay() {
+        let list = cells([todoBlock("n", zone.date(2026, 3, 5, 1))])
+        #expect(cell("2026-03-04", in: list)?.chips.map(\.title) == ["n"])
+        #expect(cell("2026-03-05", in: list)?.chips.isEmpty == true)
+    }
+
+    @Test func dateOnlyTodoShowsOnItsOwnDate() {
+        let list = cells([todoBlock("d", zone.date(2026, 3, 4), allDay: true)])
+        #expect(cell("2026-03-04", in: list)?.chips.map(\.title) == ["d"])
+        #expect(cell("2026-03-03", in: list)?.chips.isEmpty == true)
+    }
+
+    @Test func todosAndEventsShareTheChipLimit() {
+        let blocks = [eventBlock("e", zone.date(2026, 3, 4, 9))] + (0 ..< 3).map { todoBlock("t\($0)", zone.date(2026, 3, 4, 10 + $0)) }
+        let c = cell("2026-03-04", in: cells(blocks))
+        #expect(c?.chips.count == 3)
+        #expect(c?.more == 1)
+    }
 }

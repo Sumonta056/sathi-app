@@ -36,8 +36,10 @@ package struct CalendarMonthCell: Equatable, Sendable {
     }
 
     private static func isEvent(_ block: CalendarBlock) -> Bool {
-        if case .event = block.source { return true }
-        return false
+        switch block.source {
+        case .event, .todo: return true
+        case .activity: return false
+        }
     }
 
     private static func overlaps(_ block: CalendarBlock, _ interval: DateInterval) -> Bool {
