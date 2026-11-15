@@ -12,8 +12,12 @@ enum PromptFit {
         screen.height < UIMetrics.activityPromptHeight + 2 * margin
     }
 
+    static func overflows(content: CGFloat, space: CGFloat) -> Bool {
+        space > 0 && content - space > UIMetrics.promptOverflowSlack
+    }
+
     static func dropped(frame: CGRect, screens: [CGRect], margin: CGFloat) -> CGRect {
-        guard let screen = best(for: frame, in: screens) else { return frame }
+        guard let screen = screen(for: frame, in: screens) else { return frame }
         let origin = clamped(origin: frame.origin, size: frame.size, screen: screen, margin: margin)
         return CGRect(origin: origin, size: frame.size)
     }
@@ -25,7 +29,7 @@ enum PromptFit {
         return CGPoint(x: x, y: y)
     }
 
-    private static func best(for frame: CGRect, in screens: [CGRect]) -> CGRect? {
+    static func screen(for frame: CGRect, in screens: [CGRect]) -> CGRect? {
         let overlapping = screens.filter { area(frame.intersection($0)) > 0 }
         if let most = overlapping.max(by: { area(frame.intersection($0)) < area(frame.intersection($1)) }) { return most }
         let center = CGPoint(x: frame.midX, y: frame.midY)

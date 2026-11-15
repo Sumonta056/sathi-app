@@ -55,7 +55,7 @@ struct ActivityPromptView: View {
 
     private func formColumn(_ commands: PromptCommands) -> some View {
         VStack(alignment: .leading, spacing: UIMetrics.promptBodyGap) {
-            scrolling(main(commands))
+            PromptBodyFit(scrolls: scrolls) { main(commands) }
             if model.showsStarted, !startedChoices.isEmpty {
                 PromptStartedBoxes(model: model, choices: startedChoices, calendar: state.calendar)
             }
@@ -75,17 +75,6 @@ struct ActivityPromptView: View {
                 PromptOrSwitch()
             }
             PromptForm(model: model, state: state, screen: screen, onSubmit: commands.submit)
-        }
-    }
-
-    @ViewBuilder private func scrolling(_ content: some View) -> some View {
-        if !scrolls {
-            content
-                .frame(maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
-                .clipped()
-        } else {
-            ScrollView(.vertical) { content }
-                .scrollIndicators(.automatic)
         }
     }
 }

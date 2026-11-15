@@ -4,15 +4,20 @@ import SwiftUI
 
 extension UIController {
     package func showTrackerPrompt(_ kind: PromptKind) {
+        presentTrackerPrompt(kind, visible: nil)
+    }
+
+    func presentTrackerPrompt(_ kind: PromptKind, visible: CGRect?) {
         guard let engine, let state = engine.trackerPromptState(kind) else { return }
         let prompt = engine.trackerPrompt
         let model = keptPromptModel(for: prompt) ?? newPromptModel(state)
-        let screen = trackerPromptPanel?.screen?.visibleFrame ?? activeScreen?.visibleFrame
+        let screen = visible ?? trackerPromptPanel?.screen?.visibleFrame ?? activeScreen?.visibleFrame
         let content = TrackerPromptContent(
             state: state, model: model, visible: screen,
             onDrop: { [weak self] in self?.dropTrackerPrompt() }
         )
         guard let p = replacePromptContent(content) ?? trackerHosting(content).map(presentTrackerCentered) else { return }
+        if trackerPromptPanel !== p { watchTrackerMove(p) }
         trackerPromptPanel = p
         trackerPromptKind = kind
         trackerPromptShown = prompt
@@ -52,6 +57,7 @@ extension UIController {
         trackerPromptShown = nil
         trackerPromptModel = nil
         trackerPromptHasKeys = false
+        unwatchTrackerMove()
         closeTrackerPanel(p)
         DispatchQueue.main.async { [weak self, weak p] in self?.handBackKeyboard(from: p) }
     }

@@ -17,6 +17,7 @@ struct PromptDragHandle: NSViewRepresentable {
 
 final class PromptDragView: NSView {
     var onDrop: () -> Void = {}
+    private var startOrigin: NSPoint?
 
     override var mouseDownCanMoveWindow: Bool { false }
 
@@ -24,11 +25,18 @@ final class PromptDragView: NSView {
 
     override func mouseDown(with event: NSEvent) {
         guard let window else { return }
+        startOrigin = window.frame.origin
         window.performDrag(with: event)
-        onDrop()
+        dropIfMoved()
     }
 
     override func mouseUp(with _: NSEvent) {
+        dropIfMoved()
+    }
+
+    private func dropIfMoved() {
+        guard let start = startOrigin, let window, window.frame.origin != start else { return }
+        startOrigin = nil
         onDrop()
     }
 }

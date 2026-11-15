@@ -30,4 +30,11 @@ struct ActivityPromptHeightTests {
         let height = size(visibleHeight: 600, calendars: many).height
         #expect(height <= 600 - 2 * UIMetrics.promptScreenMargin)
     }
+
+    @Test func aNarrowScreenShrinksThePromptWidth() {
+        let s = Prompt.state(.stillOnIt) { _ in }
+        let view = ActivityPromptView(state: s, model: nil, visibleWidth: 1000)
+        let size = NSHostingView(rootView: view.environment(\.colorScheme, .dark)).fittingSize
+        #expect(size == CGSize(width: 1000 - 2 * UIMetrics.promptScreenMargin, height: UIMetrics.activityPromptHeight))
+    }
 }

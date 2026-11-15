@@ -74,6 +74,35 @@ struct PromptFitTests {
         #expect(right.insetBy(dx: margin, dy: margin).contains(drop(off)))
     }
 
+    @Test func theDropScreenIsTheOneWithTheLargerPart() {
+        let mostlyRight = CGRect(x: 1100, y: 100, width: 880, height: 400)
+        #expect(PromptFit.screen(for: mostlyRight, in: [left, right]) == right)
+        let mostlyLeft = CGRect(x: 800, y: 100, width: 880, height: 400)
+        #expect(PromptFit.screen(for: mostlyLeft, in: [left, right]) == left)
+    }
+
+    @Test func aFrameOnNoScreenPicksTheNearestScreen() {
+        let off = CGRect(x: -2000, y: 100, width: 880, height: 400)
+        #expect(PromptFit.screen(for: off, in: [left, right]) == left)
+        #expect(PromptFit.screen(for: off, in: []) == nil)
+    }
+
+    @Test func aDropOntoAShortScreenGetsTheShorterSizeThatScrolls() {
+        let short = CGRect(x: 1440, y: 0, width: 1280, height: 705)
+        let frame = CGRect(x: 1500, y: 0, width: 1040, height: 720)
+        let target = PromptFit.screen(for: frame, in: [left, short])
+        #expect(target == short)
+        #expect(PromptFit.size(screen: short, margin: 16) == CGSize(width: 1040, height: 673))
+        #expect(PromptFit.scrolls(screen: short, margin: 16))
+    }
+
+    @Test func theBodyOverflowsOnlyWhenTheContentIsTallerThanTheSpace() {
+        #expect(!PromptFit.overflows(content: 500, space: 560))
+        #expect(!PromptFit.overflows(content: 560, space: 560))
+        #expect(PromptFit.overflows(content: 600, space: 560))
+        #expect(!PromptFit.overflows(content: 600, space: 0))
+    }
+
     @Test func aFrameInsideStaysWhereItIs() {
         #expect(clamp(100, 100) == CGPoint(x: 100, y: 100))
         #expect(clamp(20, 20) == CGPoint(x: 20, y: 20))

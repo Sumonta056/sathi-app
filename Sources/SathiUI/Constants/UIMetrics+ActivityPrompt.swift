@@ -5,6 +5,7 @@ extension UIMetrics {
     static let activityPromptWidth: CGFloat = 1040
     static let activityPromptHeight: CGFloat = 720
     static let promptPairGap: CGFloat = 24
+    static let promptOverflowSlack: CGFloat = 0.5
     static let centerStackGap: CGFloat = 12
     static let promptScreenMargin: CGFloat = 16
     static let promptRadius: CGFloat = 22
