@@ -4,14 +4,21 @@ import SwiftUI
 struct ActivityPromptView: View {
     let state: TrackerPromptState
     let screen: ActivityPromptScreen
-    let maxHeight: CGFloat?
-    var onMove: (CGSize) -> Void = { _ in }
+    let visible: CGRect
+    var onDrop: () -> Bool = { true }
     @ObservedObject private var model: ActivityPromptModel
 
-    init(state: TrackerPromptState, model: ActivityPromptModel? = nil, maxHeight: CGFloat? = nil, onMove: @escaping (CGSize) -> Void = { _ in }) {
+    init(
+        state: TrackerPromptState, model: ActivityPromptModel? = nil,
+        visibleHeight: CGFloat? = nil, visibleWidth: CGFloat? = nil, onDrop: @escaping () -> Bool = { true }
+    ) {
         self.state = state
-        self.maxHeight = maxHeight
-        self.onMove = onMove
+        visible = CGRect(
+            x: 0, y: 0,
+            width: visibleWidth ?? .greatestFiniteMagnitude,
+            height: visibleHeight ?? .greatestFiniteMagnitude
+        )
+        self.onDrop = onDrop
         screen = ActivityPromptBuilder.screen(state)
         self.model = model ?? ActivityPromptModel(state)
     }
@@ -22,10 +29,14 @@ struct ActivityPromptView: View {
 
     private var commands: PromptCommands { PromptCommands(state: state, screen: screen, model: model) }
 
+    private var size: CGSize { PromptFit.size(screen: visible, margin: UIMetrics.promptScreenMargin) }
+
+    private var scrolls: Bool { PromptFit.scrolls(screen: visible, margin: UIMetrics.promptScreenMargin) }
+
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: UIMetrics.promptRadius, style: .continuous)
         VStack(spacing: 0) {
-            PromptHeader(screen: screen, state: state, model: model, onSkip: commands.skip, onMove: onMove)
+            PromptHeader(screen: screen, state: state, model: model, onSkip: commands.skip, onDrop: onDrop)
             Night.promptCardLine.frame(height: UIMetrics.promptBorder)
             HStack(spacing: 0) {
                 PromptRecentPane(model: model, state: state)
@@ -33,10 +44,9 @@ struct ActivityPromptView: View {
                 Night.promptCardLine.frame(width: UIMetrics.promptBorder)
                 formColumn(commands)
             }
-            .fixedSize(horizontal: false, vertical: maxHeight == nil)
+            .frame(maxHeight: .infinity)
         }
-        .frame(width: UIMetrics.activityPromptWidth)
-        .frame(maxHeight: maxHeight)
+        .frame(width: size.width, height: size.height)
         .background(Night.promptCard)
         .clipShape(shape)
         .overlay(shape.strokeBorder(Night.promptBoxLine, lineWidth: UIMetrics.promptBorder))
@@ -45,8 +55,7 @@ struct ActivityPromptView: View {
 
     private func formColumn(_ commands: PromptCommands) -> some View {
         VStack(alignment: .leading, spacing: UIMetrics.promptBodyGap) {
-            scrolling(main(commands))
-            Spacer(minLength: 0)
+            PromptBodyFit(scrolls: scrolls) { main(commands) }
             if model.showsStarted, !startedChoices.isEmpty {
                 PromptStartedBoxes(model: model, choices: startedChoices, calendar: state.calendar)
             }
@@ -66,15 +75,6 @@ struct ActivityPromptView: View {
                 PromptOrSwitch()
             }
             PromptForm(model: model, state: state, screen: screen, onSubmit: commands.submit)
-        }
-    }
-
-    @ViewBuilder private func scrolling(_ content: some View) -> some View {
-        if maxHeight == nil {
-            content
-        } else {
-            ScrollView(.vertical) { content }
-                .scrollIndicators(.automatic)
         }
     }
 }

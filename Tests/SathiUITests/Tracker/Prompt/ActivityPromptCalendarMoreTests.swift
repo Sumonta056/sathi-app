@@ -68,8 +68,8 @@ struct ActivityPromptCalendarMoreTests {
         #expect(try !Prompt.has(Prompt.view(s), "prompt.calendar.more"))
     }
 
-    @Test func aMaxHeightScrollsTheFormButNotTheFooter() throws {
-        let sut = try ActivityPromptView(state: state(), model: nil, maxHeight: 400).inspect()
+    @Test func aShortScreenScrollsTheFormButNotTheFooter() throws {
+        let sut = try ActivityPromptView(state: state(), model: nil, visibleHeight: 700).inspect()
         let scroll = try sut.find(ViewType.ScrollView.self)
         #expect(Prompt.has(scroll, "prompt.field"))
         #expect(!Prompt.has(scroll, "tracker.start"))

@@ -58,12 +58,6 @@ extension UIController {
         dismiss(p)
     }
 
-    func moveTrackerPrompt(by step: CGSize) {
-        guard let p = trackerPromptPanel, step != .zero else { return }
-        let c = NSPoint(x: p.frame.midX + step.width, y: p.frame.midY + step.height)
-        placeTracker(p, center: c, screen: activeScreen)
-    }
-
     private func trackerPanelResized(_ p: NSPanel) {
         guard let c = trackerCenters[ObjectIdentifier(p)] else { return }
         placeTracker(p, center: c, screen: p.screen ?? activeScreen)
