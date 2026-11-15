@@ -3,9 +3,10 @@ import Foundation
 extension Engine {
     package var daySummary: DaySummary {
         let day = data.live.lastDaySummary?.start(in: calendar) ?? clock.now
-        return DaySummary(rows: HabitID.allCases.map { id in
+        let rows = HabitID.allCases.map { id in
             DaySummaryRow(id: id, status: summaryStatus(id, on: day), streak: streak(id))
-        })
+        }
+        return DaySummary(rows: rows, todos: summaryTodos(on: day))
     }
 
     package func closeDaySummary() {

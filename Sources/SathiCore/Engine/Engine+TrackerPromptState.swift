@@ -34,6 +34,7 @@ extension Engine {
         s.places = awayPlaces
         if kind == .whatNow || kind == .center { s.runningEvent = unloggedRunningEvent() }
         fillEventAsk(&s)
+        fillTodos(&s, prompt: p)
         s.actions = promptActions()
         return s
     }
@@ -95,6 +96,9 @@ extension Engine {
         a.allowCalendar = { [weak self] in await self?.allowTrackerCalendar() }
         a.openCalendarSettings = { [weak self] in self?.openCalendarSettings() }
         a.close = { [weak self] in self?.closeTrackerPrompt() }
+        a.startTodo = { [weak self] id, draft, at in self?.startTodo(id, draft: draft, switchAt: at) ?? false }
+        a.doneTodo = { [weak self] id in self?.doneTodo(id) }
+        a.markTodoDone = { [weak self] yes in self?.markTodoDone(yes) }
         return a
     }
 }

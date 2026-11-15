@@ -5,7 +5,7 @@ extension Engine {
     var trackerHoldsBuddyPopups: Bool { trackerPrefs.isOn && trackerIsQuiet }
 
     func tickTracker() {
-        guard trackerPrefs.isOn else { return }
+        guard trackerPrefs.isOn else { return todoDueCheckedUntil = nil }
         runTrackerTick()
     }
 
@@ -75,6 +75,7 @@ extension Engine {
         switch p.kind {
         case .stillOnIt: return !running
         case .whatNow: return p.switchFrom == nil ? !trackerHours.isInside(n) : !running && p.resume == nil
+        case .todoDue: return !trackerHours.isInside(n)
         case .center, .welcomeBack, .eventAsk: return false
         }
     }

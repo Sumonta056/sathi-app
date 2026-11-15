@@ -39,7 +39,7 @@ extension Engine {
                 endRunningActivity(at: max(r.start, min(switchAt?.wholeSecond ?? n, n)))
             }
             trackerRuntime.whatNowAt = n.addingTimeInterval(trackerAskEvery)
-        case .center, .welcomeBack, .eventAsk:
+        case .center, .welcomeBack, .eventAsk, .todoDue:
             break
         }
         clearTrackerPrompt()

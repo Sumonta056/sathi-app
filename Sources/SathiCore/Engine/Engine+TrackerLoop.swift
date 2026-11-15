@@ -17,6 +17,7 @@ extension Engine {
         endActivityAtMidnight(n)
         checkIdle(n)
         tickTrackerEvents()
+        tickTodoDue(n)
         planTrackerPrompt(n)
         presentTrackerPrompt()
         showTrackerEndOfDayIfDue(n)
@@ -25,7 +26,7 @@ extension Engine {
     func trackerDeadlineList() -> [Date] {
         let n = clock.now
         let t = data.live.tracker
-        var list: [Date] = trackerEventDeadlines
+        var list: [Date] = trackerEventDeadlines + todoDueDeadlines(after: n)
         if let r = t.running {
             list += [r.askAt, calendar.nextDay(after: r.start)]
             if let q = r.quietUntil { list.append(q) }
@@ -42,7 +43,7 @@ extension Engine {
     }
 
     func setTrackerPrompt(_ prompt: PromptState, byUser: Bool = false) {
-        data.live.tracker.prompt = prompt
+        data.live.tracker.prompt = withTodoDoneAsk(prompt)
         trackerRuntime.promptByUser = byUser
         refreshCalendarAccess()
         guard canShowTrackerPrompt(prompt) else { return closeShownTrackerPrompt() }
@@ -63,7 +64,7 @@ extension Engine {
     private func showTrackerPromptNow(_ p: PromptState) {
         presenter.showTrackerPrompt(p.kind)
         trackerRuntime.shownPrompt = p.kind
-        if p.kind == .whatNow || p.kind == .stillOnIt, trackerPrefs.playsSound { play(.trackerPrompt) }
+        if p.kind == .whatNow || p.kind == .stillOnIt || p.kind == .todoDue, trackerPrefs.playsSound { play(.trackerPrompt) }
     }
 
     var idleLimit: TimeInterval { TimeInterval(trackerPrefs.idleMinutes) * Timing.minute }
@@ -79,7 +80,7 @@ extension Engine {
         switch p.kind {
         case .center: return true
         case .welcomeBack: return pausedUntil == nil && timeBlock?.isRunning != true && !trackerSessionRuns
-        case .whatNow, .stillOnIt, .eventAsk: return !trackerIsBusy && data.live.tracker.awaySince == nil
+        case .whatNow, .stillOnIt, .eventAsk, .todoDue: return !trackerIsBusy && data.live.tracker.awaySince == nil
         }
     }
 

@@ -15,7 +15,7 @@ extension Engine {
         case .whatNow: return p.switchFrom
         case .center, .stillOnIt: return data.live.tracker.running?.lastAnswer
         case .welcomeBack: return trackerRuntime.lastAway?.end
-        case .eventAsk: return nil
+        case .eventAsk, .todoDue: return nil
         }
     }
 }
