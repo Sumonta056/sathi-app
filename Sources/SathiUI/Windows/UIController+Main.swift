@@ -26,9 +26,10 @@ extension UIController {
     private func fillPointerScreen(_ window: NSWindow) {
         let pointer = NSEvent.mouseLocation
         let screen = NSScreen.screens.first { NSMouseInRect(pointer, $0.frame, false) } ?? NSScreen.main
-        guard let visible = screen?.visibleFrame else { return }
+        guard !window.styleMask.contains(.fullScreen), let visible = screen?.visibleFrame else { return }
         mainCloseWatcher.lastVisibleFrame = visible
         window.setFrame(WindowFit.openFrame(visible: visible), display: true)
+        mainCloseWatcher.shapeFrame = window.frame
     }
 
     func mainWillClose() {
