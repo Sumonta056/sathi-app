@@ -10,6 +10,7 @@ struct ActivityDayView: View {
     var calendarNames: [String: String] = [:]
     var actions = ActivityDayActions()
     var canUndo = false
+    var drawerHosted = false
     @State var editing: ActivityEditTarget?
     @State var selected: Set<ActivityID> = []
     @State var mergeError: String?
@@ -32,11 +33,8 @@ struct ActivityDayView: View {
                 panel(editing).frame(width: UIMetrics.activitiesEditWidth)
             }
         }
-        .overlay {
-            if layout.drawerEdit, let editing, ActivityEditPanel.shows(editing, in: day) {
-                MainDrawer(close: { self.editing = nil }, content: { panel(editing) })
-            }
-        }
+        .overlay { if !drawerHosted { drawer } }
+        .preference(key: MainDrawerKey.self, value: drawerHosted ? hostedDrawer : nil)
         .onChange(of: day.activities) { selected = ActivityMergeBar.pruned(selected, in: $0) }
         .onChange(of: day.day) { _ in
             editing = nil
@@ -59,6 +57,17 @@ struct ActivityDayView: View {
                 ActivityDayTiles(overview: overview)
             }
         }
+    }
+
+    @ViewBuilder private var drawer: some View {
+        if layout.drawerEdit, let editing, ActivityEditPanel.shows(editing, in: day) {
+            MainDrawer(close: { self.editing = nil }, content: { panel(editing) })
+        }
+    }
+
+    private var hostedDrawer: MainDrawerItem? {
+        guard layout.drawerEdit, let editing, ActivityEditPanel.shows(editing, in: day) else { return nil }
+        return MainDrawerItem(view: AnyView(drawer))
     }
 
     private func panel(_ target: ActivityEditTarget) -> some View {

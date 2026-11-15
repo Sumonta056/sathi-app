@@ -16,15 +16,12 @@ struct MainView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                     .background(Night.bg)
             }
-            .overlay(alignment: .leading) {
-                if layout.isNarrow { MainSidebarOverlay(route: route, isShown: $sidebarOverlay) }
-            }
+            .overlay(alignment: .leading) { MainSidebarOverlay(route: route, isShown: $sidebarOverlay) }
             .ignoresSafeArea()
             .environment(\.mainLayout, layout)
             .onAppear { route.settle(calendarOn: e.data.prefs.calendarPage.isOn) }
             .onChange(of: e.data.prefs.calendarPage.isOn) { route.settle(calendarOn: $0) }
             .onChange(of: route.page) { _ in route.settle(calendarOn: e.data.prefs.calendarPage.isOn) }
-            .onChange(of: layout.isNarrow) { if !$0 { sidebarOverlay = false } }
         }
         .frame(minWidth: UIMetrics.mainLayoutMinSize.width, minHeight: UIMetrics.mainLayoutMinSize.height)
         .ignoresSafeArea()

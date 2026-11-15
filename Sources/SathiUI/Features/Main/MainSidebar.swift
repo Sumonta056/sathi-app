@@ -24,15 +24,17 @@ struct MainSidebar: View {
 struct MainSidebarOverlay: View {
     @ObservedObject var route: MainRoute
     @Binding var isShown: Bool
+    @Environment(\.mainLayout) private var layout
 
     var body: some View {
-        if isShown {
-            ZStack(alignment: .leading) {
+        ZStack(alignment: .leading) {
+            if isShown, layout.isNarrow {
                 MainDim { isShown = false }
                 MainSidebarList(route: route) { isShown = false }
             }
-            .onChange(of: route.page) { _ in isShown = false }
         }
+        .onChange(of: route.page) { _ in isShown = false }
+        .onChange(of: layout.isNarrow) { if !$0 { isShown = false } }
     }
 }
 
