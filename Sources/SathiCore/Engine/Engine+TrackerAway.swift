@@ -119,6 +119,7 @@ extension Engine {
             calendarActivityDeleted(old)
         }
         trackerRuntime.endedMergedInto = nil
+        keepTodoAsk(&r)
         let n = clock.now.wholeSecond
         r.lastAnswer = n
         r.askAt = n.addingTimeInterval(trackerAskEvery)

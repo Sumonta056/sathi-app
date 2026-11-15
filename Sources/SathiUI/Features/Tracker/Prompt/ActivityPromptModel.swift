@@ -42,6 +42,7 @@ final class ActivityPromptModel: ObservableObject {
     func carry(from old: ActivityPromptModel) {
         draft.text = old.draft.text
         draft.category = old.draft.category
+        if let id = old.todoID { todoID = id }
         guard allowsAway else { return }
         awayOn = old.awayOn
         awayPick = old.awayPick

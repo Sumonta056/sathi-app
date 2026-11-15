@@ -48,6 +48,20 @@ extension Engine {
         if let first = s.todos.first, s.draft.text.isEmpty { s.draft.text = first.title }
     }
 
+    func todosTurnedOff() {
+        todoDueReady = false
+        data.live.tracker.pendingTodoAsk = nil
+    }
+
+    func keepTodoAsk(_ r: inout RunningActivity) {
+        guard let id = r.todoID, !r.askedTodoDone else { return }
+        if data.live.tracker.pendingTodoAsk == id {
+            data.live.tracker.pendingTodoAsk = nil
+        } else {
+            r.askedTodoDone = true
+        }
+    }
+
     private func consumeTodoAsk(_ id: String) {
         if data.live.tracker.pendingTodoAsk == id { data.live.tracker.pendingTodoAsk = nil }
         if data.live.tracker.running?.todoID == id { data.live.tracker.running?.askedTodoDone = true }

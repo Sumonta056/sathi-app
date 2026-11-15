@@ -43,11 +43,12 @@ extension Engine {
     }
 
     func setTrackerPrompt(_ prompt: PromptState, byUser: Bool = false) {
-        data.live.tracker.prompt = withTodoDoneAsk(prompt)
+        let stored = withTodoDoneAsk(prompt)
+        data.live.tracker.prompt = stored
         trackerRuntime.promptByUser = byUser
         refreshCalendarAccess()
-        guard canShowTrackerPrompt(prompt) else { return closeShownTrackerPrompt() }
-        showTrackerPromptNow(prompt)
+        guard canShowTrackerPrompt(stored) else { return closeShownTrackerPrompt() }
+        showTrackerPromptNow(stored)
     }
 
     func clearTrackerPrompt() {

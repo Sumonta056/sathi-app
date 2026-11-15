@@ -44,6 +44,7 @@ extension Engine {
         let new = data.prefs.todos
         syncCalendarChangeListener()
         if !new.isOn {
+            todosTurnedOff()
             todoRuntime.stale = true
             todoRuntime.token += 1
             todoRuntime.loadedRevision = nil
