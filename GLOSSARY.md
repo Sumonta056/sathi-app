@@ -141,3 +141,17 @@ _Avoid_: Reminder count, slots
 **Workout idea**:
 A name on the user's gym list, for example "10 squats". Shokti suggests one workout idea in each popup. It has no length of its own.
 _Avoid_: Workout, exercise, task
+
+## To-dos
+
+**To-do**:
+One item in the Apple Reminders app, with a title and an optional due date. Sathi shows it and can add, edit, or complete it, and every change goes back to Apple Reminders. Sathi keeps no copy of its own.
+_Avoid_: Reminder (buddies remind), task, quick reminder (a local Sathi note)
+
+**To-do list**:
+One list in Apple Reminders, for example "Shopping". It belongs to one account, such as iCloud or Exchange.
+_Avoid_: Folder, group, project
+
+**Due today**:
+The to-dos that are not done and have a due date today or earlier. The Quick panel highlights them.
+_Avoid_: Today list, overdue

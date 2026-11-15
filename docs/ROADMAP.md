@@ -220,6 +220,17 @@ Branch: `feat/window-fit` (worktree `../Sathi-window-fit`), tracks `feat/wf-prom
 - [ ] User: `perf.sh`, `perf.sh --windows`, hand tests (strip drag and zoom across displays, tile then move, prompt drag across displays)
 - [ ] Website
 
+## Phase 23: To-dos (Apple Reminders)
+
+Spec: `docs/specs/phase-23-todos.md`. Branch: `feat/todos` (worktree `../Sathi-todos`).
+
+- [x] Grill, design (option A), plan approved, business rules
+- [ ] Track A: Core models, `TodoStore` port, prefs, fake
+- [ ] Track B: To-dos page, Settings, EventKit store, Info.plist
+- [ ] Track C: Quick panel card, To-do due prompt, day summary
+- [ ] Track D: to-dos on the Calendar page
+- [ ] Checks, perf, `--windows`, merge to `main`, website
+
 ## Later
 
 - Days off: a lock or Nudgy bubble that shows at 23:58 stays after midnight into a day off (only a settings change closes it, rule 11). Close it at the first tick of a new day if users notice
