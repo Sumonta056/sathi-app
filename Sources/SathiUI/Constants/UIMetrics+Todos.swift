@@ -50,6 +50,8 @@ extension UIMetrics {
     static let todoChipRadius: CGFloat = 8
     static let todoChipDot: CGFloat = 10
     static let todoChipSpacing: CGFloat = 8
+    static let todoSectionFont: CGFloat = 13
+    static let todoSectionPadding = EdgeInsets(top: 14, leading: 4, bottom: 4, trailing: 4)
     static let todoFormWidth: CGFloat = 420
     static let todoFormPadding: CGFloat = 22
     static let todoFormSpacing: CGFloat = 16

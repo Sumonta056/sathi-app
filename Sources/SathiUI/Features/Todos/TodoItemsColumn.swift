@@ -30,7 +30,14 @@ struct TodoItemsColumn: View {
                             .foregroundStyle(Night.faint)
                             .padding(UIMetrics.todoRowPadding)
                     }
-                    ForEach(rows, id: \.id) { item($0) }
+                    if page.sections.isEmpty {
+                        ForEach(rows, id: \.id) { item($0) }
+                    } else {
+                        ForEach(page.sections, id: \.list.id) { section in
+                            TodoSectionHeader(list: section.list)
+                            ForEach(section.todos, id: \.id) { item($0) }
+                        }
+                    }
                 }
             }
         }

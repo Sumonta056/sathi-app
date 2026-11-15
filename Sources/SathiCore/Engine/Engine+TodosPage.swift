@@ -11,13 +11,15 @@ extension Engine {
         case let .smart(smart):
             let target = smart == .completed ? nil : snap.lists.first(where: \.canEdit)?.id
             let today = TodoDue(date: calendar.startOfDay(for: clock.now), hasTime: false)
+            let open = smart.todos(in: snap.todos, now: clock.now, calendar: calendar)
             return TodoPageModel(
                 selection: s,
                 title: Copywriter.todoSmartListName(smart),
-                open: smart.todos(in: snap.todos, now: clock.now, calendar: calendar),
+                open: open,
                 completed: [],
                 targetListID: target,
-                defaultDue: smart == .today || smart == .scheduled ? today : nil
+                defaultDue: smart == .today || smart == .scheduled ? today : nil,
+                sections: smart == .all ? TodoRules.listSections(lists: snap.lists, open: open) : []
             )
         case let .list(id):
             guard let list = snap.lists.first(where: { $0.id == id }) else {
