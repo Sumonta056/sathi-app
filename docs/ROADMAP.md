@@ -213,10 +213,11 @@ Spec: `docs/specs/phase-22-window-fit.md`
 Branch: `feat/window-fit` (worktree `../Sathi-window-fit`), tracks `feat/wf-prompt`, `feat/wf-window`, `feat/wf-narrow`
 
 - [x] Rules and words (business-logic Activity tracker rule 3, GLOSSARY Narrow and Wide layout)
-- [ ] Track A: activity prompt 1040×720 for every reason, no scroll, paired rows, native drag, drop onto the display with the larger part
-- [ ] Track B: Main window fills the pointer display's visible frame, min 640×520, drag strip, fit on display change keeps its shape
-- [ ] Track C: narrow layout below 900 px (rail, Today, Activities drawer below 1100, Calendar, Reports, Settings rows)
-- [ ] Merge, checks, perf, real prompt height check; user: `perf.sh --windows`
+- [x] Track A: activity prompt 1040×720 for every reason, no scroll, paired rows, native drag, drop onto the display with the larger part
+- [x] Track B: Main window fills the pointer display's visible frame, min 640×520, drag strip, fit on display change keeps its shape
+- [x] Track C: narrow layout below 900 px (rail, Today, Activities drawer below 1100, Calendar, Reports, Settings rows)
+- [x] Merge, checks (tests, lint, release build), real prompt check (1040×720, no scroll)
+- [ ] User: `perf.sh`, `perf.sh --windows`, hand tests (strip drag and zoom across displays, tile then move, prompt drag across displays)
 - [ ] Website
 
 ## Later
