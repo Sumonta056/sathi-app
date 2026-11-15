@@ -2,16 +2,17 @@ import SathiCore
 import SwiftUI
 
 extension UIMetrics {
-    static let activityPromptWidth: CGFloat = 880
+    static let activityPromptWidth: CGFloat = 1040
+    static let activityPromptHeight: CGFloat = 720
+    static let promptPairGap: CGFloat = 24
     static let centerStackGap: CGFloat = 12
     static let promptScreenMargin: CGFloat = 16
-    static let promptDragStart: CGFloat = 2
     static let promptRadius: CGFloat = 22
     static let promptBorder: CGFloat = 1
     static let promptTopBar: CGFloat = 4
-    static let promptHeaderPadding = EdgeInsets(top: 18, leading: 24, bottom: 18, trailing: 22)
+    static let promptHeaderPadding = EdgeInsets(top: 14, leading: 24, bottom: 14, trailing: 22)
     static let promptHeaderGap: CGFloat = 16
-    static let promptHeaderLines: CGFloat = 6
+    static let promptHeaderLines: CGFloat = 4
     static let promptTile: CGFloat = 48
     static let promptTileRadius: CGFloat = 14
     static let promptTileIcon: CGFloat = 20
@@ -45,15 +46,15 @@ extension UIMetrics {
     static let promptShowAllHeight: CGFloat = 38
     static let promptShowAllRadius: CGFloat = 10
     static let promptShowAllDash: [CGFloat] = [4, 3]
-    static let promptBodyPadding = EdgeInsets(top: 20, leading: 22, bottom: 20, trailing: 22)
-    static let promptBodyGap: CGFloat = 16
+    static let promptBodyPadding = EdgeInsets(top: 14, leading: 22, bottom: 14, trailing: 22)
+    static let promptBodyGap: CGFloat = 12
     static let promptFieldHeight: CGFloat = 50
     static let promptFieldRadius: CGFloat = 12
     static let promptFieldFont: CGFloat = 17
     static let promptFieldPadding: CGFloat = 16
     static let promptFieldFocusBorder: CGFloat = 2
     static let promptRowLabelWidth: CGFloat = 84
-    static let promptRowGap: CGFloat = 12
+    static let promptRowGap: CGFloat = 10
     static let promptRowLabelGap: CGFloat = 8
     static let promptRowLabelTop: CGFloat = 8
     static let promptRowFont: CGFloat = 13
@@ -75,11 +76,13 @@ extension UIMetrics {
     static let promptSkipPadding: CGFloat = 10
     static let promptStartPadding: CGFloat = 28
     static let recentKeys = Limits.recentShown
-    static let promptRunPadding = EdgeInsets(top: 14, leading: 16, bottom: 14, trailing: 16)
+    static let promptRunPadding = EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16)
     static let promptRunRadius: CGFloat = 14
     static let promptRunBorder: CGFloat = 2
-    static let promptRunGap: CGFloat = 10
+    static let promptRunGap: CGFloat = 8
     static let promptRunLineGap: CGFloat = 12
+    static let promptRunNameGap: CGFloat = 2
+    static let promptRunKeepGap: CGFloat = 14
     static let promptRunNameFont: CGFloat = 22
     static let promptRunDetailFont: CGFloat = 13
     static let promptRunBar: CGFloat = 6

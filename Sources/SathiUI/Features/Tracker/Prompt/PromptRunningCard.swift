@@ -13,13 +13,18 @@ struct PromptRunningCard: View {
         let shape = RoundedRectangle(cornerRadius: UIMetrics.promptRunRadius, style: .continuous)
         VStack(alignment: .leading, spacing: UIMetrics.promptRunGap) {
             tagLine
-            Text(verbatim: card.text)
-                .font(Typography.tracker(UIMetrics.promptRunNameFont, .heavy))
-                .foregroundStyle(Night.text)
-                .lineLimit(1)
-            detailLine
+            HStack(spacing: UIMetrics.promptRunKeepGap) {
+                VStack(alignment: .leading, spacing: UIMetrics.promptRunNameGap) {
+                    Text(verbatim: card.text)
+                        .font(Typography.tracker(UIMetrics.promptRunNameFont, .heavy))
+                        .foregroundStyle(Night.text)
+                        .lineLimit(1)
+                    detailLine
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                if let label = screen.keepLabel, commands.model.goingAway(on: screen) == nil { keepButton(label) }
+            }
             if let progress = card.progress { bar(progress) }
-            if let label = screen.keepLabel, commands.model.goingAway(on: screen) == nil { keepButton(label) }
         }
         .padding(UIMetrics.promptRunPadding)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -82,6 +87,7 @@ struct PromptRunningCard: View {
                 .accessibilityIdentifier("prompt.keep")
         }
         .buttonStyle(TrackerPressStyle())
+        .fixedSize()
         .modifier(commands.entersKeep ? PromptKey.start : PromptKey(shortcut: nil))
     }
 }

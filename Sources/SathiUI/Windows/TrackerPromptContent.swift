@@ -4,11 +4,14 @@ import SwiftUI
 struct TrackerPromptContent: View {
     let state: TrackerPromptState
     let model: ActivityPromptModel
-    var maxHeight: CGFloat?
-    var onMove: (CGSize) -> Void = { _ in }
+    var visible: CGRect?
+    var onDrop: () -> Void = {}
 
     var body: some View {
-        ActivityPromptView(state: state, model: model, maxHeight: maxHeight, onMove: onMove)
-            .id(ObjectIdentifier(model))
+        ActivityPromptView(
+            state: state, model: model,
+            visibleHeight: visible?.height, visibleWidth: visible?.width, onDrop: onDrop
+        )
+        .id(ObjectIdentifier(model))
     }
 }

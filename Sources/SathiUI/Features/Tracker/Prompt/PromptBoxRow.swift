@@ -5,6 +5,8 @@ struct PromptBoxRow<Content: View>: View {
     let label: String
     var labelTop = UIMetrics.promptRowLabelTop
     var labelColor = Night.promptSecondary
+    var labelWidth: CGFloat? = UIMetrics.promptRowLabelWidth
+    var fills = true
     @ViewBuilder let content: Content
 
     var body: some View {
@@ -13,9 +15,11 @@ struct PromptBoxRow<Content: View>: View {
                 .font(Typography.tracker(UIMetrics.promptRowFont, .medium))
                 .foregroundStyle(labelColor)
                 .padding(.top, labelTop)
-                .frame(width: UIMetrics.promptRowLabelWidth, alignment: .leading)
+                .lineLimit(1)
+                .frame(width: labelWidth, alignment: .leading)
             content
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: fills ? .infinity : nil, alignment: .leading)
+                .fixedSize(horizontal: !fills, vertical: false)
         }
     }
 }
