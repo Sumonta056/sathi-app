@@ -14,6 +14,9 @@ struct SidebarRail: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: UIMetrics.sidebarRailSpacing) {
                     pageButton(Copywriter.mainPageToday, "sun.max", route.page == .today) { route.page = .today }
+                    if e.data.prefs.todos.isOn {
+                        pageButton(Copywriter.mainPageTodos, "checkmark.circle", route.page == .todos) { route.page = .todos }
+                    }
                     pageButton(Copywriter.mainPageActivities, "list.bullet", isActivities) { route.page = .activities(nil) }
                     if e.data.prefs.calendarPage.isOn {
                         pageButton(Copywriter.calendarPageTitle, "calendar", isCalendar) { route.page = .calendar(nil) }

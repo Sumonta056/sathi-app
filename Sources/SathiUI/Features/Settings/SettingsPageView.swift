@@ -25,6 +25,7 @@ struct SettingsPageView: View {
         case .quickReminders: QuickRemindersPage()
         case .tracker: TrackerSettingsPage()
         case .timeBlocks: TimeBlockSettingsPage()
+        case .todos: TodosSettingsPage()
         case .sound: SoundPage()
         }
     }

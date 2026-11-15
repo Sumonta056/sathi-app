@@ -1,0 +1,94 @@
+import SathiCore
+import SwiftUI
+
+struct TodoSideColumn: View {
+    @Binding var selection: TodoSelection
+    @State private var creating = false
+    @State private var renamingID: String?
+    @EnvironmentObject var e: Engine
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: UIMetrics.todoSideSpacing) {
+            TodoSmartTiles(selection: $selection)
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: UIMetrics.todoListRowGap) {
+                    ForEach(Self.groups(e.todoSnapshot.lists), id: \.name) { group in
+                        Text(verbatim: group.name.uppercased())
+                            .font(Typography.tracker(UIMetrics.todoGroupFont, .bold))
+                            .tracking(UIMetrics.todoGroupTracking)
+                            .foregroundStyle(Night.label)
+                            .padding(UIMetrics.todoGroupPadding)
+                        ForEach(group.lists, id: \.id) { row($0) }
+                    }
+                }
+            }
+            Spacer(minLength: 0)
+            newListButton
+        }
+        .padding(UIMetrics.todoSidePadding)
+        .frame(width: UIMetrics.todoSideWidth)
+        .frame(maxHeight: .infinity, alignment: .top)
+        .overlay(alignment: .trailing) {
+            Rectangle().fill(Night.divider).frame(width: UIMetrics.dividerHeight)
+        }
+    }
+
+    private func row(_ list: TodoList) -> some View {
+        TodoListRow(
+            list: list,
+            count: e.todoCount(.list(list.id)),
+            isSelected: selection == .list(list.id),
+            onSelect: { selection = .list(list.id) },
+            onRename: { renamingID = list.id }
+        )
+        .popover(isPresented: renaming(list.id), arrowEdge: .trailing) {
+            TodoListForm(list: list, name: list.name) { renamingID = nil }
+                .environmentObject(e)
+        }
+    }
+
+    private func renaming(_ id: String) -> Binding<Bool> {
+        Binding(get: { renamingID == id }, set: { if !$0 { renamingID = nil } })
+    }
+
+    private var newListButton: some View {
+        Button { creating = true } label: {
+            HStack(spacing: UIMetrics.todoChipSpacing) {
+                Image(systemName: "plus")
+                Text(verbatim: Copywriter.todoNewList)
+            }
+            .font(Typography.tracker(UIMetrics.todoListFont, .semibold))
+            .foregroundStyle(Night.chipText)
+            .padding(UIMetrics.todoNewListPadding)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .overlay(
+                RoundedRectangle(cornerRadius: UIMetrics.todoAddRadius, style: .continuous)
+                    .strokeBorder(Night.fieldBorder, style: StrokeStyle(lineWidth: UIMetrics.todoBorder, dash: [UIMetrics.todoDash]))
+            )
+            .contentShape(Rectangle())
+            .accessibilityIdentifier("todos.list.new")
+        }
+        .buttonStyle(.plain)
+        .popover(isPresented: $creating, arrowEdge: .trailing) {
+            TodoListForm { creating = false }
+                .environmentObject(e)
+        }
+    }
+
+    static func groups(_ lists: [TodoList]) -> [TodoListGroup] {
+        var out: [TodoListGroup] = []
+        for list in lists {
+            if let i = out.firstIndex(where: { $0.name == list.accountName }) {
+                out[i].lists.append(list)
+            } else {
+                out.append(TodoListGroup(name: list.accountName, lists: [list]))
+            }
+        }
+        return out
+    }
+}
+
+struct TodoListGroup {
+    let name: String
+    var lists: [TodoList]
+}

@@ -9,6 +9,7 @@ enum SidebarSettingsStyle {
         case .quickReminders: return "bell"
         case .tracker: return "waveform.path.ecg"
         case .timeBlocks: return "timer"
+        case .todos: return "checkmark.circle"
         case .sound: return "speaker.wave.2"
         }
     }
@@ -19,6 +20,7 @@ enum SidebarSettingsStyle {
         case .quickReminders: return Night.quick
         case .tracker: return Night.tracker
         case .timeBlocks: return Night.block
+        case .todos: return Night.todo
         case .general, .sound: return Night.text
         }
     }

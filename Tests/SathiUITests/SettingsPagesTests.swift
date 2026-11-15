@@ -29,6 +29,7 @@ struct SettingsPagesTests {
         case .quickReminders: #expect(throws: Never.self) { try sut.find(QuickSettingsCard.self) }
         case .tracker: #expect(throws: Never.self) { try sut.find(TrackerSettingsPage.self) }
         case .timeBlocks: #expect(throws: Never.self) { try sut.find(TimeBlockSettingsPage.self) }
+        case .todos: #expect(throws: Never.self) { try sut.find(TodosSettingsPage.self) }
         case .sound: #expect(throws: Never.self) { try sut.find(MeditationSoundCard.self) }
         }
     }

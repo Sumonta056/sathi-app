@@ -18,6 +18,7 @@ struct MainSidebarTests {
         "Quick reminders",
         "Activity tracker",
         "Time blocks",
+        "To-dos",
         "Sound"
     ]
 
@@ -40,7 +41,7 @@ struct MainSidebarTests {
         #expect(shown.filter(Self.pages.contains) == Self.pages)
     }
 
-    @Test func settingsListIsAlwaysOpenWithNineItemsInOrder() throws {
+    @Test func settingsListIsAlwaysOpenWithTenItemsInOrder() throws {
         for page in [MainPage.today, .reports, .settings(.tracker)] {
             let shown = try texts(EngineHarness(), MainRoute(page))
             #expect(shown.filter(Self.subPages.contains) == Self.subPages)

@@ -51,6 +51,11 @@ struct MainSidebarList: View {
                     MainSidebarItem(title: Copywriter.mainPageToday, icon: "sun.max", isSelected: route.page == .today) {
                         route.page = .today
                     }
+                    if e.data.prefs.todos.isOn {
+                        MainSidebarItem(title: Copywriter.mainPageTodos, icon: "checkmark.circle", isSelected: route.page == .todos) {
+                            route.page = .todos
+                        }
+                    }
                     MainSidebarItem(title: Copywriter.mainPageActivities, icon: "list.bullet", isSelected: isActivities) {
                         route.page = .activities(nil)
                     }

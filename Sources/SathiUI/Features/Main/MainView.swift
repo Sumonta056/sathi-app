@@ -21,21 +21,31 @@ struct MainView: View {
             .ignoresSafeArea()
             .overlay(alignment: .top) { WindowDragStrip().frame(height: UIMetrics.mainDragStripHeight) }
             .environment(\.mainLayout, layout)
-            .onAppear { route.settle(calendarOn: e.data.prefs.calendarPage.isOn) }
-            .onChange(of: e.data.prefs.calendarPage.isOn) { route.settle(calendarOn: $0) }
-            .onChange(of: route.page) { _ in route.settle(calendarOn: e.data.prefs.calendarPage.isOn) }
+            .onAppear(perform: settle)
+            .onChange(of: e.data.prefs.calendarPage.isOn) { _ in settle() }
+            .onChange(of: e.data.prefs.todos.isOn) { _ in settle() }
+            .onChange(of: route.page) { _ in settle() }
         }
         .frame(minWidth: UIMetrics.mainWindowMinSize.width, minHeight: UIMetrics.mainWindowMinSize.height)
         .ignoresSafeArea()
+    }
+
+    private func settle() {
+        route.settle(calendarOn: e.data.prefs.calendarPage.isOn, todosOn: e.data.prefs.todos.isOn)
     }
 
     @ViewBuilder private func calendarPage(_ day: DayKey?) -> some View {
         if e.data.prefs.calendarPage.isOn { CalendarPage(day: day) } else { TodayPage() }
     }
 
+    @ViewBuilder private var todosPage: some View {
+        if e.data.prefs.todos.isOn { TodosPage() } else { TodayPage() }
+    }
+
     @ViewBuilder private var page: some View {
         switch route.page {
-        case .today, .todos: TodayPage()
+        case .today: TodayPage()
+        case .todos: todosPage
         case let .activities(day): ActivitiesPage(day: day)
         case let .calendar(day): calendarPage(day)
         case .reports: ReportsPage()
