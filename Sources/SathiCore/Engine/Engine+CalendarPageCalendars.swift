@@ -22,7 +22,7 @@ extension Engine {
                 groups.append(ShownCalendarGroup(account: choice.account, calendars: [item]))
             }
         }
-        return groups
+        return groups + todoShownGroups()
     }
 
     var shownCalendarIDs: [String] {

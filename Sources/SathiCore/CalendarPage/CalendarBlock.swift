@@ -5,11 +5,13 @@ package enum CalendarBlockStyle: Equatable, Sendable {
     case activity(category: String?)
     case away
     case joined(category: String?)
+    case todo(colorHex: UInt32)
 }
 
 package enum CalendarBlockSource: Equatable, Sendable {
     case event(CalendarEventInfo)
     case activity(Activity, running: Bool)
+    case todo(String)
 }
 
 package struct CalendarBlock: Equatable, Identifiable, Sendable {

@@ -15,6 +15,8 @@ struct CalendarBlockLook: Equatable {
             return CalendarBlockLook(fill: color.opacity(UIMetrics.calendarActivityTint), stroke: nil, text: Night.text)
         case .away:
             return CalendarBlockLook(fill: Night.calendarAway, stroke: nil, text: Night.muted)
+        case let .todo(colorHex):
+            return CalendarBlockLook(fill: .clear, stroke: Color(hex: colorHex), text: Night.text)
         case .joined:
             return CalendarBlockLook(fill: Night.calendarJoinedFill, stroke: nil, text: Night.calendarJoinedText)
         }

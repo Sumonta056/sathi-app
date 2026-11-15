@@ -24,16 +24,9 @@ struct CalendarDayColumn: View {
                 ForEach(placed, id: \.block.id) { p in
                     let lane = width / CGFloat(max(1, p.lanes))
                     let y = math.y(for: p.span.start)
-                    Button { actions.press(day, p.block, y) } label: {
-                        CalendarBlockView(
-                            block: p.block, text: texts[p.block.id] ?? CalendarBlockText(time: "", spoken: p.block.title),
-                            height: math.height(p.span), categories: categories,
-                            selected: CalendarMergePick.id(of: p.block).map(selected.contains) ?? false
-                        )
-                    }
-                    .buttonStyle(.plain)
-                    .frame(width: max(0, lane - UIMetrics.calendarLaneGap))
-                    .offset(x: UIMetrics.calendarColumnInset + lane * CGFloat(p.lane), y: y)
+                    blockView(p, y: y)
+                        .frame(width: max(0, lane - UIMetrics.calendarLaneGap))
+                        .offset(x: UIMetrics.calendarColumnInset + lane * CGFloat(p.lane), y: y)
                 }
                 if let now, math.holds(now) {
                     CalendarNowLine(now: now, calendar: calendar)
@@ -50,6 +43,21 @@ struct CalendarDayColumn: View {
             }
         }
         .frame(height: math.totalHeight)
+    }
+
+    @ViewBuilder private func blockView(_ p: CalendarPlacedBlock, y: CGFloat) -> some View {
+        if case .todo = p.block.source {
+            CalendarTodoChip(block: p.block)
+        } else {
+            Button { actions.press(day, p.block, y) } label: {
+                CalendarBlockView(
+                    block: p.block, text: texts[p.block.id] ?? CalendarBlockText(time: "", spoken: p.block.title),
+                    height: math.height(p.span), categories: categories,
+                    selected: CalendarMergePick.id(of: p.block).map(selected.contains) ?? false
+                )
+            }
+            .buttonStyle(.plain)
+        }
     }
 
     private var shows: Binding<Bool> {

@@ -9,6 +9,8 @@ extension CalendarPage {
         case let .activity(a, running):
             guard !running else { return nil }
             return .activity(CalendarActivityEdit(day: DayKey(a.start, calendar: engine.rangeCalendar), target: .activity(a.id)))
+        case .todo:
+            return nil
         }
     }
 

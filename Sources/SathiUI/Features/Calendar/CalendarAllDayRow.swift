@@ -18,6 +18,14 @@ struct CalendarAllDayRow: View {
         }
     }
 
+    @ViewBuilder private func chip(_ block: CalendarBlock) -> some View {
+        if case .todo = block.source {
+            CalendarTodoChip(block: block)
+        } else {
+            CalendarChip(block: block, categories: categories)
+        }
+    }
+
     var body: some View {
         HStack(alignment: .top, spacing: 0) {
             Text(verbatim: Copywriter.calendarAllDay)
@@ -26,7 +34,7 @@ struct CalendarAllDayRow: View {
                 .frame(width: UIMetrics.calendarHourLabelWidth, alignment: .center)
             ForEach(days, id: \.self) { day in
                 VStack(spacing: UIMetrics.calendarChipGap) {
-                    ForEach(Self.blocks(blocks, on: day, calendar: calendar)) { CalendarChip(block: $0, categories: categories) }
+                    ForEach(Self.blocks(blocks, on: day, calendar: calendar)) { chip($0) }
                 }
                 .padding(.horizontal, UIMetrics.calendarColumnInset)
                 .frame(maxWidth: .infinity, minHeight: UIMetrics.calendarAllDayHeight, alignment: .top)

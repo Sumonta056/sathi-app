@@ -9,6 +9,7 @@ extension Engine {
             syncCalendarChangeListener()
         }
         refreshCalendarAccess()
+        refreshTodos()
         storesChanged()
     }
 

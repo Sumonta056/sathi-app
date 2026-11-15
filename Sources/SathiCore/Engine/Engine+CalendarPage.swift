@@ -27,13 +27,14 @@ extension Engine {
         let tracks = data.prefs.tracker.isOn
         let rows = tracks ? pageActivities(range.interval) : []
         let running = tracks ? pageRunning(range.interval) : nil
-        let all = CalendarBlockBuilder.blocks(
+        let base = CalendarBlockBuilder.blocks(
             events: events,
             activities: rows,
             running: running,
             colors: Dictionary(readable.map { ($0.id, $0.colorHex) }) { first, _ in first },
             joins: range.kind != .day
         )
+        let all = base + calendarTodoBlocks(range)
         let tracked = rows + (running.map { [$0] } ?? [])
         let cells = range.kind == .month
             ? CalendarMonthCell.cells(
