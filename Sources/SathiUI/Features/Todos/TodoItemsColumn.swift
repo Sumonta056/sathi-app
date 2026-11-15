@@ -5,6 +5,7 @@ struct TodoItemsColumn: View {
     let selection: TodoSelection
     @State private var showCompleted: Bool
     @State private var editingID: String?
+    @Environment(\.mainLayout) private var layout
     @EnvironmentObject var e: Engine
 
     init(selection: TodoSelection, showCompleted: Bool = false) {
@@ -33,7 +34,7 @@ struct TodoItemsColumn: View {
                 }
             }
         }
-        .padding(UIMetrics.todoItemsPadding)
+        .padding(Self.padding(layout))
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 
@@ -72,6 +73,10 @@ struct TodoItemsColumn: View {
         case let .smart(list): Night.todoTile(list).dot
         case let .list(id): e.todoSnapshot.lists.first { $0.id == id }.map { Night.todoList($0.colorHex) } ?? Night.todo
         }
+    }
+
+    static func padding(_ layout: MainLayout) -> EdgeInsets {
+        layout.isNarrow ? UIMetrics.todoItemsPaddingNarrow : UIMetrics.todoItemsPadding
     }
 
     private func canEdit(_ todo: Todo) -> Bool {

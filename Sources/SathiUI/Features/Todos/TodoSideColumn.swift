@@ -5,6 +5,7 @@ struct TodoSideColumn: View {
     @Binding var selection: TodoSelection
     @State private var creating = false
     @State private var renamingID: String?
+    @Environment(\.mainLayout) private var layout
     @EnvironmentObject var e: Engine
 
     var body: some View {
@@ -26,7 +27,7 @@ struct TodoSideColumn: View {
             newListButton
         }
         .padding(UIMetrics.todoSidePadding)
-        .frame(width: UIMetrics.todoSideWidth)
+        .frame(width: Self.width(layout))
         .frame(maxHeight: .infinity, alignment: .top)
         .overlay(alignment: .trailing) {
             Rectangle().fill(Night.divider).frame(width: UIMetrics.dividerHeight)
@@ -73,6 +74,10 @@ struct TodoSideColumn: View {
             TodoListForm { creating = false }
                 .environmentObject(e)
         }
+    }
+
+    static func width(_ layout: MainLayout) -> CGFloat {
+        layout.isNarrow ? UIMetrics.todoSideWidthNarrow : UIMetrics.todoSideWidth
     }
 
     static func groups(_ lists: [TodoList]) -> [TodoListGroup] {

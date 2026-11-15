@@ -2,6 +2,8 @@ import SwiftUI
 
 extension UIMetrics {
     static let todoSideWidth: CGFloat = 280
+    static let todoSideWidthNarrow: CGFloat = 200
+    static let todoItemsMinWidth: CGFloat = 280
     static let todoSidePadding = EdgeInsets(top: 20, leading: 16, bottom: 20, trailing: 16)
     static let todoSideSpacing: CGFloat = 14
     static let todoTileGap: CGFloat = 10
@@ -23,6 +25,7 @@ extension UIMetrics {
     static let todoNewListPadding = EdgeInsets(top: 10, leading: 12, bottom: 10, trailing: 12)
     static let todoDash: CGFloat = 4
     static let todoItemsPadding = EdgeInsets(top: 28, leading: 36, bottom: 28, trailing: 36)
+    static let todoItemsPaddingNarrow = EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
     static let todoItemsSpacing: CGFloat = 14
     static let todoTitleFont: CGFloat = 34
     static let todoToggleFont: CGFloat = 14
