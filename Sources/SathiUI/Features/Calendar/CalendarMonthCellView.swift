@@ -19,7 +19,13 @@ struct CalendarMonthCellView: View {
                             .foregroundStyle(Night.tracker)
                     }
                 }
-                ForEach(cell.chips) { CalendarChip(block: $0, categories: categories) }
+                ForEach(cell.chips) { chip in
+                    if case .todo = chip.source {
+                        CalendarTodoChip(block: chip, showsTick: false)
+                    } else {
+                        CalendarChip(block: chip, categories: categories)
+                    }
+                }
                 if cell.more > 0 {
                     Text(verbatim: Copywriter.calendarMore(cell.more))
                         .font(Typography.tracker(UIMetrics.calendarChipFont, .semibold))

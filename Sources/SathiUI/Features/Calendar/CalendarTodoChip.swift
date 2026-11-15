@@ -2,8 +2,15 @@ import SathiCore
 import SwiftUI
 
 struct CalendarTodoChip: View {
-    @EnvironmentObject var e: Engine
     let block: CalendarBlock
+    let showsTick: Bool
+    @State private var editing = false
+    @EnvironmentObject var e: Engine
+
+    init(block: CalendarBlock, showsTick: Bool = true) {
+        self.block = block
+        self.showsTick = showsTick
+    }
 
     private var look: CalendarBlockLook { CalendarBlockLook.of(block.style, categories: []) }
 
@@ -15,12 +22,23 @@ struct CalendarTodoChip: View {
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: UIMetrics.calendarChipRadius, style: .continuous)
         HStack(spacing: UIMetrics.calendarTodoTickGap) {
-            tick
-            Text(verbatim: block.title)
-                .font(Typography.tracker(UIMetrics.calendarChipFont, .semibold))
-                .foregroundStyle(look.text)
-                .lineLimit(1)
-            Spacer(minLength: 0)
+            if showsTick { tick }
+            Button { editing = true } label: {
+                HStack(spacing: 0) {
+                    Text(verbatim: block.title)
+                        .font(Typography.tracker(UIMetrics.calendarChipFont, .semibold))
+                        .foregroundStyle(look.text)
+                        .lineLimit(1)
+                    Spacer(minLength: 0)
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("calendar.todo.open." + todoID)
+            .popover(isPresented: $editing, arrowEdge: .trailing) {
+                CalendarTodoPopover(todoID: todoID) { editing = false }
+                    .environmentObject(e)
+            }
         }
         .padding(UIMetrics.calendarChipPadding)
         .frame(maxWidth: .infinity, minHeight: UIMetrics.calendarChipHeight, maxHeight: UIMetrics.calendarChipHeight, alignment: .leading)
