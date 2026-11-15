@@ -4,23 +4,34 @@ import SathiCore
 extension UIController {
     package func showMain(_ page: MainPage) {
         guard let engine else { return }
+        var isNew = false
         if let mainRoute {
             mainRoute.page = page
         } else {
+            isNew = true
             let route = MainRoute(page)
             mainRoute = route
             mainWindow = MainWindow.make(engine: engine, route: route, closeWatcher: mainCloseWatcher)
         }
         if let mainWindow {
-            fillPointerScreen(mainWindow)
+            fillIfOpening(mainWindow, isNew: isNew)
             mainWindowShown(mainWindow)
         }
     }
 
     package func reopenMain() {
         guard let mainWindow else { return showMain(.today) }
-        fillPointerScreen(mainWindow)
+        fillIfOpening(mainWindow, isNew: false)
         mainWindowShown(mainWindow)
+    }
+
+    private func fillIfOpening(_ window: NSWindow, isNew: Bool) {
+        let fill = WindowFit.shouldFillOnShow(
+            isNewWindow: isNew,
+            isVisible: window.isVisible,
+            isMiniaturized: window.isMiniaturized
+        )
+        if fill { fillPointerScreen(window) }
     }
 
     private func fillPointerScreen(_ window: NSWindow) {

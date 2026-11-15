@@ -9,6 +9,14 @@ enum WindowFit {
         visible
     }
 
+    static func shouldFillOnShow(isNewWindow: Bool, isVisible: Bool, isMiniaturized: Bool) -> Bool {
+        isNewWindow || !isVisible || isMiniaturized
+    }
+
+    static func shouldRecordShape(fitting: Bool, pendingFit: Bool, mouseDown: Bool, inLiveResize: Bool) -> Bool {
+        !fitting && !pendingFit && !mouseDown && !inLiveResize
+    }
+
     static func moved(frame: CGRect, from: CGRect, to: CGRect, tolerance: CGFloat) -> CGRect {
         switch shape(frame, in: from, tolerance: tolerance) {
         case .full:

@@ -23,6 +23,17 @@ final class WindowCloseWatcher: NSObject, NSWindowDelegate {
         }
     }
 
+    func windowDidResize(_ notification: Notification) {
+        guard let window = notification.object as? NSWindow else { return }
+        let record = WindowFit.shouldRecordShape(
+            fitting: fitting,
+            pendingFit: pendingFit,
+            mouseDown: NSEvent.pressedMouseButtons != 0,
+            inLiveResize: window.inLiveResize
+        )
+        if record { shapeFrame = window.frame }
+    }
+
     func windowDidEndLiveResize(_ notification: Notification) {
         guard !fitting, let window = notification.object as? NSWindow else { return }
         settle(window)

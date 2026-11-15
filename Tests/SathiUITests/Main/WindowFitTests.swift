@@ -93,3 +93,27 @@ struct WindowFitTests {
         #expect(UIMetrics.mainDragStripPageInset == UIMetrics.mainDragStripHeight - UIMetrics.mainContentPadding.top)
     }
 }
+
+@Suite("Window fit show and shape rules")
+struct WindowFitShowTests {
+    @Test func newWindowFills() {
+        #expect(WindowFit.shouldFillOnShow(isNewWindow: true, isVisible: false, isMiniaturized: false))
+    }
+
+    @Test func hiddenOrMinimizedWindowFills() {
+        #expect(WindowFit.shouldFillOnShow(isNewWindow: false, isVisible: false, isMiniaturized: false))
+        #expect(WindowFit.shouldFillOnShow(isNewWindow: false, isVisible: true, isMiniaturized: true))
+    }
+
+    @Test func openWindowIsLeftAsTheUserTiledIt() {
+        #expect(!WindowFit.shouldFillOnShow(isNewWindow: false, isVisible: true, isMiniaturized: false))
+    }
+
+    @Test func resizeRecordsShapeOnlyWhenIdle() {
+        #expect(WindowFit.shouldRecordShape(fitting: false, pendingFit: false, mouseDown: false, inLiveResize: false))
+        #expect(!WindowFit.shouldRecordShape(fitting: true, pendingFit: false, mouseDown: false, inLiveResize: false))
+        #expect(!WindowFit.shouldRecordShape(fitting: false, pendingFit: true, mouseDown: false, inLiveResize: false))
+        #expect(!WindowFit.shouldRecordShape(fitting: false, pendingFit: false, mouseDown: true, inLiveResize: false))
+        #expect(!WindowFit.shouldRecordShape(fitting: false, pendingFit: false, mouseDown: false, inLiveResize: true))
+    }
+}
