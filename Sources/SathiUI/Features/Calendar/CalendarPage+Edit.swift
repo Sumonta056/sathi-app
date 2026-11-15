@@ -40,7 +40,7 @@ extension CalendarPage {
     }
 
     @ViewBuilder func floating(_ data: CalendarPageData, kind: ReportRange) -> some View {
-        if layout.isNarrow, e.data.prefs.calendarPage.sidePanelShown {
+        if layout.isNarrow, narrowStats {
             CalendarFloatingPanel { stats(data, kind: kind) }
         }
     }
