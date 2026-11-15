@@ -3,27 +3,54 @@ import SwiftUI
 
 struct ActivityDayTiles: View {
     let overview: ActivityDayOverview
+    var inOneRow = false
 
     var body: some View {
-        VStack(spacing: UIMetrics.activitiesTileGap) {
+        if inOneRow {
             HStack(spacing: UIMetrics.activitiesTileGap) {
-                ActivityDayTile(label: Copywriter.activitiesTileLogged, value: duration(overview.logged), note: loggedNote, noteColor: loggedColor)
-                ActivityDayTile(
-                    label: Copywriter.activitiesTileFocus, value: duration(overview.focus),
-                    note: Copywriter.activitiesFocusNote(overview.focusPercent)
-                )
+                logged
+                focus
+                away
+                count
             }
-            HStack(spacing: UIMetrics.activitiesTileGap) {
-                ActivityDayTile(
-                    label: Copywriter.activitiesTileAway, value: duration(overview.away),
-                    note: Copywriter.activitiesAwayNote(overview.awayCount, place: overview.topPlace)
-                )
-                ActivityDayTile(
-                    label: Copywriter.activitiesTileCount, value: overview.count == .zero ? Copywriter.noValue : "\(overview.count)",
-                    note: Copywriter.activitiesTopNote(overview.topCategory)
-                )
+            .fixedSize(horizontal: false, vertical: true)
+        } else {
+            VStack(spacing: UIMetrics.activitiesTileGap) {
+                HStack(spacing: UIMetrics.activitiesTileGap) {
+                    logged
+                    focus
+                }
+                HStack(spacing: UIMetrics.activitiesTileGap) {
+                    away
+                    count
+                }
             }
         }
+    }
+
+    private var logged: some View {
+        ActivityDayTile(label: Copywriter.activitiesTileLogged, value: duration(overview.logged), note: loggedNote, noteColor: loggedColor)
+    }
+
+    private var focus: some View {
+        ActivityDayTile(
+            label: Copywriter.activitiesTileFocus, value: duration(overview.focus),
+            note: Copywriter.activitiesFocusNote(overview.focusPercent)
+        )
+    }
+
+    private var away: some View {
+        ActivityDayTile(
+            label: Copywriter.activitiesTileAway, value: duration(overview.away),
+            note: Copywriter.activitiesAwayNote(overview.awayCount, place: overview.topPlace)
+        )
+    }
+
+    private var count: some View {
+        ActivityDayTile(
+            label: Copywriter.activitiesTileCount, value: overview.count == .zero ? Copywriter.noValue : "\(overview.count)",
+            note: Copywriter.activitiesTopNote(overview.topCategory)
+        )
     }
 
     private func duration(_ seconds: TimeInterval) -> String {
