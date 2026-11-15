@@ -32,22 +32,3 @@ struct TrackerCalendarCard: View {
         }
     }
 }
-
-struct TrackerStackedRow<Content: View>: View {
-    let label: String
-    let hint: String
-    @ViewBuilder let content: () -> Content
-
-    var body: some View {
-        HStack(alignment: .top, spacing: UIMetrics.blockSettingsColumnSpacing) {
-            VStack(alignment: .leading, spacing: UIMetrics.textSpacing) {
-                Text(verbatim: label).font(Typography.rowLabel).foregroundStyle(Night.text)
-                Text(verbatim: hint).font(Typography.hint).foregroundStyle(Night.muted).fixedSize(horizontal: false, vertical: true)
-            }
-            .frame(width: UIMetrics.blockSettingsLabelWidth, alignment: .leading)
-            content()
-        }
-        .padding(UIMetrics.rowPadding)
-        .overlay(alignment: .top) { Rectangle().fill(Night.divider).frame(height: UIMetrics.dividerHeight) }
-    }
-}
