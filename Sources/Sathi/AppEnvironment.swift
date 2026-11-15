@@ -19,6 +19,7 @@ enum AppEnvironment {
             history: historyStore,
             base: base
         )
+        let writer = EventKitCalendarWriter()
         let engine = Engine(
             store: stateStore,
             history: historyStore,
@@ -26,12 +27,13 @@ enum AppEnvironment {
             sound: SystemSoundPlayer(),
             presenter: presenter,
             links: WorkspaceLinkOpener(),
-            calendarWriter: EventKitCalendarWriter(),
+            calendarWriter: writer,
             audio: BreathAudioPlayer(),
             activityStore: activityStore,
             presence: SystemPresenceMonitor(),
             hotkeys: CarbonHotkeyRegistrar(),
-            calendarChanges: EventKitCalendarChangeSource()
+            calendarChanges: EventKitCalendarChangeSource(),
+            todos: EventKitTodoStore(writer: writer)
         )
         presenter.engine = engine
         return engine

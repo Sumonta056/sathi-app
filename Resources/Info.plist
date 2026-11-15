@@ -23,9 +23,13 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSCalendarsFullAccessUsageDescription</key>
-	<string>Sathi saves each time block as an event in the calendar you choose. It does not read your events.</string>
+	<string>Sathi saves time blocks and activities as events in the calendars you choose, and reads your events to show them on the Calendar page and to log them in the activity tracker.</string>
 	<key>NSCalendarsUsageDescription</key>
-	<string>Sathi saves each time block as an event in the calendar you choose. It does not read your events.</string>
+	<string>Sathi saves time blocks and activities as events in the calendars you choose, and reads your events to show them on the Calendar page and to log them in the activity tracker.</string>
+	<key>NSRemindersFullAccessUsageDescription</key>
+	<string>Sathi shows your Apple Reminders on its To-dos page and saves the changes you make there back to Reminders.</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>Sathi shows your Apple Reminders on its To-dos page and saves the changes you make there back to Reminders.</string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
