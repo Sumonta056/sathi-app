@@ -8,6 +8,7 @@ struct CalendarPage: View {
     @State var focus: CalendarPageFocus
     @State var selected: Set<ActivityID> = []
     @State var mergeError: String?
+    @Environment(\.mainLayout) var layout
     @EnvironmentObject var e: Engine
 
     init(day: DayKey? = nil, range: CalendarPageRange? = nil, editing: CalendarActivityEdit? = nil) {
@@ -28,6 +29,7 @@ struct CalendarPage: View {
             content(range, data)
         }
         .padding(UIMetrics.mainContentPadding)
+        .overlay { drawer }
         .onAppear {
             e.refreshCalendarAccess()
             e.calendarPageOpened()
@@ -53,6 +55,7 @@ struct CalendarPage: View {
                 }
                 side(data, kind: range.kind)
             }
+            .overlay(alignment: .topTrailing) { floating(data, kind: range.kind) }
             .modifier(CalendarSelectionPrune(blocks: data.blocks, selected: $selected, error: $mergeError))
         } else {
             CalendarAccessGate()

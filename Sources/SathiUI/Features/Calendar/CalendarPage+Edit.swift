@@ -32,17 +32,41 @@ extension CalendarPage {
     }
 
     @ViewBuilder func side(_ data: CalendarPageData, kind: ReportRange) -> some View {
-        if let editing = focus.editing, case let day = e.activityDay(editing.day), ActivityEditPanel.shows(editing.target, in: day) {
-            ActivityEditPanel(
-                day: day, target: editing.target, categories: e.activityCategories, calendar: e.rangeCalendar,
-                calendars: e.calendarChoices(), calendarNames: e.activityCalendarTitles, actions: .engine(e), editing: editTarget
-            )
-            .frame(width: UIMetrics.activitiesEditWidth)
-        } else if e.data.prefs.calendarPage.sidePanelShown {
-            ScrollView(.vertical, showsIndicators: false) {
-                CalendarStatsPanel(stats: data.stats, kind: kind, categories: e.activityCategories)
-            }
-            .frame(width: UIMetrics.calendarSideWidth)
+        if !layout.drawerEdit, let shown = shownEdit {
+            editPanel(shown).frame(width: UIMetrics.activitiesEditWidth)
+        } else if !layout.isNarrow, e.data.prefs.calendarPage.sidePanelShown {
+            stats(data, kind: kind).frame(width: UIMetrics.calendarSideWidth)
+        }
+    }
+
+    @ViewBuilder func floating(_ data: CalendarPageData, kind: ReportRange) -> some View {
+        if layout.isNarrow, e.data.prefs.calendarPage.sidePanelShown {
+            CalendarFloatingPanel { stats(data, kind: kind) }
+        }
+    }
+
+    @ViewBuilder var drawer: some View {
+        if layout.drawerEdit, let shown = shownEdit {
+            MainDrawer(close: { focus.editing = nil }, content: { editPanel(shown) })
+        }
+    }
+
+    private var shownEdit: (target: ActivityEditTarget, day: ActivityDay)? {
+        guard let editing = focus.editing else { return nil }
+        let day = e.activityDay(editing.day)
+        return ActivityEditPanel.shows(editing.target, in: day) ? (editing.target, day) : nil
+    }
+
+    private func editPanel(_ shown: (target: ActivityEditTarget, day: ActivityDay)) -> some View {
+        ActivityEditPanel(
+            day: shown.day, target: shown.target, categories: e.activityCategories, calendar: e.rangeCalendar,
+            calendars: e.calendarChoices(), calendarNames: e.activityCalendarTitles, actions: .engine(e), editing: editTarget
+        )
+    }
+
+    private func stats(_ data: CalendarPageData, kind: ReportRange) -> some View {
+        ScrollView(.vertical, showsIndicators: false) {
+            CalendarStatsPanel(stats: data.stats, kind: kind, categories: e.activityCategories)
         }
     }
 
