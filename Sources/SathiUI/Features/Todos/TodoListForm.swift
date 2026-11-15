@@ -7,6 +7,7 @@ struct TodoListForm: View {
     @State private var name: String
     @State private var colorHex: String
     @State private var accountID: String?
+    @State private var loaded: [TodoAccount]?
     @EnvironmentObject var e: Engine
 
     init(name: String = "", colorHex: String = Limits.todoListColors[0], accountID: String? = nil, onClose: @escaping () -> Void) {
@@ -62,20 +63,25 @@ struct TodoListForm: View {
                 .disabled(!canSave)
             }
         }
+        .onAppear(perform: loadAccounts)
+        .onChange(of: e.todoSnapshot) { _ in loadAccounts() }
         .padding(UIMetrics.todoFormPadding)
         .frame(width: UIMetrics.todoFormWidth, alignment: .leading)
         .background(Night.card)
     }
 
     private var trimmed: String { name.trimmingCharacters(in: .whitespacesAndNewlines) }
-    private var account: String? { accountID ?? e.todoDefaultAccountID }
+    private var allAccounts: [TodoAccount] { loaded ?? e.todos.accounts() }
+    private var account: String? {
+        accountID ?? TodoRules.defaultAccountID(accounts: allAccounts, preferred: e.data.prefs.todos.newListAccountID)
+    }
     private var canSave: Bool { !trimmed.isEmpty && (list != nil || account != nil) }
 
     private var accounts: some View {
         VStack(alignment: .leading, spacing: UIMetrics.todoChipSpacing) {
             SectionLabel(Copywriter.todoListAccount)
             HStack(spacing: UIMetrics.todoChipSpacing) {
-                ForEach(e.todos.accounts().filter(\.allowsNewLists), id: \.id) { a in
+                ForEach(allAccounts.filter(\.allowsNewLists), id: \.id) { a in
                     Button { accountID = a.id } label: {
                         Text(verbatim: a.name).accessibilityIdentifier("todos.listform.account.\(a.id)")
                     }
@@ -87,6 +93,10 @@ struct TodoListForm: View {
                 }
             }
         }
+    }
+
+    private func loadAccounts() {
+        loaded = e.todos.accounts()
     }
 
     private func save() {

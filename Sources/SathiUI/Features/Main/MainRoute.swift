@@ -9,7 +9,7 @@ final class MainRoute: ObservableObject {
         self.page = page
     }
 
-    func settle(calendarOn: Bool, todosOn: Bool = true) {
+    func settle(calendarOn: Bool, todosOn: Bool) {
         if !calendarOn, case .calendar = page { page = .today }
         if !todosOn, page == .todos { page = .today }
     }

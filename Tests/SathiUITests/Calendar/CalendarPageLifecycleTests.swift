@@ -57,19 +57,19 @@ struct CalendarPageLifecycleTests {
 
     @Test func calendarRouteSettlesOnTodayWhenTheSwitchIsOff() {
         let route = MainRoute(.calendar(nil))
-        route.settle(calendarOn: false)
+        route.settle(calendarOn: false, todosOn: false)
         #expect(route.page == .today)
     }
 
     @Test func calendarRouteStaysWhenTheSwitchIsOn() {
         let route = MainRoute(.calendar(nil))
-        route.settle(calendarOn: true)
+        route.settle(calendarOn: true, todosOn: false)
         #expect(route.page == .calendar(nil))
     }
 
     @Test func otherRoutesAreNotChangedBySettling() {
         let route = MainRoute(.reports)
-        route.settle(calendarOn: false)
+        route.settle(calendarOn: false, todosOn: false)
         #expect(route.page == .reports)
     }
 

@@ -10,12 +10,14 @@ extension Engine {
         switch s {
         case let .smart(smart):
             let target = smart == .completed ? nil : snap.lists.first(where: \.canEdit)?.id
+            let today = TodoDue(date: calendar.startOfDay(for: clock.now), hasTime: false)
             return TodoPageModel(
                 selection: s,
                 title: Copywriter.todoSmartListName(smart),
                 open: smart.todos(in: snap.todos, now: clock.now, calendar: calendar),
                 completed: [],
-                targetListID: target
+                targetListID: target,
+                defaultDue: smart == .today || smart == .scheduled ? today : nil
             )
         case let .list(id):
             guard let list = snap.lists.first(where: { $0.id == id }) else {
@@ -40,8 +42,8 @@ extension Engine {
     }
 
     package func todoAllLists() -> [TodoList] {
-        guard data.prefs.todos.isOn, todos.access == .allowed else { return [] }
-        return todos.lists()
+        guard data.prefs.todos.isOn, todoAccess == .allowed else { return [] }
+        return todoPageAllLists
     }
 
     package func setTodoListShown(_ id: String, _ shown: Bool) {

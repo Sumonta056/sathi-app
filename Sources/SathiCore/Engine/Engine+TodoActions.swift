@@ -37,13 +37,21 @@ extension Engine {
     }
 
     @discardableResult
-    package func saveTodo(_ t: Todo, _ f: TodoEditForm) async -> TodoWriteResult {
+    package func saveTodo(_ t: Todo, _ f: TodoEditForm) async -> TodoSaveResult {
         guard f.isValid else { return .failed }
         let moves = f.listID != t.listID
         guard canWriteTodos, isEditableTodo(t.id), !moves || isEditableTodoList(f.listID) else { return .failed }
-        var result = todos.update(t.id, f.edit(calendar: calendar))
-        if moves, case .done = result { result = todos.move(t.id, to: f.listID) }
-        return await afterTodoWrite(result)
+        let updated = todos.update(t.id, f.edit(calendar: calendar))
+        var result = TodoSaveResult.failed
+        if case .done = updated {
+            if moves, case .done = todos.move(t.id, to: f.listID) {
+                result = .saved
+            } else {
+                result = moves ? .partlySaved : .saved
+            }
+        }
+        _ = await afterTodoWrite(updated)
+        return result
     }
 
     @discardableResult

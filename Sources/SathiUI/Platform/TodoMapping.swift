@@ -15,8 +15,10 @@ enum TodoMapping {
             parts.hour = c.hour
             parts.minute = c.minute ?? 0
         }
-        guard let date = calendar.date(from: parts) else { return nil }
-        return TodoDue(date: timed ? date : calendar.startOfDay(for: date), hasTime: timed)
+        var cal = calendar
+        if let zone = c.timeZone { cal.timeZone = zone }
+        guard let date = cal.date(from: parts) else { return nil }
+        return TodoDue(date: timed ? date : cal.startOfDay(for: date), hasTime: timed)
     }
 
     static func components(for due: TodoDue, calendar: Calendar) -> DateComponents {

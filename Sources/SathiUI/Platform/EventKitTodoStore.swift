@@ -44,7 +44,16 @@ package final class EventKitTodoStore: TodoStore {
 
     package func accounts() -> [TodoAccount] {
         guard access == .allowed else { return [] }
-        let defaultSource = store.defaultCalendarForNewReminders()?.source?.sourceIdentifier
+        let icloud = TodoMapping.iCloudSourceID(
+            defaultSourceID: store.defaultCalendarForNewReminders()?.source?.sourceIdentifier,
+            sources: store.sources.map {
+                TodoSourceInfo(
+                    id: $0.sourceIdentifier,
+                    isCalDAV: $0.sourceType == .calDAV,
+                    hasReminderLists: !$0.calendars(for: .reminder).isEmpty
+                )
+            }
+        )
         var seen = Set<String>()
         return store.calendars(for: .reminder).compactMap(\.source).compactMap { source in
             guard seen.insert(source.sourceIdentifier).inserted else { return nil }
@@ -52,7 +61,7 @@ package final class EventKitTodoStore: TodoStore {
                 id: source.sourceIdentifier,
                 name: source.title,
                 allowsNewLists: source.sourceType != .birthdays && source.sourceType != .subscribed,
-                isICloud: source.sourceType == .calDAV && source.sourceIdentifier == defaultSource
+                isICloud: source.sourceIdentifier == icloud
             )
         }
     }
@@ -93,10 +102,14 @@ package final class EventKitTodoStore: TodoStore {
 
     private func fetch(_ predicate: NSPredicate, calendar: Calendar) async -> [Todo] {
         await withCheckedContinuation { (c: CheckedContinuation<[Todo], Never>) in
-            store.fetchReminders(matching: predicate) { items in
-                c.resume(returning: (items ?? []).map { Self.todo($0, calendar: calendar) })
-            }
+            store.fetchReminders(matching: predicate, completion: Self.resume(c, calendar: calendar))
         }
+    }
+
+    nonisolated static func resume(
+        _ c: CheckedContinuation<[Todo], Never>, calendar: Calendar
+    ) -> @Sendable ([EKReminder]?) -> Void {
+        { items in c.resume(returning: (items ?? []).map { todo($0, calendar: calendar) }) }
     }
 
     nonisolated static func todo(_ r: EKReminder, calendar: Calendar) -> Todo {

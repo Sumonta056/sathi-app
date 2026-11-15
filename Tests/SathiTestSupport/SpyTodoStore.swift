@@ -22,6 +22,7 @@ package final class SpyTodoStore: TodoStore {
     package var todosValue: [Todo] = []
     package var revision = 0
     package var nextResult: TodoWriteResult = .done(id: "new")
+    package var moveResult: TodoWriteResult?
     package private(set) var requestCount = 0
     package private(set) var calls: [TodoWriteCall] = []
     package private(set) var readRequests: [Set<String>] = []
@@ -82,7 +83,7 @@ package final class SpyTodoStore: TodoStore {
 
     package func move(_ id: String, to listID: String) -> TodoWriteResult {
         calls.append(.moved(id, listID))
-        return nextResult
+        return moveResult ?? nextResult
     }
 
     package func delete(_ id: String) -> TodoWriteResult {

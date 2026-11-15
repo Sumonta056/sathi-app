@@ -4,22 +4,49 @@ import SwiftUI
 struct TodoEditCard: View {
     let todo: Todo
     let onClose: () -> Void
-    @State private var form: TodoEditForm
+    @State private var edited: TodoEditForm?
     @State private var confirmingDelete: Bool
+    @State private var failure: String?
     @EnvironmentObject var e: Engine
 
-    init(todo: Todo, form: TodoEditForm? = nil, confirmingDelete: Bool = false, onClose: @escaping () -> Void) {
+    init(
+        todo: Todo,
+        form: TodoEditForm? = nil,
+        confirmingDelete: Bool = false,
+        failure: String? = nil,
+        onClose: @escaping () -> Void
+    ) {
         self.todo = todo
         self.onClose = onClose
-        _form = State(initialValue: form ?? TodoEditForm(todo: todo, calendar: .current))
+        _edited = State(initialValue: form)
         _confirmingDelete = State(initialValue: confirmingDelete)
+        _failure = State(initialValue: failure)
+    }
+
+    private var form: TodoEditForm { edited ?? TodoEditForm(todo: todo, calendar: e.calendar) }
+
+    private func field<V>(_ path: WritableKeyPath<TodoEditForm, V>) -> Binding<V> {
+        Binding(get: { form[keyPath: path] }, set: { v in
+            var f = form
+            f[keyPath: path] = v
+            edited = f
+        })
+    }
+
+    private var hasDate: Binding<Bool> {
+        Binding(get: { form.hasDate }, set: { on in
+            var f = form
+            if on, !f.hasDate, todo.due == nil { f.date = e.calendar.startOfDay(for: e.now) }
+            f.hasDate = on
+            edited = f
+        })
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: UIMetrics.todoEditSpacing) {
             HStack(spacing: UIMetrics.todoRowSpacing) {
                 TodoTick(isDone: todo.isDone, canEdit: false) {}
-                TextField(Copywriter.todoNewPlaceholder, text: $form.title)
+                TextField(Copywriter.todoNewPlaceholder, text: field(\.title))
                     .textFieldStyle(.plain)
                     .font(Typography.tracker(UIMetrics.todoRowTitleFont, .semibold))
                     .foregroundStyle(Night.text)
@@ -30,17 +57,22 @@ struct TodoEditCard: View {
                     .foregroundStyle(Night.label)
             }
             VStack(alignment: .leading, spacing: UIMetrics.todoEditSpacing) {
-                TextField(Copywriter.todoNotes, text: $form.notes, axis: .vertical)
+                TextField(Copywriter.todoNotes, text: field(\.notes), axis: .vertical)
                     .textFieldStyle(.plain)
                     .font(Typography.tracker(UIMetrics.todoFieldFont, .medium))
                     .foregroundStyle(Night.muted)
                     .accessibilityIdentifier("todos.edit.notes")
                     .disabled(!canEdit)
-                TodoEditDue(form: $form, today: e.calendar.startOfDay(for: e.now), hadDue: todo.due != nil)
+                TodoEditDue(hasDate: hasDate, date: field(\.date), minutes: field(\.minutes))
                     .disabled(!canEdit)
                 readOnlyFacts
-                TodoEditListChips(lists: e.todoSnapshot.lists.filter(\.canEdit), selection: $form.listID)
+                TodoEditListChips(lists: e.todoSnapshot.lists.filter(\.canEdit), selection: field(\.listID))
                     .disabled(!canEdit)
+                if let failure {
+                    Text(verbatim: failure)
+                        .font(Typography.hint)
+                        .foregroundStyle(Night.tracker)
+                }
                 buttons
             }
             .padding(.leading, UIMetrics.todoEditIndent)
@@ -103,7 +135,13 @@ struct TodoEditCard: View {
         let f = form
         let close = onClose
         Task {
-            if case .done = await engine.saveTodo(t, f) { close() }
+            switch await engine.saveTodo(t, f) {
+            case .saved: close()
+            case .partlySaved:
+                edited = nil
+                failure = Copywriter.todoMoveFailed
+            case .failed: failure = Copywriter.todoSaveFailed
+            }
         }
     }
 
@@ -112,7 +150,7 @@ struct TodoEditCard: View {
         let id = todo.id
         let close = onClose
         Task {
-            if case .done = await engine.deleteTodo(id) { close() }
+            if case .done = await engine.deleteTodo(id) { close() } else { failure = Copywriter.todoDeleteFailed }
         }
     }
 

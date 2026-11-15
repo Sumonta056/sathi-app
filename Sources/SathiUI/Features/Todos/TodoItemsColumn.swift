@@ -19,7 +19,7 @@ struct TodoItemsColumn: View {
             header(page)
             if !page.completed.isEmpty { toggle(page.completed.count) }
             if let target = page.targetListID {
-                TodoAddField(listID: target).id(target)
+                TodoAddField(listID: target, due: page.defaultDue).id(target)
             }
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 0) {

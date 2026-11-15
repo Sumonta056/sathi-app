@@ -27,10 +27,13 @@ extension Engine {
         todoRuntime.loadedSince = since
         todoRuntime.loadedRevision = todos.revision
         guard access == .allowed else {
+            todoPageAllLists = []
             applyTodos(.empty)
             return
         }
-        let lists = todos.lists().filter { !prefs.hiddenListIDs.contains($0.id) }
+        let all = todos.lists()
+        todoPageAllLists = all
+        let lists = all.filter { !prefs.hiddenListIDs.contains($0.id) }
         let items = await todos.todos(listIDs: Set(lists.map(\.id)), completedSince: since)
         guard token == todoRuntime.token else { return }
         applyTodos(Self.todoSnapshot(lists: lists, items: items, revision: todos.revision))
@@ -44,6 +47,7 @@ extension Engine {
             todoRuntime.token += 1
             todoRuntime.loadedRevision = nil
             todoAccess = .notAsked
+            todoPageAllLists = []
             applyTodos(.empty)
         } else if old.isOn != new.isOn || old.hiddenListIDs != new.hiddenListIDs {
             todoRuntime.stale = true

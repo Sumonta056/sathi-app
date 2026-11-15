@@ -78,6 +78,7 @@ package final class Engine: ObservableObject {
     var calendarChangesListening = false
     var todoRuntime = TodoRuntime()
     var calendarPageEventsByID: [String: CalendarEventInfo] = [:]
+    var todoPageAllLists: [TodoList] = []
 
     package init(
         store: StateStore,

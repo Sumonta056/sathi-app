@@ -7,13 +7,22 @@ package struct TodoPageModel: Equatable {
     package var completed: [Todo]
     package var canAdd: Bool
     package var targetListID: String?
+    package var defaultDue: TodoDue?
 
-    package init(selection: TodoSelection, title: String, open: [Todo], completed: [Todo], targetListID: String?) {
+    package init(
+        selection: TodoSelection,
+        title: String,
+        open: [Todo],
+        completed: [Todo],
+        targetListID: String?,
+        defaultDue: TodoDue? = nil
+    ) {
         self.selection = selection
         self.title = title
         self.open = open
         self.completed = completed
         self.targetListID = targetListID
+        self.defaultDue = defaultDue
         canAdd = targetListID != nil
     }
 }
