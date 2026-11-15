@@ -51,6 +51,7 @@ package final class Engine: ObservableObject {
     let presence: PresenceMonitor
     let hotkeys: HotkeyRegistrar
     let calendarChanges: CalendarChangeSource
+    package let todos: TodoStore
     package let calendar: Calendar
 
     var timer: Timer?
@@ -87,7 +88,8 @@ package final class Engine: ObservableObject {
         activityStore: ActivityStore = NoActivityStore(),
         presence: PresenceMonitor = NoPresenceMonitor(),
         hotkeys: HotkeyRegistrar = NoHotkeyRegistrar(),
-        calendarChanges: CalendarChangeSource = NoCalendarChangeSource()
+        calendarChanges: CalendarChangeSource = NoCalendarChangeSource(),
+        todos: TodoStore = NoTodoStore()
     ) {
         let n = clock.now
         var loaded = Persisted()
@@ -112,6 +114,7 @@ package final class Engine: ObservableObject {
         self.presence = presence
         self.hotkeys = hotkeys
         self.calendarChanges = calendarChanges
+        self.todos = todos
         calendarAccess = calendarWriter.access
         data = loaded
         now = n

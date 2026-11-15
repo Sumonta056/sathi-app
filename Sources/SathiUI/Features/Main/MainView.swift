@@ -35,7 +35,7 @@ struct MainView: View {
 
     @ViewBuilder private var page: some View {
         switch route.page {
-        case .today: TodayPage()
+        case .today, .todos: TodayPage()
         case let .activities(day): ActivitiesPage(day: day)
         case let .calendar(day): calendarPage(day)
         case .reports: ReportsPage()
