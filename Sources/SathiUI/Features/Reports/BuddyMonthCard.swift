@@ -39,7 +39,7 @@ struct BuddyMonthView: View {
                 BuddyMonthCellView(cell: month.cells[index], habit: month.habit)
             }
         }
-        .frame(width: UIMetrics.reportsCalendarWidth)
+        .reportsCalendarWidth()
     }
 }
 
