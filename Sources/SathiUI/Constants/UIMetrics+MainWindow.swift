@@ -7,6 +7,7 @@ extension UIMetrics {
     static let mainDrawerBelow: CGFloat = 1100
     static let mainDragStripHeight: CGFloat = 28
     static let windowFitTolerance: CGFloat = 8
+    static let mainWindowMinOnScreen = CGSize(width: 200, height: 120)
     static let mainSidebarWidth: CGFloat = 210
     static let mainSidebarPadding = EdgeInsets(top: 14, leading: 12, bottom: 14, trailing: 12)
     static let mainSidebarSpacing: CGFloat = 4

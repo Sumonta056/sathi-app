@@ -7,8 +7,18 @@ enum WindowFit {
 
     static func openFrame(saved: CGRect?, screens: [CGRect], pointer: CGRect, defaultSize: CGSize) -> CGRect {
         guard let saved else { return centered(defaultSize, in: pointer) }
-        if screens.contains(where: { $0.intersects(saved) }) { return saved }
-        return clamped(saved, into: pointer)
+        guard let home = screens.first(where: { isReachable(saved, on: $0) }) else { return clamped(saved, into: pointer) }
+        let fits = saved.width <= home.width && saved.height <= home.height
+        return fits ? saved : clamped(saved, into: home)
+    }
+
+    static func isReachable(_ frame: CGRect, on area: CGRect) -> Bool {
+        let least = UIMetrics.mainWindowMinOnScreen
+        let part = frame.intersection(area)
+        guard !part.isNull, part.width >= least.width, part.height >= least.height else { return false }
+        let strip = CGRect(x: frame.minX, y: frame.maxY - UIMetrics.mainDragStripHeight, width: frame.width, height: UIMetrics.mainDragStripHeight)
+        let bar = strip.intersection(area)
+        return !bar.isNull && bar.width >= least.width && bar.height >= UIMetrics.mainDragStripHeight
     }
 
     static func shouldPlaceOnShow(isNewWindow: Bool, isVisible: Bool, isMiniaturized: Bool) -> Bool {

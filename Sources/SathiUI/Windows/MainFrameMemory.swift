@@ -4,8 +4,10 @@ import SathiCore
 struct MainFrameMemory {
     var name = StorageKeys.mainWindowFrame
 
-    func frame(loadingInto window: NSWindow) -> CGRect? {
-        window.setFrameUsingName(name, force: true) ? window.frame : nil
+    func frame() -> CGRect? {
+        let probe = NSWindow(contentRect: .zero, styleMask: [.titled, .resizable], backing: .buffered, defer: true)
+        probe.isReleasedWhenClosed = false
+        return probe.setFrameUsingName(name, force: true) ? probe.frame : nil
     }
 
     func save(_ window: NSWindow) {

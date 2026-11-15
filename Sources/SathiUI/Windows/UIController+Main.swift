@@ -39,7 +39,7 @@ extension UIController {
         let screen = NSScreen.screens.first { NSMouseInRect(pointer, $0.frame, false) } ?? NSScreen.main
         guard !window.styleMask.contains(.fullScreen), let visible = screen?.visibleFrame else { return }
         let frame = WindowFit.openFrame(
-            saved: mainFrames.frame(loadingInto: window),
+            saved: mainFrames.frame(),
             screens: NSScreen.screens.map(\.visibleFrame),
             pointer: visible,
             defaultSize: UIMetrics.mainWindowSize

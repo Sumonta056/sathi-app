@@ -27,7 +27,7 @@ struct CalendarTodoPopoverTests {
     @Test func theChipBodyIsAButtonThatDoesNotMarkDone() async throws {
         let h = await loaded()
         let sut = try hosted(CalendarTodoChip(block: block()), h).inspect()
-        try sut.find(viewWithAccessibilityIdentifier: "calendar.todo.open.a").button().tap()
+        try sut.find(viewWithAccessibilityIdentifier: "calendar.todo.chip.a").button().tap()
         #expect(h.todos.calls.isEmpty)
     }
 
@@ -76,7 +76,32 @@ struct CalendarTodoPopoverTests {
         let key = DayKey(day(2026, 3, 4, 12), calendar: h.engine.rangeCalendar)
         let cell = CalendarMonthCell(day: key, chips: [block(allDay: true)], more: 0, tracked: 0, isToday: true, inRange: true)
         let sut = try hosted(CalendarMonthCellView(cell: cell, calendar: h.engine.rangeCalendar, categories: []) {}, h).inspect()
-        #expect(throws: Never.self) { try sut.find(viewWithAccessibilityIdentifier: "calendar.todo.open.a") }
+        #expect(throws: Never.self) { try sut.find(viewWithAccessibilityIdentifier: "calendar.todo.chip.a") }
         #expect((try? sut.find(viewWithAccessibilityIdentifier: "calendar.todo.done.a")) == nil)
+    }
+
+    @Test func theWholeChipIsTheOpenButton() async throws {
+        let h = await loaded()
+        let sut = try hosted(CalendarTodoChip(block: block()), h).inspect()
+        let chip = try sut.find(viewWithAccessibilityIdentifier: "calendar.todo.chip.a")
+        #expect(throws: Never.self) { try chip.button() }
+        #expect(throws: Never.self) { try chip.find(viewWithAccessibilityIdentifier: "calendar.todo.done.a") }
+    }
+
+    @Test func aChipTapInTheGridNeverRunsTheSlotAction() async throws {
+        let h = await loaded()
+        let key = DayKey(day(2026, 3, 4, 12), calendar: h.engine.rangeCalendar)
+        let math = CalendarGridMath(day: key, calendar: h.engine.rangeCalendar, hourHeight: UIMetrics.calendarHourHeight)
+        var slots = 0
+        var actions = CalendarGridActions()
+        actions.slot = { _, _, _ in slots += 1 }
+        let column = CalendarDayColumn(
+            day: key, placed: CalendarBlockLayout.place([block()], within: math.interval), texts: [:], math: math,
+            now: nil, categories: [], calendar: h.engine.rangeCalendar, actions: actions
+        )
+        let sut = try hosted(column, h).inspect()
+        try sut.find(viewWithAccessibilityIdentifier: "calendar.todo.chip.a").button().tap()
+        #expect(slots == 0)
+        #expect(h.todos.calls.isEmpty)
     }
 }

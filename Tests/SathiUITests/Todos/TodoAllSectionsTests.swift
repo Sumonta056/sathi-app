@@ -33,4 +33,13 @@ struct TodoAllSectionsTests {
         let sut = try hosted(TodoItemsColumn(selection: selection), h).inspect()
         #expect((try? sut.find(viewWithAccessibilityIdentifier: "todos.section.inbox")) == nil)
     }
+
+    @Test func theSideColumnListsMatchTheAllSectionsOrder() {
+        let a = TodoList(id: "a", name: "A", colorHex: "#FF3B30", accountID: "i", accountName: "iCloud", canEdit: true)
+        let x = TodoList(id: "x", name: "X", colorHex: "#FF3B30", accountID: "w", accountName: "Work", canEdit: true)
+        let b = TodoList(id: "b", name: "B", colorHex: "#FF3B30", accountID: "i", accountName: "iCloud", canEdit: true)
+        let groups = TodoSideColumn.groups([a, x, b])
+        #expect(groups.map(\.name) == ["iCloud", "Work"])
+        #expect(groups.flatMap(\.lists).map(\.id) == TodoRules.sideOrder([a, x, b]).map(\.id))
+    }
 }

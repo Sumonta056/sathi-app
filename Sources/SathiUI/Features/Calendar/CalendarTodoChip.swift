@@ -21,29 +21,31 @@ struct CalendarTodoChip: View {
 
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: UIMetrics.calendarChipRadius, style: .continuous)
-        HStack(spacing: UIMetrics.calendarTodoTickGap) {
-            if showsTick { tick }
-            Button { editing = true } label: {
-                HStack(spacing: 0) {
-                    Text(verbatim: block.title)
-                        .font(Typography.tracker(UIMetrics.calendarChipFont, .semibold))
-                        .foregroundStyle(look.text)
-                        .lineLimit(1)
-                    Spacer(minLength: 0)
+        Button { editing = true } label: {
+            HStack(spacing: UIMetrics.calendarTodoTickGap) {
+                if showsTick {
+                    Color.clear.frame(width: UIMetrics.calendarTodoTickHit, height: UIMetrics.calendarTodoTickHit)
                 }
-                .contentShape(Rectangle())
+                Text(verbatim: block.title)
+                    .font(Typography.tracker(UIMetrics.calendarChipFont, .semibold))
+                    .foregroundStyle(look.text)
+                    .lineLimit(1)
+                Spacer(minLength: 0)
             }
-            .buttonStyle(.plain)
-            .accessibilityIdentifier("calendar.todo.open." + todoID)
-            .popover(isPresented: $editing, arrowEdge: .trailing) {
-                CalendarTodoPopover(todoID: todoID) { editing = false }
-                    .environmentObject(e)
-            }
+            .padding(UIMetrics.calendarChipPadding)
+            .frame(maxWidth: .infinity, minHeight: UIMetrics.calendarChipHeight, maxHeight: UIMetrics.calendarChipHeight, alignment: .leading)
+            .background(shape.fill(look.fill))
+            .overlay(shape.strokeBorder(look.stroke ?? .clear, lineWidth: UIMetrics.cardBorder))
+            .contentShape(shape)
         }
-        .padding(UIMetrics.calendarChipPadding)
-        .frame(maxWidth: .infinity, minHeight: UIMetrics.calendarChipHeight, maxHeight: UIMetrics.calendarChipHeight, alignment: .leading)
-        .background(shape.fill(look.fill))
-        .overlay(shape.strokeBorder(look.stroke ?? .clear, lineWidth: UIMetrics.cardBorder))
+        .buttonStyle(.plain)
+        .overlay(alignment: .leading) {
+            if showsTick { tick.padding(.leading, UIMetrics.calendarChipPadding.leading) }
+        }
+        .popover(isPresented: $editing, arrowEdge: .trailing) {
+            CalendarTodoPopover(todoID: todoID) { editing = false }
+                .environmentObject(e)
+        }
         .accessibilityIdentifier("calendar.todo.chip." + todoID)
     }
 

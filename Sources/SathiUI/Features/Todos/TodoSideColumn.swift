@@ -81,15 +81,13 @@ struct TodoSideColumn: View {
     }
 
     static func groups(_ lists: [TodoList]) -> [TodoListGroup] {
-        var out: [TodoListGroup] = []
-        for list in lists {
-            if let i = out.firstIndex(where: { $0.name == list.accountName }) {
-                out[i].lists.append(list)
+        TodoRules.sideOrder(lists).reduce(into: []) { out, list in
+            if out.last?.name == list.accountName {
+                out[out.count - 1].lists.append(list)
             } else {
                 out.append(TodoListGroup(name: list.accountName, lists: [list]))
             }
         }
-        return out
     }
 }
 
