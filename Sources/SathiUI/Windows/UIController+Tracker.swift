@@ -37,7 +37,7 @@ extension UIController {
     private func newPromptModel(_ state: TrackerPromptState) -> ActivityPromptModel {
         let model = ActivityPromptModel(state)
         guard trackerPromptPanel != nil, let old = trackerPromptModel, !old.answered,
-              state.kind != .eventAsk, trackerPromptKind != .eventAsk else { return model }
+              state.kind != .eventAsk, state.kind != .todoDue, trackerPromptKind != .eventAsk else { return model }
         model.carry(from: old)
         return model
     }

@@ -21,6 +21,9 @@ struct PromptCommands {
             model.answered = true
             if let category = model.draft.category { actions.pickEventCategory(category) }
             actions.answerEvent(true)
+        case .todo:
+            guard let id = model.todoID, let draft = model.draft.committed else { return }
+            model.answered = actions.startTodo(id, draft, model.switchAt)
         case .ask, .shortcut, .ends, .back:
             guard let draft = model.draft.committed else { return }
             model.answered = actions.start(draft, model.switchAt)
@@ -55,6 +58,13 @@ struct PromptCommands {
         case .skip: actions.skip(screen.reason == .ends ? nil : model.switchAt)
         case .close: actions.close()
         case .answerNo: actions.answerEvent(false)
+        case .later: actions.close()
         }
+    }
+
+    func doneTodo() {
+        guard !model.answered, let id = model.todoID else { return }
+        model.answered = true
+        actions.doneTodo(id)
     }
 }

@@ -25,6 +25,7 @@ extension Night {
         case .ends: promptEnds
         case .back: promptBack
         case .event: promptEvent
+        case .todo: promptTodo
         }
     }
 }

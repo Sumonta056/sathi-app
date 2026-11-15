@@ -6,7 +6,6 @@ extension Copywriter {
     package static let todoDone = "Done"
     package static let todoStartIt = "Start it"
     package static let todoSwitchToIt = "Switch to it"
-    package static let todoMarkDone = "Mark done"
     package static let todoNotYet = "Not yet"
     package static let todoDueNow = "DUE NOW"
     package static let todoPickHint = "Tap a to-do to pick it."

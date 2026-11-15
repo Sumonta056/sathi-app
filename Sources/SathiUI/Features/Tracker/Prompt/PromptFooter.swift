@@ -8,7 +8,7 @@ struct PromptFooter: View {
     var body: some View {
         HStack(spacing: UIMetrics.promptFooterGap) {
             Button(action: commands.skip) {
-                Text(verbatim: Copywriter.trackerSkip)
+                Text(verbatim: screen.skip == .later ? Copywriter.todoLater : Copywriter.trackerSkip)
                     .font(Typography.tracker(UIMetrics.promptButtonFont, .semibold))
                     .foregroundStyle(Night.promptSecondary)
                     .padding(.horizontal, UIMetrics.promptSkipPadding)
@@ -18,6 +18,7 @@ struct PromptFooter: View {
             }
             .buttonStyle(TrackerPressStyle())
             .modifier(PromptKey.skip)
+            if let label = screen.doneLabel { PromptTodoDoneButton(label: label, action: commands.doneTodo) }
             Button(action: commands.start) {
                 Text(verbatim: startLabel)
                     .font(Typography.tracker(UIMetrics.promptStartFont, .heavy))
@@ -55,6 +56,7 @@ struct PromptFooter: View {
         case .skip: "tracker.skip"
         case .close: "tracker.close"
         case .answerNo: "tracker.no"
+        case .later: "tracker.later"
         }
     }
 }

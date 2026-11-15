@@ -11,6 +11,7 @@ struct DaySummaryCard: View {
             VStack(alignment: .leading, spacing: UIMetrics.summaryRowsSpacing) {
                 ForEach(summary.rows, id: \.id) { DaySummaryRowView(row: $0) }
             }
+            if let t = summary.todos { DaySummaryTodosLine(todos: t) }
             Button { e.closeDaySummary() } label: {
                 Text("Good night").frame(maxWidth: .infinity)
             }

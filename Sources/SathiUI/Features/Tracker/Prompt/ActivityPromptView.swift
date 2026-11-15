@@ -39,8 +39,12 @@ struct ActivityPromptView: View {
             PromptHeader(screen: screen, state: state, model: model, onSkip: commands.skip, onDrop: onDrop)
             Night.promptCardLine.frame(height: UIMetrics.promptBorder)
             HStack(spacing: 0) {
-                PromptRecentPane(model: model, state: state)
-                    .modifier(PromptDimmed(on: goingAway))
+                if screen.todos.isEmpty {
+                    PromptRecentPane(model: model, state: state)
+                        .modifier(PromptDimmed(on: goingAway))
+                } else {
+                    PromptTodoPane(model: model, todos: screen.todos)
+                }
                 Night.promptCardLine.frame(width: UIMetrics.promptBorder)
                 formColumn(commands)
             }
@@ -70,6 +74,7 @@ struct ActivityPromptView: View {
 
     private func main(_ commands: PromptCommands) -> some View {
         VStack(alignment: .leading, spacing: UIMetrics.promptBodyGap) {
+            if let ask = screen.markDone { PromptTodoDoneCard(ask: ask, actions: state.actions) }
             if let card = screen.card {
                 PromptRunningCard(card: card, screen: screen, state: state, commands: commands)
                 PromptOrSwitch()

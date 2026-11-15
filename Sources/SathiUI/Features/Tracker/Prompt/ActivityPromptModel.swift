@@ -13,6 +13,7 @@ final class ActivityPromptModel: ObservableObject {
     @Published var awayPick: PromptAwayPick?
     @Published var awayAdding = false
     @Published var awayNewName = ""
+    @Published var todoID: String?
     let places: PromptWhereForm
     private let nowChoice: Date?
     private let allowsAway: Bool
@@ -22,6 +23,8 @@ final class ActivityPromptModel: ObservableObject {
     init(_ state: TrackerPromptState) {
         var draft = state.draft
         if let event = state.event, state.kind == .eventAsk, draft.text.isEmpty { draft.text = event.title }
+        let firstTodo = state.kind == .todoDue ? state.todos.first : nil
+        if let firstTodo { draft.text = firstTodo.title }
         self.draft = draft
         let screen = ActivityPromptBuilder.screen(state)
         nowChoice = screen.startedChoices.last
@@ -29,6 +32,7 @@ final class ActivityPromptModel: ObservableObject {
         started = nowChoice
         calendars = TrackerCalendarInfo(access: state.calendarAccess, calendars: state.calendars, defaultID: state.defaultCalendarID)
         places = PromptWhereForm(state)
+        todoID = firstTodo?.id
     }
 
     var switchAt: Date? {
@@ -68,5 +72,10 @@ final class ActivityPromptModel: ObservableObject {
             calendars = answer
             if let id = answer.tickID { draft.calendarID = id }
         }
+    }
+
+    func pick(todo: PromptTodo) {
+        todoID = todo.id
+        draft.text = todo.title
     }
 }

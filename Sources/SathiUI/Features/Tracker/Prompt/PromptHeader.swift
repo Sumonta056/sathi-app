@@ -79,6 +79,7 @@ struct PromptHeader: View {
         case .ends: "flag"
         case .back: "door.left.hand.open"
         case .event: "calendar"
+        case .todo: "checkmark.circle"
         }
     }
 }
