@@ -6,6 +6,7 @@ struct PromptHeader: View {
     let state: TrackerPromptState
     let model: ActivityPromptModel
     let onSkip: () -> Void
+    var onDrop: () -> Bool = { true }
 
     var body: some View {
         HStack(alignment: .top, spacing: UIMetrics.promptHeaderGap) {
@@ -26,6 +27,7 @@ struct PromptHeader: View {
             close
         }
         .padding(UIMetrics.promptHeaderPadding)
+        .background(PromptDragHandle(onDrop: onDrop))
         .background(Night.promptHeader)
         .overlay(alignment: .top) { color.frame(height: UIMetrics.promptTopBar) }
     }

@@ -7,6 +7,7 @@ final class ActivityPromptModel: ObservableObject {
     @Published var started: Date?
     @Published var showsStarted = false
     @Published var showsAll = false
+    @Published var showsAllCalendars = false
     @Published var calendars: TrackerCalendarInfo
     @Published var awayOn = false
     @Published var awayPick: PromptAwayPick?

@@ -207,6 +207,19 @@ Branch: `feat/calendar-page` (worktree `.worktrees/calendar`)
 - [ ] User: hand tests (real `EKEventStoreChanged`, `ical://ekevent` link, merge with real calendar events), `perf.sh --windows`, merge to `main`, push
 - [ ] Website (later; the page is experimental)
 
+## Phase 22: Main window fit and activity prompt fix
+
+Spec: `docs/specs/phase-22-window-fit.md`
+Branch: `feat/window-fit` (worktree `../Sathi-window-fit`), tracks `feat/wf-prompt`, `feat/wf-window`, `feat/wf-narrow`
+
+- [x] Rules and words (business-logic Activity tracker rule 3, GLOSSARY Narrow and Wide layout)
+- [x] Track A: activity prompt 1040×720 for every reason, no scroll, paired rows, native drag, drop onto the display with the larger part
+- [x] Track B: Main window fills the pointer display's visible frame, min 640×520, drag strip, fit on display change keeps its shape
+- [x] Track C: narrow layout below 900 px (rail, Today, Activities drawer below 1100, Calendar, Reports, Settings rows)
+- [x] Merge, checks (tests, lint, release build), real prompt check (1040×720, no scroll)
+- [ ] User: `perf.sh`, `perf.sh --windows`, hand tests (strip drag and zoom across displays, tile then move, prompt drag across displays)
+- [ ] Website
+
 ## Later
 
 - Days off: a lock or Nudgy bubble that shows at 23:58 stays after midnight into a day off (only a settings change closes it, rule 11). Close it at the first tick of a new day if users notice
@@ -274,3 +287,4 @@ Branch: `feat/calendar-page` (worktree `.worktrees/calendar`)
 | 2026-11-09 | Daily activity tracker (phase 17): separate from time blocks first, replaces them later (ADR 0001). Off by default. Prompts never go away by themselves. Scheduled prompts sit in the corner and never take the keyboard; the center panel opens only from the shortcut, the menu, or after Away. Raw activities are saved per month; reports are built on demand. |
 | 2026-11-11 | Phase 18: one main window (Today, Activities, Reports, Settings) replaces the Settings and Reports windows; Dock icon only while it is open; the menu panel becomes a short quick panel; the 5 tracker prompts become 1 activity prompt at the screen center that takes the keyboard only when the user opened it; Reports and Activities get Day / Week / Month ranges with compare. Buddy reminders do not change. No saved-data change. |
 | 2026-10-24 | Phase 1 fix: a schedule change just after midnight counts the new day, not yesterday. |
+| 2026-11-15 | Phase 22: the Main window opens filling the visible frame of the pointer display and relies on macOS tiling (no own snap); pages use a narrow layout below 900 px wide. The activity prompt has one size, 1040×720, with no scroll, and a native drag. No saved-data change. |

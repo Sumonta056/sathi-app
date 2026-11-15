@@ -16,6 +16,10 @@ struct MainViewTests {
         #expect(throws: Never.self) { try main(.today).find(MainSidebar.self) }
     }
 
+    @Test func hasTheWindowDragStrip() throws {
+        #expect(throws: Never.self) { try main(.today).find(WindowDragStrip.self) }
+    }
+
     @Test func trackerSettingsPageShowsTheTrackerSettings() throws {
         #expect(throws: Never.self) { try main(.settings(.tracker)).find(TrackerSettingsPage.self) }
     }

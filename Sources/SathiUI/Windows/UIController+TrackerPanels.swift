@@ -60,6 +60,15 @@ extension UIController {
 
     private func trackerPanelResized(_ p: NSPanel) {
         guard let c = trackerCenters[ObjectIdentifier(p)] else { return }
-        p.setFrameOrigin(NSPoint(x: c.x - p.frame.width / 2, y: c.y - p.frame.height / 2))
+        placeTracker(p, center: c, screen: p.screen ?? activeScreen)
+    }
+
+    private func placeTracker(_ p: NSPanel, center c: NSPoint, screen: NSScreen?) {
+        var origin = NSPoint(x: c.x - p.frame.width / 2, y: c.y - p.frame.height / 2)
+        if let f = screen?.visibleFrame {
+            origin = PromptFit.clamped(origin: origin, size: p.frame.size, screen: f, margin: UIMetrics.promptScreenMargin)
+        }
+        p.setFrameOrigin(origin)
+        trackerCenters[ObjectIdentifier(p)] = NSPoint(x: p.frame.midX, y: p.frame.midY)
     }
 }

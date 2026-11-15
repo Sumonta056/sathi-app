@@ -131,7 +131,7 @@ Settings and Reports are 2 separate windows, and the menu panel holds a long lis
 
 51a. Running card (design A, 2026-11-12). Every reason that has a Keep action (rule 52) shows a card at the top of the right pane, above the text field, with a border in the reason color. Below the card a line says "or switch to something new". The card holds:
     - a tag: ends and shortcut "NOW RUNNING"; back "BEFORE YOU LEFT"; ask after a buddy session "LAST ACTIVITY";
-    - the activity name, its category with its color dot, and a detail line: running "Started {time} · {n} of {length} min" (Open: "Started {time} · {n} min so far"); back: "{text} stopped at {time} …" when Away stopped it, else no detail line; ask: "{session} ended at {time}.";
+    - the activity name, its category with its color dot, and a detail line: running "Started {time} · {n} of {length} min", past the length "Started {time} · {n} min · {over} min over" (Open: "Started {time} · {n} min so far"); back: "{text} stopped at {time} …" when Away stopped it, else no detail line; ask: "{session} ended at {time}.";
     - a progress bar for a running activity with a length (elapsed ÷ length, at most 1), fixed when the prompt shows (no timer);
     - the Keep button (rule 52 label), filled in the reason color.
     With a card: the ends title is "Still on {text}?"; the back title is "Welcome back. Where were you?"; the header message is short: ends "{n} min so far. Keep going, or switch." (late keeps "This question waited {n} min."), shortcut "Keep it, or type a new one to switch.", back "You were away {n} min.", ask "Continue it, or start something new.". The text field has no accent border while it is empty.

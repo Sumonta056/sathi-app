@@ -5,17 +5,7 @@ struct BlockDefaultCalendarRow: View {
     @EnvironmentObject var e: Engine
 
     var body: some View {
-        HStack(alignment: .top, spacing: UIMetrics.blockSettingsColumnSpacing) {
-            VStack(alignment: .leading, spacing: UIMetrics.textSpacing) {
-                Text(verbatim: Copywriter.blockSettingsDefaultCalendar)
-                    .font(Typography.rowLabel)
-                    .foregroundStyle(Night.text)
-                Text(verbatim: Copywriter.blockSettingsDefaultHint)
-                    .font(Typography.hint)
-                    .foregroundStyle(Night.muted)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .frame(width: UIMetrics.blockSettingsLabelWidth, alignment: .leading)
+        TrackerStackedRow(label: Copywriter.blockSettingsDefaultCalendar, hint: Copywriter.blockSettingsDefaultHint) {
             if e.calendarAccess == .allowed {
                 BlockDefaultCalendarList()
             } else {
@@ -24,12 +14,6 @@ struct BlockDefaultCalendarRow: View {
                     .foregroundStyle(Night.faint)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-        }
-        .padding(UIMetrics.rowPadding)
-        .overlay(alignment: .top) {
-            Rectangle()
-                .fill(Night.divider)
-                .frame(height: UIMetrics.dividerHeight)
         }
     }
 }

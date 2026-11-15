@@ -9,7 +9,7 @@ extension UIMetrics {
     static let ringStartAngle: Double = -90
     static let actionHeight: CGFloat = 34
     static let breakMenuHeight: CGFloat = 32
-    static let windowFitTolerance: CGFloat = 0.5
+    static let menuFitTolerance: CGFloat = 0.5
     static let pressedOpacity: Double = 0.8
     static let dashLength: CGFloat = 5
     static let cardPadding = EdgeInsets(top: 12, leading: 14, bottom: 12, trailing: 14)

@@ -14,26 +14,43 @@ struct PromptForm: View {
             VStack(alignment: .leading, spacing: UIMetrics.promptRowGap) {
                 PromptBoxRow(label: Copywriter.trackerCategory) { PromptCategoryBoxes(model: model, categories: state.categories) }
                     .modifier(PromptDimmed(on: goingAway))
-                if screen.allowsAway {
-                    PromptBoxRow(label: Copywriter.trackerAway, labelTop: 0, labelColor: Night.sproutLight) {
-                        PromptAwayRow(model: model, form: model.places, state: state)
-                    }
+                if screen.allowsAway || showsQuiet { awayAndQuiet }
+                if !goingAway {
+                    forAndAsk
+                    PromptBoxRow(label: Copywriter.trackerCalendar) { PromptCalendarBoxes(model: model, state: state, screen: screen) }
                 }
-                if !goingAway { rows }
             }
         }
     }
 
-    @ViewBuilder private var rows: some View {
-        PromptBoxRow(label: Copywriter.trackerFor) { PromptLengthBoxes(model: model, state: state) }
-        if !isEvent {
-            PromptBoxRow(label: Copywriter.trackerAskMe) { PromptAskBoxes(model: model) }
-        }
-        PromptBoxRow(label: Copywriter.trackerCalendar) { PromptCalendarBoxes(model: model, state: state, screen: screen) }
-        if !isEvent {
-            PromptBoxRow(label: Copywriter.activityPromptQuiet, labelTop: 0) { PromptQuietRow(model: model) }
+    private var awayAndQuiet: some View {
+        HStack(alignment: .top, spacing: UIMetrics.promptPairGap) {
+            if screen.allowsAway {
+                PromptBoxRow(label: Copywriter.trackerAway, labelTop: 0, labelColor: Night.sproutLight, fills: model.awayOn || !showsQuiet) {
+                    PromptAwayRow(model: model, form: model.places, state: state)
+                }
+            }
+            if showsQuiet {
+                PromptBoxRow(
+                    label: Copywriter.activityPromptQuiet, labelTop: 0,
+                    labelWidth: screen.allowsAway ? nil : UIMetrics.promptRowLabelWidth, fills: !screen.allowsAway
+                ) {
+                    PromptQuietRow(model: model)
+                }
+            }
         }
     }
+
+    private var forAndAsk: some View {
+        HStack(alignment: .top, spacing: UIMetrics.promptPairGap) {
+            PromptBoxRow(label: Copywriter.trackerFor, fills: isEvent) { PromptLengthBoxes(model: model, state: state) }
+            if !isEvent {
+                PromptBoxRow(label: Copywriter.trackerAskMe, labelWidth: nil) { PromptAskBoxes(model: model) }
+            }
+        }
+    }
+
+    private var showsQuiet: Bool { !goingAway && !isEvent }
 
     private var goingAway: Bool { model.goingAway(on: screen) != nil }
 

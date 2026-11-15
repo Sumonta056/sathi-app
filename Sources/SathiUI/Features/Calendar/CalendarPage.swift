@@ -8,10 +8,13 @@ struct CalendarPage: View {
     @State var focus: CalendarPageFocus
     @State var selected: Set<ActivityID> = []
     @State var mergeError: String?
+    @State var narrowStats: Bool
+    @Environment(\.mainLayout) var layout
     @EnvironmentObject var e: Engine
 
-    init(day: DayKey? = nil, range: CalendarPageRange? = nil, editing: CalendarActivityEdit? = nil) {
+    init(day: DayKey? = nil, range: CalendarPageRange? = nil, editing: CalendarActivityEdit? = nil, narrowStats: Bool = false) {
         self.day = day
+        _narrowStats = State(initialValue: narrowStats)
         _picked = State(initialValue: range)
         _focus = State(initialValue: CalendarPageFocus(editing: editing))
     }
@@ -19,15 +22,16 @@ struct CalendarPage: View {
     var body: some View {
         let range = shown
         let data = e.calendarAccess == .allowed ? memo.value(range, end: range.interval.end, engine: e) { $0.calendarPage($1) } : nil
-        let sidePanelShown = e.data.prefs.calendarPage.sidePanelShown
+        let sidePanelShown = layout.isNarrow ? narrowStats : e.data.prefs.calendarPage.sidePanelShown
         VStack(alignment: .leading, spacing: UIMetrics.reportsPageGap) {
             CalendarPageHeader(
                 range: binding(range), now: e.now, calendar: e.rangeCalendar, stats: data?.stats, sidePanelShown: sidePanelShown,
-                toggleSidePanel: { e.setCalendarSidePanelShown(!sidePanelShown) }, rowMinutes: rowMinutes
+                toggleSidePanel: toggleSidePanel, rowMinutes: rowMinutes
             )
             content(range, data)
         }
         .padding(UIMetrics.mainContentPadding)
+        .overlay { drawer }
         .onAppear {
             e.refreshCalendarAccess()
             e.calendarPageOpened()
@@ -35,6 +39,11 @@ struct CalendarPage: View {
         .onDisappear { e.calendarPageClosed() }
         .onChange(of: day) { _ in picked = nil }
         .modifier(CalendarRangeReset(range: range, focus: $focus, selected: $selected, error: $mergeError) { e.clearMergeUndo() })
+    }
+
+    private func toggleSidePanel() {
+        if layout.isNarrow { return narrowStats.toggle() }
+        e.setCalendarSidePanelShown(!e.data.prefs.calendarPage.sidePanelShown)
     }
 
     private var shown: CalendarPageRange {
@@ -53,6 +62,7 @@ struct CalendarPage: View {
                 }
                 side(data, kind: range.kind)
             }
+            .overlay(alignment: .topTrailing) { floating(data, kind: range.kind) }
             .modifier(CalendarSelectionPrune(blocks: data.blocks, selected: $selected, error: $mergeError))
         } else {
             CalendarAccessGate()
