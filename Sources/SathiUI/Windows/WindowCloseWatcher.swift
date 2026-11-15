@@ -4,7 +4,10 @@ import AppKit
 final class WindowCloseWatcher: NSObject, NSWindowDelegate {
     var onClose: () -> Void = {}
     var lastVisibleFrame: CGRect?
-    var shapeFrame: CGRect?
+    var onShape: (CGRect) -> Void = { _ in }
+    var shapeFrame: CGRect? {
+        didSet { if let shapeFrame, shapeFrame != oldValue { onShape(shapeFrame) } }
+    }
     private var fitting = false
     private var pendingFit = false
     private var releaseMonitor: Any?

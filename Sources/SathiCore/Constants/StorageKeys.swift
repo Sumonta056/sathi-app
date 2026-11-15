@@ -20,4 +20,5 @@ package enum StorageKeys {
     package static let tempSuffix = ".tmp"
     package static let migrationMarker = "migrated-v1"
     package static let sidebarOpen = "sathi.ui.sidebarOpen"
+    package static let mainWindowFrame = "SathiMainWindow"
 }

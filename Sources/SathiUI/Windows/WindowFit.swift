@@ -5,11 +5,13 @@ enum WindowFit {
         case full, left, right, free
     }
 
-    static func openFrame(visible: CGRect) -> CGRect {
-        visible
+    static func openFrame(saved: CGRect?, screens: [CGRect], pointer: CGRect, defaultSize: CGSize) -> CGRect {
+        guard let saved else { return centered(defaultSize, in: pointer) }
+        if screens.contains(where: { $0.intersects(saved) }) { return saved }
+        return clamped(saved, into: pointer)
     }
 
-    static func shouldFillOnShow(isNewWindow: Bool, isVisible: Bool, isMiniaturized: Bool) -> Bool {
+    static func shouldPlaceOnShow(isNewWindow: Bool, isVisible: Bool, isMiniaturized: Bool) -> Bool {
         isNewWindow || !isVisible || isMiniaturized
     }
 
@@ -38,6 +40,12 @@ enum WindowFit {
         if near(frame.minX, area.minX) { return .left }
         if near(frame.maxX, area.maxX) { return .right }
         return .free
+    }
+
+    private static func centered(_ size: CGSize, in area: CGRect) -> CGRect {
+        let width = min(size.width, area.width)
+        let height = min(size.height, area.height)
+        return CGRect(x: area.midX - width / 2, y: area.midY - height / 2, width: width, height: height)
     }
 
     private static func clamped(_ frame: CGRect, into area: CGRect) -> CGRect {

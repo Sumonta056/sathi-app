@@ -37,11 +37,13 @@ package final class UIController: ReminderPresenter {
     var mainWindow: NSWindow?
     var mainRoute: MainRoute?
     let mainCloseWatcher = WindowCloseWatcher()
+    var mainFrames = MainFrameMemory()
     var mainWindowShown: (NSWindow) -> Void = UIController.bringToFront
     var mainWindowClosed: () -> Void = UIController.backToMenuBar
 
     package init() {
         mainCloseWatcher.onClose = { [weak self] in self?.mainWillClose() }
+        mainCloseWatcher.onShape = { [weak self] _ in self?.rememberMainFrame() }
     }
 
     package func showBubble(_ id: HabitID, _ level: Level) {

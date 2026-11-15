@@ -14,33 +14,51 @@ extension UIController {
             mainWindow = MainWindow.make(engine: engine, route: route, closeWatcher: mainCloseWatcher)
         }
         if let mainWindow {
-            fillIfOpening(mainWindow, isNew: isNew)
+            placeIfOpening(mainWindow, isNew: isNew)
             mainWindowShown(mainWindow)
         }
     }
 
     package func reopenMain() {
         guard let mainWindow else { return showMain(.today) }
-        fillIfOpening(mainWindow, isNew: false)
+        placeIfOpening(mainWindow, isNew: false)
         mainWindowShown(mainWindow)
     }
 
-    private func fillIfOpening(_ window: NSWindow, isNew: Bool) {
-        let fill = WindowFit.shouldFillOnShow(
+    private func placeIfOpening(_ window: NSWindow, isNew: Bool) {
+        let place = WindowFit.shouldPlaceOnShow(
             isNewWindow: isNew,
             isVisible: window.isVisible,
             isMiniaturized: window.isMiniaturized
         )
-        if fill { fillPointerScreen(window) }
+        if place { placeAtRememberedFrame(window) }
     }
 
-    private func fillPointerScreen(_ window: NSWindow) {
+    private func placeAtRememberedFrame(_ window: NSWindow) {
         let pointer = NSEvent.mouseLocation
         let screen = NSScreen.screens.first { NSMouseInRect(pointer, $0.frame, false) } ?? NSScreen.main
         guard !window.styleMask.contains(.fullScreen), let visible = screen?.visibleFrame else { return }
-        mainCloseWatcher.lastVisibleFrame = visible
-        window.setFrame(WindowFit.openFrame(visible: visible), display: true)
+        let frame = WindowFit.openFrame(
+            saved: mainFrames.frame(loadingInto: window),
+            screens: NSScreen.screens.map(\.visibleFrame),
+            pointer: visible,
+            defaultSize: UIMetrics.mainWindowSize
+        )
+        mainCloseWatcher.lastVisibleFrame = Self.visibleFrame(holding: frame) ?? visible
+        window.setFrame(frame, display: true)
         mainCloseWatcher.shapeFrame = window.frame
+    }
+
+    private static func visibleFrame(holding frame: CGRect) -> CGRect? {
+        func area(_ r: CGRect) -> CGFloat { r.isNull ? 0 : r.width * r.height }
+        return NSScreen.screens.map(\.visibleFrame)
+            .filter { $0.intersects(frame) }
+            .max { area($0.intersection(frame)) < area($1.intersection(frame)) }
+    }
+
+    func rememberMainFrame() {
+        guard let mainWindow, !mainWindow.styleMask.contains(.fullScreen) else { return }
+        mainFrames.save(mainWindow)
     }
 
     func mainWillClose() {

@@ -13,11 +13,6 @@ struct WindowFitTests {
         WindowFit.moved(frame: frame, from: from, to: to, tolerance: tol)
     }
 
-    @Test func openFrameIsThePointerDisplayVisibleFrame() {
-        #expect(WindowFit.openFrame(visible: screenA) == screenA)
-        #expect(WindowFit.openFrame(visible: screenB) == screenB)
-    }
-
     @Test func toleranceIsAFewPixels() {
         #expect(tol >= 2)
         #expect(tol <= 16)
@@ -96,17 +91,17 @@ struct WindowFitTests {
 
 @Suite("Window fit show and shape rules")
 struct WindowFitShowTests {
-    @Test func newWindowFills() {
-        #expect(WindowFit.shouldFillOnShow(isNewWindow: true, isVisible: false, isMiniaturized: false))
+    @Test func newWindowIsPlaced() {
+        #expect(WindowFit.shouldPlaceOnShow(isNewWindow: true, isVisible: false, isMiniaturized: false))
     }
 
-    @Test func hiddenOrMinimizedWindowFills() {
-        #expect(WindowFit.shouldFillOnShow(isNewWindow: false, isVisible: false, isMiniaturized: false))
-        #expect(WindowFit.shouldFillOnShow(isNewWindow: false, isVisible: true, isMiniaturized: true))
+    @Test func hiddenOrMinimizedWindowIsPlaced() {
+        #expect(WindowFit.shouldPlaceOnShow(isNewWindow: false, isVisible: false, isMiniaturized: false))
+        #expect(WindowFit.shouldPlaceOnShow(isNewWindow: false, isVisible: true, isMiniaturized: true))
     }
 
     @Test func openWindowIsLeftAsTheUserTiledIt() {
-        #expect(!WindowFit.shouldFillOnShow(isNewWindow: false, isVisible: true, isMiniaturized: false))
+        #expect(!WindowFit.shouldPlaceOnShow(isNewWindow: false, isVisible: true, isMiniaturized: false))
     }
 
     @Test func resizeRecordsShapeOnlyWhenIdle() {
