@@ -31,6 +31,13 @@ struct ActivityPromptTodoBuilderTests {
         #expect(s.card?.text == "Code review")
     }
 
+    @Test func theScreenShowsAtMostTheCappedNumberOfTodosSoThePaneNeverScrolls() {
+        let more = (1 ... 7).map { makeTodo("x\($0)", "Task \($0)", due: TodoDue(date: Fix.at(10, 30), hasTime: true)) }
+        let s = Fix.screen(.todoDue) { $0.todos.append(contentsOf: more) }
+        #expect(Limits.promptTodosShown == 5)
+        #expect(s.todos.map(\.id) == ["a", "x1", "x2", "x3", "x4"])
+    }
+
     @Test func theScreenListsTheDueTodosInOrder() {
         let s = Fix.screen(.todoDue) { $0.todos.append(second) }
         #expect(s.todos.map(\.id) == ["a", "b"])

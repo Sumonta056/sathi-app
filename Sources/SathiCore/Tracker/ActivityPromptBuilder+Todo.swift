@@ -15,7 +15,7 @@ extension ActivityPromptBuilder {
         p.keep = r.map { .keep($0.text) }
         p.card = r.map { runningCard($0, now: s.now, calendar: s.calendar) }
         p.doneLabel = Copywriter.todoDone
-        p.todos = s.todos.map { promptTodo($0, s) }
+        p.todos = s.todos.prefix(Limits.promptTodosShown).map { promptTodo($0, s) }
         return p
     }
 
