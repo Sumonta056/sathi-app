@@ -9,6 +9,7 @@ extension Engine {
         mergeOldRowsOnce()
         restoreTracker()
         syncCalendarChangeListener()
+        startTodos()
         tick()
     }
 

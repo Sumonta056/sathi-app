@@ -16,6 +16,7 @@ package final class Engine: ObservableObject {
             if oldValue.prefs.general.snoozeLimit != data.prefs.general.snoozeLimit { refreshIgnoreDeadlines() }
             if oldValue.prefs.timeBlock.display != data.prefs.timeBlock.display { blockDisplayChanged() }
             if oldValue.prefs.tracker != data.prefs.tracker { trackerPrefsChanged(from: oldValue.prefs.tracker) }
+            if oldValue.prefs.todos != data.prefs.todos { todosPrefsChanged(from: oldValue.prefs.todos) }
             if oldValue.prefs != data.prefs { store.savePrefs(data.prefs) }
             if oldValue.live != data.live { store.saveLive(data.live) }
         }
@@ -37,6 +38,8 @@ package final class Engine: ObservableObject {
     @Published package internal(set) var waitingCalendarPick: String?
     @Published package internal(set) var calendarAccess: CalendarAccess
     @Published package internal(set) var mergeUndo: ManualMergeUndo?
+    @Published package internal(set) var todoSnapshot = TodoSnapshot.empty
+    @Published package internal(set) var todoAccess = TodoAccess.notAsked
 
     package let status = StatusModel()
     let store: StateStore
@@ -73,6 +76,7 @@ package final class Engine: ObservableObject {
     var calendarPageOpen = false
     var calendarPageRead: CalendarPageRead?
     var calendarChangesListening = false
+    var todoRuntime = TodoRuntime()
     var calendarPageEventsByID: [String: CalendarEventInfo] = [:]
 
     package init(
@@ -118,16 +122,7 @@ package final class Engine: ObservableObject {
         calendarAccess = calendarWriter.access
         data = loaded
         now = n
-        habits = Dictionary(uniqueKeysWithValues: HabitID.allCases.map { id in
-            let r = id.rules(loaded.prefs, calendar: calendar)
-            let due = r.nextDue(
-                now: n,
-                lastDone: loaded.lastDone(id),
-                doneToday: r.total(on: n, data: loaded),
-                skipToday: Self.skipped(id, on: n, live: loaded.live, calendar: calendar)
-            )
-            return (id, HabitState(nextDue: due))
-        })
+        habits = Self.initialHabits(loaded, now: n, calendar: calendar)
         trackerRuntime.away = loaded.live.tracker.away
     }
 

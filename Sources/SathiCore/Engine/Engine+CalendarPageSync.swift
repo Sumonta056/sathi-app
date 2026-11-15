@@ -22,7 +22,7 @@ extension Engine {
     }
 
     func syncCalendarChangeListener() {
-        let wants = calendarPageOpen || trackerWantsCalendarChanges
+        let wants = calendarPageOpen || trackerWantsCalendarChanges || todosWantChanges
         guard wants != calendarChangesListening else { return }
         calendarChangesListening = wants
         if wants {
@@ -34,6 +34,7 @@ extension Engine {
 
     func calendarStoreChanged() {
         markTrackerEventsStale()
+        todosStoreChanged()
         if calendarPageOpen {
             refreshCalendarChoices()
             storesChanged()

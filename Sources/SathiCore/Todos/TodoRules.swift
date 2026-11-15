@@ -15,6 +15,15 @@ package enum TodoRules {
         }
     }
 
+    package static func sortedByDoneAt(_ items: [Todo]) -> [Todo] {
+        items.sorted { a, b in
+            let x = a.doneAt ?? .distantPast
+            let y = b.doneAt ?? .distantPast
+            if x != y { return x > y }
+            return a.title < b.title
+        }
+    }
+
     package static func isDueToday(_ t: Todo, now: Date, calendar: Calendar) -> Bool {
         guard !t.isDone, let due = t.due else { return false }
         return calendar.startOfDay(for: due.date) <= calendar.startOfDay(for: now)

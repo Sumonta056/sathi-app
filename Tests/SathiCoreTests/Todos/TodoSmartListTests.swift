@@ -73,6 +73,20 @@ struct TodoSmartListTests {
         #expect(!TodoSmartList.all.matches(done, now: now, calendar: cal))
     }
 
+    @Test func completedWithTheSameDoneTimeSortByTitle() {
+        let at = z.date(2026, 3, 4, 8)
+        let tied = [
+            makeTodo("b", "Beta", done: true, doneAt: at),
+            makeTodo("a", "Alpha", done: true, doneAt: at)
+        ]
+        #expect(TodoSmartList.completed.todos(in: tied, now: now, calendar: cal).map(\.id) == ["a", "b"])
+    }
+
+    @Test func onTheSameDayADateOnlyTodoSortsBeforeATimedOne() {
+        let both = [makeTodo("timed", due: timed(4, 15)), makeTodo("dateOnly", due: dateOnly(4))]
+        #expect(TodoSmartList.today.todos(in: both, now: now, calendar: cal).map(\.id) == ["dateOnly", "timed"])
+    }
+
     @Test func emptyInputGivesEmptyLists() {
         for list in TodoSmartList.allCases {
             #expect(list.todos(in: [], now: now, calendar: cal).isEmpty)

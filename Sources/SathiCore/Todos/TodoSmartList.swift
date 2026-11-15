@@ -15,7 +15,7 @@ package enum TodoSmartList: String, CaseIterable, Sendable {
     package func todos(in items: [Todo], now: Date, calendar: Calendar) -> [Todo] {
         let hits = items.filter { matches($0, now: now, calendar: calendar) }
         if self == .completed {
-            return hits.sorted { ($0.doneAt ?? .distantPast) > ($1.doneAt ?? .distantPast) }
+            return TodoRules.sortedByDoneAt(hits)
         }
         return TodoRules.sorted(hits)
     }
