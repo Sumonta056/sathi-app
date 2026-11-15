@@ -11,21 +11,23 @@ struct ActivityPromptHeightTests {
         CalendarChoice(id: "c\($0)", title: "Calendar number \($0)", account: "iCloud", colorHex: 0x4CC3F5)
     }
 
-    private func height(maxHeight: CGFloat?, calendars: [CalendarChoice]) -> CGFloat {
+    private func size(visibleHeight: CGFloat?, calendars: [CalendarChoice]) -> CGSize {
         let s = Prompt.state(.stillOnIt) { $0.calendars = calendars }
         let model = ActivityPromptModel(s)
         model.showsAllCalendars = true
-        let view = ActivityPromptView(state: s, model: model, maxHeight: maxHeight)
-        return NSHostingView(rootView: view.environment(\.colorScheme, .dark)).fittingSize.height
+        let view = ActivityPromptView(state: s, model: model, visibleHeight: visibleHeight)
+        return NSHostingView(rootView: view.environment(\.colorScheme, .dark)).fittingSize
     }
 
-    @Test func aTallPromptStopsAtTheMaxHeight() {
-        #expect(height(maxHeight: nil, calendars: many) > 400)
-        #expect(height(maxHeight: 400, calendars: many) <= 400)
+    @Test func aPromptOnABigScreenIsAlwaysTheFixedSize() {
+        let fixed = CGSize(width: UIMetrics.activityPromptWidth, height: UIMetrics.activityPromptHeight)
+        #expect(size(visibleHeight: nil, calendars: []) == fixed)
+        #expect(size(visibleHeight: nil, calendars: many) == fixed)
+        #expect(size(visibleHeight: 1000, calendars: many) == fixed)
     }
 
-    @Test func aShortPromptKeepsItsOwnHeight() {
-        let free = height(maxHeight: nil, calendars: [])
-        #expect(height(maxHeight: free + 300, calendars: []) == free)
+    @Test func aShortScreenShrinksThePromptToTheScreenLessTheMargins() {
+        let height = size(visibleHeight: 600, calendars: many).height
+        #expect(height <= 600 - 2 * UIMetrics.promptScreenMargin)
     }
 }

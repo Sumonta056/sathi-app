@@ -12,9 +12,66 @@ struct PromptFitTests {
         PromptFit.clamped(origin: CGPoint(x: x, y: y), size: size ?? self.size, screen: screen ?? self.screen, margin: margin)
     }
 
-    @Test func theMaxHeightIsTheScreenLessBothMargins() {
-        #expect(PromptFit.maxHeight(screen: screen, margin: margin) == 860)
-        #expect(PromptFit.maxHeight(screen: CGRect(x: 0, y: 25, width: 1280, height: 775), margin: 12) == 751)
+    private let left = CGRect(x: 0, y: 0, width: 1440, height: 900)
+    private let right = CGRect(x: 1440, y: 0, width: 1920, height: 1080)
+
+    private func drop(_ frame: CGRect) -> CGRect {
+        PromptFit.dropped(frame: frame, screens: [left, right], margin: margin)
+    }
+
+    @Test func aLargeScreenGivesTheFixedSize() {
+        let size = PromptFit.size(screen: CGRect(x: 0, y: 0, width: 1920, height: 1080), margin: 16)
+        #expect(size == CGSize(width: UIMetrics.activityPromptWidth, height: UIMetrics.activityPromptHeight))
+        #expect(size == CGSize(width: 1040, height: 720))
+    }
+
+    @Test func aShortScreenShrinksTheHeightToTheScreenLessBothMargins() {
+        let size = PromptFit.size(screen: CGRect(x: 0, y: 25, width: 1440, height: 700), margin: 16)
+        #expect(size == CGSize(width: 1040, height: 668))
+    }
+
+    @Test func aNarrowScreenShrinksTheWidthToTheScreenLessBothMargins() {
+        let size = PromptFit.size(screen: CGRect(x: 0, y: 0, width: 1000, height: 900), margin: 16)
+        #expect(size == CGSize(width: 968, height: 720))
+    }
+
+    @Test func aScreenOf752FitsExactlyAndSmallerScrolls() {
+        let fits = CGRect(x: 0, y: 0, width: 1440, height: 752)
+        let short = CGRect(x: 0, y: 0, width: 1440, height: 751)
+        #expect(PromptFit.size(screen: fits, margin: 16).height == 720)
+        #expect(PromptFit.size(screen: short, margin: 16).height == 719)
+        #expect(!PromptFit.scrolls(screen: fits, margin: 16))
+        #expect(PromptFit.scrolls(screen: short, margin: 16))
+    }
+
+    @Test func aFrameInsideOneScreenIsDroppedWhereItIs() {
+        let frame = CGRect(x: 100, y: 100, width: 880, height: 400)
+        #expect(drop(frame) == frame)
+        let onRight = CGRect(x: 1600, y: 200, width: 880, height: 400)
+        #expect(drop(onRight) == onRight)
+    }
+
+    @Test func aFrameAcrossTwoScreensMovesToTheOneWithTheLargerPart() {
+        let mostlyLeft = CGRect(x: 800, y: 100, width: 880, height: 400)
+        let movedLeft = drop(mostlyLeft)
+        #expect(left.insetBy(dx: margin, dy: margin).contains(movedLeft))
+        #expect(movedLeft.size == mostlyLeft.size)
+        let mostlyRight = CGRect(x: 1100, y: 100, width: 880, height: 400)
+        let movedRight = drop(mostlyRight)
+        #expect(right.insetBy(dx: margin, dy: margin).contains(movedRight))
+        #expect(movedRight.size == mostlyRight.size)
+    }
+
+    @Test func aDroppedFrameIsInsideTheMarginsVertically() {
+        let low = CGRect(x: 1500, y: -100, width: 880, height: 400)
+        #expect(drop(low).minY == right.minY + margin)
+        let high = CGRect(x: 1500, y: 900, width: 880, height: 400)
+        #expect(drop(high).maxY == right.maxY - margin)
+    }
+
+    @Test func aFrameBeyondEveryScreenLandsInsideTheNearest() {
+        let off = CGRect(x: 3300, y: 100, width: 880, height: 400)
+        #expect(right.insetBy(dx: margin, dy: margin).contains(drop(off)))
     }
 
     @Test func aFrameInsideStaysWhereItIs() {
