@@ -6,6 +6,9 @@ struct PromptHeader: View {
     let state: TrackerPromptState
     let model: ActivityPromptModel
     let onSkip: () -> Void
+    var onMove: (CGSize) -> Void = { _ in }
+    @State private var lastMouse: CGPoint?
+    @GestureState private var dragging = false
 
     var body: some View {
         HStack(alignment: .top, spacing: UIMetrics.promptHeaderGap) {
@@ -28,6 +31,19 @@ struct PromptHeader: View {
         .padding(UIMetrics.promptHeaderPadding)
         .background(Night.promptHeader)
         .overlay(alignment: .top) { color.frame(height: UIMetrics.promptTopBar) }
+        .contentShape(Rectangle())
+        .gesture(drag)
+        .onChange(of: dragging) { if !$0 { lastMouse = nil } }
+    }
+
+    private var drag: some Gesture {
+        DragGesture(minimumDistance: UIMetrics.promptDragStart, coordinateSpace: .global)
+            .onChanged { _ in
+                let now = NSEvent.mouseLocation
+                onMove(BlockWidget.dragStep(from: lastMouse, to: now))
+                lastMouse = now
+            }
+            .updating($dragging) { _, state, _ in state = true }
     }
 
     private var color: Color { Night.reason(screen.reason) }

@@ -9,6 +9,8 @@ extension Copywriter {
     package static let activityPromptKeepItOrSwitch = "Keep it, or type a new one to switch."
     package static let activityPromptContinueOrStart = "Continue it, or start something new."
 
+    package static func activityPromptCalendarMore(_ count: Int) -> String { "+\(count) more" }
+
     package static func activityPromptStillTitle(_ text: String) -> String { "Still on " + text + "?" }
 
     package static func activityPromptKeepOrSwitch(minutes: Int) -> String { "\(minutes) min so far. Keep going, or switch." }
@@ -16,6 +18,7 @@ extension Copywriter {
     package static func activityPromptCardDetail(start: Date, minutes: Int, length: Int?, calendar: Calendar) -> String {
         let started = "Started " + trackerClock(start, calendar: calendar) + " · "
         guard let length else { return started + "\(minutes) min so far" }
-        return started + "\(minutes) of \(length) min"
+        guard minutes > length else { return started + "\(minutes) of \(length) min" }
+        return started + "\(minutes) min · \(minutes - length) min over"
     }
 }

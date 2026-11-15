@@ -71,4 +71,12 @@ struct CopywriterActivityPromptTests {
         #expect(timed == started + " · 20 of 30 min")
         #expect(open == started + " · 75 min so far")
     }
+
+    @Test func cardDetailSaysHowFarPastTheLength() {
+        let started = "Started " + Fix.clock(Fix.at(10))
+        let over = Copywriter.activityPromptCardDetail(start: Fix.at(10), minutes: 45, length: 15, calendar: Fix.calendar)
+        let exact = Copywriter.activityPromptCardDetail(start: Fix.at(10), minutes: 20, length: 20, calendar: Fix.calendar)
+        #expect(over == started + " · 45 min · 30 min over")
+        #expect(exact == started + " · 20 of 20 min")
+    }
 }

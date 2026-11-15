@@ -50,13 +50,19 @@ struct PromptCalendarBoxes: View {
         }
     }
 
+    private var shown: [CalendarChoice] {
+        CalendarChips.shown(info.calendars, picked: model.draft.calendarID, all: model.showsAllCalendars)
+    }
+
     private var choices: some View {
-        PromptBoxes {
-            ForEach(info.calendars) { c in
+        let shown = shown
+        let hidden = info.calendars.count - shown.count
+        return PromptBoxes {
+            ForEach(shown) { c in
                 let color = Night.category(c.colorHex)
                 PromptBox(
-                    label: c.title, on: !readOnly && model.draft.calendarID == c.id, id: "prompt.calendar." + c.id, dot: color,
-                    look: .solid(color)
+                    label: CalendarChips.label(c, in: info.calendars), on: !readOnly && model.draft.calendarID == c.id,
+                    id: "prompt.calendar." + c.id, dot: color, look: .solid(color)
                 ) { model.draft.calendarID = c.id }
                     .disabled(readOnly)
             }
@@ -65,6 +71,11 @@ struct PromptCalendarBoxes: View {
                 dot: Night.promptDim, look: .solid(Night.promptSecondary)
             ) { model.draft.calendarID = nil }
                 .disabled(readOnly)
+            if hidden > 0, !readOnly {
+                PromptBox(label: Copywriter.activityPromptCalendarMore(hidden), on: false, id: "prompt.calendar.more") {
+                    model.showsAllCalendars = true
+                }
+            }
         }
     }
 

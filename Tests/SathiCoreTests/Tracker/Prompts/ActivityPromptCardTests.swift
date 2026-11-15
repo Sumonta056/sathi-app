@@ -38,7 +38,7 @@ struct ActivityPromptCardTests {
     @Test func progressStopsAtFullPastTheLength() {
         let s = Fix.screen(.stillOnIt, now: Fix.at(10, 42))
         #expect(s.card?.progress == 1)
-        #expect(s.card?.detail == started() + " · 42 of 30 min")
+        #expect(s.card?.detail == started() + " · 42 min · 12 min over")
     }
 
     @Test func anOpenActivityHasNoProgressAndCountsSoFar() {

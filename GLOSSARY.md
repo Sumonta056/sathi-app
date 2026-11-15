@@ -12,6 +12,14 @@ _Avoid_: Dashboard, app view, Settings window, Reports window
 The small panel that opens from the menu bar icon. It shows the status of the buddies and the running activity, and it opens the main window.
 _Avoid_: Menu, popover, dropdown
 
+**Narrow layout**:
+The compact form of the main window pages, used when the window is narrow, for example on half of a laptop screen. The sidebar shows icons only, cards stack, and side panels float over the page.
+_Avoid_: Mobile view, compact mode, small screen
+
+**Wide layout**:
+The normal form of the main window pages, with the full sidebar and side panels next to the page. The main window opens in it when it fills the screen.
+_Avoid_: Desktop view, full mode
+
 **Range**:
 The span of days that Reports and Activities show: Day, Week, or Month. Each range compares with the range before it.
 _Avoid_: Period, window, timeframe

@@ -7,7 +7,12 @@ extension UIController {
         guard let engine, let state = engine.trackerPromptState(kind) else { return }
         let prompt = engine.trackerPrompt
         let model = keptPromptModel(for: prompt) ?? newPromptModel(state)
-        let content = TrackerPromptContent(state: state, model: model)
+        let screen = trackerPromptPanel?.screen?.visibleFrame ?? activeScreen?.visibleFrame
+        let content = TrackerPromptContent(
+            state: state, model: model,
+            maxHeight: screen.map { PromptFit.maxHeight(screen: $0, margin: UIMetrics.promptScreenMargin) },
+            onMove: { [weak self] step in self?.moveTrackerPrompt(by: step) }
+        )
         guard let p = replacePromptContent(content) ?? trackerHosting(content).map(presentTrackerCentered) else { return }
         trackerPromptPanel = p
         trackerPromptKind = kind
