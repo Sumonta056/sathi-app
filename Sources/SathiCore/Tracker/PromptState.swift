@@ -8,6 +8,7 @@ package struct PromptState: Codable, Equatable, Sendable {
     package var resume: ActivityDraft?
     package var eventID: String?
     package var doneAt: Date?
+    package var todoIDs: [String] = []
 
     package init(
         kind: PromptKind,
@@ -16,7 +17,8 @@ package struct PromptState: Codable, Equatable, Sendable {
         switchFrom: Date? = nil,
         resume: ActivityDraft? = nil,
         eventID: String? = nil,
-        doneAt: Date? = nil
+        doneAt: Date? = nil,
+        todoIDs: [String] = []
     ) {
         self.kind = kind
         self.shownAt = shownAt.wholeSecond
@@ -25,6 +27,7 @@ package struct PromptState: Codable, Equatable, Sendable {
         self.resume = resume
         self.eventID = eventID
         self.doneAt = doneAt?.wholeSecond
+        self.todoIDs = todoIDs
     }
 }
 
@@ -38,5 +41,6 @@ extension PromptState {
         resume = c.lenient(.resume, or: ActivityDraft?.none)
         eventID = c.lenient(.eventID, or: String?.none)
         doneAt = c.lenient(.doneAt, or: Date?.none)?.wholeSecond
+        todoIDs = c.lenient(.todoIDs, or: [String]())
     }
 }

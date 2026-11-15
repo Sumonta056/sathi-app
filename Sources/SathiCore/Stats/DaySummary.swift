@@ -32,9 +32,11 @@ package struct DaySummaryRow: Equatable, Sendable {
 
 package struct DaySummary: Equatable, Sendable {
     package var rows: [DaySummaryRow]
+    package var todos: DaySummaryTodos?
 
-    package init(rows: [DaySummaryRow]) {
+    package init(rows: [DaySummaryRow], todos: DaySummaryTodos? = nil) {
         self.rows = rows
+        self.todos = todos
     }
 
     package var verdict: DaySummaryVerdict {
@@ -44,5 +46,15 @@ package struct DaySummary: Equatable, Sendable {
         if met == progress.count { return .allMet }
         if met == 0 { return .noneMet }
         return .someMet(met: met, of: progress.count)
+    }
+}
+
+package struct DaySummaryTodos: Equatable, Sendable {
+    package var done: Int
+    package var left: Int
+
+    package init(done: Int, left: Int) {
+        self.done = done
+        self.left = left
     }
 }

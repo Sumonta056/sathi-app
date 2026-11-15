@@ -10,6 +10,7 @@ package enum ActivityPromptBuilder {
         case .ends: return ends(s)
         case .back: return back(s)
         case .event: return event(s)
+        case .todo: return todo(s)
         }
     }
 
@@ -61,6 +62,7 @@ package enum ActivityPromptBuilder {
             p.card = runningCard(r, now: s.now, calendar: s.calendar)
         }
         p.startedChoices = startedChoices(s)
+        p.markDone = markDone(s)
         return p
     }
 

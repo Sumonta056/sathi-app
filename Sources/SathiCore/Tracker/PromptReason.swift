@@ -6,6 +6,7 @@ package enum PromptReason: CaseIterable, Equatable, Sendable {
     case ends
     case back
     case event
+    case todo
 
     package init(_ kind: PromptKind) {
         switch kind {
@@ -14,6 +15,7 @@ package enum PromptReason: CaseIterable, Equatable, Sendable {
         case .stillOnIt: self = .ends
         case .welcomeBack: self = .back
         case .eventAsk: self = .event
+        case .todoDue: self = .todo
         }
     }
 }

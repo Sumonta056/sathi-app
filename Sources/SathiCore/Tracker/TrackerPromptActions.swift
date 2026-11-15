@@ -19,6 +19,9 @@ package struct TrackerPromptActions {
     package var allowCalendar: @MainActor () async -> TrackerCalendarInfo? = { nil }
     package var openCalendarSettings: @MainActor () -> Void = {}
     package var close: @MainActor () -> Void = {}
+    package var startTodo: @MainActor (String, ActivityDraft, Date?) -> Bool = { _, _, _ in false }
+    package var doneTodo: @MainActor (String) -> Void = { _ in }
+    package var markTodoDone: @MainActor (Bool) -> Void = { _ in }
 
     package init() {}
 }

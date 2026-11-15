@@ -13,6 +13,8 @@ package struct RunningActivity: Codable, Equatable, Sendable {
     package var calendarID: String?
     package var quietUntil: Date?
     package var sourceEventID: String?
+    package var todoID: String?
+    package var askedTodoDone = false
 
     package init(
         id: ActivityID = ActivityID(),
@@ -57,5 +59,7 @@ extension RunningActivity {
         calendarID = c.lenient(.calendarID, or: String?.none)
         quietUntil = c.lenient(.quietUntil, or: Date?.none)?.wholeSecond
         sourceEventID = c.lenient(.sourceEventID, or: String?.none)
+        todoID = c.lenient(.todoID, or: String?.none)
+        askedTodoDone = c.lenient(.askedTodoDone, or: false)
     }
 }

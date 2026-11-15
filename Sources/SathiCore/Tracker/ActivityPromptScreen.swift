@@ -15,6 +15,9 @@ package struct ActivityPromptScreen: Equatable, Sendable {
     package var calendarNote: String?
     package var card: PromptCard?
     package var showsIWasHere = false
+    package var todos: [PromptTodo] = []
+    package var doneLabel: String?
+    package var markDone: PromptMarkDone?
 
     package init(reason: PromptReason, tag: String, timeText: String, title: String, message: String, startLabel: String, skip: PromptSkip) {
         self.reason = reason

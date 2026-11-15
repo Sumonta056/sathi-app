@@ -6,4 +6,5 @@ package enum PromptKind: String, Codable, CaseIterable, Sendable {
     case stillOnIt
     case welcomeBack
     case eventAsk
+    case todoDue
 }
