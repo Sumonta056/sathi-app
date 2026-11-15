@@ -7,7 +7,7 @@ struct TodayPage: View {
     @EnvironmentObject var e: Engine
 
     var body: some View {
-        page(model.screen ?? e.todayScreen)
+        ZStack(alignment: .topLeading) { page(model.screen ?? e.todayScreen) }
             .onAppear { model.attach(e) }
             .onDisappear { model.detach() }
     }

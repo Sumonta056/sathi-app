@@ -15,7 +15,8 @@ struct TodayBreakdownCard: View {
             if sofar.isOn {
                 CategoryTableView(
                     table: table, summary: Copywriter.categoryCount(table.rows.count),
-                    columns: layout.isNarrow ? UIMetrics.todayBreakdownColumnsNarrow : 2, showsChange: false, showsTotal: false
+                    columns: layout.isNarrow ? UIMetrics.todayBreakdownColumnsNarrow : UIMetrics.todayBreakdownColumns, showsChange: false,
+                    showsTotal: false
                 )
             } else {
                 Text(verbatim: Copywriter.todaySoFarOffHint)
