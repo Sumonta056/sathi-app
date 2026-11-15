@@ -32,7 +32,7 @@ struct StreakOverviewView: View {
             }
             legend
         }
-        .frame(width: UIMetrics.reportsCalendarWidth)
+        .reportsCalendarWidth()
     }
 
     private var legend: some View {

@@ -4,6 +4,7 @@ import SwiftUI
 struct TodayBreakdownCard: View {
     let sofar: TodaySoFar
     let categories: [ActivityCategory]
+    @Environment(\.mainLayout) private var layout
 
     var body: some View {
         let table = CategoryTable(sofar.categories.map(input))
@@ -13,7 +14,9 @@ struct TodayBreakdownCard: View {
                 .foregroundStyle(Night.text)
             if sofar.isOn {
                 CategoryTableView(
-                    table: table, summary: Copywriter.categoryCount(table.rows.count), columns: 2, showsChange: false, showsTotal: false
+                    table: table, summary: Copywriter.categoryCount(table.rows.count),
+                    columns: layout.isNarrow ? UIMetrics.todayBreakdownColumnsNarrow : UIMetrics.todayBreakdownColumns, showsChange: false,
+                    showsTotal: false
                 )
             } else {
                 Text(verbatim: Copywriter.todaySoFarOffHint)
