@@ -13,6 +13,24 @@ package struct DayOffMonth: Equatable, Sendable {
     package let weeks: [[DayOffCell?]]
     package let canGoBack: Bool
     package let canGoForward: Bool
+
+    static func build(
+        first: Date,
+        calendar g: Calendar,
+        canGoBack: Bool,
+        canGoForward: Bool,
+        state: (DayKey) -> DayOffCellState
+    ) -> DayOffMonth {
+        let count = g.range(of: .day, in: .month, for: first)?.count ?? 0
+        let blanks = (g.component(.weekday, from: first) - Limits.weekStartWeekday + Limits.daysPerWeek) % Limits.daysPerWeek
+        let cells: [DayOffCell?] = Array(repeating: nil, count: blanks) + (1 ... count).map { day in
+            let key = DayKey(g.date(byAdding: .day, value: day - 1, to: first) ?? first, calendar: g)
+            return DayOffCell(key: key, day: day, state: state(key))
+        }
+        let padded = cells + Array(repeating: nil, count: (Limits.daysPerWeek - cells.count % Limits.daysPerWeek) % Limits.daysPerWeek)
+        let weeks = stride(from: 0, to: padded.count, by: Limits.daysPerWeek).map { Array(padded[$0 ..< $0 + Limits.daysPerWeek]) }
+        return DayOffMonth(firstDay: DayKey(first, calendar: g), weeks: weeks, canGoBack: canGoBack, canGoForward: canGoForward)
+    }
 }
 
 extension HabitDays {
@@ -25,16 +43,9 @@ extension HabitDays {
         let shown = max(0, min(offset, lastOffset))
         let first = Self.firstOfMonth(shownFrom: range.lowerBound, months: shown, g)
         let isFull = upcoming(from: now, calendar: g).count >= Limits.daysOffMax
-        let count = g.range(of: .day, in: .month, for: first)?.count ?? 0
-        let blanks = (g.component(.weekday, from: first) - Limits.weekStartWeekday + Limits.daysPerWeek) % Limits.daysPerWeek
-        let cells: [DayOffCell?] = Array(repeating: nil, count: blanks) + (1 ... count).map { day in
-            let key = DayKey(g.date(byAdding: .day, value: day - 1, to: first) ?? first, calendar: g)
-            let state = cellState(key, today: today, last: last, isFull: isFull)
-            return DayOffCell(key: key, day: day, state: state)
+        return DayOffMonth.build(first: first, calendar: g, canGoBack: shown > 0, canGoForward: shown < lastOffset) {
+            cellState($0, today: today, last: last, isFull: isFull)
         }
-        let padded = cells + Array(repeating: nil, count: (Limits.daysPerWeek - cells.count % Limits.daysPerWeek) % Limits.daysPerWeek)
-        let weeks = stride(from: 0, to: padded.count, by: Limits.daysPerWeek).map { Array(padded[$0 ..< $0 + Limits.daysPerWeek]) }
-        return DayOffMonth(firstDay: DayKey(first, calendar: g), weeks: weeks, canGoBack: shown > 0, canGoForward: shown < lastOffset)
     }
 
     private func cellState(_ key: DayKey, today: DayKey, last: DayKey, isFull: Bool) -> DayOffCellState {

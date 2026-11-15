@@ -4,6 +4,7 @@ import SwiftUI
 struct DayOffCellButton: View {
     let cell: DayOffCell
     let accent: Color
+    var markedValue = Copywriter.daysOffMarked
     let action: () -> Void
 
     var body: some View {
@@ -20,7 +21,7 @@ struct DayOffCellButton: View {
         .buttonStyle(.plain)
         .disabled(cell.state != .pickable)
         .accessibilityLabel(Text(verbatim: DaysOffRow.label(cell.key)))
-        .accessibilityValue(Text(verbatim: cell.state == .off ? "Day off" : ""))
+        .accessibilityValue(Text(verbatim: cell.state == .off ? markedValue : ""))
     }
 
     private var foreground: Color {

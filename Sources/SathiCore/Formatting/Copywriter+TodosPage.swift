@@ -20,6 +20,7 @@ extension Copywriter {
     package static let todoList = "List"
     package static let todoAddTime = "Add time"
     package static let todoNoTime = "No time"
+    package static let todoDueMarked = "Due date"
     package static let todoSave = "Save"
     package static let todoCancel = "Cancel"
     package static let todoDelete = "Delete"

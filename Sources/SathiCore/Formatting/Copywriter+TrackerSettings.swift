@@ -11,6 +11,7 @@ extension Copywriter {
     package static let daysOffTitle = "Days off"
     package static let daysOffAdd = "Add a day off"
     package static let daysOffPick = "Pick a date"
+    package static let daysOffMarked = "Day off"
     package static let trackerDaysOffHint = "Sathi stays quiet on these days."
     package static let trackerNoCalendars = "No calendars found on this Mac."
     package static let trackerNewCategory = "New category"

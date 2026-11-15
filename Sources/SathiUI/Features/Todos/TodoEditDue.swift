@@ -15,9 +15,7 @@ struct TodoEditDue: View {
             BuddySwitch(isOn: $hasDate, accent: Night.todo, label: Copywriter.todoDue)
                 .accessibilityIdentifier("todos.edit.hasDate")
             if hasDate {
-                DatePicker("", selection: $date, displayedComponents: .date)
-                    .labelsHidden()
-                    .fixedSize()
+                TodoDueDateChip(date: $date)
                 if minutes != nil {
                     TimeMenu(minutes: time, accent: Night.todo, active: true)
                     chip(Copywriter.todoNoTime, "todos.edit.noTime") { minutes = nil }
