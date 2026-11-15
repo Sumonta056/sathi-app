@@ -8,7 +8,7 @@ import Testing
 @MainActor
 @Suite("Settings tab width")
 struct SettingsTabWidthTests {
-    private static let column = UIMetrics.mainWindowMinSize.width - UIMetrics.mainSidebarWidth
+    private static let column = UIMetrics.mainWindowMinSize.width - UIMetrics.sidebarRailWidth
         - UIMetrics.mainContentPadding.leading - UIMetrics.mainContentPadding.trailing
 
     private func width(of view: some View) -> CGFloat {

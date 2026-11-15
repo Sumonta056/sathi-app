@@ -13,17 +13,19 @@ struct MainView: View {
             HStack(spacing: 0) {
                 MainSidebar(route: route, isOpen: $sidebarOpen) { sidebarOverlay = true }
                 page
+                    .padding(.top, UIMetrics.mainDragStripPageInset)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                     .background(Night.bg)
             }
             .overlay(alignment: .leading) { MainSidebarOverlay(route: route, isShown: $sidebarOverlay) }
             .ignoresSafeArea()
+            .overlay(alignment: .top) { WindowDragStrip().frame(height: UIMetrics.mainDragStripHeight) }
             .environment(\.mainLayout, layout)
             .onAppear { route.settle(calendarOn: e.data.prefs.calendarPage.isOn) }
             .onChange(of: e.data.prefs.calendarPage.isOn) { route.settle(calendarOn: $0) }
             .onChange(of: route.page) { _ in route.settle(calendarOn: e.data.prefs.calendarPage.isOn) }
         }
-        .frame(minWidth: UIMetrics.mainLayoutMinSize.width, minHeight: UIMetrics.mainLayoutMinSize.height)
+        .frame(minWidth: UIMetrics.mainWindowMinSize.width, minHeight: UIMetrics.mainWindowMinSize.height)
         .ignoresSafeArea()
     }
 

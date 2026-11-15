@@ -89,5 +89,7 @@ struct WindowFitTests {
         #expect(UIMetrics.mainNarrowBelow == 900)
         #expect(UIMetrics.mainDrawerBelow == 1100)
         #expect(UIMetrics.mainDragStripHeight == 28)
+        #expect(UIMetrics.mainDragStripPageInset == 12)
+        #expect(UIMetrics.mainDragStripPageInset == UIMetrics.mainDragStripHeight - UIMetrics.mainContentPadding.top)
     }
 }

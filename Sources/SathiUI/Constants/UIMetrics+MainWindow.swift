@@ -28,4 +28,5 @@ extension UIMetrics {
     static let mainStatusFont: CGFloat = 12
     static let mainContentPadding = EdgeInsets(top: 16, leading: 20, bottom: 16, trailing: 20)
     static let mainPageTitleFont: CGFloat = 26
+    static let mainDragStripPageInset: CGFloat = mainDragStripHeight - mainContentPadding.top
 }
