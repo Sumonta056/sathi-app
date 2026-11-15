@@ -68,7 +68,7 @@ package enum TodoRules {
     package static func defaultAccountID(accounts: [TodoAccount], preferred: String?) -> String? {
         let usable = accounts.filter(\.allowsNewLists)
         if let preferred, usable.contains(where: { $0.id == preferred }) { return preferred }
-        if let icloud = usable.first(where: { $0.name == Limits.todoPreferredAccountName }) { return icloud.id }
+        if let icloud = usable.first(where: \.isICloud) { return icloud.id }
         return usable.first?.id
     }
 }

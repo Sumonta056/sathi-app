@@ -142,8 +142,8 @@ struct TodoRulesTests {
     }
 
     @Test func newListAccountPrefersTheSavedOneThenICloudThenTheFirstThatAllows() {
-        let icloud = TodoAccount(id: "ic", name: "iCloud", allowsNewLists: true)
-        let other = TodoAccount(id: "ex", name: "Exchange", allowsNewLists: true)
+        let icloud = TodoAccount(id: "ic", name: "Mein iCloud", allowsNewLists: true, isICloud: true)
+        let other = TodoAccount(id: "ex", name: "iCloud", allowsNewLists: true)
         let locked = TodoAccount(id: "lk", name: "Locked", allowsNewLists: false)
         #expect(TodoRules.defaultAccountID(accounts: [other, icloud], preferred: "ex") == "ex")
         #expect(TodoRules.defaultAccountID(accounts: [other, icloud], preferred: nil) == "ic")

@@ -15,7 +15,7 @@ struct CopywriterMainTests {
 
     @Test func settingsPagesHaveTheirSidebarNamesInOrder() {
         let names = SettingsPage.all.map(Copywriter.settingsPageTitle)
-        #expect(names == ["General", "Fota", "Boi", "Shanti", "Shokti", "Quick reminders", "Activity tracker", "Time blocks", "Sound"])
+        #expect(names == ["General", "Fota", "Boi", "Shanti", "Shokti", "Quick reminders", "Activity tracker", "Time blocks", "To-dos", "Sound"])
     }
 
     @Test func trackerStatusWords() {

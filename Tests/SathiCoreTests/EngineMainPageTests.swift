@@ -36,6 +36,18 @@ struct EngineMainPageTests {
         #expect(h.presenter.calls.last == .showMain(.calendar(nil)))
     }
 
+    @Test func openMainTodosFallsBackToTodayWhenTodosIsOff() {
+        let h = EngineHarness()
+        h.engine.openMain(.todos)
+        #expect(h.presenter.calls.last == .showMain(.today))
+    }
+
+    @Test func openMainTodosShowsTheTodosPageWhenOn() {
+        let h = EngineHarness { $0.prefs.todos.isOn = true }
+        h.engine.openMain(.todos)
+        #expect(h.presenter.calls.last == .showMain(.todos))
+    }
+
     @Test func openActivityReportShowsThatDayAndClosesTheEndOfDayPopup() {
         let h = EngineHarness.tracker(at: wed(17, 50))
         h.engine.skipTrackerPrompt()

@@ -22,10 +22,12 @@ package struct TodoAccount: Equatable, Sendable {
     package var id: String
     package var name: String
     package var allowsNewLists: Bool
+    package var isICloud: Bool
 
-    package init(id: String, name: String, allowsNewLists: Bool) {
+    package init(id: String, name: String, allowsNewLists: Bool, isICloud: Bool = false) {
         self.id = id
         self.name = name
         self.allowsNewLists = allowsNewLists
+        self.isICloud = isICloud
     }
 }

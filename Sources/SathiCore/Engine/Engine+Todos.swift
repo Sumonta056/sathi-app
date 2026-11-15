@@ -55,6 +55,7 @@ extension Engine {
         todoRuntime.refreshTask?.cancel()
         todoRuntime.refreshTask = nil
         todoRuntime.token += 1
+        todoRuntime.stale = true
     }
 
     func todosStoreChanged() {

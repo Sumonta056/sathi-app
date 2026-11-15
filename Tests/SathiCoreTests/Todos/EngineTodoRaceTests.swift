@@ -71,6 +71,7 @@ struct EngineTodoRaceTests {
         await h.engine.todoRuntime.refreshTask?.value
         h.engine.data.prefs.todos.isOn = false
         #expect(h.engine.todoAccess == .notAsked)
+        #expect(h.engine.todoRuntime.loadedRevision == nil)
         let reads = h.todos.readRequests.count
         h.engine.data.prefs.todos.isOn = true
         await h.engine.todoRuntime.refreshTask?.value

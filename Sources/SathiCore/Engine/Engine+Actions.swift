@@ -82,7 +82,9 @@ extension Engine {
         requestTick()
     }
 
-    package func openMain(_ page: MainPage) { presenter.showMain(page) }
+    package func openMain(_ page: MainPage) {
+        presenter.showMain(page == .todos && !data.prefs.todos.isOn ? .today : page)
+    }
     package func openSettings(_ page: SettingsPage = .general) { openMain(.settings(page)) }
     package func openReports() { openMain(.reports) }
 

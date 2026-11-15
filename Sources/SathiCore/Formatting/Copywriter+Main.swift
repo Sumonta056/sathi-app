@@ -21,6 +21,7 @@ extension Copywriter {
         case .quickReminders: return "Quick reminders"
         case .tracker: return "Activity tracker"
         case .timeBlocks: return blockSettingsTitle
+        case .todos: return mainPageTodos
         case .sound: return "Sound"
         }
     }

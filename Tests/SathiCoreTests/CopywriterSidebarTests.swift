@@ -14,6 +14,7 @@ struct CopywriterSidebarTests {
             "Quick reminders",
             "Activity tracker",
             "Time blocks",
+            "To-dos",
             "Sound"
         ])
     }

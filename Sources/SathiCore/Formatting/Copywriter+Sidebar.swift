@@ -12,7 +12,7 @@ extension Copywriter {
     package static func sidebarSettingsTitle(_ page: SettingsPage) -> String {
         switch page {
         case let .habit(id): return "\(id.buddy) · \(habitWord(id))"
-        case .general, .quickReminders, .tracker, .timeBlocks, .sound: return settingsPageTitle(page)
+        case .general, .quickReminders, .tracker, .timeBlocks, .todos, .sound: return settingsPageTitle(page)
         }
     }
 
