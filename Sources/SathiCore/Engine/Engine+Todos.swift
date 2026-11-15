@@ -14,7 +14,7 @@ extension Engine {
         guard prefs.isOn else {
             todoRuntime.token += 1
             applyTodos(.empty)
-            return
+            return todosRead()
         }
         let access = todos.access
         let since = TodoRules.completedSince(now: clock.now, calendar: calendar)
@@ -29,7 +29,7 @@ extension Engine {
         guard access == .allowed else {
             todoPageAllLists = []
             applyTodos(.empty)
-            return
+            return todosRead()
         }
         let all = todos.lists()
         todoPageAllLists = all
@@ -37,6 +37,7 @@ extension Engine {
         let items = await todos.todos(listIDs: Set(lists.map(\.id)), completedSince: since)
         guard token == todoRuntime.token else { return }
         applyTodos(Self.todoSnapshot(lists: lists, items: items, revision: todos.revision))
+        todosRead()
     }
 
     func todosPrefsChanged(from old: TodoPrefs) {

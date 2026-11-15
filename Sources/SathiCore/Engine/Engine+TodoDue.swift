@@ -5,52 +5,56 @@ extension Engine {
 
     func todoDueDeadlines(after n: Date) -> [Date] {
         guard todoDueAsks else { return [] }
-        return todoSnapshot.open.compactMap(Self.dueMoment).filter { $0 > n }
+        let hours = trackerHours
+        return todoSnapshot.open.compactMap(Self.dueMoment).filter { $0 > n && hours.isInside($0) }
     }
 
     func tickTodoDue(_ n: Date) {
+        if !data.prefs.todos.isOn, data.live.tracker.prompt?.kind == .todoDue { clearTrackerPrompt() }
         guard let from = todoDueCheckedUntil else {
             todoDueCheckedUntil = n
             return
         }
+        let slot = todoDueSlot
+        if todoDueAsks, slot == .hold { return }
         todoDueCheckedUntil = max(from, n)
-        guard todoDueAsks, canAskTodoDue(n) else { return }
+        guard todoDueAsks, todoDueCanAsk(n) else { return }
         let due = todoSnapshot.open.filter { t in Self.dueMoment(t).map { $0 > from && $0 <= n } ?? false }
         guard !due.isEmpty else { return }
-        let ids = TodoRules.sorted(due).map(\.id)
-        setTrackerPrompt(PromptState(kind: .todoDue, shownAt: n, askTime: n, todoIDs: ids))
-    }
-
-    func withTodoDoneAsk(_ prompt: PromptState) -> PromptState {
-        guard prompt.kind == .stillOnIt, data.prefs.todos.isOn, let r = data.live.tracker.running,
-              let id = r.todoID, !r.askedTodoDone, todoSnapshot.open.contains(where: { $0.id == id }) else { return prompt }
-        data.live.tracker.running?.askedTodoDone = true
-        var p = prompt
-        p.todoIDs = [id]
-        return p
-    }
-
-    func fillTodos(_ s: inout TrackerPromptState, prompt p: PromptState) {
-        guard data.prefs.todos.isOn, !p.todoIDs.isEmpty else { return }
-        let open = todoSnapshot.open
-        s.todoListNames = Dictionary(todoSnapshot.lists.map { ($0.id, $0.name) }, uniquingKeysWith: { a, _ in a })
-        switch p.kind {
-        case .todoDue: s.todos = TodoRules.sorted(open.filter { p.todoIDs.contains($0.id) })
-        case .stillOnIt: s.todoDoneAsk = p.todoIDs.first.flatMap { id in open.first { $0.id == id } }
-        case .whatNow, .center, .welcomeBack, .eventAsk: break
+        switch slot {
+        case .open: setTrackerPrompt(PromptState(kind: .todoDue, shownAt: n, askTime: n, todoIDs: TodoRules.sorted(due).map(\.id)))
+        case .merge: mergeDueTodos(due)
+        case .hold: break
         }
-        if let first = s.todos.first, s.draft.text.isEmpty { s.draft.text = first.title }
     }
 
-    private func canAskTodoDue(_ n: Date) -> Bool {
-        let t = data.live.tracker
-        guard trackerHours.isInside(n), t.awaySince == nil, !trackerIsBusy, !isAnyLockShowing else { return false }
-        guard let p = t.prompt else { return true }
+    private enum TodoDueSlot { case open, merge, hold }
+
+    private var todoDueSlot: TodoDueSlot {
+        guard let p = data.live.tracker.prompt else { return .open }
         switch p.kind {
-        case .whatNow: return p.switchFrom == nil && !trackerRuntime.promptByUser
-        case .stillOnIt: return p.todoIDs.isEmpty
-        case .center, .welcomeBack, .eventAsk, .todoDue: return false
+        case .whatNow: return p.switchFrom == nil && !trackerRuntime.promptByUser ? .open : .hold
+        case .stillOnIt: return p.todoIDs.isEmpty ? .open : .hold
+        case .todoDue: return .merge
+        case .center, .welcomeBack, .eventAsk: return .hold
         }
+    }
+
+    private func todoDueCanAsk(_ n: Date) -> Bool {
+        trackerHours.isInside(n) && data.live.tracker.awaySince == nil && !trackerIsBusy && !isAnyLockShowing
+    }
+
+    private func mergeDueTodos(_ due: [Todo]) {
+        guard var p = data.live.tracker.prompt else { return }
+        let ids = Set(p.todoIDs).union(due.map(\.id))
+        p.todoIDs = TodoRules.sorted(todoSnapshot.open.filter { ids.contains($0.id) }).map(\.id)
+        data.live.tracker.prompt = p
+        reshowTrackerPrompt()
+    }
+
+    func reshowTrackerPrompt() {
+        guard let k = data.live.tracker.prompt?.kind else { return }
+        if trackerRuntime.shownPrompt == k { presenter.showTrackerPrompt(k) } else { presentTrackerPrompt() }
     }
 
     private static func dueMoment(_ t: Todo) -> Date? {

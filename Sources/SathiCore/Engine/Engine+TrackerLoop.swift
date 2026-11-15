@@ -76,7 +76,7 @@ extension Engine {
     }
 
     private func canShowTrackerPrompt(_ p: PromptState) -> Bool {
-        guard trackerPrefs.isOn, !isAnyLockShowing else { return false }
+        guard trackerPrefs.isOn, !isAnyLockShowing, p.todoIDs.isEmpty || todosReady else { return false }
         switch p.kind {
         case .center: return true
         case .welcomeBack: return pausedUntil == nil && timeBlock?.isRunning != true && !trackerSessionRuns

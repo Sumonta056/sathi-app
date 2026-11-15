@@ -13,17 +13,21 @@ extension Engine {
         _ = todos.setDone(id, true)
         todoRuntime.stale = true
         refreshTodos()
-        if let p = data.live.tracker.prompt, p.kind == .todoDue, p.todoIDs.contains(id) { closeTrackerPrompt() }
+        guard var p = data.live.tracker.prompt, p.kind == .todoDue, p.todoIDs.contains(id) else { return }
+        p.todoIDs.removeAll { $0 == id }
+        guard !p.todoIDs.isEmpty else { return closeTrackerPrompt() }
+        data.live.tracker.prompt = p
+        reshowTrackerPrompt()
     }
 
     package func markTodoDone(_ yes: Bool) {
-        guard let p = data.live.tracker.prompt, p.kind == .stillOnIt, let id = p.todoIDs.first else { return }
+        guard let p = data.live.tracker.prompt, p.kind != .todoDue, let id = p.todoIDs.first else { return }
         if yes, data.prefs.todos.isOn {
             _ = todos.setDone(id, true)
             todoRuntime.stale = true
             refreshTodos()
         }
         data.live.tracker.prompt?.todoIDs = []
-        if trackerRuntime.shownPrompt == .stillOnIt { presenter.showTrackerPrompt(.stillOnIt) }
+        reshowTrackerPrompt()
     }
 }

@@ -5,10 +5,7 @@ struct QuickDueTodayCard: View {
     @EnvironmentObject var e: Engine
 
     var body: some View {
-        Group {
-            if let q = e.quickTodos { card(q) }
-        }
-        .onAppear { e.refreshTodos() }
+        if let q = e.quickTodos { card(q) }
     }
 
     private func card(_ q: QuickTodos) -> some View {

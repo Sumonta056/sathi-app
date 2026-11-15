@@ -80,6 +80,7 @@ package final class Engine: ObservableObject {
     var calendarPageEventsByID: [String: CalendarEventInfo] = [:]
     var todoPageAllLists: [TodoList] = []
     var todoDueCheckedUntil: Date?
+    var todoDueReady = false
 
     package init(
         store: StateStore,

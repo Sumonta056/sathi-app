@@ -4,6 +4,12 @@ package enum ActivityPromptBuilder {
     private typealias Copy = Copywriter
 
     package static func screen(_ s: TrackerPromptState) -> ActivityPromptScreen {
+        var p = reasonScreen(s)
+        if p.reason != .todo { p.markDone = markDone(s) }
+        return p
+    }
+
+    private static func reasonScreen(_ s: TrackerPromptState) -> ActivityPromptScreen {
         switch PromptReason(s.kind) {
         case .ask: return ask(s)
         case .shortcut: return shortcut(s)
@@ -62,7 +68,6 @@ package enum ActivityPromptBuilder {
             p.card = runningCard(r, now: s.now, calendar: s.calendar)
         }
         p.startedChoices = startedChoices(s)
-        p.markDone = markDone(s)
         return p
     }
 

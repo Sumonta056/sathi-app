@@ -26,6 +26,7 @@ package struct MenuPanel: View {
         .onAppear {
             e.tick()
             e.refreshCalendarAccess()
+            e.refreshTodos()
         }
     }
 }

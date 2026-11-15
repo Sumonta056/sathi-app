@@ -46,6 +46,7 @@ extension Engine {
     @discardableResult
     func endRunningActivity(at end: Date) -> Activity? {
         guard let r = data.live.tracker.running else { return nil }
+        if let id = r.todoID, !r.askedTodoDone { data.live.tracker.pendingTodoAsk = id }
         data.live.tracker.running = nil
         let stop = max(r.start, min(end, calendar.nextDay(after: r.start)))
         var item = r.activity(until: stop)

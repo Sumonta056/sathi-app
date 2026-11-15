@@ -11,6 +11,7 @@ package struct TrackerLiveState: Codable, Equatable, Sendable {
     package var lastActivity: ActivityDraft?
     package var beforeSession: ActivityDraft?
     package var away = TrackerAwayDetails()
+    package var pendingTodoAsk: String?
 
     package init() {}
 }
@@ -28,5 +29,6 @@ extension TrackerLiveState {
         lastActivity = c.lenient(.lastActivity, or: ActivityDraft?.none)
         beforeSession = c.lenient(.beforeSession, or: ActivityDraft?.none)
         away = c.lenient(.away, or: TrackerAwayDetails())
+        pendingTodoAsk = c.lenient(.pendingTodoAsk, or: String?.none)
     }
 }
