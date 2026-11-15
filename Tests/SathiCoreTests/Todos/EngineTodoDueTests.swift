@@ -16,7 +16,7 @@ struct EngineTodoDueTests {
     }
 
     @Test func opensAtTheDueMomentInsideTrackerHours() async {
-        let h = await EngineHarness.todoTracker(todos: [report()])
+        let h = await EngineHarness.todoTracker(todos: [report()]) { $0.prefs.tracker.askEveryMinutes = 60 }
         #expect(h.promptKind == nil)
         h.advance(minutes: 29)
         #expect(h.promptKind == nil)
@@ -134,9 +134,9 @@ struct EngineTodoDueTests {
     }
 
     @Test func theDueMomentShortensTheTickDelay() async {
-        let h = await EngineHarness.todoTracker(todos: [])
-        #expect(h.engine.nextTickDelay() > 120)
-        await h.replaceTodos([report(due: timedDue(10, 2))])
-        #expect(abs(h.engine.nextTickDelay() - 120) < 1)
+        let h = await EngineHarness.todoTracker(at: day(2026, 3, 4, 10).addingTimeInterval(30), todos: [])
+        #expect(h.engine.nextTickDelay() == Timing.idleTickMax)
+        await h.replaceTodos([report(due: timedDue(10, 1))])
+        #expect(abs(h.engine.nextTickDelay() - 30) < 1)
     }
 }
