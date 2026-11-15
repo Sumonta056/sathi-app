@@ -6,6 +6,7 @@ final class WindowCloseWatcher: NSObject, NSWindowDelegate {
     var lastVisibleFrame: CGRect?
     var shapeFrame: CGRect?
     private var fitting = false
+    private var pendingFit = false
     private var releaseMonitor: Any?
 
     func windowWillClose(_: Notification) {
@@ -14,33 +15,45 @@ final class WindowCloseWatcher: NSObject, NSWindowDelegate {
     }
 
     func windowDidMove(_ notification: Notification) {
-        rememberShape(notification)
+        guard !fitting, let window = notification.object as? NSWindow else { return }
+        if NSEvent.pressedMouseButtons == 0 {
+            settle(window)
+        } else {
+            armReleaseMonitor(window)
+        }
     }
 
     func windowDidEndLiveResize(_ notification: Notification) {
-        rememberShape(notification)
+        guard !fitting, let window = notification.object as? NSWindow else { return }
+        settle(window)
     }
 
     func windowDidChangeScreen(_ notification: Notification) {
         guard !fitting, let window = notification.object as? NSWindow else { return }
+        pendingFit = true
         if NSEvent.pressedMouseButtons == 0 {
-            fit(window)
+            settle(window)
         } else {
-            fitAfterRelease(window)
+            armReleaseMonitor(window)
         }
     }
 
-    private func rememberShape(_ notification: Notification) {
-        guard !fitting, NSEvent.pressedMouseButtons == 0, let window = notification.object as? NSWindow else { return }
-        shapeFrame = window.frame
+    func settle(_ window: NSWindow) {
+        guard !fitting, NSEvent.pressedMouseButtons == 0 else { return }
+        removeReleaseMonitor()
+        if pendingFit {
+            pendingFit = false
+            fit(window)
+        } else {
+            shapeFrame = window.frame
+        }
     }
 
-    private func fitAfterRelease(_ window: NSWindow) {
+    private func armReleaseMonitor(_ window: NSWindow) {
         guard releaseMonitor == nil else { return }
         releaseMonitor = NSEvent.addLocalMonitorForEvents(matching: .leftMouseUp) { [weak self, weak window] event in
             DispatchQueue.main.async {
-                self?.removeReleaseMonitor()
-                if let window { self?.fit(window) }
+                if let window { self?.settle(window) }
             }
             return event
         }

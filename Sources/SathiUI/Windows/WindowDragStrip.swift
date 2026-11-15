@@ -18,6 +18,7 @@ final class DragStripView: NSView {
             window.zoom(nil)
         } else {
             window.performDrag(with: event)
+            (window.delegate as? WindowCloseWatcher)?.settle(window)
         }
     }
 }
