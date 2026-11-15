@@ -31,6 +31,8 @@ enum PromptFixture {
         case .eventAsk:
             s.event = event
             s.eventCalendarTitle = "Work"
+        case .todoDue:
+            s.todos = [makeTodo("a", "Write report", due: TodoDue(date: at(10, 30), hasTime: true))]
         case .whatNow, .center:
             break
         }

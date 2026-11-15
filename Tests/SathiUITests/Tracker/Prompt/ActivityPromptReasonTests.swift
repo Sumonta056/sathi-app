@@ -1,5 +1,6 @@
 import Foundation
 import SathiCore
+import SathiTestSupport
 @testable import SathiUI
 import SwiftUI
 import Testing
@@ -21,6 +22,9 @@ enum Reasons {
             case .welcomeBack:
                 s.lastActivity = ActivityDraft(text: "Coding")
                 s.away = AwaySpan(start: Prompt.now.addingTimeInterval(-2100), end: Prompt.now, cause: .asleep)
+            case .todoDue:
+                s.todos = [makeTodo("a", "Write report")]
+                s.running = running()
             case .eventAsk:
                 s.event = Prompt.event()
                 s.eventCalendarTitle = "Work"
@@ -46,6 +50,7 @@ struct ActivityPromptReasonTests {
         case .center: Expected(tag: "YOU ASKED", title: "Switch to something new?", start: "Switch", keep: "Keep Code review")
         case .stillOnIt: Expected(tag: "STILL ON IT?", title: "Still on Code review?", start: "Switch", keep: "Keep going +15 min")
         case .welcomeBack: Expected(tag: "WELCOME BACK", title: "Welcome back. Where were you?", start: "Start", keep: "Back to Coding")
+        case .todoDue: Expected(tag: "TO-DO DUE", title: "Write report", start: "Switch to it", keep: "Keep Code review")
         case .eventAsk: Expected(tag: "CALENDAR EVENT", title: "Log “Standup” now?", start: "Log it", keep: nil)
         }
     }

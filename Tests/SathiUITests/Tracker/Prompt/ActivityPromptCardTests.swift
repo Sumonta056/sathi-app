@@ -37,7 +37,7 @@ struct ActivityPromptCardTests {
         case .whatNow: return ("LAST ACTIVITY", "Coding", "Reading ended at " + clock(Prompt.now.addingTimeInterval(-300)) + ".")
         case .center, .stillOnIt: return ("NOW RUNNING", "Code review", running)
         case .welcomeBack: return ("BEFORE YOU LEFT", "Coding", stoppedLine())
-        case .eventAsk: return ("", "", "")
+        case .eventAsk, .todoDue: return ("", "", "")
         }
     }
 

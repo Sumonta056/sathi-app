@@ -32,6 +32,8 @@ struct ActivityPromptBuilderTests {
                 keep: .backTo("Code review"),
                 skip: .close
             )
+        case .todoDue:
+            return Row(reason: .todo, tag: "TO-DO DUE", title: "Write report", start: "Start it", keep: nil, skip: .later)
         case .eventAsk:
             return Row(reason: .event, tag: "CALENDAR EVENT", title: "Log “Design sync” now?", start: "Log it", keep: nil, skip: .answerNo)
         }
