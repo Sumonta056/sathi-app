@@ -71,18 +71,24 @@ struct NarrowLayoutTests {
         #expect(!has(sut, id: MainLayout.drawerIdentifier))
     }
 
-    private func calendarPage(_ layout: MainLayout) throws -> InspectableView<ViewType.ClassifiedView> {
+    private func calendarPage(_ layout: MainLayout, narrowStats: Bool = false) throws -> InspectableView<ViewType.ClassifiedView> {
         let coding = Activity(text: "Coding", category: "Coding", start: day(2026, 3, 4, 10), end: day(2026, 3, 4, 11))
         let h = EngineHarness(at: day(2026, 3, 4, 12), activities: InMemoryActivityStore(activities: [coding])) {
             $0.prefs.tracker.isOn = true
             $0.prefs.calendarPage.sidePanelShown = true
         }
         let range = CalendarPageRange.containing(day(2026, 3, 4, 12), kind: .week, calendar: h.engine.rangeCalendar)
-        return try CalendarPage(range: range).environmentObject(h.engine).environment(\.mainLayout, layout).inspect()
+        return try CalendarPage(range: range, narrowStats: narrowStats).environmentObject(h.engine).environment(\.mainLayout, layout).inspect()
+    }
+
+    @Test func calendarStatsPanelStartsHiddenWhenNarrowEvenIfSavedShown() throws {
+        let sut = try calendarPage(NarrowSupport.narrow)
+        #expect(!has(sut, id: MainLayout.floatingIdentifier))
+        #expect((try? sut.find(CalendarStatsPanel.self)) == nil)
     }
 
     @Test func calendarStatsPanelFloatsOverTheGridWhenNarrow() throws {
-        let sut = try calendarPage(NarrowSupport.narrow)
+        let sut = try calendarPage(NarrowSupport.narrow, narrowStats: true)
         let floating = try sut.find(viewWithAccessibilityIdentifier: MainLayout.floatingIdentifier)
         #expect(throws: Never.self) { try floating.find(CalendarStatsPanel.self) }
     }
