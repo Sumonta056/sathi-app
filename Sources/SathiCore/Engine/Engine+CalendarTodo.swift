@@ -29,8 +29,6 @@ extension Engine {
     }
 
     package func completeCalendarTodo(_ id: String) {
-        _ = todos.setDone(id, true)
-        todoRuntime.stale = true
-        refreshTodos()
+        doneTodo(id)
     }
 }

@@ -1,6 +1,6 @@
 import SwiftUI
 
 extension Night {
-    static let promptTodo = Color(hex: 0xE58CF5)
+    static let promptTodo = todo
     static let todoDueAccent = promptEnds
 }

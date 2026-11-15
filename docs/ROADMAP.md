@@ -225,11 +225,12 @@ Branch: `feat/window-fit` (worktree `../Sathi-window-fit`), tracks `feat/wf-prom
 Spec: `docs/specs/phase-23-todos.md`. Branch: `feat/todos` (worktree `../Sathi-todos`).
 
 - [x] Grill, design (option A), plan approved, business rules
-- [ ] Track A: Core models, `TodoStore` port, prefs, fake
-- [ ] Track B: To-dos page, Settings, EventKit store, Info.plist
-- [ ] Track C: Quick panel card, To-do due prompt, day summary
-- [ ] Track D: to-dos on the Calendar page
-- [ ] Checks, perf, `--windows`, merge to `main`, website
+- [x] Track A: Core models, `TodoStore` port, prefs, fake
+- [x] Track B: To-dos page, Settings, EventKit store, Info.plist
+- [x] Track C: Quick panel card, To-do due prompt, day summary
+- [x] Track D: to-dos on the Calendar page
+- [x] Rebased on Phase 22 `main`; tracks joined; checks (tests, lint, release build)
+- [ ] User: install, hand tests, perf, `--windows`, merge to `main`, website
 
 ## Later
 
