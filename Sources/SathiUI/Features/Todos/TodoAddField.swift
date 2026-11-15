@@ -17,23 +17,28 @@ struct TodoAddField: View {
     }
 
     var body: some View {
-        HStack(spacing: UIMetrics.todoRowSpacing) {
-            Image(systemName: "plus")
-                .font(.system(size: UIMetrics.todoAddIcon, weight: .bold))
-                .foregroundStyle(Night.spark)
-            TextField(Copywriter.todoNewPlaceholder, text: $title)
-                .textFieldStyle(.plain)
-                .font(Typography.tracker(UIMetrics.todoFieldFont, .medium))
-                .foregroundStyle(Night.text)
-                .onSubmit(add)
-                .accessibilityIdentifier("todos.add.field")
-            dueChip
-            Button(action: add) {
-                Text(verbatim: Copywriter.todoAdd).accessibilityIdentifier("todos.add.button")
+        VStack(alignment: .leading, spacing: UIMetrics.todoChipSpacing) {
+            HStack(spacing: UIMetrics.todoRowSpacing) {
+                Image(systemName: "plus")
+                    .font(.system(size: UIMetrics.todoAddIcon, weight: .bold))
+                    .foregroundStyle(Night.spark)
+                TextField(Copywriter.todoNewPlaceholder, text: $title)
+                    .textFieldStyle(.plain)
+                    .font(Typography.tracker(UIMetrics.todoFieldFont, .medium))
+                    .foregroundStyle(Night.text)
+                    .onSubmit(add)
+                    .accessibilityIdentifier("todos.add.field")
+                Button(action: add) {
+                    Text(verbatim: Copywriter.todoAdd).accessibilityIdentifier("todos.add.button")
+                }
+                .buttonStyle(GhostButton(accent: Night.todo))
+                .disabled(isBlank)
             }
-            .buttonStyle(GhostButton(accent: Night.todo))
-            .disabled(isBlank)
+            dueChip
+                .padding(.leading, UIMetrics.todoAddIcon + UIMetrics.todoRowSpacing)
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("todos.add.stack")
         .padding(UIMetrics.todoAddPadding)
         .background(shape.fill(Night.todoField))
         .overlay(shape.strokeBorder(Night.border, lineWidth: UIMetrics.todoBorder))
@@ -47,7 +52,10 @@ struct TodoAddField: View {
         .buttonStyle(GhostButton(accent: pick == nil ? Night.chipText : Night.todo))
         .popover(isPresented: $picking, arrowEdge: .bottom) {
             TodoEditDue(hasDate: hasDate, date: date, minutes: minutes)
+                .environmentObject(e)
                 .padding(UIMetrics.todoEditPadding)
+                .frame(width: UIMetrics.todoDuePopoverWidth, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
                 .background(Night.card)
         }
     }

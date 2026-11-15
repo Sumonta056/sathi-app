@@ -7,20 +7,24 @@ struct TodoEditDue: View {
     @Binding var minutes: Int?
 
     var body: some View {
-        HStack(spacing: UIMetrics.todoChipSpacing) {
-            Text(verbatim: Copywriter.todoDue)
-                .font(Typography.tracker(UIMetrics.todoRowMetaFont, .medium))
-                .foregroundStyle(Night.label)
-                .frame(width: UIMetrics.todoEditLabelWidth, alignment: .leading)
-            BuddySwitch(isOn: $hasDate, accent: Night.todo, label: Copywriter.todoDue)
-                .accessibilityIdentifier("todos.edit.hasDate")
+        VStack(alignment: .leading, spacing: UIMetrics.todoChipSpacing) {
+            HStack(spacing: UIMetrics.todoChipSpacing) {
+                Text(verbatim: Copywriter.todoDue)
+                    .font(Typography.tracker(UIMetrics.todoRowMetaFont, .medium))
+                    .foregroundStyle(Night.label)
+                    .frame(width: UIMetrics.todoEditLabelWidth, alignment: .leading)
+                BuddySwitch(isOn: $hasDate, accent: Night.todo, label: Copywriter.todoDue)
+                    .accessibilityIdentifier("todos.edit.hasDate")
+            }
             if hasDate {
                 TodoDueDateChip(date: $date)
-                if minutes != nil {
-                    TimeMenu(minutes: time, accent: Night.todo, active: true)
-                    chip(Copywriter.todoNoTime, "todos.edit.noTime") { minutes = nil }
-                } else {
-                    chip(Copywriter.todoAddTime, "todos.edit.addTime") { minutes = Limits.todoDefaultDueMinutes }
+                HStack(spacing: UIMetrics.todoChipSpacing) {
+                    if minutes != nil {
+                        TimeMenu(minutes: time, accent: Night.todo, active: true)
+                        chip(Copywriter.todoNoTime, "todos.edit.noTime") { minutes = nil }
+                    } else {
+                        chip(Copywriter.todoAddTime, "todos.edit.addTime") { minutes = Limits.todoDefaultDueMinutes }
+                    }
                 }
             }
         }
