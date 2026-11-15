@@ -11,12 +11,24 @@ extension UIController {
             mainRoute = route
             mainWindow = MainWindow.make(engine: engine, route: route, closeWatcher: mainCloseWatcher)
         }
-        if let mainWindow { mainWindowShown(mainWindow) }
+        if let mainWindow {
+            fillPointerScreen(mainWindow)
+            mainWindowShown(mainWindow)
+        }
     }
 
     package func reopenMain() {
         guard let mainWindow else { return showMain(.today) }
+        fillPointerScreen(mainWindow)
         mainWindowShown(mainWindow)
+    }
+
+    private func fillPointerScreen(_ window: NSWindow) {
+        let pointer = NSEvent.mouseLocation
+        let screen = NSScreen.screens.first { NSMouseInRect(pointer, $0.frame, false) } ?? NSScreen.main
+        guard let visible = screen?.visibleFrame else { return }
+        mainCloseWatcher.lastVisibleFrame = visible
+        window.setFrame(WindowFit.openFrame(visible: visible), display: true)
     }
 
     func mainWillClose() {

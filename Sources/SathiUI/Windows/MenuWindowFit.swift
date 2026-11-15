@@ -17,7 +17,7 @@ struct MenuWindowFit: NSViewRepresentable {
     }
 
     static func needsFit(_ current: NSRect, height: CGFloat) -> Bool {
-        abs(current.height - height) > UIMetrics.windowFitTolerance
+        abs(current.height - height) > UIMetrics.menuFitTolerance
     }
 
     static func frame(_ current: NSRect, height: CGFloat) -> NSRect {
