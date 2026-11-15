@@ -15,6 +15,7 @@ extension Engine {
 
     package func stop() {
         isRunning = false
+        stopTodos()
         stopTracker()
         calendarPageClosed()
         syncCalendarChangeListener()

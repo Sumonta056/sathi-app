@@ -37,14 +37,24 @@ extension Engine {
     }
 
     func todosPrefsChanged(from old: TodoPrefs) {
-        todoRuntime.stale = true
+        let new = data.prefs.todos
         syncCalendarChangeListener()
-        if !data.prefs.todos.isOn {
+        if !new.isOn {
+            todoRuntime.stale = true
             todoRuntime.token += 1
+            todoRuntime.loadedRevision = nil
+            todoAccess = .notAsked
             applyTodos(.empty)
-        } else if isRunning {
-            refreshTodos()
+        } else if old.isOn != new.isOn || old.hiddenListIDs != new.hiddenListIDs {
+            todoRuntime.stale = true
+            if isRunning { refreshTodos() }
         }
+    }
+
+    func stopTodos() {
+        todoRuntime.refreshTask?.cancel()
+        todoRuntime.refreshTask = nil
+        todoRuntime.token += 1
     }
 
     func todosStoreChanged() {

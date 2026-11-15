@@ -26,6 +26,18 @@ package final class SpyTodoStore: TodoStore {
     package private(set) var calls: [TodoWriteCall] = []
     package private(set) var readRequests: [Set<String>] = []
     package private(set) var completedSinceRequests: [Date] = []
+    package var holdsReads = false
+    private var waiting: [CheckedContinuation<Void, Never>] = []
+
+    package var suspendedReads: Int { waiting.count }
+
+    package func releaseReads() {
+        let pending = waiting
+        waiting = []
+        for c in pending {
+            c.resume()
+        }
+    }
 
     package init() {}
 
@@ -42,11 +54,15 @@ package final class SpyTodoStore: TodoStore {
     package func todos(listIDs: Set<String>, completedSince: Date) async -> [Todo] {
         readRequests.append(listIDs)
         completedSinceRequests.append(completedSince)
-        return todosValue.filter { item in
+        let result = todosValue.filter { item in
             guard listIDs.contains(item.listID) else { return false }
             guard item.isDone else { return true }
             return (item.doneAt ?? .distantPast) >= completedSince
         }
+        if holdsReads {
+            await withCheckedContinuation { waiting.append($0) }
+        }
+        return result
     }
 
     package func add(_ draft: TodoDraft) -> TodoWriteResult {
