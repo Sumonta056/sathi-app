@@ -55,7 +55,7 @@ enum CalendarSplitRows {
     private static func order(_ items: [Item]) -> [Int] {
         items.indices.sorted { a, b in
             let (x, z) = (items[a], items[b])
-            return x.from != z.from ? x.from < z.from : CalendarBlockLayout.precedes(x.laid.span, z.laid.span)
+            return x.from != z.from ? x.from < z.from : CalendarSplitLanes.precedes(x.laid.span, z.laid.span)
         }
     }
 

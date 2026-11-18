@@ -40,7 +40,7 @@ struct CalendarShownListTests {
 
     @Test func aRenderReadsNoCalendarsAfterThePageBuild() throws {
         let h = EngineHarness(at: day(2026, 3, 4, 12))
-        _ = h.engine.calendarPage(.containing(day(2026, 3, 4, 12), kind: .day, calendar: h.engine.rangeCalendar))
+        _ = h.engine.calendarPageBase(.containing(day(2026, 3, 4, 12), kind: .day, calendar: h.engine.rangeCalendar))
         let readable = h.calendarWriter.readableCalls
         let calendars = h.calendarWriter.calendarsCalls
         for _ in 0 ..< 2 {

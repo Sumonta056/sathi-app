@@ -30,7 +30,7 @@ enum CalendarHoverFixtures {
         h.calendarWriter.eventsValue = events
         h.todos.listsValue = [makeTodoList("inbox", "Inbox")]
         h.todos.todosValue = todos
-        _ = h.engine.calendarPage(range(h))
+        _ = h.engine.calendarPageBase(range(h))
         return h
     }
 
@@ -39,11 +39,7 @@ enum CalendarHoverFixtures {
     }
 
     static func block(_ h: EngineHarness, _ title: String) throws -> CalendarBlock {
-        try #require(h.engine.calendarPage(range(h)).blocks.first { $0.title == title })
-    }
-
-    static func placed(_ h: EngineHarness, _ title: String) throws -> CalendarPlacedBlock {
-        try CalendarPlacedBlock(block: block(h, title), lane: 0, lanes: 1)
+        try #require(h.engine.calendarPageBase(range(h)).blocks.first { $0.title == title })
     }
 
     static func todo(_ id: String = "a") -> CalendarBlock {

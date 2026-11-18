@@ -4,15 +4,6 @@ extension Copywriter {
     package static let calendarHoverDoneDuring = "Done during this event"
     package static let calendarHoverAlsoHere = "Also here"
     package static let calendarHoverMetaSeparator = " · "
-    package static let calendarGroupDetailSeparator = " · "
-
-    package static func calendarGroupTitle(_ count: Int) -> String {
-        "\(count) activities"
-    }
-
-    package static func calendarInside(_ count: Int) -> String {
-        "\(count) inside"
-    }
 
     package static func calendarHoverKind(_ k: CalendarHoverKind) -> String {
         switch k {

@@ -25,7 +25,7 @@ struct CalendarPageEditTests {
     }
 
     private func block(_ h: EngineHarness, _ title: String) throws -> CalendarBlock {
-        try #require(h.engine.calendarPage(range(h, .day)).blocks.first { $0.title == title })
+        try #require(h.engine.calendarPageBase(range(h, .day)).blocks.first { $0.title == title })
     }
 
     @Test func anEventBlockOpensThePopoverWithItsValues() throws {
@@ -45,7 +45,7 @@ struct CalendarPageEditTests {
         let h = harness()
         h.engine.startActivity(ActivityDraft(text: "Focus", length: .minutes(60)))
         h.advance(minutes: 20)
-        let running = try #require(h.engine.calendarPage(range(h, .day)).blocks.first {
+        let running = try #require(h.engine.calendarPageBase(range(h, .day)).blocks.first {
             if case .activity(_, running: true) = $0.source { true } else { false }
         })
         return (h, running)

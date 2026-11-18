@@ -11,7 +11,7 @@ enum CalendarDoneDuring {
 
     static func link(_ day: [CalendarLaidBlock]) -> [CalendarLaidBlock] {
         let all = day.flatMap { [$0] + $0.hidden }
-        let events = all.filter(isHost).sorted { CalendarBlockLayout.precedes($0.rounded, $1.rounded) }
+        let events = all.filter(isHost).sorted { CalendarSplitLanes.precedes($0.rounded, $1.rounded) }
         var hosts: [String: String] = [:]
         for a in all where isChild(a) {
             if let e = events.first(where: { fits(a.rounded, in: $0.rounded) }) { hosts[a.id] = e.id }

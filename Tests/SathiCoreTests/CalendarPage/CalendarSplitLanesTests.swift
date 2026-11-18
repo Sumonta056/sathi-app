@@ -107,4 +107,33 @@ struct CalendarSplitLanesTests {
         #expect(Split.laid(grid, "bill") == nil)
         #expect(Split.laid(grid, "call")?.top == 240)
     }
+
+    @Test func limitsMatchTheRule() {
+        #expect(Limits.calendarSideBySideMinutes == 30)
+        #expect(Limits.calendarCascadeMaxDepth == 2)
+        #expect(Limits.calendarLanesMax == 2)
+    }
+
+    @Test func longerBlockTakesTheFirstLaneWhenStartsAreEqual() {
+        let grid = Split.layout([Split.event("short", "10:00", "10:30"), Split.event("long", "10:00", "11:30")])
+        #expect(Split.laid(grid, "long")?.lane == 0)
+        #expect(Split.laid(grid, "short")?.lane == 1)
+    }
+
+    @Test func chainOfLaterStartsRaisesEachOne() {
+        let grid = Split.layout([
+            Split.event("a", "10:00", "11:00"), Split.event("b", "10:40", "11:30"), Split.event("c", "11:20", "12:00")
+        ])
+        #expect(["a", "b", "c"].map { Split.laid(grid, $0)?.depth } == [0, 1, 2])
+    }
+
+    @Test func raisedItemsSitSideBySideAtTheirDepth() {
+        let grid = Split.layout([
+            Split.event("a", "10:00", "12:00"), Split.event("b", "10:30", "11:00"), Split.event("c", "10:35", "11:10")
+        ])
+        let shape = { (id: String) in Split.laid(grid, id).map { [$0.lane, $0.lanes, $0.depth] } }
+        #expect(shape("a") == [0, 1, 0])
+        #expect(shape("b") == [0, 2, 1])
+        #expect(shape("c") == [1, 2, 1])
+    }
 }

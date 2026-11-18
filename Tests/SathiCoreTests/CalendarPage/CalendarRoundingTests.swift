@@ -62,7 +62,7 @@ struct EngineCalendarRoundedTextTests {
         let start = day(2026, 3, 4, 14, 35).addingTimeInterval(54)
         let end = day(2026, 3, 4, 15, 1).addingTimeInterval(32)
         h.calendarWriter.eventsValue = [CalendarEventInfo(id: "e", title: "e", start: start, end: end, calendarID: "work")]
-        let data = h.engine.calendarPage(.containing(h.clock.now, kind: .day, calendar: h.engine.calendar))
+        let data = h.engine.calendarPageBase(.containing(h.clock.now, kind: .day, calendar: h.engine.calendar))
         let id = data.blocks[0].id
         let cal = h.engine.calendar
         #expect(data.texts[id]?.time == "2:36 – 3:02 PM")

@@ -5,7 +5,7 @@ package enum CalendarSplitLanes {
 
     package static func arrange(_ items: [CalendarLaidBlock]) -> [CalendarLaidBlock] {
         var shown: [CalendarLaidBlock] = []
-        for item in items.sorted(by: { CalendarBlockLayout.precedes($0.span, $1.span) }) {
+        for item in items.sorted(by: { precedes($0.span, $1.span) }) {
             let over = shown.indices.filter { overlaps(shown[$0].span, item.span) }
             let near = over.filter { item.span.start.timeIntervalSince(shown[$0].span.start) < window }
             if over.isEmpty {
@@ -17,6 +17,10 @@ package enum CalendarSplitLanes {
             }
         }
         return shown
+    }
+
+    static func precedes(_ a: DateInterval, _ b: DateInterval) -> Bool {
+        a.start != b.start ? a.start < b.start : a.end > b.end
     }
 
     static func overlaps(_ a: DateInterval, _ b: DateInterval) -> Bool {

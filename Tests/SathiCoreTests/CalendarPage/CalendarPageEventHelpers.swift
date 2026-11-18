@@ -18,7 +18,7 @@ func pageEvent(
 extension EngineHarness {
     func showPage(_ events: [CalendarEventInfo]) {
         calendarWriter.eventsValue = events
-        _ = engine.calendarPage(.containing(day(2026, 3, 4, 12), kind: .day, calendar: engine.calendar))
+        _ = engine.calendarPageBase(.containing(day(2026, 3, 4, 12), kind: .day, calendar: engine.calendar))
     }
 
     var writerCalls: Int {

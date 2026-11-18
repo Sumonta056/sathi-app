@@ -7,14 +7,7 @@ package struct CalendarPageData: Equatable, Sendable {
     package var stats: CalendarPageStats
     package var monthCells: [[CalendarMonthCell]]
     package var texts: [String: CalendarBlockText]
-    package var placed: [DayKey: [CalendarPlacedBlock]] = [:]
-    package var placedMinimumMinutes: Double = 0
-    package var placedNarrow: Set<CalendarLaneShape> = []
     package var grid: CalendarGridLayout?
-
-    package var shownIDs: Set<String> {
-        Set(blocks.map(\.id)).union(placed.values.joined().flatMap { [$0] + $0.children + $0.hidden }.map(\.block.id))
-    }
 }
 
 package struct CalendarBlockText: Equatable, Sendable {
@@ -28,24 +21,7 @@ package struct CalendarBlockText: Equatable, Sendable {
 }
 
 extension Engine {
-    package func calendarPage(
-        _ range: CalendarPageRange,
-        minimumMinutes: Double = 0,
-        narrow: Set<CalendarLaneShape> = []
-    ) -> CalendarPageData {
-        var page = calendarPageBase(range)
-        page.placedMinimumMinutes = minimumMinutes
-        page.placedNarrow = narrow
-        guard range.kind != .month else { return page }
-        page.placed = placed(page.blocks, days: range.days, minimumMinutes: minimumMinutes, narrow: narrow)
-        let groups = page.placed.values.joined().flatMap { [$0] + $0.children + $0.hidden }.map(\.block).filter { $0.group != nil }
-        for g in groups where page.texts[g.id] == nil {
-            page.texts[g.id] = text(of: g)
-        }
-        return page
-    }
-
-    func calendarPageBase(_ range: CalendarPageRange) -> CalendarPageData {
+    package func calendarPageBase(_ range: CalendarPageRange) -> CalendarPageData {
         let read = pageRead(range)
         let readable = read.readable
         let events = read.events
@@ -75,15 +51,6 @@ extension Engine {
             monthCells: cells,
             texts: Dictionary(all.map { ($0.id, text(of: $0)) }) { first, _ in first }
         )
-    }
-
-    private func placed(
-        _ blocks: [CalendarBlock], days: [DayKey], minimumMinutes: Double, narrow: Set<CalendarLaneShape>
-    ) -> [DayKey: [CalendarPlacedBlock]] {
-        Dictionary(days.map { key in
-            let column = CalendarPageDay.interval(of: key, calendar: calendar)
-            return (key, CalendarBlockLayout.place(blocks, within: column, minimumMinutes: minimumMinutes, narrow: narrow))
-        }) { first, _ in first }
     }
 
     private func text(of b: CalendarBlock) -> CalendarBlockText {

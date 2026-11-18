@@ -49,7 +49,7 @@ struct CalendarNoMergeTests {
     @Test func activityHoverActionsAreEditAndDeleteOnly() throws {
         let h = harness()
         let range = CalendarPageRange.containing(day(2026, 3, 4, 12), kind: .day, calendar: h.engine.rangeCalendar)
-        let block = try #require(h.engine.calendarPage(range).blocks.first { $0.title == "Write" })
+        let block = try #require(h.engine.calendarPageBase(range).blocks.first { $0.title == "Write" })
         let laid = CalendarLaidBlock(block: block, span: block.interval, half: .actual)
         #expect(CalendarHoverRun.visible(h.engine.calendarHoverInfo(laid, among: [laid])) == [.edit, .delete])
     }

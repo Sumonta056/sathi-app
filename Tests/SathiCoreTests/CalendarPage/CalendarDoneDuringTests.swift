@@ -49,6 +49,36 @@ struct CalendarDoneDuringTests {
         #expect(a1?.lanes == 1)
         #expect(a1?.depth == 0)
     }
+
+    @Test func limitsMatchTheRule() {
+        #expect(Limits.calendarHostLeadMinutes == 5)
+        #expect(Limits.calendarHostShare == 0.5)
+    }
+
+    @Test func activityLinksToTheFirstMatchingEventOnly() {
+        let grid = Split.layout([
+            Split.event("late", "10:10", "10:40"), Split.event("early", "10:00", "11:00"), Split.activity("a", "10:12", "10:30")
+        ])
+        #expect(Split.laid(grid, "a")?.doneDuring == "early")
+        #expect(Split.laid(grid, "early")?.doneDuringCount == 1)
+        #expect(Split.laid(grid, "late")?.doneDuringCount == 0)
+    }
+
+    @Test func eventsAndActivitiesNeverSwapRoles() {
+        let grid = Split.layout([
+            Split.activity("big", "10:00", "11:00"), Split.activity("small", "10:10", "10:20"),
+            Split.event("meet", "12:00", "13:00"), Split.event("inside", "12:10", "12:20")
+        ])
+        #expect(Split.laid(grid, "small")?.doneDuring == nil)
+        #expect(Split.laid(grid, "inside")?.doneDuring == nil)
+        #expect(Split.laid(grid, "meet")?.doneDuringCount == 0)
+    }
+
+    @Test func awayIsNeverDoneDuring() {
+        let grid = Split.layout([Split.event("meet", "10:00", "11:00"), Split.away("away", "10:10", "10:30")])
+        #expect(Split.laid(grid, "away")?.doneDuring == nil)
+        #expect(Split.laid(grid, "meet")?.doneDuringCount == 0)
+    }
 }
 
 @Suite("Calendar done during: real times")

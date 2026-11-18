@@ -44,7 +44,7 @@ struct CalendarHoverRunTests {
     @Test func deleteRemovesTheActivity() throws {
         let h = Fix.harness()
         try Fix.runner(h, Fix.Spy()).run(.delete, Fix.target(Fix.laid(h, "Write")))
-        #expect(!h.engine.calendarPage(Fix.range(h)).blocks.contains { $0.title == "Write" })
+        #expect(!h.engine.calendarPageBase(Fix.range(h)).blocks.contains { $0.title == "Write" })
     }
 
     @Test func markDoneCompletesTheTodo() {

@@ -22,16 +22,4 @@ extension Engine {
         }
         return CalendarHoverInfo.make(laid, among: day, lookup: lookup, calendar: calendar)
     }
-
-    package func calendarHoverInfo(_ placed: CalendarPlacedBlock) -> CalendarHoverInfo {
-        calendarHoverInfo(Self.laid(placed), among: [])
-    }
-
-    private static func laid(_ placed: CalendarPlacedBlock) -> CalendarLaidBlock {
-        var half = CalendarHalf.plan
-        if case .activity = placed.block.source { half = .actual }
-        var out = CalendarLaidBlock(block: placed.block, span: placed.span, half: half, rounded: CalendarRounding.rounded(placed.span))
-        out.hidden = placed.hidden.map(Self.laid)
-        return out
-    }
 }

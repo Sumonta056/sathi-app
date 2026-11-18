@@ -66,18 +66,12 @@ struct EngineCalendarGridTests {
     }
 
     @Test(arguments: [ReportRange.day, .week])
-    func gridPathRunsNoOldLayout(_ kind: ReportRange) {
+    func gridPathKeepsBlocksAndTexts(_ kind: ReportRange) {
         let h = harness()
         let data = h.engine.calendarPage(range(h, kind), metrics: weekMetrics)
-        #expect(data.placed.isEmpty)
         #expect(data.grid != nil)
         #expect(!data.blocks.isEmpty)
         #expect(data.blocks.allSatisfy { data.texts[$0.id] != nil })
-    }
-
-    @Test func oldPathStillPlaces() {
-        let h = harness()
-        #expect(!h.engine.calendarPage(range(h, .week)).placed.isEmpty)
     }
 
     @Test func monthHasNoGrid() {

@@ -21,7 +21,7 @@ struct EngineCalendarPageDataTests {
     @Test func trackerOffShowsEventsOnly() {
         let h = EngineHarness(at: day(2026, 3, 4, 12))
         h.calendarWriter.eventsValue = [event("e1", day(2026, 3, 4, 9))]
-        let data = h.engine.calendarPage(wednesday(h))
+        let data = h.engine.calendarPageBase(wednesday(h))
         #expect(data.blocks.map(\.title) == ["e1"])
         #expect(!hasActivityBlock(data))
         #expect(data.stats.planned == 60 * 60)
@@ -31,12 +31,12 @@ struct EngineCalendarPageDataTests {
         let row = Activity(text: "Old", start: day(2026, 3, 4, 9), end: day(2026, 3, 4, 10))
         let h = EngineHarness(at: day(2026, 3, 4, 12), activities: InMemoryActivityStore(activities: [row]))
         h.calendarWriter.eventsValue = [event("e1", day(2026, 3, 4, 11))]
-        let data = h.engine.calendarPage(wednesday(h))
+        let data = h.engine.calendarPageBase(wednesday(h))
         #expect(data.blocks.map(\.title) == ["e1"])
         #expect(!hasActivityBlock(data))
         #expect(data.stats.tracked == 0)
         #expect(data.stats.byCategory.isEmpty)
-        let month = h.engine.calendarPage(wednesday(h, kind: .month))
+        let month = h.engine.calendarPageBase(wednesday(h, kind: .month))
         #expect(month.monthCells.flatMap { $0 }.allSatisfy { $0.tracked == 0 })
     }
 
@@ -45,7 +45,7 @@ struct EngineCalendarPageDataTests {
         var declined = event("no", day(2026, 3, 4, 9))
         declined.declined = true
         h.calendarWriter.eventsValue = [declined]
-        let data = h.engine.calendarPage(wednesday(h))
+        let data = h.engine.calendarPageBase(wednesday(h))
         #expect(data.blocks.map(\.title) == ["no"])
         #expect(data.stats.planned == 0)
     }
@@ -54,7 +54,7 @@ struct EngineCalendarPageDataTests {
         let h = EngineHarness(at: day(2026, 3, 4, 12))
         let reads = h.calendarWriter.eventReads.count
         let range = wednesday(h, kind: .week)
-        _ = h.engine.calendarPage(range)
+        _ = h.engine.calendarPageBase(range)
         #expect(h.calendarWriter.eventReads.count == reads + 1)
         #expect(h.calendarWriter.eventReads.last == range.interval)
     }
@@ -64,7 +64,7 @@ struct EngineCalendarPageDataTests {
         h.calendarWriter.eventsValue = [event("e1", day(2026, 3, 4, 9))]
         h.engine.calendarAccess = .denied
         let reads = h.calendarWriter.eventReads.count
-        let data = h.engine.calendarPage(wednesday(h))
+        let data = h.engine.calendarPageBase(wednesday(h))
         #expect(h.calendarWriter.eventReads.count == reads)
         #expect(data.blocks.isEmpty)
         #expect(data.allDay.isEmpty)
@@ -75,7 +75,7 @@ struct EngineCalendarPageDataTests {
         let row = Activity(text: "Write", start: day(2026, 3, 4, 9), end: day(2026, 3, 4, 10), calendarID: "work", eventID: "e1")
         let h = EngineHarness.tracker(at: day(2026, 3, 4, 12), activities: [row])
         h.calendarWriter.eventsValue = [event("e1", day(2026, 3, 4, 9)), event("e2", day(2026, 3, 4, 11))]
-        let data = h.engine.calendarPage(wednesday(h))
+        let data = h.engine.calendarPageBase(wednesday(h))
         #expect(data.blocks.map(\.title).sorted() == ["Write", "e2"])
         #expect(data.stats.planned == 2 * 60 * 60)
     }
@@ -83,7 +83,7 @@ struct EngineCalendarPageDataTests {
     @Test func rowAfterMidnightIsInTheDayBefore() {
         let row = Activity(text: "Late", start: day(2026, 3, 5, 0, 22), end: day(2026, 3, 5, 2, 2))
         let h = EngineHarness.tracker(at: day(2026, 3, 5, 12), activities: [row])
-        let data = h.engine.calendarPage(wednesday(h))
+        let data = h.engine.calendarPageBase(wednesday(h))
         #expect(data.blocks.map(\.title) == ["Late"])
         #expect(data.stats.tracked == 100 * 60)
     }
@@ -92,7 +92,7 @@ struct EngineCalendarPageDataTests {
         let h = EngineHarness(at: day(2026, 3, 4, 12))
         let e = event("e1", day(2026, 3, 4, 9))
         h.calendarWriter.eventsValue = [e, e]
-        let data = h.engine.calendarPage(wednesday(h))
+        let data = h.engine.calendarPageBase(wednesday(h))
         #expect(data.blocks.count == 1)
         #expect(Set(data.blocks.map(\.id)).count == data.blocks.count)
     }
@@ -103,7 +103,7 @@ struct EngineCalendarPageDataTests {
             text: "Focus", start: day(2026, 3, 4, 10), expectedLength: .minutes(60), askAt: day(2026, 3, 4, 11)
         )
         h.clock.advance(minutes: 20)
-        let data = h.engine.calendarPage(wednesday(h))
+        let data = h.engine.calendarPageBase(wednesday(h))
         let block = data.blocks.first { $0.title == "Focus" }
         #expect(block?.interval.end == day(2026, 3, 4, 10, 20))
         #expect(data.stats.tracked == 20 * 60)
@@ -111,8 +111,8 @@ struct EngineCalendarPageDataTests {
 
     @Test func monthRangeHasCells() {
         let h = EngineHarness(at: day(2026, 3, 4, 12))
-        #expect(h.engine.calendarPage(wednesday(h)).monthCells.isEmpty)
-        let month = h.engine.calendarPage(wednesday(h, kind: .month))
+        #expect(h.engine.calendarPageBase(wednesday(h)).monthCells.isEmpty)
+        let month = h.engine.calendarPageBase(wednesday(h, kind: .month))
         #expect(month.monthCells.flatMap { $0 }.filter(\.isToday).map(\.day.raw) == ["2026-03-04"])
     }
 }

@@ -8,6 +8,10 @@ import Testing
 struct EngineCalendarStartFromEventTests {
     private let standup = meeting(from: wed(10, 30), to: wed(11, 30))
 
+    private func laid(_ b: CalendarBlock) -> CalendarLaidBlock {
+        CalendarHoverInfoTests.laid(b)
+    }
+
     private func onPage(_ mode: EventMode = .logAndTell, at time: Date = wed(10)) -> EngineHarness {
         let h = EngineHarness.tracker(at: time)
         h.useEvents([standup], mode: mode)
@@ -55,9 +59,9 @@ struct EngineCalendarStartFromEventTests {
     @Test func tomorrowsEventHasNoStartAndStartsNothing() throws {
         let h = EngineHarness.tracker(at: wed(10))
         h.useEvents([meeting("t1", "Plan", from: wed(10).addingTimeInterval(Timing.day), to: wed(11).addingTimeInterval(Timing.day))])
-        let week = h.engine.calendarPage(.containing(wed(12), kind: .week, calendar: h.engine.calendar))
+        let week = h.engine.calendarPageBase(.containing(wed(12), kind: .week, calendar: h.engine.calendar))
         let block = try #require(week.blocks.first { $0.title == "Plan" })
-        #expect(!h.engine.calendarHoverInfo(CalendarPlacedBlock(block: block, lane: 0, lanes: 1)).actions.contains(.startAsActivity))
+        #expect(!h.engine.calendarHoverInfo(laid(block), among: []).actions.contains(.startAsActivity))
         #expect(!h.engine.startActivity(fromEvent: "t1"))
         #expect(h.running?.sourceEventID == nil)
     }
@@ -66,13 +70,13 @@ struct EngineCalendarStartFromEventTests {
         let h = onPage(at: wed(10, 40))
         h.engine.data.prefs.tracker.isOn = false
         let block = try #require(h.pageDay.blocks.first { $0.title == "Standup" })
-        #expect(!h.engine.calendarHoverInfo(CalendarPlacedBlock(block: block, lane: 0, lanes: 1)).actions.contains(.startAsActivity))
+        #expect(!h.engine.calendarHoverInfo(laid(block), among: []).actions.contains(.startAsActivity))
     }
 
     @Test func eventWithinFiveMinutesShowsStartInTheHoverCard() throws {
         let h = onPage(at: wed(10, 25))
         let block = try #require(h.pageDay.blocks.first { $0.title == "Standup" })
-        #expect(h.engine.calendarHoverInfo(CalendarPlacedBlock(block: block, lane: 0, lanes: 1)).actions.first == .startAsActivity)
+        #expect(h.engine.calendarHoverInfo(laid(block), among: []).actions.first == .startAsActivity)
         #expect(h.engine.startActivity(fromEvent: "m1"))
     }
 
