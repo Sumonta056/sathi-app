@@ -6,6 +6,7 @@ struct CalendarBlockContext {
     var categories: [ActivityCategory] = []
     var selected: Set<ActivityID> = []
     var press: (CalendarBlock, CGFloat) -> Void = { _, _ in }
+    var hover: (CalendarPlacedBlock, Bool) -> Void = { _, _ in }
 
     func text(_ block: CalendarBlock) -> CalendarBlockText {
         texts[block.id] ?? CalendarBlockText(time: "", spoken: block.title)

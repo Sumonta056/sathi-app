@@ -35,6 +35,7 @@ struct CalendarEventCard: View {
         .frame(maxWidth: .infinity, alignment: .topLeading)
         .frame(height: max(height, UIMetrics.calendarBarMinHeight), alignment: .topLeading)
         .modifier(CalendarBlockChrome(look: look, radius: UIMetrics.calendarEventRadius, selected: false, raised: placed.isRaised))
+        .onHover { context.hover(placed, $0) }
     }
 
     private var spoken: String {

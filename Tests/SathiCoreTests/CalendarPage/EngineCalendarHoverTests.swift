@@ -37,4 +37,15 @@ struct EngineCalendarHoverTests {
         #expect(i.actions == [.startAsActivity, .openInCalendar])
         #expect(i.meta == nil)
     }
+
+    @Test func openRemindersOpensTheRemindersApp() {
+        let h = EngineHarness(at: wed(10))
+        h.engine.openReminders()
+        #expect(h.links.opened == [URL(fileURLWithPath: "/System/Applications/Reminders.app")])
+    }
+
+    @Test func hoverDelaysAreOneShotWaitsFromTheSpec() {
+        #expect(Timing.calendarHoverOpenDelay == 0.35)
+        #expect(Timing.calendarHoverCloseDelay == 0.2)
+    }
 }

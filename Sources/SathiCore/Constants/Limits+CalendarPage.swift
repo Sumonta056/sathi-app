@@ -16,4 +16,5 @@ extension Limits {
     package static let calendarLanesMax = 2
     package static let calendarHostLeadMinutes = 5
     package static let calendarHostShare = 0.5
+    package static let calendarHoverLeftWeekdays: Set<Int> = [4, 5, 6]
 }

@@ -20,6 +20,7 @@ struct CalendarActivityBlock: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .onHover { context.hover(placed, $0) }
         .accessibilityAddTraits(selected ? .isSelected : [])
         .accessibilityLabel(context.text(block).spoken)
     }

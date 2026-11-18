@@ -46,4 +46,6 @@ package enum Timing {
     package static let musicFadeIn: TimeInterval = 3
     package static let musicFadeOut: TimeInterval = 2
     package static let soundPreview: TimeInterval = 5
+    package static let calendarHoverOpenDelay: TimeInterval = 0.35
+    package static let calendarHoverCloseDelay: TimeInterval = 0.2
 }

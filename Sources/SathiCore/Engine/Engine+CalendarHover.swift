@@ -1,6 +1,12 @@
 import Foundation
 
 extension Engine {
+    static let remindersAppPath = "/System/Applications/Reminders.app"
+
+    package func openReminders() {
+        links.open(URL(fileURLWithPath: Self.remindersAppPath))
+    }
+
     package func calendarHoverInfo(_ placed: CalendarPlacedBlock) -> CalendarHoverInfo {
         var lookup = CalendarHoverLookup()
         switch placed.block.source {
