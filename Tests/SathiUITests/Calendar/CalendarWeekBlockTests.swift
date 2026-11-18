@@ -42,14 +42,9 @@ struct CalendarWeekBlockTests {
         #expect(Find.lacks(sut, text: "2:36 – 3:02 PM · 26m"))
     }
 
-    @Test(arguments: [(22.0, 1), (33.9, 1), (34.0, 2), (80.0, 2)])
-    func narrowWrapsToTwoLinesOnlyFromThirtyFourPoints(_ height: Double, _ lines: Int) {
-        #expect(CalendarWeekBlock.titleLines(height: height, narrow: true) == lines)
-    }
-
     @Test(arguments: [(34.0, 1), (49.0, 2), (64.0, 3), (200.0, 3)])
     func wideTitleGrowsToThreeLinesWhenTall(_ height: Double, _ lines: Int) {
-        #expect(CalendarWeekBlock.titleLines(height: height, narrow: false) == lines)
+        #expect(CalendarWeekBlock.titleLines(height: height) == lines)
     }
 
     @Test func awayIsADimStripedBlock() throws {

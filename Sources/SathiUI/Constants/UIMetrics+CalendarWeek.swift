@@ -3,6 +3,8 @@ import SwiftUI
 extension UIMetrics {
     static let calendarWeekHeaderHeight: CGFloat = 26
     static let calendarWeekHeaderFont: CGFloat = 12
+    static let calendarWeekHeaderGap: CGFloat = 5
+    static let calendarWeekTodayCircle: CGFloat = 22
     static let calendarWeekLabelFont: CGFloat = 9.5
     static let calendarWeekLabelTracking: CGFloat = 0.6
     static let calendarWeekBlockRadius: CGFloat = 6
@@ -15,7 +17,7 @@ extension UIMetrics {
     static let calendarWeekLineHeight: Double = 15
     static let calendarWeekTimeRoom: Double = 19
     static let calendarWeekTitleLinesMax = 3
-    static let calendarWeekNarrowLinesMax = 2
+    static let calendarWeekNarrowTimeRoom: CGFloat = 40
     static let calendarWeekEventStrokeOpacity: Double = 0.5
     static let calendarWeekGap: CGFloat = 4
     static let calendarDashedLine: [CGFloat] = [3, 3]

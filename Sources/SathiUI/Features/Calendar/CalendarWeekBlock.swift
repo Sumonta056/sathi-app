@@ -9,8 +9,7 @@ struct CalendarWeekBlock: View {
     let categories: [ActivityCategory]
     var doneColor: Color?
 
-    static func titleLines(height: Double, narrow: Bool) -> Int {
-        if narrow { return height >= UIMetrics.calendarWeekBlockMinHeight ? UIMetrics.calendarWeekNarrowLinesMax : 1 }
+    static func titleLines(height: Double) -> Int {
         let fit = Int(((height - UIMetrics.calendarWeekTimeRoom) / UIMetrics.calendarWeekLineHeight).rounded(.down))
         return min(UIMetrics.calendarWeekTitleLinesMax, max(1, fit))
     }
@@ -19,24 +18,31 @@ struct CalendarWeekBlock: View {
     private var isEvent: Bool { if case .event = block.source { true } else { false } }
     private var isAway: Bool { block.style == .away }
     private var look: CalendarBlockLook { CalendarBlockLook.of(block.style, categories: categories) }
-    private var lines: Int { Self.titleLines(height: Double(size.height), narrow: narrow) }
+    private var edge: Color { Self.edge(block.style, categories: categories) }
+    private var titleColor: Color { isAway ? Night.muted : Night.text }
 
-    private var edge: Color {
-        if isAway { return Color(hex: NightHex.trackerAway) }
-        if case let .activity(category) = block.style { return Color(hex: ActivityColors.hex(category, in: categories)) }
-        return look.stroke ?? look.text
+    static func edge(_ style: CalendarBlockStyle, categories: [ActivityCategory]) -> Color {
+        switch style {
+        case .away: Color(hex: NightHex.trackerAway)
+        case let .activity(category), let .joined(category): Color(hex: ActivityColors.hex(category, in: categories))
+        case let .event(hex), let .todo(hex): Color(hex: hex)
+        }
     }
 
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: UIMetrics.calendarWeekBlockRadius, style: .continuous)
         ZStack(alignment: .topLeading) {
             if isAway { CalendarStripes() }
-            if narrow { narrowFace } else { wideFace }
+            if narrow {
+                CalendarWeekNarrowText(laid: laid, size: size, calendar: calendar, titleColor: titleColor)
+            } else {
+                wideFace
+            }
         }
         .frame(width: size.width, height: size.height, alignment: .topLeading)
         .background(isEvent || isAway ? Night.card : look.fill)
         .overlay(alignment: .leading) { edge.frame(width: UIMetrics.calendarWeekBlockEdge) }
-        .overlay(alignment: .bottomTrailing) { dot }
+        .overlay(alignment: .topTrailing) { dot }
         .clipShape(shape)
         .overlay(outline(shape))
         .accessibilityElement(children: .combine)
@@ -47,7 +53,10 @@ struct CalendarWeekBlock: View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .firstTextBaseline, spacing: UIMetrics.calendarCopiesGap) {
                 icon
-                title(UIMetrics.calendarWeekTitleFont)
+                CalendarWordTitle(
+                    text: block.title, font: Typography.tracker(UIMetrics.calendarWeekTitleFont, .bold), color: titleColor,
+                    lines: Self.titleLines(height: Double(size.height))
+                )
                 Spacer(minLength: 0)
                 CalendarBlockBadges(laid: laid)
             }
@@ -59,20 +68,6 @@ struct CalendarWeekBlock: View {
         .padding(UIMetrics.calendarWeekBlockPadding)
     }
 
-    private var narrowFace: some View {
-        HStack(alignment: .firstTextBaseline, spacing: UIMetrics.calendarCopiesGap) {
-            icon
-            Text(verbatim: Copywriter.calendarStartClock(laid.rounded.start, calendar: calendar))
-                .font(Typography.tracker(UIMetrics.calendarWeekTimeFont, .semibold))
-                .foregroundStyle(Night.chipText)
-                .fixedSize()
-            title(UIMetrics.calendarWeekNarrowFont)
-            Spacer(minLength: 0)
-            CalendarBlockBadges(laid: laid)
-        }
-        .padding(UIMetrics.calendarWeekNarrowPadding)
-    }
-
     @ViewBuilder private var icon: some View {
         if isEvent {
             Image(systemName: "calendar")
@@ -80,13 +75,6 @@ struct CalendarWeekBlock: View {
                 .foregroundStyle(edge)
                 .accessibilityHidden(true)
         }
-    }
-
-    private func title(_ size: CGFloat) -> some View {
-        Text(verbatim: block.title)
-            .font(Typography.tracker(size, .bold))
-            .foregroundStyle(isAway ? Night.muted : Night.text)
-            .lineLimit(lines)
     }
 
     @ViewBuilder private var dot: some View {
