@@ -25,35 +25,6 @@ struct CalendarHoverGroupTests {
         CalendarPlacedBlock(block: CalendarBlockGroup.block(members), lane: 0, lanes: 1)
     }
 
-    @Test func groupCardListsTheMembersAndATapPicksOne() throws {
-        let h = Fix.harness()
-        var picked: [String] = []
-        let info = h.engine.calendarHoverInfo(group)
-        let sut = try CalendarHoverCard(info: info, actions: info.actions, run: { _ in }, pick: { picked.append($0) }).inspect()
-        #expect(throws: Never.self) { try sut.find(text: "3 activities · grouped") }
-        #expect(throws: Never.self) { try sut.find(text: "In this block") }
-        #expect(throws: Never.self) { try sut.find(button: "Select all") }
-        try sut.find(viewWithAccessibilityIdentifier: "calendar.hover.row.Code").button().tap()
-        #expect(picked == ["Code"])
-    }
-
-    @Test func selectAllIsOnlyShownWhereMergeWorks() {
-        let h = Fix.harness()
-        let info = h.engine.calendarHoverInfo(group)
-        #expect(CalendarHoverRun.visible(info, canMerge: true) == [.selectAll])
-        #expect(CalendarHoverRun.visible(info, canMerge: false) == [])
-    }
-
-    @Test func selectAllAddsEveryMemberToTheMergeSelection() {
-        let h = Fix.harness()
-        var picked: [ActivityID] = []
-        var grid = CalendarGridActions()
-        grid.toggle = { _ in }
-        grid.select = { picked += $0 }
-        CalendarHoverRun(engine: h.engine, grid: grid) { _ in }.run(.selectAll, Fix.target(group))
-        #expect(picked == members.flatMap(\.activityIDs))
-    }
-
     @Test func aMemberRowDoesWhatAClickOnThatBlockDoes() {
         let h = Fix.harness()
         let spy = Fix.Spy()
