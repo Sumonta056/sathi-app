@@ -10,7 +10,7 @@ struct EngineCalendarGridTests {
         pointsPerMinute: 1, minHeight: 46, awayMinHeight: 40, gap: 4, titleRoom: 22, foldHeight: 22, foldsNights: false
     )
     private let weekMetrics = CalendarLayoutMetrics(
-        pointsPerMinute: 1, minHeight: 34, awayMinHeight: 34, gap: 2, titleRoom: 22, foldHeight: 22, foldsNights: false
+        pointsPerMinute: 1, minHeight: 34, awayMinHeight: 34, gap: 2, titleRoom: 22, foldHeight: 22, foldsNights: true
     )
 
     private func event(_ id: String, _ from: Date, _ to: Date) -> CalendarEventInfo {
@@ -43,8 +43,26 @@ struct EngineCalendarGridTests {
         let grid = data.grid
         #expect(grid != nil)
         #expect(grid.map { Set($0.days.keys) } == Set(data.range.days))
-        #expect(grid?.rows.count == 24)
+        #expect(grid?.rows.first?.startMinute == 0)
+        #expect(grid?.rows.last?.endMinute == Limits.minutesPerDay)
         #expect(block(grid, titled: "a")?.half == .plan)
+    }
+
+    @Test func dayNeverFoldsWhateverTheMetricsSay() {
+        let h = harness()
+        var folding = dayMetrics
+        folding.foldsNights = true
+        let grid = h.engine.calendarPage(range(h, .day), metrics: folding).grid
+        #expect(grid?.rows.count == 24)
+        #expect(grid?.rows.contains(where: \.isFold) == false)
+    }
+
+    @Test func weekFoldsQuietNightsWhateverTheMetricsSay() {
+        let h = harness()
+        var flat = weekMetrics
+        flat.foldsNights = false
+        let grid = h.engine.calendarPage(range(h, .week), metrics: flat).grid
+        #expect(grid?.rows.contains(where: \.isFold) == true)
     }
 
     @Test func monthHasNoGrid() {

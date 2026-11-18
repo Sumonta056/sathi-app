@@ -76,4 +76,22 @@ struct CalendarNightFoldTests {
         let grid = Split.layout([], days: [Split.page, Split.key(Split.monday + 1)], metrics: Split.weekNarrow)
         #expect(strips(grid) == ["0-1440 fold"])
     }
+
+    @Test func awayInsideAFoldIsNotShown() {
+        let grid = Split.layout(
+            [Split.activity("work", "10:00", "11:00"), Split.away("sleep", "01:00", "05:00")], metrics: Split.week
+        )
+        #expect(Split.laid(grid, "sleep") == nil)
+        #expect(grid.days[Split.page]?.contains { $0.hidden.contains { $0.id == "sleep" } } == false)
+    }
+
+    @Test func awayLeavingAFoldStartsAtTheStripBottom() {
+        let real = DateInterval(start: Split.at("04:00", on: Split.monday - 1), end: Split.at("10:30"))
+        let grid = Split.layout(
+            [Split.activity("work", "10:00", "11:00"), Split.activity("sleep", real, kind: .away)], metrics: Split.week
+        )
+        let strip = grid.rowAt(0)
+        #expect(strip?.isFold == true)
+        #expect(Split.laid(grid, "sleep")?.top == strip.map { $0.top + $0.height })
+    }
 }
