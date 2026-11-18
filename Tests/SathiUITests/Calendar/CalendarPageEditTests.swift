@@ -98,6 +98,7 @@ struct CalendarPageEditTests {
 
     @Test func everyViewShowsThePanelAndTheHeaderSummaryAndNoLine() throws {
         let h = harness()
+        h.engine.setCalendarSidePanelShown(true, for: .week)
         for kind in ReportRange.allCases {
             let sut = try CalendarPage(range: range(h, kind)).environmentObject(h.engine).inspect()
             #expect(throws: Never.self) { try sut.find(CalendarStatsPanel.self) }

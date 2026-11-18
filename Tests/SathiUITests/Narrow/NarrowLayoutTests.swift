@@ -76,6 +76,7 @@ struct NarrowLayoutTests {
         let h = EngineHarness(at: day(2026, 3, 4, 12), activities: InMemoryActivityStore(activities: [coding])) {
             $0.prefs.tracker.isOn = true
             $0.prefs.calendarPage.sidePanelShown = true
+            $0.prefs.calendarPage.sidePanelShownWeek = true
         }
         let range = CalendarPageRange.containing(day(2026, 3, 4, 12), kind: .week, calendar: h.engine.rangeCalendar)
         return try CalendarPage(range: range, narrowStats: narrowStats).environmentObject(h.engine).environment(\.mainLayout, layout).inspect()

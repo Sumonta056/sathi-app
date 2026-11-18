@@ -46,8 +46,12 @@ extension Engine {
         data.prefs.calendarPage.isOn = on
     }
 
-    package func setCalendarSidePanelShown(_ shown: Bool) {
-        data.prefs.calendarPage.sidePanelShown = shown
+    package func setCalendarSidePanelShown(_ shown: Bool, for kind: ReportRange) {
+        if kind == .week {
+            data.prefs.calendarPage.sidePanelShownWeek = shown
+        } else {
+            data.prefs.calendarPage.sidePanelShown = shown
+        }
     }
 
     package func setCalendarRowMinutes(_ minutes: Int) {

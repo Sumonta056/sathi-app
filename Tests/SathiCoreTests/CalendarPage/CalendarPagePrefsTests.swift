@@ -59,9 +59,9 @@ struct CalendarPagePrefsTests {
 
     @MainActor @Test func settingTheSidePanelSavesIt() {
         let h = EngineHarness()
-        h.engine.setCalendarSidePanelShown(false)
+        h.engine.setCalendarSidePanelShown(false, for: .day)
         #expect(h.store.prefs.calendarPage.sidePanelShown == false)
-        h.engine.setCalendarSidePanelShown(true)
+        h.engine.setCalendarSidePanelShown(true, for: .day)
         #expect(h.store.prefs.calendarPage.sidePanelShown == true)
     }
 
