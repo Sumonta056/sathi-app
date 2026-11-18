@@ -5,7 +5,7 @@ struct TodosPage: View {
     @State private var selection: TodoSelection
     @EnvironmentObject var e: Engine
 
-    init(selection: TodoSelection = .smart(.today)) {
+    init(selection: TodoSelection = .smart(.all)) {
         _selection = State(initialValue: selection)
     }
 
@@ -26,7 +26,7 @@ struct TodosPage: View {
 
     private var shown: TodoSelection {
         if case let .list(id) = selection, !e.todoSnapshot.lists.contains(where: { $0.id == id }) {
-            return .smart(.today)
+            return .smart(.all)
         }
         return selection
     }

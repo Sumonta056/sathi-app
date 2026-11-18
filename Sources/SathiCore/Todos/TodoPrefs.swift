@@ -5,6 +5,7 @@ package struct TodoPrefs: Codable, Equatable, Sendable {
     package var hiddenListIDs: Set<String> = []
     package var askWhenDue: Bool = true
     package var newListAccountID: String?
+    package var order: [String: [String]] = [:]
 
     package init(
         isOn: Bool = false,
@@ -19,7 +20,7 @@ package struct TodoPrefs: Codable, Equatable, Sendable {
     }
 
     private enum CodingKeys: String, CodingKey {
-        case isOn, hiddenListIDs, askWhenDue, newListAccountID
+        case isOn, hiddenListIDs, askWhenDue, newListAccountID, order
     }
 
     package init(from decoder: Decoder) throws {
@@ -29,5 +30,6 @@ package struct TodoPrefs: Codable, Equatable, Sendable {
         hiddenListIDs = c.lenientSet(.hiddenListIDs, or: d.hiddenListIDs)
         askWhenDue = c.lenient(.askWhenDue, or: d.askWhenDue)
         newListAccountID = try? c.decodeIfPresent(String.self, forKey: .newListAccountID)
+        order = c.lenient(.order, or: d.order)
     }
 }
