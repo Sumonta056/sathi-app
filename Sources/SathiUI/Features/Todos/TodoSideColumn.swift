@@ -13,7 +13,7 @@ struct TodoSideColumn: View {
             TodoSmartTiles(selection: $selection)
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: UIMetrics.todoListRowGap) {
-                    ForEach(Self.groups(e.todoSnapshot.lists), id: \.name) { group in
+                    ForEach(Self.groups(e.todoSideLists(selection)), id: \.name) { group in
                         Text(verbatim: group.name.uppercased())
                             .font(Typography.tracker(UIMetrics.todoGroupFont, .bold))
                             .tracking(UIMetrics.todoGroupTracking)

@@ -11,7 +11,7 @@ struct TodoListRow: View {
     var body: some View {
         Button(action: onSelect) {
             HStack(spacing: UIMetrics.todoListRowSpacing) {
-                Circle().fill(Night.todoList(list.colorHex)).frame(width: UIMetrics.todoListDot, height: UIMetrics.todoListDot)
+                Circle().fill(Night.todoSoftDot(Night.todoList(list.colorHex))).frame(width: UIMetrics.todoListDot, height: UIMetrics.todoListDot)
                 Text(verbatim: list.name)
                     .font(Typography.tracker(UIMetrics.todoListFont, isSelected ? .semibold : .medium))
                     .foregroundStyle(Night.text)

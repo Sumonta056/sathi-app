@@ -5,23 +5,25 @@ struct TodoSectionHeader: View {
     let list: TodoList
     let count: Int
 
+    static let nameColor = Night.todoSectionName
+    static let ruleColor = Night.divider
+
     var body: some View {
-        let color = Night.todoList(list.colorHex)
         HStack(spacing: UIMetrics.todoSectionSpacing) {
             Circle()
-                .fill(color)
+                .fill(Night.todoSoftDot(Night.todoList(list.colorHex)))
                 .frame(width: UIMetrics.todoSectionDot, height: UIMetrics.todoSectionDot)
                 .accessibilityIdentifier("todos.section.dot." + list.id)
             Text(verbatim: list.name)
-                .font(Typography.tracker(UIMetrics.todoSectionFont, .heavy))
-                .foregroundStyle(color)
+                .font(Typography.tracker(UIMetrics.todoSectionFont, .bold))
+                .foregroundStyle(Self.nameColor)
                 .lineLimit(1)
             Text(verbatim: "\(count)")
-                .font(Typography.tracker(UIMetrics.todoSectionCountFont, .bold))
-                .foregroundStyle(Night.muted)
+                .font(Typography.tracker(UIMetrics.todoSectionCountFont, .semibold))
+                .foregroundStyle(Night.faint)
                 .accessibilityIdentifier("todos.section.count." + list.id)
             Rectangle()
-                .fill(Night.todoSectionRule(color))
+                .fill(Self.ruleColor)
                 .frame(maxWidth: .infinity)
                 .frame(height: UIMetrics.dividerHeight)
                 .accessibilityIdentifier("todos.section.rule." + list.id)

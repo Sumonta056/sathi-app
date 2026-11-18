@@ -44,10 +44,10 @@ struct TodosPageTests {
         #expect(throws: Never.self) { try denied.find(viewWithAccessibilityIdentifier: "todos.access.open") }
     }
 
-    @Test func pageOpensOnTodayByDefault() async throws {
+    @Test func pageOpensOnAllByDefault() async throws {
         let h = await EngineHarness.pageFixture()
         let sut = try hosted(TodosPage(), h).inspect()
-        #expect(try sut.find(TodoItemsColumn.self).actualView().selection == .smart(.today))
+        #expect(try sut.find(TodoItemsColumn.self).actualView().selection == .smart(.all))
     }
 
     @Test func pageCanOpenOnAGivenSelection() async throws {

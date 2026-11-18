@@ -19,7 +19,7 @@ extension Engine {
                 completed: [],
                 targetListID: target,
                 defaultDue: smart == .today || smart == .scheduled ? today : nil,
-                sections: smart == .all ? TodoRules.listSections(lists: snap.lists, open: open) : []
+                sections: smart == .all ? todoOrderedSections(TodoRules.listSections(lists: snap.lists, open: open)) : []
             )
         case let .list(id):
             guard let list = snap.lists.first(where: { $0.id == id }) else {
@@ -28,7 +28,7 @@ extension Engine {
             return TodoPageModel(
                 selection: s,
                 title: list.name,
-                open: snap.open.filter { $0.listID == id },
+                open: todoShownOpen(id),
                 completed: snap.recentCompleted.filter { $0.listID == id },
                 targetListID: list.canEdit ? id : nil
             )

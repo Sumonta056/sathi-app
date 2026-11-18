@@ -19,7 +19,7 @@ struct TodoAddField: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: UIMetrics.todoChipSpacing) {
-            HStack(spacing: UIMetrics.todoRowSpacing) {
+            HStack(spacing: UIMetrics.todoAddRowSpacing) {
                 Image(systemName: "plus")
                     .font(.system(size: UIMetrics.todoAddIcon, weight: .bold))
                     .foregroundStyle(Night.spark)
@@ -38,7 +38,8 @@ struct TodoAddField: View {
             }
             .frame(minHeight: UIMetrics.todoAddHeight)
             if !Self.chipOnFieldRow(layout) {
-                dueChip.padding(.leading, UIMetrics.todoAddIcon + UIMetrics.todoRowSpacing)
+                dueChip.padding(.leading, UIMetrics.todoAddIcon + UIMetrics.todoAddRowSpacing)
+                    .padding(.bottom, UIMetrics.todoChipSpacing)
             }
         }
         .accessibilityElement(children: .contain)
@@ -57,7 +58,7 @@ struct TodoAddField: View {
             }
             .accessibilityIdentifier("todos.add.due")
         }
-        .buttonStyle(GhostButton(accent: pick == nil ? Night.chipText : Night.todo))
+        .buttonStyle(GhostButton(accent: pick == nil ? Night.muted : Night.todo, height: UIMetrics.todoAddChipHeight))
         .popover(isPresented: $picking, arrowEdge: .bottom) {
             TodoEditDue(hasDate: hasDate, date: date, minutes: minutes)
                 .environmentObject(e)
