@@ -80,13 +80,24 @@ struct CalendarSplitGeometryTests {
 
     @Test(arguments: [true, false])
     func aZeroOrNegativeColumnKeepsTheNarrowChoice(_ current: Bool) {
-        #expect(CalendarSplitMetrics.narrow(column: 0, kind: .week, current: current) == current)
-        #expect(CalendarSplitMetrics.narrow(column: -4, kind: .week, current: current) == current)
+        #expect(CalendarSplitMetrics.narrow(CalendarSplitMeasure(column: 0, kind: .week), current: current) == current)
+        #expect(CalendarSplitMetrics.narrow(CalendarSplitMeasure(column: -4, kind: .week), current: current) == current)
     }
 
     @Test func aMeasuredColumnDecidesTheNarrowChoice() {
-        #expect(CalendarSplitMetrics.narrow(column: 190, kind: .week, current: false))
-        #expect(!CalendarSplitMetrics.narrow(column: 400, kind: .week, current: true))
+        #expect(CalendarSplitMetrics.narrow(CalendarSplitMeasure(column: 190, kind: .week), current: false))
+        #expect(!CalendarSplitMetrics.narrow(CalendarSplitMeasure(column: 400, kind: .week), current: true))
+    }
+
+    @Test(arguments: [true, false])
+    func aDayMeasureKeepsTheWeekNarrowChoice(_ current: Bool) {
+        let day = CalendarSplitMeasure(column: 900, kind: .day)
+        #expect(CalendarSplitMetrics.narrow(day, current: current) == current)
+    }
+
+    @Test func dayToSevenDayWeekTurnsNarrowOnFromTheWeekMeasure() {
+        let afterDay = CalendarSplitMetrics.narrow(CalendarSplitMeasure(column: 1300, kind: .day), current: false)
+        #expect(CalendarSplitMetrics.narrow(CalendarSplitMeasure(column: 190, kind: .week), current: afterDay))
     }
 
     @Test func dayIsNeverNarrow() {

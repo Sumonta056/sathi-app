@@ -1,6 +1,11 @@
 import SathiCore
 import SwiftUI
 
+struct CalendarSplitMeasure: Equatable {
+    let column: CGFloat
+    let kind: ReportRange
+}
+
 enum CalendarSplitMetrics {
     static func metrics(kind: ReportRange, rowMinutes: Int, narrow: Bool) -> CalendarLayoutMetrics {
         let perMinute = Double(UIMetrics.calendarHourHeight(rowMinutes: rowMinutes)) / Double(Limits.minutesPerHour)
@@ -23,8 +28,8 @@ enum CalendarSplitMetrics {
         return max(0, column - gutter) * UIMetrics.calendarActualShare
     }
 
-    static func narrow(column: CGFloat, kind: ReportRange, current: Bool) -> Bool {
-        column > 0 ? isNarrow(column: column, kind: kind) : current
+    static func narrow(_ m: CalendarSplitMeasure, current: Bool) -> Bool {
+        m.kind == .week && m.column > 0 ? isNarrow(column: m.column, kind: .week) : current
     }
 
     static func isNarrow(column: CGFloat, kind: ReportRange) -> Bool {

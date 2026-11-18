@@ -11,7 +11,7 @@ struct CalendarSplitGrid: View {
     var popover: Binding<CalendarPopoverTarget?> = .constant(nil)
     var narrow = false
     var calendarNames: [String: String] = [:]
-    var measured: (CGFloat) -> Void = { _ in }
+    var measured: (CalendarSplitMeasure) -> Void = { _ in }
     @State private var box = CalendarHoverBox()
 
     private var hover: CalendarHoverHost { box.host }
@@ -39,8 +39,8 @@ struct CalendarSplitGrid: View {
                 }
                 scroller(column)
             }
-            .onAppear { measured(column) }
-            .onChange(of: column) { measured($0) }
+            .onAppear { measured(CalendarSplitMeasure(column: column, kind: range.kind)) }
+            .onChange(of: CalendarSplitMeasure(column: column, kind: range.kind)) { measured($0) }
         }
         .background(shape.fill(Night.card))
         .clipShape(shape)

@@ -85,9 +85,8 @@ struct CalendarPage: View {
                 range: range, data: data, now: e.now, calendar: e.rangeCalendar, categories: e.activityCategories,
                 actions: gridActions(), popover: $focus.popover, narrow: range.kind == .week && narrowWeek,
                 calendarNames: range.kind == .day ? data.calendarNames : [:]
-            ) { column in
-                guard range.kind == .week else { return }
-                let next = CalendarSplitMetrics.narrow(column: column, kind: .week, current: narrowWeek)
+            ) { measure in
+                let next = CalendarSplitMetrics.narrow(measure, current: narrowWeek)
                 guard next != narrowWeek else { return }
                 CalendarNarrowMemory.week = next
                 narrowWeek = next
