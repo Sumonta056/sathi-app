@@ -17,7 +17,7 @@ struct CalendarWeekHeaders: View {
                         .font(Typography.tracker(UIMetrics.calendarWeekHeaderFont, .bold))
                         .foregroundStyle(day == today ? Night.tracker : Night.text)
                         .lineLimit(1)
-                        .frame(maxWidth: .infinity, minHeight: UIMetrics.calendarWeekHeaderHeight)
+                        .frame(maxWidth: .infinity, minHeight: UIMetrics.calendarWeekHeaderHeight, maxHeight: UIMetrics.calendarWeekHeaderHeight)
                     HStack(spacing: 0) {
                         label(Copywriter.calendarActualLabel).frame(width: halves.actualWidth)
                         label(Copywriter.calendarPlanLabel).frame(width: halves.planWidth)
