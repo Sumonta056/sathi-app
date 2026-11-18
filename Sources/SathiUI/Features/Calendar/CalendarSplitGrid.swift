@@ -34,6 +34,7 @@ struct CalendarSplitGrid: View {
                 header(column)
                 if !data.allDay.isEmpty {
                     CalendarAllDayRow(days: range.days, blocks: data.allDay, categories: categories, calendar: calendar)
+                        .fixedSize(horizontal: false, vertical: true)
                     line
                 }
                 scroller(column)
@@ -59,6 +60,7 @@ struct CalendarSplitGrid: View {
                 )
                 .frame(width: column, alignment: .leading)
             }
+            .frame(height: UIMetrics.calendarSplitLabelHeight)
             line
         }
     }
