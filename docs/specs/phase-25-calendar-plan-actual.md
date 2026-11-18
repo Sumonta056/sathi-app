@@ -66,9 +66,9 @@ Keep the phase 24 hover card (open 0.35 s, close 0.2 s, one `Task.sleep`, right 
 - A block with "+N" lists the hidden items under "Also here"; a click on a row does what a click on that item does.
 - Times and lengths in the card use the rounded-once values.
 
-## B5. To-dos (open question, ask the user before building)
+## B5. To-dos (answered 2026-11-18: option A, mockup https://claude.ai/artifact/5qcmvor46ZBi7F6sQ2B3ub)
 
-The mockup has no to-dos. Proposal: a to-do with a due time shows in the **Plan** half as the phase 24 pill on its dashed due line; a date-only to-do stays in the all-day row. Ask the user first.
+Approved: a to-do with a due time shows in the **Plan** half as the phase 24 pill on its dashed due line; a date-only to-do stays in the all-day row.  The pill takes no lane and never moves a block.
 
 ## Rules first
 
@@ -122,7 +122,7 @@ No new timer. The layout runs in Core when the blocks, the range, the day count,
 ## Checklist
 
 - [ ] Rules and ROADMAP updated
-- [ ] B5 to-do question answered by the user
+- [x] B5 to-do question answered by the user (option A)
 - [ ] B1 layout core with tests; replaced code removed
 - [ ] B2 Day view with tests
 - [ ] B3 Week view and `weekDays` pref with tests

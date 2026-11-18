@@ -256,7 +256,7 @@ Spec: `docs/specs/phase-25-calendar-plan-actual.md`. Design: https://claude.ai/a
 Branch: `feat/calendar-plan-actual` (worktree `../Sathi-plan-actual`), one branch and worktree per track.
 
 - [x] Rules (Calendar page rules 5, 5a, 5b, 11, 12, 14, 15) and this entry
-- [ ] B5: to-dos in the split, user picks from a mockup
+- [x] B5: to-dos in the split: option A, pill on a dashed due line in the Plan half (https://claude.ai/artifact/5qcmvor46ZBi7F6sQ2B3ub)
 - [ ] T1 (B1): Core layout (halves, lanes, raised, push, row growth, night fold, done during, rounded once)
 - [ ] T2 (B3 data): `calendarPage.weekDays` pref (3, 4, 5, 7) and range math (`/data-migration`)
 - [ ] T3 (B2): Day view cards, link gutter, header
