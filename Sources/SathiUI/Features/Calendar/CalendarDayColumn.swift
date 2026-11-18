@@ -21,7 +21,7 @@ struct CalendarDayColumn: View {
                     .frame(width: geo.size.width, height: math.totalHeight)
                     .contentShape(Rectangle())
                     .onTapGesture(coordinateSpace: .local) { p in actions.slot(day, math.slotStart(y: p.y), p.y) }
-                ForEach(placed.flatMap { [$0] + $0.children }, id: \.block.id) { p in
+                ForEach(placed.flatMap { [$0] + $0.children }.filter { !CalendarTodoLayer.holds($0) }, id: \.block.id) { p in
                     let indent = min(CGFloat(p.depth) * UIMetrics.calendarCascadeIndent, width / 2)
                     let lane = (width - indent) / CGFloat(max(1, p.lanes))
                     let y = math.y(for: p.displaySpan.start)
@@ -35,6 +35,7 @@ struct CalendarDayColumn: View {
                         .frame(width: width)
                         .offset(x: UIMetrics.calendarColumnInset, y: y)
                 }
+                CalendarTodoLayer(placed: placed, math: math, width: width)
                 if let now, math.holds(now) {
                     CalendarNowLine(now: now, calendar: calendar)
                         .frame(width: geo.size.width)
@@ -53,9 +54,7 @@ struct CalendarDayColumn: View {
     }
 
     @ViewBuilder private func blockView(_ p: CalendarPlacedBlock, y: CGFloat) -> some View {
-        if case .todo = p.block.source {
-            CalendarTodoChip(block: p.block)
-        } else if p.isBackdrop {
+        if p.isBackdrop {
             backdrop(p, y: y, layer: .stripes)
         } else {
             Button { actions.press(day, p.block, y) } label: {

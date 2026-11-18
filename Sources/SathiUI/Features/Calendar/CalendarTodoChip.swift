@@ -4,13 +4,18 @@ import SwiftUI
 struct CalendarTodoChip: View {
     let block: CalendarBlock
     let showsTick: Bool
+    let isPill: Bool
     @State private var editing = false
     @EnvironmentObject var e: Engine
 
-    init(block: CalendarBlock, showsTick: Bool = true) {
+    init(block: CalendarBlock, showsTick: Bool = true, isPill: Bool = false) {
         self.block = block
         self.showsTick = showsTick
+        self.isPill = isPill
     }
+
+    private var height: CGFloat { isPill ? UIMetrics.calendarTodoPillHeight : UIMetrics.calendarChipHeight }
+    private var font: CGFloat { isPill ? UIMetrics.calendarTodoPillFont : UIMetrics.calendarChipFont }
 
     private var look: CalendarBlockLook { CalendarBlockLook.of(block.style, categories: []) }
 
@@ -19,22 +24,33 @@ struct CalendarTodoChip: View {
         return block.id
     }
 
+    private var due: String? {
+        !isPill || block.isAllDay ? nil : Copywriter.trackerClock(block.interval.start, calendar: e.rangeCalendar)
+    }
+
     var body: some View {
-        let shape = RoundedRectangle(cornerRadius: UIMetrics.calendarChipRadius, style: .continuous)
+        let shape = RoundedRectangle(cornerRadius: isPill ? height / 2 : UIMetrics.calendarChipRadius, style: .continuous)
         Button { editing = true } label: {
             HStack(spacing: UIMetrics.calendarTodoTickGap) {
                 if showsTick {
                     Color.clear.frame(width: UIMetrics.calendarTodoTickHit, height: UIMetrics.calendarTodoTickHit)
                 }
                 Text(verbatim: block.title)
-                    .font(Typography.tracker(UIMetrics.calendarChipFont, .semibold))
+                    .font(Typography.tracker(font, .semibold))
                     .foregroundStyle(look.text)
                     .lineLimit(1)
                 Spacer(minLength: 0)
+                if let due {
+                    Text(verbatim: due)
+                        .font(Typography.tracker(UIMetrics.calendarTodoTimeFont, .semibold))
+                        .foregroundStyle(look.text.opacity(UIMetrics.calendarTimeOpacity))
+                        .lineLimit(1)
+                        .fixedSize()
+                }
             }
             .padding(UIMetrics.calendarChipPadding)
-            .frame(maxWidth: .infinity, minHeight: UIMetrics.calendarChipHeight, maxHeight: UIMetrics.calendarChipHeight, alignment: .leading)
-            .background(shape.fill(look.fill))
+            .frame(maxWidth: .infinity, minHeight: height, maxHeight: height, alignment: .leading)
+            .background(shape.fill(isPill ? Night.card : look.fill))
             .overlay(shape.strokeBorder(look.stroke ?? .clear, lineWidth: UIMetrics.cardBorder))
             .contentShape(shape)
         }
