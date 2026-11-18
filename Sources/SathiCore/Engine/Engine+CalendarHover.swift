@@ -22,4 +22,10 @@ extension Engine {
         }
         return CalendarHoverInfo.make(placed, lookup: lookup, calendar: calendar)
     }
+
+    package func calendarHoverInfo(_ laid: CalendarLaidBlock, among day: [CalendarLaidBlock]) -> CalendarHoverInfo {
+        var placed = CalendarPlacedBlock(block: laid.block, span: laid.rounded, lane: laid.lane, lanes: laid.lanes, depth: laid.depth)
+        placed.hidden = laid.hidden.map { CalendarPlacedBlock(block: $0.block, span: $0.rounded, lane: 0, lanes: 1) }
+        return calendarHoverInfo(placed)
+    }
 }
