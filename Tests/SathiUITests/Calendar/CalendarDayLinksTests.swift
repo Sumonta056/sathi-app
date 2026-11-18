@@ -86,6 +86,18 @@ struct CalendarDayLinksTests {
         #expect(links.isEmpty)
     }
 
+    @Test func eventInAPlusBadgeLinksToTheCardThatHoldsIt() {
+        let sync = DayFix.event("Sync", DayFix.at(13, 5), DayFix.at(13, 25), colorHex: 0xFF0000, top: 427, bottom: 466)
+        var holder = scrum
+        holder.hidden = [sync]
+        var a = scurm
+        a.doneDuring = sync.id
+        let links = CalendarDayLinks.links(blocks: [a, holder], halves: halves, colors: [sync.id: .red, holder.id: .blue])
+        #expect(links.count == 1)
+        #expect(links.first?.color == .red)
+        #expect(links.first?.points == CalendarDayLinks.points(activity: a, event: holder, halves: halves))
+    }
+
     @Test func linksNeverTakeClicks() throws {
         let sut = CalendarDayLinks(blocks: [scurm, scrum], halves: halves, colors: [scrum.id: .red])
         #expect(try sut.inspect().find(viewWithAccessibilityIdentifier: "calendar.day.links").allowsHitTesting() == false)

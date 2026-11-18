@@ -46,7 +46,7 @@ Remove what this phase replaces, in the same wave: host and child nesting, optio
 - Left time rail with hour labels, a line at each hour, a dashed line every 15 min.
 - **Activity card** (Activities row style): 3 pt left edge in the category color, fill = category color mixed on the card color, bold title (wraps up to 3 lines when tall), time "10:38 AM – 12:31 PM", category name in its color, "Calendar" or "Not in calendar" tag, length on the right ("1h 53m"), edit pencil. Away card: dim, stripes, title "Away · Sleep", time and length.
 - **Event card**: outline in the calendar color, card fill, calendar icon, title (up to 3 lines), time, calendar name (dark colors made lighter for text only), "N done during" tag, length on the right. Hover shows "Start as activity" and Open.
-- A 26 pt gutter between the halves holds the "done during" link: a line in the event's color from the activity to its event, with a dot on the activity.
+- A 26 pt gutter between the halves holds the "done during" link: a line in the event's color from the activity to its event, with a dot on the activity. When the event is in a "+N", the link goes to the card that holds it.
 - No "Free" rows: empty time is empty space.
 - Every Day card always shows all its fields: title, time range, category (or calendar name), tag, and length. A card never drops the time or the length because it is short; the minimum height (46 pt) makes them fit. The old phase 24 look (full-width flat blocks, time on tall blocks only, length on short blocks only) must not remain anywhere in Day.
 

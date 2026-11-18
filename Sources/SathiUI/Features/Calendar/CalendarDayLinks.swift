@@ -37,12 +37,15 @@ struct CalendarDayLinks: View {
     }
 
     static func links(blocks: [CalendarLaidBlock], halves: CalendarSplitHalves, colors: [String: Color]) -> [CalendarDayLink] {
-        let events = Dictionary(blocks.filter { $0.half == .plan }.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a })
+        let plan = blocks.filter { $0.half == .plan }
+        let shown = plan.map { ($0.id, (event: $0, card: $0)) }
+        let held = plan.flatMap { card in card.hidden.map { ($0.id, (event: $0, card: card)) } }
+        let events = Dictionary(shown + held, uniquingKeysWith: { a, _ in a })
         return blocks.compactMap { a in
             guard a.half == .actual, let id = a.doneDuring, let e = events[id] else { return nil }
             return CalendarDayLink(
-                id: a.id, color: colors[id] ?? fallback(e),
-                points: points(activity: a, event: e, halves: halves)
+                id: a.id, color: colors[id] ?? fallback(e.event),
+                points: points(activity: a, event: e.card, halves: halves)
             )
         }
     }
