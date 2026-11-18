@@ -32,9 +32,9 @@ extension Engine {
         data.live.tracker.awayCause = nil
         data.live.tracker.awayPlan = nil
         data.live.tracker.lastInput = back
-        let waited = logWaitedEvents(until: back)
         var eventSpan: DateInterval?
         if let r = data.live.tracker.running, r.kind == .buddy, trackerSessionRuns { return requestTick() }
+        let waited = cause == .onBreak ? [] : logWaitedEvents(until: max(back, clock.now.wholeSecond))
         if let r = data.live.tracker.running, r.kind == .event {
             guard back >= r.confirmedUntil else {
                 awayRows(from: since, to: min(back, r.start), place: place, name: plan?.name).forEach(storeActivity)
@@ -125,8 +125,7 @@ extension Engine {
     }
 
     var offersIWasHere: Bool {
-        guard let away = trackerRuntime.lastAway, away.fromIdle else { return false }
-        return data.live.tracker.running.map { $0.start < away.end } ?? true
+        trackerRuntime.lastAway?.fromIdle == true && data.live.tracker.running == nil && trackerRuntime.loggedWhileAway.isEmpty
     }
 
     var trackerActiveSessionRuns: Bool { HabitID.allCases.contains { session($0).map { !$0.isPaused } ?? false } }

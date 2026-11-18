@@ -14,19 +14,22 @@ extension Engine {
         presenter.showTrackerPrompt(.stillOnIt)
     }
 
-    func logAskedEvent(_ e: CalendarEventInfo) {
+    @discardableResult
+    func logAskedEvent(_ e: CalendarEventInfo) -> Activity? {
         let n = clock.now.wholeSecond
         let start = e.start.wholeSecond
         let end = max(start, e.end.wholeSecond)
         let span = DateInterval(start: start, end: min(end, max(start, n)))
+        var stored: Activity?
         if end > n {
             if let r = data.live.tracker.running, r.start > start { endRunningActivity(at: start) }
             logEvent(e, at: start)
         } else {
             cutRunning(around: span)
-            storeEndedEvent(e, from: start, to: end)
+            stored = storeEndedEvent(e, from: start, to: end)
         }
         makeRoom(for: span)
+        return stored
     }
 
     private func cutRunning(around span: DateInterval) {
@@ -41,11 +44,13 @@ extension Engine {
         data.live.tracker.running = r
     }
 
-    private func storeEndedEvent(_ e: CalendarEventInfo, from start: Date, to end: Date) {
+    private func storeEndedEvent(_ e: CalendarEventInfo, from start: Date, to end: Date) -> Activity {
         let pick = eventCategory(e)
         if let added = pick.added { addActivityCategory(added.name, colorHex: added.colorHex) }
         let text = eventDraft(e, category: pick.name, from: start).text
-        storeActivity(Activity(kind: .event, text: text, category: pick.name, start: start, end: end, sourceEventID: e.id))
+        let item = Activity(kind: .event, text: text, category: pick.name, start: start, end: end, sourceEventID: e.id)
+        storeActivity(item)
+        return item
     }
 
     private func makeRoom(for span: DateInterval) {
