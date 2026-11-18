@@ -23,6 +23,10 @@ enum CalendarSplitMetrics {
         return max(0, column - gutter) * UIMetrics.calendarActualShare
     }
 
+    static func narrow(column: CGFloat, kind: ReportRange, current: Bool) -> Bool {
+        column > 0 ? isNarrow(column: column, kind: kind) : current
+    }
+
     static func isNarrow(column: CGFloat, kind: ReportRange) -> Bool {
         kind == .week && actualWidth(column: column, kind: kind) < UIMetrics.calendarNarrowActualWidth
     }

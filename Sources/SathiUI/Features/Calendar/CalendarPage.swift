@@ -87,7 +87,7 @@ struct CalendarPage: View {
                 calendarNames: range.kind == .day ? data.calendarNames : [:]
             ) { column in
                 guard range.kind == .week else { return }
-                let next = CalendarSplitMetrics.isNarrow(column: column, kind: .week)
+                let next = CalendarSplitMetrics.narrow(column: column, kind: .week, current: narrowWeek)
                 guard next != narrowWeek else { return }
                 CalendarNarrowMemory.week = next
                 narrowWeek = next

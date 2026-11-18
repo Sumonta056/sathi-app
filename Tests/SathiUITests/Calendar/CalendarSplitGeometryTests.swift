@@ -78,6 +78,17 @@ struct CalendarSplitGeometryTests {
         #expect(CalendarSplitMetrics.isNarrow(column: column, kind: .week) == narrow)
     }
 
+    @Test(arguments: [true, false])
+    func aZeroOrNegativeColumnKeepsTheNarrowChoice(_ current: Bool) {
+        #expect(CalendarSplitMetrics.narrow(column: 0, kind: .week, current: current) == current)
+        #expect(CalendarSplitMetrics.narrow(column: -4, kind: .week, current: current) == current)
+    }
+
+    @Test func aMeasuredColumnDecidesTheNarrowChoice() {
+        #expect(CalendarSplitMetrics.narrow(column: 190, kind: .week, current: false))
+        #expect(!CalendarSplitMetrics.narrow(column: 400, kind: .week, current: true))
+    }
+
     @Test func dayIsNeverNarrow() {
         #expect(!CalendarSplitMetrics.isNarrow(column: 100, kind: .day))
     }
