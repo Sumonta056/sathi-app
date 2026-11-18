@@ -2,7 +2,7 @@ import Foundation
 
 extension Engine {
     package func calendarPage(_ range: CalendarPageRange, metrics: CalendarLayoutMetrics) -> CalendarPageData {
-        var page = calendarPage(range)
+        var page = calendarPageBase(range)
         guard range.kind != .month else { return page }
         var shaped = metrics
         shaped.foldsNights = range.kind == .week

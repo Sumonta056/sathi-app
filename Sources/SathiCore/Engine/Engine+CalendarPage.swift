@@ -33,6 +33,19 @@ extension Engine {
         minimumMinutes: Double = 0,
         narrow: Set<CalendarLaneShape> = []
     ) -> CalendarPageData {
+        var page = calendarPageBase(range)
+        page.placedMinimumMinutes = minimumMinutes
+        page.placedNarrow = narrow
+        guard range.kind != .month else { return page }
+        page.placed = placed(page.blocks, days: range.days, minimumMinutes: minimumMinutes, narrow: narrow)
+        let groups = page.placed.values.joined().flatMap { [$0] + $0.children + $0.hidden }.map(\.block).filter { $0.group != nil }
+        for g in groups where page.texts[g.id] == nil {
+            page.texts[g.id] = text(of: g)
+        }
+        return page
+    }
+
+    func calendarPageBase(_ range: CalendarPageRange) -> CalendarPageData {
         let read = pageRead(range)
         let readable = read.readable
         let events = read.events
@@ -54,19 +67,13 @@ extension Engine {
                 today: CalendarPageDay.key(holding: clock.now, calendar: calendar), calendar: calendar
             )
             : []
-        let timed = all.filter { !$0.isAllDay }
-        let laid = range.kind == .month ? [:] : placed(timed, days: range.days, minimumMinutes: minimumMinutes, narrow: narrow)
-        let groups = laid.values.joined().flatMap { [$0] + $0.children + $0.hidden }.map(\.block).filter { $0.group != nil }
         return CalendarPageData(
             range: range,
             allDay: all.filter(\.isAllDay),
-            blocks: timed,
+            blocks: all.filter { !$0.isAllDay },
             stats: CalendarPageStats.make(events: events, activities: tracked, interval: range.interval),
             monthCells: cells,
-            texts: Dictionary((all + groups).map { ($0.id, text(of: $0)) }) { first, _ in first },
-            placed: laid,
-            placedMinimumMinutes: minimumMinutes,
-            placedNarrow: narrow
+            texts: Dictionary(all.map { ($0.id, text(of: $0)) }) { first, _ in first }
         )
     }
 
