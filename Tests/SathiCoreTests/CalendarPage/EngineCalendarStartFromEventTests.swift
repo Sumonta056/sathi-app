@@ -81,10 +81,10 @@ struct EngineCalendarStartFromEventTests {
         h.start("Spec", minutes: 120)
         h.advance(minutes: 30)
         #expect(h.promptKind == .eventAsk)
-        #expect(h.engine.trackerCalendarRuntime.pendingAsk?.id == "m1")
+        #expect(h.engine.trackerCalendarRuntime.pendingAsks.contains { $0.id == "m1" })
         _ = h.pageDay
         #expect(h.engine.startActivity(fromEvent: "m1"))
-        #expect(h.engine.trackerCalendarRuntime.pendingAsk == nil)
+        #expect(h.engine.trackerCalendarRuntime.pendingAsks.allSatisfy { $0.id != "m1" })
         #expect(h.promptKind == nil)
         h.advance(minutes: 1)
         #expect(h.promptKind != .eventAsk)
@@ -96,10 +96,10 @@ struct EngineCalendarStartFromEventTests {
         let h = EngineHarness.tracker(at: wed(10))
         h.useEvents([standup, other], mode: .askFirst)
         h.advance(minutes: 30)
-        #expect(h.engine.trackerCalendarRuntime.pendingAsk?.id == "m1")
+        #expect(h.engine.trackerCalendarRuntime.pendingAsks.contains { $0.id == "m1" })
         _ = h.pageDay
         #expect(h.engine.startActivity(fromEvent: "m2"))
-        #expect(h.engine.trackerCalendarRuntime.pendingAsk?.id == "m1")
+        #expect(h.engine.trackerCalendarRuntime.pendingAsks.contains { $0.id == "m1" })
         #expect(h.running?.sourceEventID == "m2")
     }
 
