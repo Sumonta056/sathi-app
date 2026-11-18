@@ -98,3 +98,18 @@ struct CalendarBlockLayoutCutTests {
         #expect(CalendarBlockLayout.place([b], within: page(12)).map(\.span) == [b.interval])
     }
 }
+
+@Suite("CalendarBlockLayout display span")
+struct CalendarBlockLayoutDisplayTests {
+    @Test func displaySpanEqualsTheRealSpanWithoutAMinimum() {
+        let placed = CalendarBlockLayout.place([Lay.activity("a", 0, 8), Lay.event("e", 30, 90)])
+        #expect(placed.allSatisfy { $0.displaySpan == $0.span })
+    }
+
+    @Test func touchingBlocksDoNotOverlapOrNest() {
+        let placed = Lay.byID(CalendarBlockLayout.place([Lay.event("e", 0, 30), Lay.activity("a", 30, 60)]))
+        #expect(placed["a"]?.hostID == nil)
+        #expect(placed["a"]?.lanes == 1)
+        #expect(placed["a"]?.depth == 0)
+    }
+}

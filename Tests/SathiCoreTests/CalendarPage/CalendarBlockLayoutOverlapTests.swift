@@ -29,14 +29,20 @@ struct CalendarBlockLayoutOverlapTests {
     }
 
     @Test func limitsMatchTheRule() {
-        #expect(Limits.calendarSideBySideMinutes == 15)
-        #expect(Limits.calendarCascadeMaxDepth == 3)
+        #expect(Limits.calendarSideBySideMinutes == 30)
+        #expect(Limits.calendarCascadeMaxDepth == 2)
+        #expect(Limits.calendarLanesMax == 2)
     }
 
     @Test func placedBlockDefaultsToDepthZeroAndNoBackdrop() {
         let p = CalendarPlacedBlock(block: block("a", 0, 30), lane: 0, lanes: 1)
         #expect(p.depth == 0)
         #expect(!p.isBackdrop)
+        #expect(!p.isRaised)
+        #expect(p.hostID == nil)
+        #expect(p.children.isEmpty)
+        #expect(p.hiddenCount == 0)
+        #expect(p.displaySpan == p.span)
     }
 
     @Test func awayIsABackdropAndAddsNoLanes() {
@@ -65,9 +71,39 @@ struct CalendarBlockLayoutOverlapTests {
     }
 
     @Test func blockStartingAtTheThresholdCascades() {
-        let result = placed([block("a", 0, 60), block("b", 15, 45)])
+        let result = placed([block("a", 0, 60), block("b", 30, 45)])
         #expect(shape(result["a"]) == [0, 1, 0])
         #expect(shape(result["b"]) == [0, 1, 1])
+    }
+
+    @Test func blocksStartingTwentyThreeMinutesApartShareTwoLanes() {
+        let result = placed([block("a", 0, 60), block("b", 23, 80)])
+        #expect(shape(result["a"]) == [0, 2, 0])
+        #expect(shape(result["b"]) == [1, 2, 0])
+        #expect(result["b"]?.isRaised == false)
+    }
+
+    @Test func blocksStartingFourHoursApartGiveOneFullWidthAndOneRaised() {
+        let result = placed([block("one", 780, 1080), block("five", 1020, 1080)])
+        #expect(shape(result["one"]) == [0, 1, 0])
+        #expect(result["one"]?.isRaised == false)
+        #expect(shape(result["five"]) == [0, 1, 1])
+        #expect(result["five"]?.isRaised == true)
+    }
+
+    @Test func thirdBlockInAGroupBecomesPlusOne() {
+        let result = placed([block("a", 0, 60), block("b", 5, 60), block("c", 10, 60)])
+        #expect(shape(result["a"]) == [0, 2, 0])
+        #expect(shape(result["b"]) == [1, 2, 0])
+        #expect(result["c"] == nil)
+        #expect(result["a"]?.hiddenCount == 1)
+        #expect(result["b"]?.hiddenCount == 0)
+    }
+
+    @Test func extraBlocksAddUpInOneChip() {
+        let result = placed([block("a", 0, 60), block("b", 5, 60), block("c", 10, 60), block("d", 12, 60)])
+        #expect(result.count == 2)
+        #expect(result["a"]?.hiddenCount == 2)
     }
 
     @Test func laterStartOverAnOpenBlockSitsOnTop() {
@@ -89,12 +125,12 @@ struct CalendarBlockLayoutOverlapTests {
         #expect(result["a"]?.depth == 0)
         #expect(result["b"]?.depth == 1)
         #expect(result["c"]?.depth == 2)
-        #expect(result["d"]?.depth == 3)
-        #expect(result["e"]?.depth == 3)
+        #expect(result["d"]?.depth == 2)
+        #expect(result["e"]?.depth == 2)
     }
 
     @Test func chainOfLaterStartsCascades() {
-        let result = placed([block("a", 0, 30), block("b", 20, 50), block("c", 40, 70)])
+        let result = placed([block("a", 0, 60), block("b", 40, 90), block("c", 80, 120)])
         #expect(shape(result["a"]) == [0, 1, 0])
         #expect(shape(result["b"]) == [0, 1, 1])
         #expect(shape(result["c"]) == [0, 1, 2])

@@ -21,16 +21,16 @@ struct CalendarDayColumn: View {
                     .frame(width: geo.size.width, height: math.totalHeight)
                     .contentShape(Rectangle())
                     .onTapGesture(coordinateSpace: .local) { p in actions.slot(day, math.slotStart(y: p.y), p.y) }
-                ForEach(placed, id: \.block.id) { p in
+                ForEach(placed.flatMap { [$0] + $0.children }, id: \.block.id) { p in
                     let indent = min(CGFloat(p.depth) * UIMetrics.calendarCascadeIndent, width / 2)
                     let lane = (width - indent) / CGFloat(max(1, p.lanes))
-                    let y = math.y(for: p.span.start)
+                    let y = math.y(for: p.displaySpan.start)
                     blockView(p, y: y)
                         .frame(width: p.isBackdrop ? width : max(0, lane - UIMetrics.calendarLaneGap))
                         .offset(x: UIMetrics.calendarColumnInset + indent + lane * CGFloat(p.lane), y: y)
                 }
                 ForEach(placed.filter(\.isBackdrop), id: \.block.id) { p in
-                    let y = math.y(for: p.span.start)
+                    let y = math.y(for: p.displaySpan.start)
                     backdrop(p, y: y, layer: .label)
                         .frame(width: width)
                         .offset(x: UIMetrics.calendarColumnInset, y: y)
@@ -61,9 +61,9 @@ struct CalendarDayColumn: View {
             Button { actions.press(day, p.block, y) } label: {
                 CalendarBlockView(
                     block: p.block, text: texts[p.block.id] ?? CalendarBlockText(time: "", spoken: p.block.title),
-                    height: math.height(p.span), categories: categories,
+                    height: math.height(p.displaySpan), categories: categories,
                     selected: CalendarMergePick.id(of: p.block).map(selected.contains) ?? false,
-                    raised: p.depth > 0
+                    raised: p.isRaised
                 )
             }
             .buttonStyle(.plain)
@@ -73,7 +73,7 @@ struct CalendarDayColumn: View {
     private func backdrop(_ p: CalendarPlacedBlock, y: CGFloat, layer: CalendarAwayBackdrop.Layer) -> some View {
         CalendarAwayBackdrop(
             block: p.block, text: texts[p.block.id] ?? CalendarBlockText(time: "", spoken: p.block.title),
-            height: math.height(p.span), layer: layer,
+            height: math.height(p.displaySpan), layer: layer,
             selected: CalendarMergePick.id(of: p.block).map(selected.contains) ?? false
         ) { actions.press(day, p.block, y) }
     }
