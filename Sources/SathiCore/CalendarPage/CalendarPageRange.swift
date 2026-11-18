@@ -87,13 +87,6 @@ package struct CalendarPageRange: Equatable, Sendable {
         return weeks
     }
 
-    package func initialScrollRow(now: Date) -> Int {
-        guard holds(now) else { return 0 }
-        let day = CalendarPageDay.key(holding: now, calendar: calendar)
-        let rows = CalendarPageDay.hourStarts(of: day, calendar: calendar)
-        return rows.lastIndex { $0 <= now } ?? 0
-    }
-
     private func shifted(by step: Int) -> CalendarPageRange {
         if isCustomWeek { return moved(by: step) }
         let stats = StatsRange.containing(firstStart, kind: kind, calendar: calendar)
