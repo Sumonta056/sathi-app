@@ -11,4 +11,6 @@ extension Limits {
     package static let calendarPageFirstWeekday = 7
     package static let calendarRowMinutes = [60, 30, 15]
     package static let calendarDefaultRowMinutes = 60
+    package static let calendarSideBySideMinutes = 15
+    package static let calendarCascadeMaxDepth = 3
 }

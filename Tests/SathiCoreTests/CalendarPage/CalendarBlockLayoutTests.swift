@@ -7,11 +7,11 @@ import Testing
 struct CalendarBlockLayoutTests {
     let t0 = Date(timeIntervalSince1970: 1_800_000_000)
 
-    func block(_ id: String, _ from: Int, _ to: Int, allDay: Bool = false) -> CalendarBlock {
+    func block(_ id: String, _ from: Int, _ to: Int, allDay: Bool = false, style: CalendarBlockStyle = .event(colorHex: 0)) -> CalendarBlock {
         CalendarBlock(
             id: id, title: id,
             interval: DateInterval(start: t0.addingTimeInterval(TimeInterval(from * 60)), end: t0.addingTimeInterval(TimeInterval(to * 60))),
-            style: .away,
+            style: style,
             source: .event(CalendarEventInfo(id: id, title: id, start: t0, end: t0, calendarID: "c")),
             isAllDay: allDay, activityIDs: []
         )
@@ -39,7 +39,7 @@ struct CalendarBlockLayoutTests {
     }
 
     @Test func chainReusesTheFirstLane() {
-        let result = lanes([block("a", 0, 30), block("b", 20, 50), block("c", 40, 70)])
+        let result = lanes([block("a", 0, 10), block("b", 5, 50), block("c", 12, 40)])
         #expect(result["a"] == [0, 2])
         #expect(result["b"] == [1, 2])
         #expect(result["c"] == [0, 2])

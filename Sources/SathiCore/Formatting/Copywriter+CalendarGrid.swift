@@ -11,6 +11,14 @@ extension Copywriter {
         return "\(shown) " + (hour < half ? "AM" : "PM")
     }
 
+    package static func calendarCopies(_ count: Int) -> String {
+        "×\(count)"
+    }
+
+    package static func calendarCopiesSpoken(_ count: Int) -> String {
+        "in \(count) calendars"
+    }
+
     package static func calendarMore(_ count: Int) -> String {
         "+\(count) more"
     }

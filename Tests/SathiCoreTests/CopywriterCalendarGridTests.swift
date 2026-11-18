@@ -34,6 +34,15 @@ struct CopywriterCalendarGridTests {
         #expect(names == ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
     }
 
+    @Test func copiesBadge() {
+        #expect(Copywriter.calendarCopies(2) == "×2")
+        #expect(Copywriter.calendarCopies(3) == "×3")
+    }
+
+    @Test func copiesSpoken() {
+        #expect(Copywriter.calendarCopiesSpoken(2) == "in 2 calendars")
+    }
+
     @Test func allDayLabel() {
         #expect(Copywriter.calendarAllDay == "All day")
     }

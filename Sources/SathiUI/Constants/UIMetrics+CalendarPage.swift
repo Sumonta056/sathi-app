@@ -49,4 +49,14 @@ extension UIMetrics {
     static let calendarMonthTrackedFont: CGFloat = 10
     static let calendarOutsideOpacity: Double = 0.4
     static let calendarTodayBorder: CGFloat = 1.5
+    static let calendarCascadeIndent: CGFloat = 26
+    static let calendarRaisedRing: CGFloat = 2
+    static let calendarCopiesFont: CGFloat = 9
+    static let calendarCopiesGap: CGFloat = 4
+    static let calendarAwayFillOpacity: Double = 0.5
+    static let calendarCopiesPadding = EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 4)
+    static let calendarStripeSpacing: CGFloat = 10
+    static let calendarStripeWidth: CGFloat = 2.5
+    static let calendarStripeOpacity: Double = 0.55
+    static let calendarAwayLabelHeight: CGFloat = 18
 }

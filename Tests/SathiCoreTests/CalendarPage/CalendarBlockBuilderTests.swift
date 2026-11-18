@@ -58,8 +58,8 @@ struct CalendarBlockBuilderTests {
         #expect(blocks.contains { $0.source == .event(other) })
     }
 
-    @Test func twinEventsBothShow() {
-        let blocks = build([event("t1", "Standup", calendar: "c1"), event("t2", "Standup ", calendar: "c2")])
+    @Test func twinEventsAtDifferentTimesBothShow() {
+        let blocks = build([event("t1", "Standup", calendar: "c1"), event("t2", "Standup ", at: 60, calendar: "c2")])
         #expect(blocks.count == 2)
     }
 

@@ -95,10 +95,14 @@ struct MainFrameMemoryTests {
         #expect(memory().frame() == nil)
     }
 
-    @Test func aSavedFrameComesBackInANewWindow() {
+    @Test(.enabled(if: NSScreen.main != nil))
+    func aSavedFrameComesBackInANewWindow() throws {
         let m = memory()
         defer { m.forget() }
-        let first = window(CGRect(x: 120, y: 80, width: 900, height: 640))
+        let visible = try #require(NSScreen.main?.visibleFrame)
+        let saved = CGRect(x: visible.minX + 120, y: visible.minY + 80, width: 900, height: 640)
+        let first = window(saved)
+        first.setFrame(saved, display: false)
         m.save(first)
         #expect(m.frame() == first.frame)
     }

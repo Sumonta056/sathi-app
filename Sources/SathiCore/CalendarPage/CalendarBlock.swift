@@ -22,6 +22,7 @@ package struct CalendarBlock: Equatable, Identifiable, Sendable {
     package var source: CalendarBlockSource
     package var isAllDay: Bool
     package var activityIDs: [ActivityID]
+    package var copies: Int
 
     package init(
         id: String,
@@ -30,8 +31,10 @@ package struct CalendarBlock: Equatable, Identifiable, Sendable {
         style: CalendarBlockStyle,
         source: CalendarBlockSource,
         isAllDay: Bool,
-        activityIDs: [ActivityID]
+        activityIDs: [ActivityID],
+        copies: Int = 1
     ) {
+        self.copies = copies
         self.id = id
         self.title = title
         self.interval = interval
