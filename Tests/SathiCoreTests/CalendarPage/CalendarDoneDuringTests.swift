@@ -55,8 +55,9 @@ struct CalendarDoneDuringTests {
 struct CalendarDoneDuringUncutTests {
     @Test func activityBeforeTheEventStartsIsNotLinkedInTheNextColumn() {
         let tuesday = Split.monday + 1
+        let real = DateInterval(start: Split.at("05:30"), end: Split.at("06:30", on: tuesday))
         let grid = Split.layout(
-            [Split.event("early", "06:00", "07:00", on: tuesday), Split.activity("run", DateInterval(start: Split.at("05:30"), end: Split.at("06:30", on: tuesday)))],
+            [Split.event("early", "06:00", "07:00", on: tuesday), Split.activity("run", real)],
             days: [Split.page, Split.key(tuesday)], metrics: Split.weekFlat
         )
         let key = Split.key(tuesday)
