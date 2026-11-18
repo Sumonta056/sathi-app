@@ -6,22 +6,11 @@ package struct CalendarPageData: Equatable, Sendable {
     package var blocks: [CalendarBlock]
     package var stats: CalendarPageStats
     package var monthCells: [[CalendarMonthCell]]
-    package var texts: [String: CalendarBlockText]
     package var grid: CalendarGridLayout?
 }
 
-package struct CalendarBlockText: Equatable, Sendable {
-    package var time: String
-    package var spoken: String
-
-    package init(time: String, spoken: String) {
-        self.time = time
-        self.spoken = spoken
-    }
-}
-
 extension Engine {
-    package func calendarPageBase(_ range: CalendarPageRange) -> CalendarPageData {
+    func calendarPageBase(_ range: CalendarPageRange) -> CalendarPageData {
         let read = pageRead(range)
         let readable = read.readable
         let events = read.events
@@ -48,16 +37,7 @@ extension Engine {
             allDay: all.filter(\.isAllDay),
             blocks: all.filter { !$0.isAllDay },
             stats: CalendarPageStats.make(events: events, activities: tracked, interval: range.interval),
-            monthCells: cells,
-            texts: Dictionary(all.map { ($0.id, text(of: $0)) }) { first, _ in first }
-        )
-    }
-
-    private func text(of b: CalendarBlock) -> CalendarBlockText {
-        let i = CalendarRounding.rounded(b.interval)
-        return CalendarBlockText(
-            time: Fmt.shortRange(i.start, i.end, calendar: calendar),
-            spoken: Copywriter.calendarBlockSpoken(b.title, i.start, i.end, calendar: calendar)
+            monthCells: cells
         )
     }
 

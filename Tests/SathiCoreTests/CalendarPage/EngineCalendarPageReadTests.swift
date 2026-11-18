@@ -59,14 +59,4 @@ struct EngineCalendarPageReadTests {
         #expect(data.stats.tracked == 20 * 60)
         #expect(h.calendarWriter.eventReads.count == 1)
     }
-
-    @Test func blockTextsAreBuiltWithTheData() {
-        let h = EngineHarness(at: day(2026, 3, 4, 12))
-        h.calendarWriter.eventsValue = [event("e1", day(2026, 3, 4, 9, 30))]
-        let data = h.engine.calendarPageBase(today(h))
-        let id = data.blocks[0].id
-        let cal = h.engine.calendar
-        #expect(data.texts[id]?.time == Fmt.shortRange(day(2026, 3, 4, 9, 30), day(2026, 3, 4, 10, 30), calendar: cal))
-        #expect(data.texts[id]?.spoken == Copywriter.calendarBlockSpoken("e1", day(2026, 3, 4, 9, 30), day(2026, 3, 4, 10, 30), calendar: cal))
-    }
 }

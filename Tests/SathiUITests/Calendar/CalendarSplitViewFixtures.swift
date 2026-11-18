@@ -79,7 +79,7 @@ enum CalendarSplitViewFixtures {
     }
 
     static func data(_ range: CalendarPageRange, grid: CalendarGridLayout?) -> CalendarPageData {
-        var d = CalendarPageData(range: range, allDay: [], blocks: [], stats: CalendarPageStats(), monthCells: [], texts: [:])
+        var d = CalendarPageData(range: range, allDay: [], blocks: [], stats: CalendarPageStats(), monthCells: [])
         d.grid = grid
         return d
     }

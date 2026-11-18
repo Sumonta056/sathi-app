@@ -1,5 +1,5 @@
 import Foundation
-import SathiCore
+@testable import SathiCore
 import SathiTestSupport
 
 func pageEvent(

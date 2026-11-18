@@ -31,8 +31,7 @@ struct CalendarHoverLayer: View {
     private func card(_ t: CalendarHoverTarget, width: CGFloat) -> some View {
         let info = e.calendarHoverInfo(t.laid, among: t.among)
         let run = CalendarHoverRun(engine: e, grid: grid) { host.todoEdit = $0 }
-        let shown = CalendarHoverRun.visible(info)
-        return CalendarHoverCard(info: info, actions: shown) { action in
+        return CalendarHoverCard(info: info, actions: info.actions) { action in
             host.close()
             run.run(action, t)
         } pick: { id in

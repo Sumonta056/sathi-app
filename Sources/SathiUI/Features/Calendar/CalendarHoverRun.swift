@@ -7,12 +7,6 @@ struct CalendarHoverRun {
     let grid: CalendarGridActions
     let editTodo: (CalendarHoverTarget) -> Void
 
-    static let shown: [CalendarHoverAction] = [.startAsActivity, .edit, .openInCalendar, .delete, .markDone, .openInReminders, .editAway]
-
-    static func visible(_ info: CalendarHoverInfo) -> [CalendarHoverAction] {
-        info.actions.filter(shown.contains)
-    }
-
     func open(row id: String, _ target: CalendarHoverTarget) {
         guard let block = target.row(id) else { return }
         grid.block(target.day, block, target.rect.minY)

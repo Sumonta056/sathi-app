@@ -1,4 +1,4 @@
-import SathiCore
+@testable import SathiCore
 import SathiTestSupport
 @testable import SathiUI
 import SwiftUI

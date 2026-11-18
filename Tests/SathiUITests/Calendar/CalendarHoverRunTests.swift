@@ -1,5 +1,5 @@
 import Foundation
-import SathiCore
+@testable import SathiCore
 import SathiTestSupport
 @testable import SathiUI
 import SwiftUI
@@ -70,21 +70,21 @@ struct CalendarHoverRunTests {
     @Test func startAsActivityIsHiddenForAPastEvent() throws {
         let h = Fix.harness(at: day(2026, 3, 4, 12))
         let placed = try Fix.laid(h, "Standup")
-        let shown = CalendarHoverRun.visible(h.engine.calendarHoverInfo(placed, among: [placed]))
+        let shown = h.engine.calendarHoverInfo(placed, among: [placed]).actions
         #expect(shown == [.edit, .openInCalendar])
     }
 
     @Test func startAsActivityShowsWhileTheEventIsNotOver() throws {
         let h = Fix.harness(at: day(2026, 3, 4, 9, 29))
         let placed = try Fix.laid(h, "Standup")
-        let shown = CalendarHoverRun.visible(h.engine.calendarHoverInfo(placed, among: [placed]))
+        let shown = h.engine.calendarHoverInfo(placed, among: [placed]).actions
         #expect(shown == [.startAsActivity, .edit, .openInCalendar])
     }
 
     @Test func activityShowsEditAndDeleteAndNoMerge() throws {
         let h = Fix.harness()
         let placed = try Fix.laid(h, "Write")
-        let shown = CalendarHoverRun.visible(h.engine.calendarHoverInfo(placed, among: [placed]))
+        let shown = h.engine.calendarHoverInfo(placed, among: [placed]).actions
         #expect(shown == [.edit, .delete])
     }
 
@@ -97,7 +97,7 @@ struct CalendarHoverRunTests {
         )
         let laid = Fix.laid(block)
         let info = h.engine.calendarHoverInfo(laid, among: [laid])
-        #expect(CalendarHoverRun.visible(info).isEmpty)
+        #expect(info.actions.isEmpty)
     }
 
     @Test func failedDeleteShowsTheErrorLine() {
