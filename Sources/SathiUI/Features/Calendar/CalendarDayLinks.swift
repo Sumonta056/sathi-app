@@ -9,12 +9,11 @@ struct CalendarDayLink: Identifiable {
 
 struct CalendarDayLinks: View {
     let blocks: [CalendarLaidBlock]
-    let actualWidth: CGFloat
-    let planX: CGFloat
+    let halves: CalendarSplitHalves
     let colors: [String: Color]
 
     var body: some View {
-        let links = Self.links(blocks: blocks, actualWidth: actualWidth, planX: planX, colors: colors)
+        let links = Self.links(blocks: blocks, halves: halves, colors: colors)
         ZStack(alignment: .topLeading) {
             ForEach(links) { link in
                 Path { $0.addLines(link.points) }
@@ -37,27 +36,24 @@ struct CalendarDayLinks: View {
         .accessibilityIdentifier("calendar.day.links")
     }
 
-    static func links(blocks: [CalendarLaidBlock], actualWidth: CGFloat, planX: CGFloat, colors: [String: Color]) -> [CalendarDayLink] {
+    static func links(blocks: [CalendarLaidBlock], halves: CalendarSplitHalves, colors: [String: Color]) -> [CalendarDayLink] {
         let events = Dictionary(blocks.filter { $0.half == .plan }.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a })
         return blocks.compactMap { a in
             guard a.half == .actual, let id = a.doneDuring, let e = events[id] else { return nil }
             return CalendarDayLink(
                 id: a.id, color: colors[id] ?? fallback(e),
-                points: points(activity: a, event: e, actualWidth: actualWidth, planX: planX)
+                points: points(activity: a, event: e, halves: halves)
             )
         }
     }
 
-    static func points(activity a: CalendarLaidBlock, event e: CalendarLaidBlock, actualWidth: CGFloat, planX: CGFloat) -> [CGPoint] {
+    static func points(activity a: CalendarLaidBlock, event e: CalendarLaidBlock, halves: CalendarSplitHalves) -> [CGPoint] {
         let r = UIMetrics.calendarDayLinkDot / 2
-        let right = actualWidth * CGFloat(a.lane + 1) / CGFloat(max(1, a.lanes))
-        let ya = min(max((a.top + a.bottom) / 2, a.top + r), a.bottom - r)
-        let share = UIMetrics.calendarActualShare
-        let planWidth = actualWidth * (1 - share) / share
-        let left = planX + planWidth * CGFloat(e.lane) / CGFloat(max(1, e.lanes)) + CGFloat(e.depth) * UIMetrics.calendarCascadeIndent
-        let ye = (e.top + e.bottom) / 2
-        let mid = (actualWidth + planX) / 2
-        return [CGPoint(x: right, y: ya), CGPoint(x: mid, y: ya), CGPoint(x: mid, y: ye), CGPoint(x: left, y: ye)]
+        let from = CalendarSplitGeometry.rect(a, halves: halves)
+        let to = CalendarSplitGeometry.rect(e, halves: halves)
+        let ya = min(max(from.midY, from.minY + r), from.maxY - r)
+        let mid = (halves.actualX + halves.actualWidth + halves.planX) / 2
+        return [CGPoint(x: from.maxX, y: ya), CGPoint(x: mid, y: ya), CGPoint(x: mid, y: to.midY), CGPoint(x: to.minX, y: to.midY)]
     }
 
     private static func fallback(_ e: CalendarLaidBlock) -> Color {

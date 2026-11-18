@@ -84,6 +84,22 @@ struct CalendarSplitColumnTests {
         #expect(sut.findAll(CalendarDayCard.self).count == 1)
     }
 
+    private func rings(_ sut: InspectableView<ViewType.ClassifiedView>) -> Int {
+        sut.findAll(where: { (try? $0.accessibilityIdentifier()) == "calendar.block.ring" }).count
+    }
+
+    @Test(arguments: [ReportRange.day, .week])
+    func aRaisedBlockGetsExactlyOneRing(_ kind: ReportRange) throws {
+        var raised = scrum
+        raised.depth = 1
+        #expect(try rings(column(kind, [raised]).inspect()) == 1)
+    }
+
+    @Test(arguments: [ReportRange.day, .week])
+    func aFlatBlockHasNoRing(_ kind: ReportRange) throws {
+        #expect(try rings(column(kind, [scrum]).inspect()) == 0)
+    }
+
     @Test func theTodoDueLineSpansOnlyThePlanHalf() {
         let halves = CalendarSplitGeometry.halves(column: 526, kind: .day)
         let line = CalendarSplitGeometry.dueLine(top: 540, halves: halves)

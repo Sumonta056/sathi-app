@@ -6,7 +6,6 @@ struct CalendarDayEventFace: View {
     let size: CGSize
     let time: String
     let calendarName: String?
-    let edit: () -> Void
 
     private var hex: UInt32 {
         if case let .event(colorHex) = laid.block.style { return colorHex }
@@ -40,7 +39,7 @@ struct CalendarDayEventFace: View {
         }
         .modifier(CalendarDayChrome(
             size: size, fill: Night.card, edge: color,
-            outline: color.opacity(UIMetrics.calendarDayEventOutlineOpacity), raised: laid.isRaised, tap: edit
+            outline: color.opacity(UIMetrics.calendarDayEventOutlineOpacity)
         ))
     }
 }

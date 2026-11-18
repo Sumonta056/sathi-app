@@ -20,7 +20,7 @@ struct CalendarDayCard: View {
                 CalendarDayActivityFace(laid: laid, activity: activity, size: size, time: time, categories: categories, edit: edit)
             }
         case .event:
-            CalendarDayEventFace(laid: laid, size: size, time: time, calendarName: calendarName, edit: edit)
+            CalendarDayEventFace(laid: laid, size: size, time: time, calendarName: calendarName)
         }
     }
 

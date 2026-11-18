@@ -39,7 +39,6 @@ struct CalendarWeekBlock: View {
         .overlay(alignment: .bottomTrailing) { dot }
         .clipShape(shape)
         .overlay(outline(shape))
-        .background(ring(shape))
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Copywriter.calendarBlockSpoken(block.title, laid.rounded.start, laid.rounded.end, calendar: calendar))
     }
@@ -110,14 +109,6 @@ struct CalendarWeekBlock: View {
             shape.strokeBorder(edge.opacity(UIMetrics.calendarWeekEventStrokeOpacity), lineWidth: UIMetrics.cardBorder)
         } else if isAway {
             shape.strokeBorder(Night.border, lineWidth: UIMetrics.cardBorder)
-        }
-    }
-
-    @ViewBuilder private func ring(_ shape: RoundedRectangle) -> some View {
-        if laid.isRaised {
-            shape.fill(Night.bg)
-                .padding(-UIMetrics.calendarRaisedRing)
-                .accessibilityIdentifier("calendar.block.ring")
         }
     }
 }

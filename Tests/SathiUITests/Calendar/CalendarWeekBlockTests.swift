@@ -79,11 +79,4 @@ struct CalendarWeekBlockTests {
         let sut = try block(laid).inspect()
         #expect(throws: Never.self) { try sut.find(text: "+1") }
     }
-
-    @Test func raisedBlockHasThePageColorRing() throws {
-        var laid = rounded("Later")
-        laid.depth = 1
-        let sut = try block(laid).inspect()
-        #expect(throws: Never.self) { try sut.find(viewWithAccessibilityIdentifier: "calendar.block.ring") }
-    }
 }

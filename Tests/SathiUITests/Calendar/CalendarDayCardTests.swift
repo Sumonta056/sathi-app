@@ -83,6 +83,21 @@ struct CalendarDayCardTests {
         #expect(edits == 1)
     }
 
+    @Test(arguments: ["activity", "away", "event"])
+    func theCardBodyHasNoTapOfItsOwn(_ kind: String) throws {
+        var edits = 0
+        let laid = switch kind {
+        case "away": DayFix.away("Sleep", DayFix.at(7, 0), DayFix.at(9, 34, 28))
+        case "event": DayFix.event("Frontline Morning Scrum", DayFix.at(10, 30), DayFix.at(11, 0))
+        default: codeReview
+        }
+        let sut = try DayFix.card(laid) { edits += 1 }.inspect()
+        for view in sut.findAll(where: { _ in true }) {
+            try? view.callOnTapGesture()
+        }
+        #expect(edits == 0)
+    }
+
     @Test func todoDrawsNothing() {
         let sut = DayFix.card(DayFix.todo("Pay rent", DayFix.at(15, 0)))
         #expect((try? sut.inspect().find(ViewType.Text.self)) == nil)

@@ -19,7 +19,7 @@ struct CalendarDayAwayFace: View {
         }
         .modifier(CalendarDayChrome(
             size: size, padding: UIMetrics.calendarDayAwayPadding, fill: Night.card, edge: Night.trackerAway,
-            outline: Night.border, raised: laid.isRaised, stripes: true, tap: edit
+            outline: Night.border, stripes: true
         ))
     }
 }

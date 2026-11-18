@@ -6,9 +6,7 @@ struct CalendarDayChrome: ViewModifier {
     let fill: Color
     let edge: Color
     var outline: Color?
-    var raised = false
     var stripes = false
-    let tap: () -> Void
 
     func body(content: Content) -> some View {
         let shape = RoundedRectangle(cornerRadius: UIMetrics.calendarDayCardRadius, style: .continuous)
@@ -24,9 +22,6 @@ struct CalendarDayChrome: ViewModifier {
             .overlay(alignment: .leading) { edge.frame(width: UIMetrics.calendarDayCardEdge) }
             .clipShape(shape)
             .overlay(shape.strokeBorder(outline ?? .clear, lineWidth: UIMetrics.calendarDayEventOutline))
-            .overlay(shape.stroke(raised ? Night.bg : .clear, lineWidth: UIMetrics.calendarRaisedRing))
-            .contentShape(shape)
-            .onTapGesture(perform: tap)
     }
 }
 

@@ -41,7 +41,7 @@ struct CalendarSplitColumn: View {
                 }
             if kind == .week { middle(halves) }
             if kind == .day {
-                CalendarDayLinks(blocks: cards, actualWidth: halves.actualWidth, planX: halves.planX, colors: colors)
+                CalendarDayLinks(blocks: cards, halves: halves, colors: colors)
                     .allowsHitTesting(false)
             }
             ForEach(cards) { laid in
@@ -81,10 +81,11 @@ struct CalendarSplitColumn: View {
     }
 
     @ViewBuilder private func ring(_ laid: CalendarLaidBlock) -> some View {
-        if kind == .day, laid.isRaised {
-            RoundedRectangle(cornerRadius: UIMetrics.calendarEventRadius, style: .continuous)
+        if laid.isRaised {
+            RoundedRectangle(cornerRadius: kind == .day ? UIMetrics.calendarDayCardRadius : UIMetrics.calendarWeekBlockRadius, style: .continuous)
                 .fill(Night.bg)
                 .padding(-UIMetrics.calendarRaisedRing)
+                .accessibilityIdentifier("calendar.block.ring")
         }
     }
 

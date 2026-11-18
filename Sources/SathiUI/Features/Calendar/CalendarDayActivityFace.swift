@@ -28,7 +28,7 @@ struct CalendarDayActivityFace: View {
             CalendarDayParts.length(laid.rounded)
             CalendarDayParts.pencil(laid.block.title, tint: color, action: edit)
         }
-        .modifier(CalendarDayChrome(size: size, fill: fill, edge: color, raised: laid.isRaised, tap: edit))
+        .modifier(CalendarDayChrome(size: size, fill: fill, edge: color))
     }
 
     @ViewBuilder private var tag: some View {
