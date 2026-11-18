@@ -105,7 +105,7 @@ Reports → Activities shows each day and month: a timeline, totals by category,
 
 ## Calendar page
 
-See your plan and what you did on one grid. Turn it on in Settings → General (it is off by default and marked Experimental). The Calendar page shows your calendar events and your activities from 6 AM to 6 AM in Day, Week, or Month view, and you can create, edit, and delete events. In Day and Week, each event is a card (the plan) that holds the activities you did during it (the actual). Activities outside an event are solid blocks, and to-dos sit as pills on a dashed line at their due time. Hover a block for a card with actions: Start as activity, Edit, Merge, Delete, Mark done, and Open in Calendar or Reminders. Day and Week have a row zoom. A side panel shows stats; Week hides it by default.
+See your plan and what you did on one grid. Turn it on in Settings → General (it is off by default and marked Experimental). The Calendar page shows your calendar events and your activities from 6 AM to 6 AM in Day, Week, or Month view, and you can create, edit, and delete events. Day and Week split each day into Actual (your activities, left) and Plan (your calendar events, right), and every item sits at its real time. In Day, a line links an activity to the event you did it during. Week shows 3, 4, 5, or 7 days. To-dos sit as pills on a dashed line at their due time. Hover a block for a card with actions: Start as activity, Edit, Delete, Mark done, and Open in Calendar or Reminders. To merge activities, use the Activities page. Day and Week have a row zoom. A side panel shows stats; Week hides it by default.
 
 ## Reports and settings
 
