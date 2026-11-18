@@ -7,6 +7,7 @@ struct TodoAddField: View {
     @State private var title: String
     @State private var pick: TodoDue?
     @State private var picking = false
+    @Environment(\.mainLayout) private var layout
     @EnvironmentObject var e: Engine
 
     init(listID: String, title: String = "", due: TodoDue? = nil) {
@@ -28,14 +29,17 @@ struct TodoAddField: View {
                     .foregroundStyle(Night.text)
                     .onSubmit(add)
                     .accessibilityIdentifier("todos.add.field")
+                if Self.chipOnFieldRow(layout) { dueChip }
                 Button(action: add) {
                     Text(verbatim: Copywriter.todoAdd).accessibilityIdentifier("todos.add.button")
                 }
-                .buttonStyle(GhostButton(accent: Night.todo))
+                .buttonStyle(TodoAddButtonStyle())
                 .disabled(isBlank)
             }
-            dueChip
-                .padding(.leading, UIMetrics.todoAddIcon + UIMetrics.todoRowSpacing)
+            .frame(minHeight: UIMetrics.todoAddHeight)
+            if !Self.chipOnFieldRow(layout) {
+                dueChip.padding(.leading, UIMetrics.todoAddIcon + UIMetrics.todoRowSpacing)
+            }
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("todos.add.stack")
@@ -46,8 +50,12 @@ struct TodoAddField: View {
 
     private var dueChip: some View {
         Button { picking = true } label: {
-            Text(verbatim: pick.map { Copywriter.todoDueText($0, now: e.now, calendar: e.calendar) } ?? Copywriter.todoNoDate)
-                .accessibilityIdentifier("todos.add.due")
+            Label {
+                Text(verbatim: pick.map { Copywriter.todoDueText($0, now: e.now, calendar: e.calendar) } ?? Copywriter.todoNoDate)
+            } icon: {
+                Image(systemName: "calendar")
+            }
+            .accessibilityIdentifier("todos.add.due")
         }
         .buttonStyle(GhostButton(accent: pick == nil ? Night.chipText : Night.todo))
         .popover(isPresented: $picking, arrowEdge: .bottom) {
@@ -59,6 +67,8 @@ struct TodoAddField: View {
                 .background(Night.card)
         }
     }
+
+    static func chipOnFieldRow(_ layout: MainLayout) -> Bool { !layout.isNarrow }
 
     private var today: Date { e.calendar.startOfDay(for: e.now) }
 

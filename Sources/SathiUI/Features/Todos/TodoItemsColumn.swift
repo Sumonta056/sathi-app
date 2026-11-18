@@ -18,7 +18,6 @@ struct TodoItemsColumn: View {
         let rows = showCompleted ? page.open + page.completed : page.open
         VStack(alignment: .leading, spacing: UIMetrics.todoItemsSpacing) {
             header(page)
-            if !page.completed.isEmpty { toggle(page.completed.count) }
             if let target = page.targetListID {
                 TodoAddField(listID: target, due: page.defaultDue).id(target)
             }
@@ -34,7 +33,7 @@ struct TodoItemsColumn: View {
                         ForEach(rows, id: \.id) { item($0) }
                     } else {
                         ForEach(page.sections, id: \.list.id) { section in
-                            TodoSectionHeader(list: section.list)
+                            TodoSectionHeader(list: section.list, count: section.todos.count)
                             ForEach(section.todos, id: \.id) { item($0) }
                         }
                     }
@@ -54,14 +53,20 @@ struct TodoItemsColumn: View {
     }
 
     private func header(_ page: TodoPageModel) -> some View {
-        HStack(alignment: .firstTextBaseline) {
+        HStack(alignment: .firstTextBaseline, spacing: UIMetrics.todoHeaderSpacing) {
             Text(verbatim: page.title)
+                .font(Typography.tracker(UIMetrics.todoTitleFont, .heavy))
+                .foregroundStyle(accent)
+                .layoutPriority(1)
+            Text(verbatim: Copywriter.todoPageCount(open: page.open.count, lists: selection == .smart(.all) ? page.sections.count : nil))
+                .font(Typography.tracker(UIMetrics.todoHeaderCountFont, .semibold))
+                .foregroundStyle(Night.muted)
             Spacer(minLength: 0)
-            Text(verbatim: "\(page.open.count)")
+            if !page.completed.isEmpty { toggle(page.completed.count) }
         }
-        .font(Typography.tracker(UIMetrics.todoTitleFont, .heavy))
-        .foregroundStyle(accent)
         .lineLimit(1)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("todos.header")
     }
 
     private func toggle(_ count: Int) -> some View {
@@ -69,7 +74,6 @@ struct TodoItemsColumn: View {
             Text(verbatim: showCompleted ? Copywriter.todoHideCompleted : Copywriter.todoCompletedToggle(count))
                 .font(Typography.tracker(UIMetrics.todoToggleFont, .medium))
                 .foregroundStyle(Night.muted)
-                .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -77,6 +81,7 @@ struct TodoItemsColumn: View {
 
     private var accent: Color {
         switch selection {
+        case .smart(.all): Night.text
         case let .smart(list): Night.todoTile(list).dot
         case let .list(id): e.todoSnapshot.lists.first { $0.id == id }.map { Night.todoList($0.colorHex) } ?? Night.todo
         }

@@ -292,6 +292,8 @@ Full rules are in `docs/specs/phase-23-todos.md`.
 14. Day summary: 1 line, "To-dos: {done} done · {left} left for today" (done = done today; left = due today and not done). It shows only when To-dos is on and has access. It does not change the "all goals met" verdict.
 15. Sync: Sathi reads to-dos when the feature turns on, when the To-dos page or the Quick panel opens, and on `EKEventStoreChanged` (the same single observer as Calendar page rule 7). A change marks the cache stale and asks for a tick. No timer; the next due moment goes into `upcomingDeadlines()`.
 16. Quick reminders stay separate and unchanged.
+17. To-dos page look (option A, 2026-11-18): the page header shows the page name, "{n} open" (the All page adds " · {m} lists", m = its section count), and the "{n} Completed · Show" toggle on the right. The add field is 1 row: plus, text, due chip, Add. Each All section header shows the list color dot, the list name in the list color, its open count, and a line in the list color to the right edge. A row shows its due text and the Repeats label on the right side of the title row, not under the title.
+18. Links in a to-do title: an http or https link (also `www.` with no scheme, opened as https) shows in link color with its short label: the host without `www.`, then the path without the last `/`, no query, no fragment, cut to `Limits.todoLinkLabelMax` (32) characters with "…". A click on the link opens the full URL in the default browser (`LinkOpener`) and does not open the edit card. A click on any other part of the row opens the edit card. Other schemes (mailto, file, app links) stay plain text. The title in Apple Reminders does not change.
 
 ## Time
 

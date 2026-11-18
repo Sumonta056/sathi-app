@@ -19,14 +19,12 @@ struct TodoAddLayoutTests {
         #expect(throws: Never.self) { try fieldRow.find(viewWithAccessibilityIdentifier: "todos.add.button") }
     }
 
-    @Test func theDueChipIsOnItsOwnRowUnderTheTextField() async throws {
+    @Test func theDueChipSitsOnTheFieldRow() async throws {
         let h = await EngineHarness.pageFixture()
         let sut = try hosted(TodoAddField(listID: "inbox", title: "Call"), h).inspect()
         let fieldRow = try row(sut, of: "todos.add.field")
-        #expect((try? fieldRow.find(viewWithAccessibilityIdentifier: "todos.add.due")) == nil)
-        let stack = try sut.find(viewWithAccessibilityIdentifier: "todos.add.stack").vStack()
-        #expect(try stack.alignment() == .leading)
-        #expect(throws: Never.self) { try stack.find(viewWithAccessibilityIdentifier: "todos.add.due") }
+        #expect(throws: Never.self) { try fieldRow.find(viewWithAccessibilityIdentifier: "todos.add.due") }
+        #expect(throws: Never.self) { try fieldRow.find(viewWithAccessibilityIdentifier: "todos.add.button") }
     }
 
     @Test func theDuePopoverHasAFixedWidthThatFitsTheNarrowestPage() {
