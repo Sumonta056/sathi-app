@@ -15,7 +15,7 @@ struct CalendarGridMath {
     var totalHeight: CGFloat { hourHeight * CGFloat(rows.count) }
 
     var minimumMinutes: Double {
-        Double(UIMetrics.calendarBlockMinHeight / hourHeight) * Timing.hour / Timing.minute
+        Double(UIMetrics.calendarBlockMinTextHeight / hourHeight) * Timing.hour / Timing.minute
     }
 
     func place(_ blocks: [CalendarBlock]) -> [CalendarPlacedBlock] {

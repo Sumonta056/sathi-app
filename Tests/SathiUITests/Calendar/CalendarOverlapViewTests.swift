@@ -29,7 +29,9 @@ struct CalendarOverlapViewTests {
     }
 
     private func blockView(copies: Int) throws -> InspectableView<ViewType.ClassifiedView> {
-        try CalendarBlockView(block: block(copies: copies), text: text, height: UIMetrics.calendarTimeRangeMinHeight, categories: []).inspect()
+        let math = CalendarGridMath(day: DayKey(start, calendar: cal), calendar: cal, hourHeight: UIMetrics.calendarHourHeight)
+        let placed = CalendarPlacedBlock(block: block(copies: copies), lane: 0, lanes: 1)
+        return try CalendarEventCard(placed: placed, math: math, context: CalendarBlockContext(texts: ["b": text])).inspect()
     }
 
     private func labels(_ sut: InspectableView<ViewType.ClassifiedView>) -> [String] {

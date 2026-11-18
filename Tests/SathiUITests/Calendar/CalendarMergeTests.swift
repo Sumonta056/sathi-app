@@ -109,7 +109,7 @@ struct CalendarMergeTests {
     }
 
     @Test func aSelectedBlockGetsTheThickBorder() {
-        #expect(CalendarBlockView.border(selected: true) > CalendarBlockView.border(selected: false))
+        #expect(CalendarBlockFit.border(selected: true) > CalendarBlockFit.border(selected: false))
     }
 
     @Test func theDayPageHoldsTheStripAndTheWeekPageDoesNot() throws {

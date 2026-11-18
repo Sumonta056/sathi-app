@@ -12,6 +12,7 @@ struct CalendarDayColumn: View {
     var actions = CalendarGridActions()
     var selected: Set<ActivityID> = []
     var popover: Binding<CalendarPopoverTarget?> = .constant(nil)
+    var showsAwayPill = true
 
     var body: some View {
         GeometryReader { geo in
@@ -21,7 +22,7 @@ struct CalendarDayColumn: View {
                     .frame(width: geo.size.width, height: math.totalHeight)
                     .contentShape(Rectangle())
                     .onTapGesture(coordinateSpace: .local) { p in actions.slot(day, math.slotStart(y: p.y), p.y) }
-                ForEach(placed.flatMap { [$0] + $0.children }.filter { !CalendarTodoLayer.holds($0) }, id: \.block.id) { p in
+                ForEach(placed.filter { !CalendarTodoLayer.holds($0) }, id: \.block.id) { p in
                     let indent = min(CGFloat(p.depth) * UIMetrics.calendarCascadeIndent, width / 2)
                     let lane = (width - indent) / CGFloat(max(1, p.lanes))
                     let y = math.y(for: p.displaySpan.start)
@@ -29,7 +30,7 @@ struct CalendarDayColumn: View {
                         .frame(width: p.isBackdrop ? width : max(0, lane - UIMetrics.calendarLaneGap))
                         .offset(x: UIMetrics.calendarColumnInset + indent + lane * CGFloat(p.lane), y: y)
                 }
-                ForEach(placed.filter(\.isBackdrop), id: \.block.id) { p in
+                ForEach(showsAwayPill ? placed.filter(\.isBackdrop) : [], id: \.block.id) { p in
                     let y = math.y(for: p.displaySpan.start)
                     backdrop(p, y: y, layer: .label)
                         .frame(width: width)
@@ -56,17 +57,20 @@ struct CalendarDayColumn: View {
     @ViewBuilder private func blockView(_ p: CalendarPlacedBlock, y: CGFloat) -> some View {
         if p.isBackdrop {
             backdrop(p, y: y, layer: .stripes)
+        } else if Self.isEvent(p) {
+            CalendarEventCard(placed: p, math: math, context: context)
         } else {
-            Button { actions.press(day, p.block, y) } label: {
-                CalendarBlockView(
-                    block: p.block, text: texts[p.block.id] ?? CalendarBlockText(time: "", spoken: p.block.title),
-                    height: math.height(p.displaySpan), categories: categories,
-                    selected: CalendarMergePick.id(of: p.block).map(selected.contains) ?? false,
-                    raised: p.isRaised
-                )
-            }
-            .buttonStyle(.plain)
+            CalendarActivityBlock(placed: p, height: math.height(p.displaySpan), context: context, y: y)
         }
+    }
+
+    static func isEvent(_ p: CalendarPlacedBlock) -> Bool {
+        if case .event = p.block.source { return true }
+        return false
+    }
+
+    private var context: CalendarBlockContext {
+        CalendarBlockContext(texts: texts, categories: categories, selected: selected) { block, y in actions.press(day, block, y) }
     }
 
     private func backdrop(_ p: CalendarPlacedBlock, y: CGFloat, layer: CalendarAwayBackdrop.Layer) -> some View {

@@ -43,6 +43,11 @@ struct CopywriterCalendarGridTests {
         #expect(Copywriter.calendarCopiesSpoken(2) == "in 2 calendars")
     }
 
+    @Test func hiddenBlocksChip() {
+        #expect(Copywriter.calendarHiddenCount(1) == "+1")
+        #expect(Copywriter.calendarHiddenCount(3) == "+3")
+    }
+
     @Test func allDayLabel() {
         #expect(Copywriter.calendarAllDay == "All day")
     }

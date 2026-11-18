@@ -14,12 +14,13 @@ enum NightHex {
     static let border: UInt32 = 0x263049
     static let trackerEvent: UInt32 = 0x7FB8FF
     static let trackerAway: UInt32 = 0x3A4458
+    static let card: UInt32 = 0x1A2233
 }
 
 enum Night {
     static let bg = Color(hex: 0x121826)
     static let sidebar = Color(hex: 0x0D1220)
-    static let card = Color(hex: 0x1A2233)
+    static let card = Color(hex: NightHex.card)
     static let border = Color(hex: NightHex.border)
     static let divider = Color(hex: 0x222B40)
     static let text = Color(hex: NightHex.text)

@@ -55,7 +55,7 @@ struct CalendarTimeGrid: View {
                         CalendarDayColumn(
                             day: day, placed: math.place(data.blocks), texts: data.texts,
                             math: math, now: day == today ? now : nil, categories: categories, calendar: calendar,
-                            actions: actions, selected: selected, popover: popover
+                            actions: actions, selected: selected, popover: popover, showsAwayPill: range.kind == .day
                         )
                         .overlay(alignment: .leading) { Night.divider.frame(width: UIMetrics.calendarLine) }
                     }

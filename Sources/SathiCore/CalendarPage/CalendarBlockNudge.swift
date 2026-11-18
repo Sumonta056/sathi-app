@@ -4,7 +4,7 @@ package enum CalendarBlockNudge {
     package static func apply(_ placed: [CalendarPlacedBlock], minimumMinutes: Double) -> [CalendarPlacedBlock] {
         let least = max(0, minimumMinutes) * Timing.minute
         var result = placed
-        let order = result.indices.filter { moves(result[$0]) }.sorted {
+        let order = result.indices.filter { !result[$0].isBackdrop }.sorted {
             result[$0].span.start != result[$1].span.start ? result[$0].span.start < result[$1].span.start : $0 < $1
         }
         for (k, i) in order.enumerated() {
@@ -13,12 +13,6 @@ package enum CalendarBlockNudge {
             fill(&result[i], start: start, least: least)
         }
         return result
-    }
-
-    private static func moves(_ p: CalendarPlacedBlock) -> Bool {
-        if p.isBackdrop { return false }
-        if case .todo = p.block.source { return false }
-        return true
     }
 
     private static func pushes(_ above: CalendarPlacedBlock, _ below: CalendarPlacedBlock) -> Bool {
