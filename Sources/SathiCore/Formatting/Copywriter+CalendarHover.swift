@@ -5,6 +5,7 @@ extension Copywriter {
     package static let calendarHoverAlsoHere = "Also here"
     package static let calendarHoverMetaSeparator = " · "
     package static let calendarHoverGroupMembers = "In this block"
+    package static let calendarHoverGroupKindNeutral = "Grouped activities"
     package static let calendarGroupDetailSeparator = " · "
     package static let calendarGroupCategorySeparator = ", "
 
@@ -26,7 +27,7 @@ extension Copywriter {
         case .activity: return "Activity · Actual"
         case .todo: return "To-do · Apple Reminders"
         case .away: return trackerAway
-        case .group: return calendarGroupTitle(0)
+        case .group: return calendarHoverGroupKindNeutral
         }
     }
 

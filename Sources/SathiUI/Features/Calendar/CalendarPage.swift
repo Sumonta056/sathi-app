@@ -9,7 +9,7 @@ struct CalendarPage: View {
     @State var selected: Set<ActivityID> = []
     @State var mergeError: String?
     @State var narrowStats: Bool
-    @State var narrowLanes: Set<CalendarLaneShape> = []
+    @State var narrowLanes = CalendarLaneMemory.remembered
     @Environment(\.mainLayout) var layout
     @EnvironmentObject var e: Engine
 
@@ -22,7 +22,7 @@ struct CalendarPage: View {
 
     var body: some View {
         let range = shown
-        let request = CalendarPageRequest(range: range, narrow: narrowLanes)
+        let request = CalendarPageRequest(range: range, narrow: CalendarLaneMemory.narrow(narrowLanes, for: range.kind))
         let data = e.calendarAccess == .allowed ? memo.value(request, end: range.interval.end, engine: e) {
             $0.calendarPage(
                 $1.range, minimumMinutes: CalendarGridMath.minimumMinutes(rowMinutes: $0.data.prefs.calendarPage.rowMinutes), narrow: $1.narrow
@@ -84,10 +84,11 @@ struct CalendarPage: View {
             CalendarTimeGrid(
                 range: range, data: data, now: e.now, calendar: e.rangeCalendar, categories: e.activityCategories,
                 actions: gridActions(kind: range.kind), selected: range.kind == .day ? selected : [], popover: $focus.popover,
-                rowMinutes: e.data.prefs.calendarPage.rowMinutes, narrow: narrowLanes,
+                rowMinutes: e.data.prefs.calendarPage.rowMinutes, narrow: CalendarLaneMemory.narrow(narrowLanes, for: range.kind),
                 measured: { width in
-                    let next = CalendarNarrowLanes.shapes(columnWidth: width)
-                    if next != narrowLanes { narrowLanes = next }
+                    guard let next = CalendarLaneMemory.next(narrowLanes, kind: range.kind, columnWidth: width) else { return }
+                    CalendarLaneMemory.remembered = next
+                    narrowLanes = next
                 }
             )
         }

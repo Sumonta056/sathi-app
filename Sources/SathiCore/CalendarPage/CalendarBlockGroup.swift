@@ -13,7 +13,7 @@ package struct CalendarBlockGroup: Equatable, Sendable {
         self.categories = categories
     }
 
-    package static func block(_ members: [CalendarBlock]) -> CalendarBlock {
+    package static func block(_ members: [CalendarBlock], column: String? = nil) -> CalendarBlock {
         let first = members[0]
         let end = members.map(\.interval.end).max() ?? first.interval.end
         let span = DateInterval(start: first.interval.start, end: max(first.interval.start, end))
@@ -28,10 +28,10 @@ package struct CalendarBlockGroup: Equatable, Sendable {
             categories: categories(members)
         )
         return CalendarBlock(
-            id: groupPrefix + first.id,
+            id: [groupMark, column, longest.id].compactMap { $0 }.joined(separator: idSeparator),
             title: lead.map { trimmed($0.title) } ?? Copywriter.calendarGroupTitle(members.count),
             interval: span,
-            style: lead?.style ?? .activity(category: category(of: longest)),
+            style: longest.style,
             source: (lead ?? longest).source,
             isAllDay: false,
             activityIDs: members.flatMap(\.activityIDs),
@@ -39,7 +39,8 @@ package struct CalendarBlockGroup: Equatable, Sendable {
         )
     }
 
-    static let groupPrefix = "g-"
+    static let groupMark = "g"
+    static let idSeparator = "-"
 
     private static func trimmed(_ s: String) -> String {
         s.trimmingCharacters(in: .whitespacesAndNewlines)

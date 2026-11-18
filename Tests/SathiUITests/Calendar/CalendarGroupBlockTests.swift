@@ -85,14 +85,34 @@ struct CalendarGroupBlockTests {
         #expect(CalendarNarrowLanes.shapes(columnWidth: 130).contains(CalendarLaneShape(depth: 0, lanes: 1)))
     }
 
-    @Test func aCommandClickOnAGroupSelectsEveryMember() {
-        var picked: [ActivityID] = []
+    @Test func aCommandClickOnAGroupTogglesEveryMember() {
+        var picked: [[ActivityID]] = []
         var grid = CalendarGridActions()
         grid.toggle = { _ in }
-        grid.select = { picked += $0 }
+        grid.toggleAll = { picked.append($0) }
         grid.command = { true }
         let group = same
         grid.press(DayKey(day(2026, 11, 12), calendar: cal), group, 0)
-        #expect(picked == group.mergeIDs)
+        #expect(picked == [group.mergeIDs])
+    }
+
+    @Test func togglingAGroupAddsAllOrRemovesAllWhenEveryMemberIsSelected() {
+        let ids = same.mergeIDs
+        var selected: Set<ActivityID> = [ids[0]]
+        CalendarMergePick.toggle(all: ids, in: &selected)
+        #expect(selected == Set(ids))
+        CalendarMergePick.toggle(all: ids, in: &selected)
+        #expect(selected.isEmpty)
+    }
+
+    @Test func theFirstBuildUsesTheRememberedNarrowLanesOfThatView() {
+        let week = CalendarNarrowLanes.shapes(columnWidth: 190)
+        let remembered: [ReportRange: Set<CalendarLaneShape>] = [.week: week]
+        #expect(CalendarLaneMemory.narrow(remembered, for: .week) == week)
+        #expect(CalendarLaneMemory.narrow(remembered, for: .day) == [])
+        #expect(CalendarLaneMemory.next(remembered, kind: .week, columnWidth: 190) == nil)
+        #expect(CalendarLaneMemory.next(remembered, kind: .day, columnWidth: 800) == nil)
+        #expect(CalendarLaneMemory.next(remembered, kind: .week, columnWidth: 600) == [.week: []])
+        #expect(CalendarLaneMemory.next([:], kind: .week, columnWidth: 190) == [.week: week])
     }
 }

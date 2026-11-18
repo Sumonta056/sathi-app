@@ -50,7 +50,7 @@ struct CalendarBlockGroupTests {
     @Test func blockSpansTheMembersAndHoldsEveryRow() {
         let members = [Grp.act("a", 0, 4), Grp.act("b", 6, 12)]
         let b = CalendarBlockGroup.block(members)
-        #expect(b.id == "g-a")
+        #expect(b.id == "g-b")
         #expect(b.interval == Lay.span(0, 12))
         #expect(b.activityIDs == members.flatMap(\.activityIDs))
         #expect(b.group?.members.map(\.id) == ["a", "b"])

@@ -16,6 +16,10 @@ enum CalendarMergePick {
         ActivityMergeBar.pruned(selected, in: rows)
     }
 
+    static func toggle(all ids: [ActivityID], in selected: inout Set<ActivityID>) {
+        if !ids.isEmpty, ids.allSatisfy(selected.contains) { selected.subtract(ids) } else { selected.formUnion(ids) }
+    }
+
     static func toggle(_ id: ActivityID, in selected: inout Set<ActivityID>) {
         if selected.contains(id) { selected.remove(id) } else { selected.insert(id) }
     }
