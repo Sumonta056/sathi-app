@@ -27,7 +27,10 @@ struct CalendarWeekHeaders: View {
                 .frame(width: column)
             }
         }
+        .frame(height: Self.height)
     }
+
+    static let height = UIMetrics.calendarWeekHeaderHeight + UIMetrics.calendarSplitLabelHeight
 
     private func label(_ text: String) -> some View {
         Text(verbatim: text)
