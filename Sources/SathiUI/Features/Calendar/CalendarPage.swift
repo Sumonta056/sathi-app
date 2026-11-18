@@ -55,8 +55,9 @@ struct CalendarPage: View {
     private var shown: CalendarPageRange {
         if let picked { return picked }
         let calendar = e.rangeCalendar
-        guard let day else { return .containing(e.now, kind: .week, calendar: calendar) }
-        return .containing(day: day, kind: .day, calendar: calendar)
+        let weekDays = e.data.prefs.calendarPage.weekDays
+        guard let day else { return .containing(e.now, kind: .week, calendar: calendar, weekDays: weekDays) }
+        return .containing(day: day, kind: .day, calendar: calendar, weekDays: weekDays)
     }
 
     @ViewBuilder private func content(_ range: CalendarPageRange, _ data: CalendarPageData?) -> some View {

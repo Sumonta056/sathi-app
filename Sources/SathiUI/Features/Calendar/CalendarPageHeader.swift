@@ -52,7 +52,7 @@ struct CalendarPageHeader: View {
     }
 
     private var todayButton: some View {
-        Button { range = .containing(now, kind: range.kind, calendar: calendar) } label: {
+        Button { range = .containing(now, kind: range.kind, calendar: calendar, weekDays: range.weekDays) } label: {
             Text(verbatim: Copywriter.calendarToday)
                 .font(Typography.chip)
                 .foregroundStyle(Night.text)
