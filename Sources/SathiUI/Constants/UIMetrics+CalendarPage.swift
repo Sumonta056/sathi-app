@@ -15,6 +15,7 @@ extension UIMetrics {
         calendarHourHeight * CGFloat(Limits.minutesPerHour / max(1, rowMinutes))
     }
     static let calendarBlockMinTextHeight: CGFloat = 26
+    static let calendarFitTolerance: CGFloat = 0.01
     static let calendarEventRadius: CGFloat = 8
     static let calendarTitleLinesMax = 3
     static let calendarTitleLineHeight: CGFloat = 15

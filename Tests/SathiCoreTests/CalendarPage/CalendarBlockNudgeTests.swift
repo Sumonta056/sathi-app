@@ -105,3 +105,47 @@ struct CalendarBlockNudgeTests {
         #expect(placed.first?.displaySpan.end ?? column.end <= column.end)
     }
 }
+
+@Suite("CalendarBlockNudge raised blocks")
+struct CalendarBlockNudgeRaisedTests {
+    func shown(_ blocks: [CalendarBlock]) -> [String: CalendarPlacedBlock] {
+        Lay.byID(CalendarBlockLayout.place(blocks, minimumMinutes: 20))
+    }
+
+    private var chain: [CalendarBlock] {
+        [Lay.activity("x", 0, 2), Lay.activity("y", 2, 4), Lay.activity("z", 4, 6), Lay.event("e", 6, 40), Lay.event("r", 36, 50)]
+    }
+
+    @Test func aRaisedBlockMovesBelowNudgedBlocksAndTheTitleOfItsHost() {
+        let r = shown(chain)
+        #expect(r["e"]?.displaySpan == Lay.span(60, 94))
+        #expect(r["r"]?.depth == 1)
+        #expect(r["r"]?.displaySpan == Lay.span(80, 100))
+    }
+
+    @Test func aLaterBlockMovesBelowARaisedBlock() {
+        let r = shown(chain + [Lay.activity("s", 52, 54)])
+        #expect(r["s"]?.depth == 0)
+        #expect(r["s"]?.displaySpan == Lay.span(100, 120))
+    }
+
+    @Test func aRaisedBlockNeverCoversTheTitleOfTheBlockBelow() {
+        let r = shown([Lay.activity("p", 0, 2), Lay.activity("l", 2, 60), Lay.event("r", 35, 43)])
+        #expect(r["l"]?.displaySpan == Lay.span(20, 78))
+        #expect(r["r"]?.depth == 1)
+        #expect(r["r"]?.displaySpan == Lay.span(40, 60))
+    }
+
+    @Test func aRaisedBlockNeverCoversAChildOfTheBlockBelow() {
+        let r = shown([Lay.event("e", 0, 120), Lay.activity("c", 5, 100), Lay.event("r", 40, 50)])
+        #expect(r["e"]?.children.first?.displaySpan == Lay.span(20, 115))
+        #expect(r["r"]?.depth == 1)
+        #expect(r["r"]?.displaySpan == Lay.span(115, 135))
+    }
+
+    @Test func aRaisedBlockStillSitsOnTheOpenPartOfALongBlock() {
+        let r = shown([Lay.activity("a", 0, 120), Lay.activity("b", 40, 50)])
+        #expect(r["b"]?.depth == 1)
+        #expect(r["b"]?.displaySpan == Lay.span(40, 60))
+    }
+}

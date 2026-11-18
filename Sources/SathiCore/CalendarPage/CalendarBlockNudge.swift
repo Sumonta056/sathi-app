@@ -8,11 +8,32 @@ enum CalendarBlockNudge {
             result[$0].span.start != result[$1].span.start ? result[$0].span.start < result[$1].span.start : $0 < $1
         }
         for (k, i) in order.enumerated() {
-            let floor = order.prefix(k).filter { pushes(result[$0], result[i]) }.map { result[$0].displaySpan.end }.max()
-            let start = fit.start(max(result[i].span.start, floor ?? result[i].span.start), real: result[i].span.start)
+            let before = order.prefix(k).map { result[$0] }
+            let real = result[i].span.start
+            let floor = before.filter { pushes($0, result[i]) }.map(\.displaySpan.end).max()
+            var start = fit.start(max(real, floor ?? real), real: real)
             fill(&result[i], start: start, fit: fit)
+            while let clear = clearance(result[i], before, least: fit.least) {
+                let next = fit.start(clear, real: real)
+                guard next > start else { break }
+                start = next
+                fill(&result[i], start: start, fit: fit)
+            }
         }
         return result
+    }
+
+    private static func clearance(_ block: CalendarPlacedBlock, _ before: [CalendarPlacedBlock], least: TimeInterval) -> Date? {
+        before.filter { sharesWidth($0, block) }
+            .flatMap { covered($0, by: block, least: least) }
+            .filter { $0.start < block.displaySpan.end && block.displaySpan.start < $0.end }
+            .map(\.end).max()
+    }
+
+    private static func covered(_ other: CalendarPlacedBlock, by block: CalendarPlacedBlock, least: TimeInterval) -> [DateInterval] {
+        let raisedOver = block.depth > other.depth && block.span.start < other.span.end && other.span.start < block.span.end
+        guard raisedOver else { return [other.displaySpan] }
+        return [DateInterval(start: other.displaySpan.start, duration: least)] + other.children.map(\.displaySpan)
     }
 
     private struct Fit {
