@@ -46,7 +46,10 @@ enum Split {
     }
 
     static func activity(_ id: String, _ from: String, _ to: String, on date: Int = monday, kind: ActivityKind = .work) -> CalendarBlock {
-        let i = span(from, to, on: date)
+        activity(id, span(from, to, on: date), kind: kind)
+    }
+
+    static func activity(_ id: String, _ i: DateInterval, kind: ActivityKind = .work) -> CalendarBlock {
         let a = Activity(kind: kind, text: id, category: "Focus", start: i.start, end: i.end)
         return CalendarBlock(
             id: id, title: id, interval: i, style: kind == .away ? .away : .activity(category: "Focus"),

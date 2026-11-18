@@ -1,5 +1,6 @@
 import Foundation
 @testable import SathiCore
+import SathiTestSupport
 import Testing
 
 @Suite("Calendar rounding")
@@ -31,5 +32,40 @@ struct CalendarRoundingTests {
 
     @Test func labelAcrossNoonAndOverAnHour() {
         #expect(Copywriter.calendarBlockTime(Split.span("10:38", "12:31"), calendar: Split.calendar) == "10:38 AM – 12:31 PM · 1h 53m")
+    }
+}
+
+@Suite("Calendar rounding: kept for the views")
+struct CalendarRoundedKeptTests {
+    @Test func laidBlockKeepsTheFullRoundedInterval() {
+        let grid = Split.layout([Split.activity("testing", "14:35:54", "15:01:32")], metrics: Split.weekFlat)
+        #expect(Split.laid(grid, "testing")?.rounded == Split.span("14:36", "15:02"))
+    }
+
+    @Test func awayOverNightKeepsItsRealStartInTheNextPageDay() {
+        let tuesday = Split.key(Split.monday + 1)
+        let real = DateInterval(start: Split.at("23:00:20"), end: Split.at("07:00:10", on: Split.monday + 1))
+        let away = Split.activity("sleep", real, kind: .away)
+        let grid = Split.layout([away], days: [Split.page, tuesday], metrics: Split.weekFlat)
+        let next = Split.laid(grid, "sleep", on: tuesday)
+        #expect(next?.rounded.start == Split.at("23:00"))
+        #expect(next?.rounded.end == Split.at("07:00", on: Split.monday + 1))
+        #expect(next?.span.start == Split.at("06:00", on: Split.monday + 1))
+    }
+}
+
+@MainActor
+@Suite("Engine calendar page rounded texts")
+struct EngineCalendarRoundedTextTests {
+    @Test func blockTextUsesTheRoundedTimes() {
+        let h = EngineHarness(at: day(2026, 3, 4, 18))
+        let start = day(2026, 3, 4, 14, 35).addingTimeInterval(54)
+        let end = day(2026, 3, 4, 15, 1).addingTimeInterval(32)
+        h.calendarWriter.eventsValue = [CalendarEventInfo(id: "e", title: "e", start: start, end: end, calendarID: "work")]
+        let data = h.engine.calendarPage(.containing(h.clock.now, kind: .day, calendar: h.engine.calendar))
+        let id = data.blocks[0].id
+        let cal = h.engine.calendar
+        #expect(data.texts[id]?.time == "2:36 – 3:02 PM")
+        #expect(data.texts[id]?.spoken == Copywriter.calendarBlockSpoken("e", day(2026, 3, 4, 14, 36), day(2026, 3, 4, 15, 2), calendar: cal))
     }
 }

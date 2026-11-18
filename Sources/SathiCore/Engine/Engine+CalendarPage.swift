@@ -80,7 +80,7 @@ extension Engine {
     }
 
     private func text(of b: CalendarBlock) -> CalendarBlockText {
-        let i = b.interval
+        let i = CalendarRounding.rounded(b.interval)
         return CalendarBlockText(
             time: Fmt.shortRange(i.start, i.end, calendar: calendar),
             spoken: Copywriter.calendarBlockSpoken(b.title, i.start, i.end, calendar: calendar)

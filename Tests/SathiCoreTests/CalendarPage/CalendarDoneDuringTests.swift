@@ -50,3 +50,18 @@ struct CalendarDoneDuringTests {
         #expect(a1?.depth == 0)
     }
 }
+
+@Suite("Calendar done during: real times")
+struct CalendarDoneDuringUncutTests {
+    @Test func activityBeforeTheEventStartsIsNotLinkedInTheNextColumn() {
+        let tuesday = Split.monday + 1
+        let grid = Split.layout(
+            [Split.event("early", "06:00", "07:00", on: tuesday), Split.activity("run", DateInterval(start: Split.at("05:30"), end: Split.at("06:30", on: tuesday)))],
+            days: [Split.page, Split.key(tuesday)], metrics: Split.weekFlat
+        )
+        let key = Split.key(tuesday)
+        #expect(Split.laid(grid, "run", on: key) != nil)
+        #expect(Split.laid(grid, "run", on: key)?.doneDuring == nil)
+        #expect(Split.laid(grid, "early", on: key)?.doneDuringCount == 0)
+    }
+}

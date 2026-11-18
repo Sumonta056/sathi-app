@@ -42,8 +42,8 @@ package enum CalendarSplitLayout {
         let span = DateInterval(start: max(r.start, column.start), end: max(max(r.start, column.start), min(r.end, column.end)))
         let keeps = span.duration > 0 || (r.duration == 0 && column.start <= r.start && r.start < column.end)
         guard keeps else { return nil }
-        if case .activity = block.source { return CalendarLaidBlock(block: block, span: span, half: .actual) }
-        return CalendarLaidBlock(block: block, span: span, half: .plan)
+        if case .activity = block.source { return CalendarLaidBlock(block: block, span: span, half: .actual, rounded: r) }
+        return CalendarLaidBlock(block: block, span: span, half: .plan, rounded: r)
     }
 
     private static func item(
