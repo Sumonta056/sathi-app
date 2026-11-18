@@ -38,6 +38,15 @@ struct CalendarGridMathTests {
         #expect(math(12).height(i) == 1.5 * h)
     }
 
+    @Test func hourHeightIsSixtyPoints() {
+        #expect(UIMetrics.calendarHourHeight == 60)
+    }
+
+    @Test(arguments: [(60, CGFloat(60)), (30, 120), (15, 240)])
+    func rowZoomMultipliesSixtyPoints(_ minutes: Int, _ height: CGFloat) {
+        #expect(UIMetrics.calendarHourHeight(rowMinutes: minutes) == height)
+    }
+
     @Test(arguments: [(60, CGFloat(1)), (30, 2), (15, 4)])
     func rowZoomScalesTheHourHeight(_ minutes: Int, _ scale: CGFloat) {
         let base = UIMetrics.calendarHourHeight

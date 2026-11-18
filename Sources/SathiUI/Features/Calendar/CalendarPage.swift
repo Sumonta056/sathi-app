@@ -22,11 +22,11 @@ struct CalendarPage: View {
     var body: some View {
         let range = shown
         let data = e.calendarAccess == .allowed ? memo.value(range, end: range.interval.end, engine: e) { $0.calendarPage($1) } : nil
-        let sidePanelShown = layout.isNarrow ? narrowStats : e.data.prefs.calendarPage.sidePanelShown
+        let sidePanelShown = layout.isNarrow ? narrowStats : e.data.prefs.calendarPage.sidePanelShown(for: range.kind)
         VStack(alignment: .leading, spacing: UIMetrics.reportsPageGap) {
             CalendarPageHeader(
                 range: binding(range), now: e.now, calendar: e.rangeCalendar, stats: data?.stats, sidePanelShown: sidePanelShown,
-                toggleSidePanel: toggleSidePanel, rowMinutes: rowMinutes
+                toggleSidePanel: { toggleSidePanel(range.kind) }, rowMinutes: rowMinutes
             )
             content(range, data)
         }
@@ -41,9 +41,9 @@ struct CalendarPage: View {
         .modifier(CalendarRangeReset(range: range, focus: $focus, selected: $selected, error: $mergeError) { e.clearMergeUndo() })
     }
 
-    private func toggleSidePanel() {
+    private func toggleSidePanel(_ kind: ReportRange) {
         if layout.isNarrow { return narrowStats.toggle() }
-        e.setCalendarSidePanelShown(!e.data.prefs.calendarPage.sidePanelShown)
+        e.setCalendarSidePanelShown(!e.data.prefs.calendarPage.sidePanelShown(for: kind), for: kind)
     }
 
     private var shown: CalendarPageRange {
