@@ -7,6 +7,7 @@ package struct CalendarPagePrefs: Codable, Equatable, Sendable {
     package var sidePanelShown = true
     package var sidePanelShownWeek = false
     package var rowMinutes = Limits.calendarDefaultRowMinutes
+    package var weekDays = Limits.calendarDefaultWeekDays
 
     package init() {}
 
@@ -20,6 +21,8 @@ package struct CalendarPagePrefs: Codable, Equatable, Sendable {
         sidePanelShownWeek = c.lenient(.sidePanelShownWeek, or: d.sidePanelShownWeek)
         let minutes = c.lenient(.rowMinutes, or: d.rowMinutes)
         rowMinutes = Limits.calendarRowMinutes.contains(minutes) ? minutes : d.rowMinutes
+        let days = c.lenient(.weekDays, or: d.weekDays)
+        weekDays = Limits.calendarWeekDays.contains(days) ? days : d.weekDays
     }
 
     package func sidePanelShown(for kind: ReportRange) -> Bool {

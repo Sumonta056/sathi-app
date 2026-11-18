@@ -36,6 +36,6 @@ struct CalendarMonthGrid: View {
     }
 
     private func open(_ day: DayKey) {
-        range = .containing(day: day, kind: .day, calendar: calendar)
+        range = .containing(day: day, kind: .day, calendar: calendar, weekDays: range.weekDays)
     }
 }
