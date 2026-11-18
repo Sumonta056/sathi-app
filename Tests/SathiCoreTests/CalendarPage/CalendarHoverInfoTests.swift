@@ -121,7 +121,8 @@ struct CalendarHoverInfoTests {
     @Test func everyActionHasALabel() {
         let labels = CalendarHoverAction.allCases.map(Copywriter.calendarHoverAction)
         #expect(labels == [
-            "Start as activity", "Edit", "Open in Calendar", "Merge", "Delete", "Mark done", "Open in Reminders", "Edit Away"
+            "Start as activity", "Edit", "Open in Calendar", "Merge", "Delete", "Mark done", "Open in Reminders", "Edit Away",
+            "Select all"
         ])
     }
 }

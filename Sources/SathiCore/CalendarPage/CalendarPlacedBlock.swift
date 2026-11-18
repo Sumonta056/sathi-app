@@ -9,6 +9,7 @@ package struct CalendarPlacedBlock: Equatable, Sendable {
     package var depth: Int
     package var isBackdrop: Bool
     package var isRaised: Bool
+    package var kidsShown = true
     package var hostID: String?
     package var children: [CalendarPlacedBlock]
     package var hidden: [CalendarPlacedBlock]
@@ -36,4 +37,6 @@ package struct CalendarPlacedBlock: Equatable, Sendable {
     }
 
     package var hiddenCount: Int { hidden.count }
+
+    package var shownChildren: [CalendarPlacedBlock] { kidsShown ? children : [] }
 }

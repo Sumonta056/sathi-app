@@ -4,11 +4,12 @@ import SwiftUI
 struct CalendarPage: View {
     let day: DayKey?
     @State private var picked: CalendarPageRange?
-    @State private var memo = RangeMemo<CalendarPageRange, CalendarPageData>()
+    @State private var memo = RangeMemo<CalendarPageRequest, CalendarPageData>()
     @State var focus: CalendarPageFocus
     @State var selected: Set<ActivityID> = []
     @State var mergeError: String?
     @State var narrowStats: Bool
+    @State var narrowLanes = CalendarLaneMemory.remembered
     @Environment(\.mainLayout) var layout
     @EnvironmentObject var e: Engine
 
@@ -21,8 +22,11 @@ struct CalendarPage: View {
 
     var body: some View {
         let range = shown
-        let data = e.calendarAccess == .allowed ? memo.value(range, end: range.interval.end, engine: e) {
-            $0.calendarPage($1, minimumMinutes: CalendarGridMath.minimumMinutes(rowMinutes: $0.data.prefs.calendarPage.rowMinutes))
+        let request = CalendarPageRequest(range: range, narrow: CalendarLaneMemory.narrow(narrowLanes, for: range.kind))
+        let data = e.calendarAccess == .allowed ? memo.value(request, end: range.interval.end, engine: e) {
+            $0.calendarPage(
+                $1.range, minimumMinutes: CalendarGridMath.minimumMinutes(rowMinutes: $0.data.prefs.calendarPage.rowMinutes), narrow: $1.narrow
+            )
         } : nil
         let sidePanelShown = layout.isNarrow ? narrowStats : e.data.prefs.calendarPage.sidePanelShown(for: range.kind)
         VStack(alignment: .leading, spacing: UIMetrics.reportsPageGap) {
@@ -80,7 +84,12 @@ struct CalendarPage: View {
             CalendarTimeGrid(
                 range: range, data: data, now: e.now, calendar: e.rangeCalendar, categories: e.activityCategories,
                 actions: gridActions(kind: range.kind), selected: range.kind == .day ? selected : [], popover: $focus.popover,
-                rowMinutes: e.data.prefs.calendarPage.rowMinutes
+                rowMinutes: e.data.prefs.calendarPage.rowMinutes, narrow: CalendarLaneMemory.narrow(narrowLanes, for: range.kind),
+                measured: { width in
+                    guard let next = CalendarLaneMemory.next(narrowLanes, kind: range.kind, columnWidth: width) else { return }
+                    CalendarLaneMemory.remembered = next
+                    narrowLanes = next
+                }
             )
         }
     }

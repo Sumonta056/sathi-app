@@ -11,7 +11,7 @@ struct CalendarHoverFrames {
 
     func rect(_ p: CalendarPlacedBlock) -> CGRect {
         let indent = min(CGFloat(p.depth) * UIMetrics.calendarCascadeIndent, width / 2)
-        let lane = (width - indent) / CGFloat(max(1, p.lanes))
+        let lane = CalendarNarrowLanes.laneWidth(depth: p.depth, lanes: p.lanes, inner: width)
         return CGRect(
             x: UIMetrics.calendarColumnInset + indent + lane * CGFloat(p.lane),
             y: math.y(for: p.displaySpan.start),

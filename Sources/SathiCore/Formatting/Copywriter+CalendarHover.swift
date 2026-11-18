@@ -4,6 +4,22 @@ extension Copywriter {
     package static let calendarHoverChildren = "Done in this event"
     package static let calendarHoverAlsoHere = "Also here"
     package static let calendarHoverMetaSeparator = " · "
+    package static let calendarHoverGroupMembers = "In this block"
+    package static let calendarHoverGroupKindNeutral = "Grouped activities"
+    package static let calendarGroupDetailSeparator = " · "
+    package static let calendarGroupCategorySeparator = ", "
+
+    package static func calendarHoverGroupKind(_ count: Int) -> String {
+        "\(count) activities · grouped"
+    }
+
+    package static func calendarGroupTitle(_ count: Int) -> String {
+        "\(count) activities"
+    }
+
+    package static func calendarInside(_ count: Int) -> String {
+        "\(count) inside"
+    }
 
     package static func calendarHoverKind(_ k: CalendarHoverKind) -> String {
         switch k {
@@ -11,6 +27,7 @@ extension Copywriter {
         case .activity: return "Activity · Actual"
         case .todo: return "To-do · Apple Reminders"
         case .away: return trackerAway
+        case .group: return calendarHoverGroupKindNeutral
         }
     }
 
@@ -24,6 +41,7 @@ extension Copywriter {
         case .markDone: return calendarTodoMarkDone
         case .openInReminders: return "Open in Reminders"
         case .editAway: return "Edit Away"
+        case .selectAll: return "Select all"
         }
     }
 }

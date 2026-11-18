@@ -70,7 +70,7 @@ struct CalendarEventCardTests {
     }
 
     @Test func hostListsItsChildrenInsideTheCard() throws {
-        let blocks = [event("Planning", at(9), at(10)), activity("Notes", at(9, 5), at(9, 27)), activity("Mail", at(9, 30), at(9, 50))]
+        let blocks = [event("Planning", at(9), at(10)), activity("Notes", at(9, 5), at(9, 27)), activity("Mail", at(9, 33), at(9, 53))]
         let sut = try card(blocks).inspect()
         #expect(throws: Never.self) { try sut.find(text: "Planning") }
         #expect(throws: Never.self) { try sut.find(text: "Notes") }
@@ -96,5 +96,26 @@ struct CalendarEventCardTests {
     @Test func twoCopiesShowTheBadge() throws {
         let sut = try card([event("Standup", at(9), at(10), copies: 2)]).inspect()
         #expect(throws: Never.self) { try sut.find(text: Copywriter.calendarCopies(2)) }
+    }
+
+    private func narrowCard(width: CGFloat) throws -> InspectableView<ViewType.ClassifiedView> {
+        let blocks = [event("Class", at(13), at(17)), activity("Notes", at(13, 10), at(13, 50)), activity("Quiz", at(14), at(15))]
+        let placed = math.place(blocks)
+        var host = try #require(placed.first { if case .event = $0.block.source { return true }; return false })
+        host.kidsShown = false
+        return try CalendarEventCard(placed: host, math: math, context: context(blocks), width: width).inspect()
+    }
+
+    @Test func aNarrowHostShowsAnInsideChipInsteadOfItsChildren() throws {
+        let sut = try narrowCard(width: 125)
+        #expect(throws: Never.self) { try sut.find(text: "2 inside") }
+        #expect(throws: (any Error).self) { try sut.find(text: "Notes") }
+    }
+
+    @Test func aTinyHostShowsOnlyTheStackIconAndTheCount() throws {
+        let sut = try narrowCard(width: 110)
+        #expect(throws: (any Error).self) { try sut.find(text: "2 inside") }
+        #expect(throws: Never.self) { try sut.find(text: "2") }
+        #expect(sut.findAll(ViewType.Image.self).compactMap { try? $0.actualImage().name() }.contains("square.stack"))
     }
 }

@@ -5,6 +5,7 @@ package enum CalendarHoverKind: Equatable, Sendable {
     case activity
     case todo
     case away
+    case group
 }
 
 package enum CalendarHoverAction: Equatable, Sendable, CaseIterable {
@@ -16,6 +17,7 @@ package enum CalendarHoverAction: Equatable, Sendable, CaseIterable {
     case markDone
     case openInReminders
     case editAway
+    case selectAll
 }
 
 package struct CalendarHoverChild: Equatable, Identifiable, Sendable {
@@ -70,35 +72,31 @@ package struct CalendarHoverInfo: Equatable, Sendable {
         let b = placed.block
         let span = placed.span
         let kind = kind(of: b)
-        let children = placed.children.map {
-            CalendarHoverChild(
-                id: $0.block.id, title: $0.block.title,
-                time: Copywriter.trackerSpan($0.span.start, $0.span.end, calendar: calendar)
-            )
-        }
+        let children = b.group == nil
+            ? rows(placed.children.map(\.block), calendar: calendar, short: false)
+            : rows([b], calendar: calendar)
         let point = span.duration == 0
-        let also = placed.hidden.map {
-            CalendarHoverChild(id: $0.block.id, title: $0.block.title, time: Fmt.shortRange($0.span.start, $0.span.end, calendar: calendar))
-        }
+        let also = rows(placed.hidden.map(\.block), calendar: calendar)
         return CalendarHoverInfo(
             id: b.id,
             kind: kind,
-            kindLabel: Copywriter.calendarHoverKind(kind),
+            kindLabel: b.group.map { Copywriter.calendarHoverGroupKind($0.members.count) } ?? Copywriter.calendarHoverKind(kind),
             title: b.title,
             time: point
                 ? Copywriter.trackerClock(span.start, calendar: calendar)
                 : Copywriter.trackerSpan(span.start, span.end, calendar: calendar),
             length: point ? nil : Copywriter.trackerDuration(span.duration),
             meta: meta(of: b, lookup: lookup),
-            childrenTitle: children.isEmpty ? nil : Copywriter.calendarHoverChildren,
+            childrenTitle: children.isEmpty ? nil : b.group == nil ? Copywriter.calendarHoverChildren : Copywriter.calendarHoverGroupMembers,
             children: children,
             alsoHereTitle: also.isEmpty ? nil : Copywriter.calendarHoverAlsoHere,
             alsoHere: also,
-            actions: actions(of: b, kind: kind, lookup: lookup)
+            actions: b.group == nil ? actions(of: b, kind: kind, lookup: lookup) : [.selectAll]
         )
     }
 
     private static func kind(of b: CalendarBlock) -> CalendarHoverKind {
+        if b.group != nil { return .group }
         switch b.source {
         case .event: return .event
         case .todo: return .todo
@@ -107,6 +105,9 @@ package struct CalendarHoverInfo: Equatable, Sendable {
     }
 
     private static func meta(of b: CalendarBlock, lookup: CalendarHoverLookup) -> String? {
+        if let group = b.group {
+            return group.categories.map { $0 ?? Copywriter.trackerNoCategory }.joined(separator: Copywriter.calendarGroupCategorySeparator)
+        }
         switch b.source {
         case let .event(e):
             let copies = b.copies > 1 ? Copywriter.calendarCopiesSpoken(b.copies) : nil

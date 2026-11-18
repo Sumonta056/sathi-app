@@ -23,8 +23,8 @@ struct CalendarHoverCard: View {
                 .fixedSize(horizontal: false, vertical: true)
             line(timeLine, color: Night.text)
             if let meta = info.meta { line(meta, color: Night.muted) }
-            if let childrenTitle = info.childrenTitle { rows(childrenTitle, info.children) }
-            if let alsoHereTitle = info.alsoHereTitle { rows(alsoHereTitle, info.alsoHere, picks: true) }
+            if let childrenTitle = info.childrenTitle { rows(childrenTitle, info.children, key: "row") }
+            if let alsoHereTitle = info.alsoHereTitle { rows(alsoHereTitle, info.alsoHere, key: "also") }
             if !actions.isEmpty { buttons }
         }
         .padding(UIMetrics.calendarHoverPadding)
@@ -43,19 +43,15 @@ struct CalendarHoverCard: View {
             .lineLimit(1)
     }
 
-    private func rows(_ title: String, _ items: [CalendarHoverChild], picks: Bool = false) -> some View {
+    private func rows(_ title: String, _ items: [CalendarHoverChild], key: String) -> some View {
         VStack(alignment: .leading, spacing: UIMetrics.calendarHoverChildGap) {
             Text(verbatim: title)
                 .font(Typography.tracker(UIMetrics.calendarHoverKindFont, .semibold))
                 .foregroundStyle(Night.faint)
             ForEach(items) { item in
-                if picks {
-                    Button { pick(item.id) } label: { row(item) }
-                        .buttonStyle(.plain)
-                        .accessibilityIdentifier("calendar.hover.also." + item.id)
-                } else {
-                    row(item)
-                }
+                Button { pick(item.id) } label: { row(item) }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("calendar.hover." + key + "." + item.id)
             }
         }
     }

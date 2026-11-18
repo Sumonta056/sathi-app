@@ -26,13 +26,15 @@ struct CalendarGridMath {
         Double(UIMetrics.calendarBlockMinTextHeight / hourHeight) * Timing.hour / Timing.minute
     }
 
-    func placed(_ data: CalendarPageData, day: DayKey) -> [CalendarPlacedBlock] {
-        guard data.placedMinimumMinutes == minimumMinutes, let cached = data.placed[day] else { return place(data.blocks) }
+    func placed(_ data: CalendarPageData, day: DayKey, narrow: Set<CalendarLaneShape> = []) -> [CalendarPlacedBlock] {
+        guard data.placedMinimumMinutes == minimumMinutes, data.placedNarrow == narrow, let cached = data.placed[day] else {
+            return place(data.blocks, narrow: narrow)
+        }
         return cached
     }
 
-    func place(_ blocks: [CalendarBlock]) -> [CalendarPlacedBlock] {
-        CalendarBlockLayout.place(blocks, within: interval, minimumMinutes: minimumMinutes)
+    func place(_ blocks: [CalendarBlock], narrow: Set<CalendarLaneShape> = []) -> [CalendarPlacedBlock] {
+        CalendarBlockLayout.place(blocks, within: interval, minimumMinutes: minimumMinutes, narrow: narrow)
     }
 
     func y(for date: Date) -> CGFloat {

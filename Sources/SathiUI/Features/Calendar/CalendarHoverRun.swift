@@ -8,16 +8,21 @@ struct CalendarHoverRun {
     let editTodo: (CalendarHoverTarget) -> Void
 
     static func visible(_ info: CalendarHoverInfo, canMerge: Bool) -> [CalendarHoverAction] {
-        info.actions.filter { $0 != .merge || canMerge }
+        info.actions.filter { ($0 != .merge && $0 != .selectAll) || canMerge }
     }
 
     private func delete(_ id: ActivityID) {
         if !engine.deleteActivity(id) { grid.failed(Copywriter.activitiesDeleteFailed) }
     }
 
-    func open(hidden id: String, _ target: CalendarHoverTarget) {
-        guard let hidden = target.placed.hidden.first(where: { $0.block.id == id }) else { return }
-        grid.press(target.day, hidden.block, target.rect.minY)
+    func open(row id: String, _ target: CalendarHoverTarget) {
+        guard let block = target.placed.row(id) else { return }
+        grid.press(target.day, block, target.rect.minY)
+    }
+
+    private func pick(_ action: CalendarHoverAction, _ block: CalendarBlock) {
+        if action == .selectAll { return grid.select?(block.mergeIDs) ?? () }
+        if let id = CalendarMergePick.id(of: block) { grid.toggle?(id) }
     }
 
     func run(_ action: CalendarHoverAction, _ target: CalendarHoverTarget) {
@@ -31,8 +36,8 @@ struct CalendarHoverRun {
             editTodo(target)
         case (.edit, _), (.editAway, _):
             grid.block(target.day, block, target.rect.minY)
-        case (.merge, _):
-            if let id = CalendarMergePick.id(of: block) { grid.toggle?(id) }
+        case (.merge, _), (.selectAll, _):
+            pick(action, block)
         case let (.delete, .activity(a, _)):
             delete(a.id)
         case let (.markDone, .todo(id)):

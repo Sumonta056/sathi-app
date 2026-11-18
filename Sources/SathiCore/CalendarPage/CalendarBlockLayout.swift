@@ -6,7 +6,8 @@ package enum CalendarBlockLayout {
     package static func place(
         _ blocks: [CalendarBlock],
         within column: DateInterval,
-        minimumMinutes: Double = 0
+        minimumMinutes: Double = 0,
+        narrow: Set<CalendarLaneShape> = []
     ) -> [CalendarPlacedBlock] {
         let cut = blocks.filter { !$0.isAllDay }.compactMap { b -> Item? in
             let i = b.interval
@@ -15,11 +16,16 @@ package enum CalendarBlockLayout {
             let end = min(i.end, column.end)
             return start < end ? (b, DateInterval(start: start, end: end)) : nil
         }
-        return lay(cut, minimumMinutes: minimumMinutes, column: column)
+        let room = Room(minimumMinutes: minimumMinutes, narrow: narrow, key: String(Int(column.start.timeIntervalSince1970)))
+        return lay(cut, room, column: column)
     }
 
-    package static func place(_ blocks: [CalendarBlock], minimumMinutes: Double = 0) -> [CalendarPlacedBlock] {
-        lay(blocks.filter { !$0.isAllDay }.map { ($0, $0.interval) }, minimumMinutes: minimumMinutes, column: nil)
+    package static func place(
+        _ blocks: [CalendarBlock],
+        minimumMinutes: Double = 0,
+        narrow: Set<CalendarLaneShape> = []
+    ) -> [CalendarPlacedBlock] {
+        lay(blocks.filter { !$0.isAllDay }.map { ($0, $0.interval) }, Room(minimumMinutes: minimumMinutes, narrow: narrow, key: nil), column: nil)
     }
 
     static func precedes(_ a: DateInterval, _ b: DateInterval) -> Bool {
@@ -40,29 +46,40 @@ package enum CalendarBlockLayout {
 
     private static let window = TimeInterval(Limits.calendarSideBySideMinutes) * Timing.minute
 
-    private static func lay(_ items: [Item], minimumMinutes: Double, column: DateInterval?) -> [CalendarPlacedBlock] {
+    private struct Room {
+        let minimumMinutes: Double
+        let narrow: Set<CalendarLaneShape>
+        let key: String?
+
+        var least: TimeInterval { max(0, minimumMinutes) * Timing.minute }
+    }
+
+    private static func lay(_ items: [Item], _ room: Room, column: DateInterval?) -> [CalendarPlacedBlock] {
         let backdrops = items.filter { $0.block.style == .away }.map {
             CalendarPlacedBlock(block: $0.block, span: $0.span, lane: 0, lanes: 1, isBackdrop: true)
         }
         let todos = items.filter { isTodo($0.block) }.map { CalendarPlacedBlock(block: $0.block, span: $0.span, lane: 0, lanes: 1) }
         var excluded = Set<String>()
         var hosts = CalendarBlockHost.hosts(items)
-        var placed = arrange(items, hosts: hosts)
+        var placed = arrange(items, hosts: hosts, room: room)
         var lost = hiddenHosts(placed, hosts: hosts)
         while !lost.isEmpty {
             excluded.formUnion(lost)
             hosts = CalendarBlockHost.hosts(items, excluding: excluded)
-            placed = arrange(items, hosts: hosts)
+            placed = arrange(items, hosts: hosts, room: room)
             lost = hiddenHosts(placed, hosts: hosts)
         }
-        return CalendarBlockNudge.apply(backdrops + placed, minimumMinutes: minimumMinutes, within: column) + todos
+        return CalendarBlockNudge.apply(backdrops + placed, minimumMinutes: room.minimumMinutes, within: column) + todos
     }
 
-    private static func arrange(_ items: [Item], hosts: [String: String]) -> [CalendarPlacedBlock] {
+    private static func arrange(_ items: [Item], hosts: [String: String], room: Room) -> [CalendarPlacedBlock] {
         let top = items.filter { $0.block.style != .away && !isTodo($0.block) && hosts[$0.block.id] == nil }
-            .sorted { precedes($0.span, $1.span) }
         let children = items.filter { hosts[$0.block.id] != nil }.sorted { precedes($0.span, $1.span) }
-        return stack(top).map { adopt($0, children, hosts: hosts) }
+        return stack(CalendarBlockRuns.grouped(top, least: room.least, column: room.key)).map {
+            var host = adopt($0, children, hosts: hosts, room: room)
+            host.kidsShown = host.children.isEmpty || !room.narrow.contains(CalendarLaneShape(depth: host.depth, lanes: host.lanes))
+            return host
+        }
     }
 
     private static func hiddenHosts(_ placed: [CalendarPlacedBlock], hosts: [String: String]) -> Set<String> {
@@ -105,9 +122,10 @@ package enum CalendarBlockLayout {
         return placed
     }
 
-    private static func adopt(_ host: CalendarPlacedBlock, _ items: [Item], hosts: [String: String]) -> CalendarPlacedBlock {
+    private static func adopt(_ host: CalendarPlacedBlock, _ items: [Item], hosts: [String: String], room: Room) -> CalendarPlacedBlock {
         var host = host
-        host.children = items.filter { hosts[$0.block.id] == host.block.id }.map {
+        let own = items.filter { hosts[$0.block.id] == host.block.id }
+        host.children = CalendarBlockRuns.grouped(own, least: room.least, column: room.key).map {
             var child = CalendarPlacedBlock(
                 block: $0.block, span: $0.span, lane: host.lane, lanes: host.lanes, depth: host.depth, hostID: host.block.id
             )
