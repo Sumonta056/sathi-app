@@ -23,6 +23,8 @@ struct CalendarDayEventFace: View {
                         .foregroundStyle(text)
                         .accessibilityHidden(true)
                     CalendarDayParts.title(laid.block.title, lines: CalendarDayCardFit.titleLines(height: size.height))
+                    Spacer(minLength: 0)
+                    CalendarBlockBadges(laid: laid)
                 }
                 HStack(spacing: UIMetrics.calendarDayMetaGap) {
                     CalendarDayParts.meta(time, Night.chipText).layoutPriority(2)

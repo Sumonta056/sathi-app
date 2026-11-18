@@ -49,7 +49,7 @@ struct CalendarWeekBlock: View {
                 icon
                 title(UIMetrics.calendarWeekTitleFont)
                 Spacer(minLength: 0)
-                badges
+                CalendarBlockBadges(laid: laid)
             }
             Text(verbatim: Copywriter.calendarBlockTime(laid.rounded, calendar: calendar))
                 .font(Typography.tracker(UIMetrics.calendarWeekTimeFont, .medium))
@@ -68,7 +68,7 @@ struct CalendarWeekBlock: View {
                 .fixedSize()
             title(UIMetrics.calendarWeekNarrowFont)
             Spacer(minLength: 0)
-            badges
+            CalendarBlockBadges(laid: laid)
         }
         .padding(UIMetrics.calendarWeekNarrowPadding)
     }
@@ -87,11 +87,6 @@ struct CalendarWeekBlock: View {
             .font(Typography.tracker(size, .bold))
             .foregroundStyle(isAway ? Night.muted : Night.text)
             .lineLimit(lines)
-    }
-
-    @ViewBuilder private var badges: some View {
-        if block.copies > 1 { CalendarBlockBadge(text: Copywriter.calendarCopies(block.copies)) }
-        if !laid.hidden.isEmpty { CalendarBlockBadge(text: Copywriter.calendarHiddenCount(laid.hidden.count)) }
     }
 
     @ViewBuilder private var dot: some View {

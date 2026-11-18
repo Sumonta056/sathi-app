@@ -10,7 +10,11 @@ struct CalendarDayAwayFace: View {
     var body: some View {
         HStack(alignment: .top, spacing: UIMetrics.calendarDayRowGap) {
             VStack(alignment: .leading, spacing: UIMetrics.calendarDayLineGap) {
-                CalendarDayParts.title(laid.block.title, lines: 1, color: Night.muted)
+                HStack(alignment: .firstTextBaseline, spacing: UIMetrics.calendarDayIconGap) {
+                    CalendarDayParts.title(laid.block.title, lines: 1, color: Night.muted)
+                    Spacer(minLength: 0)
+                    CalendarBlockBadges(laid: laid)
+                }
                 CalendarDayParts.meta(time, Night.muted)
             }
             .frame(maxWidth: .infinity, alignment: .leading)

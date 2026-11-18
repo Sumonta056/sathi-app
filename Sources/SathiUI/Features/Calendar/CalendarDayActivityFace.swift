@@ -15,7 +15,11 @@ struct CalendarDayActivityFace: View {
         let fill = RGB(hex: NightHex.card).mix(RGB(hex: hex), UIMetrics.calendarDayActivityTint).color()
         HStack(alignment: .top, spacing: UIMetrics.calendarDayRowGap) {
             VStack(alignment: .leading, spacing: UIMetrics.calendarDayLineGap) {
-                CalendarDayParts.title(laid.block.title, lines: CalendarDayCardFit.titleLines(height: size.height))
+                HStack(alignment: .firstTextBaseline, spacing: UIMetrics.calendarDayIconGap) {
+                    CalendarDayParts.title(laid.block.title, lines: CalendarDayCardFit.titleLines(height: size.height))
+                    Spacer(minLength: 0)
+                    CalendarBlockBadges(laid: laid)
+                }
                 HStack(spacing: UIMetrics.calendarDayMetaGap) {
                     CalendarDayParts.meta(time, Night.chipText).layoutPriority(2)
                     if let category = activity.category {
