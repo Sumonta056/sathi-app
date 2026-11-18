@@ -18,13 +18,70 @@ struct CalendarTodoChipTests {
         )
     }
 
-    private func chip(_ h: EngineHarness, _ block: CalendarBlock) throws -> InspectableView<ViewType.ClassifiedView> {
-        try hosted(CalendarTodoChip(block: block), h).inspect()
+    private func chip(_ h: EngineHarness, _ block: CalendarBlock, pill: Bool = false) throws -> InspectableView<ViewType.ClassifiedView> {
+        try hosted(CalendarTodoChip(block: block, isPill: pill), h).inspect()
     }
 
     @Test func chipShowsTheTitle() throws {
         let sut = try chip(EngineHarness(), block())
         #expect(throws: Never.self) { try sut.find(text: "Call Rina") }
+    }
+
+    private func column(_ h: EngineHarness, _ block: CalendarBlock) throws -> InspectableView<ViewType.ClassifiedView> {
+        let key = DayKey(day(2026, 3, 4, 12), calendar: h.engine.rangeCalendar)
+        let math = CalendarGridMath(day: key, calendar: h.engine.rangeCalendar, hourHeight: UIMetrics.calendarHourHeight)
+        let column = CalendarDayColumn(
+            day: key, placed: CalendarBlockLayout.place([block], within: math.interval), texts: [:], math: math,
+            now: nil, categories: [], calendar: h.engine.rangeCalendar
+        )
+        return try hosted(column, h).inspect()
+    }
+
+    @Test func pillShowsTheTitleAndTheDueTime() throws {
+        let h = EngineHarness()
+        let sut = try chip(h, block(), pill: true)
+        let due = Copywriter.trackerClock(day(2026, 3, 4, 15), calendar: h.engine.rangeCalendar)
+        #expect(throws: Never.self) { try sut.find(text: "Call Rina") }
+        #expect(throws: Never.self) { try sut.find(text: due) }
+    }
+
+    @Test func allDayPillShowsNoDueTime() throws {
+        let h = EngineHarness()
+        let sut = try chip(h, block(allDay: true), pill: true)
+        let due = Copywriter.trackerClock(day(2026, 3, 4, 15), calendar: h.engine.rangeCalendar)
+        #expect(throws: (any Error).self) { try sut.find(text: due) }
+    }
+
+    @Test func dayColumnDrawsADueLineThatNeverTakesClicks() throws {
+        let sut = try column(EngineHarness(), block())
+        let line = try sut.find(viewWithAccessibilityIdentifier: "calendar.todo.line.a")
+        #expect(try line.allowsHitTesting() == false)
+    }
+
+    @Test func dayColumnShowsThePillAboveTheLine() throws {
+        let sut = try column(EngineHarness(), block())
+        #expect(throws: Never.self) { try sut.find(viewWithAccessibilityIdentifier: "calendar.todo.chip.a") }
+        #expect(throws: Never.self) { try sut.find(text: "Call Rina") }
+    }
+
+    @Test func tickInTheDayColumnMarksTheTodoDone() throws {
+        let h = EngineHarness.withCalendarTodos(lists: [makeTodoList("inbox")], todos: [makeTodo("a")])
+        try column(h, block()).find(viewWithAccessibilityIdentifier: "calendar.todo.done.a").button().tap()
+        #expect(h.todos.calls == [.doneSet("a", true)])
+    }
+
+    @Test func plainChipKeepsItsLookWithNoDueTime() throws {
+        let h = EngineHarness()
+        let sut = try chip(h, block())
+        let due = Copywriter.trackerClock(day(2026, 3, 4, 15), calendar: h.engine.rangeCalendar)
+        #expect(throws: (any Error).self) { try sut.find(text: due) }
+    }
+
+    @Test func pillMetricsMatchTheDesignAndChipsKeepTheirs() {
+        #expect(UIMetrics.calendarTodoPillHeight == 22)
+        #expect(UIMetrics.calendarTodoPillFont == 12)
+        #expect(UIMetrics.calendarChipHeight == 18)
+        #expect(UIMetrics.calendarChipFont == 10)
     }
 
     @Test func chipHasATickCircleWithAnAccessibleName() throws {

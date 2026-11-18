@@ -7,14 +7,20 @@ extension UIMetrics {
     static let calendarHeaderSpacing: CGFloat = 4
     static let calendarTodayPadding = EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
     static let calendarGateGap: CGFloat = 10
-    static let calendarHourHeight: CGFloat = 48
+    static let calendarHourHeight: CGFloat = 60
     static let calendarSubLineOpacity: Double = 0.45
     static let calendarRowZoomGap: CGFloat = 6
 
     static func calendarHourHeight(rowMinutes: Int) -> CGFloat {
         calendarHourHeight * CGFloat(Limits.minutesPerHour / max(1, rowMinutes))
     }
-    static let calendarBlockMinHeight: CGFloat = 16
+    static let calendarBlockMinTextHeight: CGFloat = 26
+    static let calendarEventRadius: CGFloat = 8
+    static let calendarTitleLinesMax = 3
+    static let calendarTitleLineHeight: CGFloat = 15
+    static let calendarTimeLineHeight: CGFloat = 13
+    static let calendarIconFont: CGFloat = 10
+    static let calendarChildInset: CGFloat = 4
     static let calendarTimeRangeMinHeight: CGFloat = 34
     static let calendarAllDayHeight: CGFloat = 22
     static let calendarNowLineWidth: CGFloat = 1.5
@@ -27,8 +33,8 @@ extension UIMetrics {
     static let calendarColumnInset: CGFloat = 3
     static let calendarBlockRadius: CGFloat = 5
     static let calendarBlockPadding = EdgeInsets(top: 3, leading: 6, bottom: 3, trailing: 6)
-    static let calendarBlockFont: CGFloat = 11
-    static let calendarBlockTimeFont: CGFloat = 10
+    static let calendarBlockFont: CGFloat = 12
+    static let calendarBlockTimeFont: CGFloat = 10.5
     static let calendarBlockSpacing: CGFloat = 1
     static let calendarActivityTint: Double = 0.28
     static let calendarTimeOpacity: Double = 0.8
@@ -49,7 +55,7 @@ extension UIMetrics {
     static let calendarMonthTrackedFont: CGFloat = 10
     static let calendarOutsideOpacity: Double = 0.4
     static let calendarTodayBorder: CGFloat = 1.5
-    static let calendarCascadeIndent: CGFloat = 26
+    static let calendarCascadeIndent: CGFloat = 14
     static let calendarRaisedRing: CGFloat = 2
     static let calendarCopiesFont: CGFloat = 9
     static let calendarCopiesGap: CGFloat = 4

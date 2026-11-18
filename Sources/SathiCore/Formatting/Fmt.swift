@@ -41,4 +41,19 @@ package enum Fmt {
         if m % 60 == 0 { return m == 60 ? "1 hour" : "\(m / 60) hours" }
         return m > 60 ? "\(m / 60) h \(m % 60) min" : "\(m) min"
     }
+
+    package static func shortRange(_ start: Date, _ end: Date, calendar: Calendar) -> String {
+        let from = clockParts(start, calendar: calendar)
+        let to = clockParts(end, calendar: calendar)
+        let head = from.half == to.half ? from.time : from.time + " " + from.half
+        return head + " – " + to.time + " " + to.half
+    }
+
+    private static func clockParts(_ date: Date, calendar: Calendar) -> (time: String, half: String) {
+        let parts = calendar.dateComponents([.hour, .minute], from: date)
+        let hour = parts.hour ?? 0
+        let half = Limits.hoursPerDay / 2
+        let shown = hour % half == 0 ? half : hour % half
+        return (String(format: "%d:%02d", shown, parts.minute ?? 0), hour < half ? "AM" : "PM")
+    }
 }

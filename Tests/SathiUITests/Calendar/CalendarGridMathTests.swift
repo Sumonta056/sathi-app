@@ -38,6 +38,15 @@ struct CalendarGridMathTests {
         #expect(math(12).height(i) == 1.5 * h)
     }
 
+    @Test func hourHeightIsSixtyPoints() {
+        #expect(UIMetrics.calendarHourHeight == 60)
+    }
+
+    @Test(arguments: [(60, CGFloat(60)), (30, 120), (15, 240)])
+    func rowZoomMultipliesSixtyPoints(_ minutes: Int, _ height: CGFloat) {
+        #expect(UIMetrics.calendarHourHeight(rowMinutes: minutes) == height)
+    }
+
     @Test(arguments: [(60, CGFloat(1)), (30, 2), (15, 4)])
     func rowZoomScalesTheHourHeight(_ minutes: Int, _ scale: CGFloat) {
         let base = UIMetrics.calendarHourHeight
@@ -56,9 +65,9 @@ struct CalendarGridMathTests {
         let heights = [60, 30, 15].map {
             CalendarGridMath(day: key, calendar: z.calendar, hourHeight: UIMetrics.calendarHourHeight(rowMinutes: $0)).height(span)
         }
-        #expect(!CalendarBlockView.showsText(height: heights[0]))
-        #expect(CalendarBlockView.showsText(height: heights[1]))
-        #expect(CalendarBlockView.showsTimeRange(height: heights[2]))
+        #expect(!CalendarBlockFit.showsText(height: heights[0]))
+        #expect(CalendarBlockFit.showsText(height: heights[1]))
+        #expect(CalendarBlockFit.showsTimeRange(height: heights[2]))
     }
 
     @Test func fallBackDayKeepsWallClockRows() {

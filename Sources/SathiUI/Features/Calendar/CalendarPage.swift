@@ -21,12 +21,14 @@ struct CalendarPage: View {
 
     var body: some View {
         let range = shown
-        let data = e.calendarAccess == .allowed ? memo.value(range, end: range.interval.end, engine: e) { $0.calendarPage($1) } : nil
-        let sidePanelShown = layout.isNarrow ? narrowStats : e.data.prefs.calendarPage.sidePanelShown
+        let data = e.calendarAccess == .allowed ? memo.value(range, end: range.interval.end, engine: e) {
+            $0.calendarPage($1, minimumMinutes: CalendarGridMath.minimumMinutes(rowMinutes: $0.data.prefs.calendarPage.rowMinutes))
+        } : nil
+        let sidePanelShown = layout.isNarrow ? narrowStats : e.data.prefs.calendarPage.sidePanelShown(for: range.kind)
         VStack(alignment: .leading, spacing: UIMetrics.reportsPageGap) {
             CalendarPageHeader(
                 range: binding(range), now: e.now, calendar: e.rangeCalendar, stats: data?.stats, sidePanelShown: sidePanelShown,
-                toggleSidePanel: toggleSidePanel, rowMinutes: rowMinutes
+                toggleSidePanel: { toggleSidePanel(range.kind) }, rowMinutes: rowMinutes
             )
             content(range, data)
         }
@@ -41,9 +43,9 @@ struct CalendarPage: View {
         .modifier(CalendarRangeReset(range: range, focus: $focus, selected: $selected, error: $mergeError) { e.clearMergeUndo() })
     }
 
-    private func toggleSidePanel() {
+    private func toggleSidePanel(_ kind: ReportRange) {
         if layout.isNarrow { return narrowStats.toggle() }
-        e.setCalendarSidePanelShown(!e.data.prefs.calendarPage.sidePanelShown)
+        e.setCalendarSidePanelShown(!e.data.prefs.calendarPage.sidePanelShown(for: kind), for: kind)
     }
 
     private var shown: CalendarPageRange {
@@ -57,7 +59,7 @@ struct CalendarPage: View {
         if let data {
             HStack(alignment: .top, spacing: UIMetrics.calendarSideGap) {
                 VStack(alignment: .leading, spacing: UIMetrics.calendarSideGap) {
-                    if range.kind == .day { strip(data) }
+                    if range.kind == .day { strip(data) } else if let mergeError { errorLine(mergeError) }
                     grid(range, data)
                 }
                 side(data, kind: range.kind)
@@ -88,6 +90,13 @@ struct CalendarPage: View {
             rows: CalendarMergePick.rows(data.blocks), calendar: e.rangeCalendar, canUndo: e.mergeUndo != nil,
             actions: .merging(e), selected: $selected, error: $mergeError
         )
+    }
+
+    private func errorLine(_ text: String) -> some View {
+        Text(verbatim: text)
+            .font(Typography.hint)
+            .foregroundStyle(Night.tracker)
+            .accessibilityIdentifier("calendar.page.error")
     }
 
     private var rowMinutes: Binding<Int> {

@@ -19,6 +19,10 @@ extension Copywriter {
         "in \(count) calendars"
     }
 
+    package static func calendarHiddenCount(_ count: Int) -> String {
+        "+\(count)"
+    }
+
     package static func calendarMore(_ count: Int) -> String {
         "+\(count) more"
     }

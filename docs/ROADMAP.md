@@ -232,6 +232,24 @@ Spec: `docs/specs/phase-23-todos.md`. Branch: `feat/todos` (worktree `../Sathi-t
 - [x] Rebased on Phase 22 `main`; tracks joined; checks (tests, lint, release build)
 - [ ] User: install, hand tests, perf, `--windows`, merge to `main`, website
 
+## Phase 24: Calendar Week redesign (H2) and event pop-up fix
+
+Spec: `docs/specs/phase-24-calendar-h2.md`. Design: board H2 on https://claude.ai/artifact/MqDQoohF24VV4m9bKQzhX9
+Branches: Track A `fix/event-ask-held`, Track B `feat/calendar-week-h2` (worktree `../Sathi-cal-h2`)
+
+- [ ] Track A: event pop-up fix. Rules (Activity tracker rules 2 and 7, To-dos rule 11); an event ask shows at its start on top of other pop-ups (held pop-up comes back) and during a pause, a time block, or a buddy session; only Away and a lock make it wait, then it asks while the event is still on; "Log and tell" asks when busy
+- [x] B0: rules (Calendar page rules 5, 5a, 5b, 12, 14, 15) and this entry
+- [ ] B1: joined activities keep their category color, with a link icon
+- [ ] B2: Core layout: host and child, side by side (< 30 min, 2 lanes, "+N"), raised depth max 2, minimum-height nudge
+- [ ] B3: event card and activity block views, sizes (60 pt hour), Away stripes only in Week
+- [ ] B4: to-do pill and dashed due line
+- [ ] B5: hover card, `CalendarHoverInfo`, "Start as activity" (`startActivity(fromEvent:)`)
+- [ ] B6: Week side panel hidden by default (`sidePanelShownWeek`, `/data-migration`)
+- [ ] B7: Day view uses the same layout, cards, pills, and hover card
+- [ ] Checks (tests, lint, release build), `perf.sh`, `ui-verifier` against H2, code review, `CLAUDE.md` module map and README
+- [ ] User: hand tests, `perf.sh --windows`, merge to `main`, push
+- [ ] Website screenshots (later, `/sathi-website`)
+
 ## Later
 
 - Days off: a lock or Nudgy bubble that shows at 23:58 stays after midnight into a day off (only a settings change closes it, rule 11). Close it at the first tick of a new day if users notice
@@ -300,3 +318,4 @@ Spec: `docs/specs/phase-23-todos.md`. Branch: `feat/todos` (worktree `../Sathi-t
 | 2026-11-11 | Phase 18: one main window (Today, Activities, Reports, Settings) replaces the Settings and Reports windows; Dock icon only while it is open; the menu panel becomes a short quick panel; the 5 tracker prompts become 1 activity prompt at the screen center that takes the keyboard only when the user opened it; Reports and Activities get Day / Week / Month ranges with compare. Buddy reminders do not change. No saved-data change. |
 | 2026-10-24 | Phase 1 fix: a schedule change just after midnight counts the new day, not yesterday. |
 | 2026-11-15 | Phase 22: the Main window opens filling the visible frame of the pointer display and relies on macOS tiling (no own snap); pages use a narrow layout below 900 px wide. The activity prompt has one size, 1040×720, with no scroll, and a native drag. No saved-data change. |
+| 2026-11-18 | Phase 24: calendar events come first; an event ask shows on top of other tracker pop-ups and during busy states, and only Away and a lock make it wait. The Calendar Week side panel has its own saved choice (`sidePanelShownWeek`, default hidden). The hour height is 60 pt in all views. |

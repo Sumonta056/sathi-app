@@ -98,3 +98,30 @@ struct CalendarBlockLayoutCutTests {
         #expect(CalendarBlockLayout.place([b], within: page(12)).map(\.span) == [b.interval])
     }
 }
+
+@Suite("CalendarBlockLayout display span")
+struct CalendarBlockLayoutDisplayTests {
+    @Test func displaySpanEqualsTheRealSpanWithoutAMinimum() {
+        let placed = CalendarBlockLayout.place([Lay.activity("a", 0, 8), Lay.event("e", 30, 90)])
+        #expect(placed.allSatisfy { $0.displaySpan == $0.span })
+    }
+
+    @Test func touchingBlocksDoNotOverlapOrNest() {
+        let placed = Lay.byID(CalendarBlockLayout.place([Lay.event("e", 0, 30), Lay.activity("a", 30, 60)]))
+        #expect(placed["a"]?.hostID == nil)
+        #expect(placed["a"]?.lanes == 1)
+        #expect(placed["a"]?.depth == 0)
+    }
+
+    @Test func aToDoTakesNoLaneAndNarrowsNoBlock() {
+        let todo = CalendarBlock(
+            id: "t", title: "t", interval: Lay.span(10, 10), style: .todo(colorHex: 0),
+            source: .todo("t"), isAllDay: false, activityIDs: []
+        )
+        let placed = Lay.byID(CalendarBlockLayout.place([Lay.event("e", 0, 60), todo], minimumMinutes: 26))
+        #expect(placed["e"]?.lanes == 1)
+        #expect(placed["e"]?.hiddenCount == 0)
+        #expect(placed["t"]?.span == Lay.span(10, 10))
+        #expect(placed["t"]?.displaySpan == Lay.span(10, 10))
+    }
+}

@@ -59,4 +59,32 @@ struct CalendarTimeGridTests {
         let past = CalendarPageRange.containing(z.date(2026, 10, 1, 12), kind: .day, calendar: z.calendar)
         #expect(grid(past, now: now).initialRow == 0)
     }
+
+    private func placedGrid(minimum: Double) throws -> (CalendarDayColumn, [CalendarPlacedBlock]) {
+        let now = z.date(2026, 11, 12, 12)
+        let range = CalendarPageRange.containing(now, kind: .day, calendar: z.calendar)
+        let key = range.days[0]
+        let event = CalendarEventInfo(id: "e", title: "E", start: z.date(2026, 11, 12, 9), end: z.date(2026, 11, 12, 10), calendarID: "c")
+        let block = CalendarBlock(
+            id: "e", title: "E", interval: DateInterval(start: event.start, end: event.end), style: .event(colorHex: 0),
+            source: .event(event), isAllDay: false, activityIDs: []
+        )
+        let cached = [CalendarPlacedBlock(block: block, lane: 0, lanes: 1, depth: 1)]
+        var data = CalendarPageData(range: range, allDay: [], blocks: [block], stats: CalendarPageStats(), monthCells: [], texts: [:])
+        data.placed = [key: cached]
+        data.placedMinimumMinutes = minimum
+        let sut = CalendarTimeGrid(range: range, data: data, now: now, calendar: z.calendar, categories: [])
+        return try (sut.inspect().find(CalendarDayColumn.self).actualView(), cached)
+    }
+
+    @Test func columnUsesTheLayoutCachedInThePageData() throws {
+        let (column, cached) = try placedGrid(minimum: CalendarGridMath.minimumMinutes(rowMinutes: Limits.calendarDefaultRowMinutes))
+        #expect(column.placed == cached)
+    }
+
+    @Test func columnLaysOutAgainWhenTheCacheHasAnotherMinimum() throws {
+        let (column, cached) = try placedGrid(minimum: 0)
+        #expect(column.placed != cached)
+        #expect(column.placed.map(\.depth) == [0])
+    }
 }

@@ -11,6 +11,7 @@ struct CalendarTimeGrid: View {
     var selected: Set<ActivityID> = []
     var popover: Binding<CalendarPopoverTarget?> = .constant(nil)
     var rowMinutes = Limits.calendarDefaultRowMinutes
+    @State private var box = CalendarHoverBox()
 
     static let hourLabels = (0 ..< Limits.calendarGridHours).map {
         Copywriter.calendarHourLabel(hour: (Limits.calendarPageDayStartHour + $0) % Limits.calendarGridHours)
@@ -19,6 +20,8 @@ struct CalendarTimeGrid: View {
     var initialRow: Int { range.initialScrollRow(now: now) }
 
     private var hourHeight: CGFloat { UIMetrics.calendarHourHeight(rowMinutes: rowMinutes) }
+
+    private var hover: CalendarHoverHost { box.host }
 
     private var subLines: Int { Limits.minutesPerHour / max(1, rowMinutes) - 1 }
 
@@ -53,18 +56,27 @@ struct CalendarTimeGrid: View {
                     labels
                     ForEach(Array(zip(range.days, columns)), id: \.0) { day, math in
                         CalendarDayColumn(
-                            day: day, placed: CalendarBlockLayout.place(data.blocks, within: math.interval), texts: data.texts,
+                            day: day, placed: math.placed(data, day: day), texts: data.texts,
                             math: math, now: day == today ? now : nil, categories: categories, calendar: calendar,
-                            actions: actions, selected: selected, popover: popover
+                            actions: actions, selected: selected, popover: popover, showsAwayPill: range.kind == .day,
+                            hover: { [hover] in hover.block($0, inside: $1) }, weekSides: range.kind == .week
                         )
                         .overlay(alignment: .leading) { Night.divider.frame(width: UIMetrics.calendarLine) }
                     }
                 }
                 .background(alignment: .top) { hourLines }
+                .coordinateSpace(name: CalendarHoverHost.space)
+                .overlay(alignment: .topLeading) {
+                    CalendarHoverLayer(host: hover, grid: actions, height: columns.first?.totalHeight ?? 0)
+                }
             }
             .onAppear { proxy.scrollTo(initialRow, anchor: .top) }
-            .onChange(of: range) { proxy.scrollTo($0.initialScrollRow(now: now), anchor: .top) }
+            .onChange(of: range) {
+                hover.close()
+                proxy.scrollTo($0.initialScrollRow(now: now), anchor: .top)
+            }
             .onChange(of: rowMinutes) { _ in proxy.scrollTo(initialRow, anchor: .top) }
+            .onChange(of: data) { hover.keep(ids: Set($0.blocks.map(\.id))) }
         }
     }
 

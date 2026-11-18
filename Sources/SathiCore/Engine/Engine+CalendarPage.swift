@@ -7,6 +7,8 @@ package struct CalendarPageData: Equatable, Sendable {
     package var stats: CalendarPageStats
     package var monthCells: [[CalendarMonthCell]]
     package var texts: [String: CalendarBlockText]
+    package var placed: [DayKey: [CalendarPlacedBlock]] = [:]
+    package var placedMinimumMinutes: Double = 0
 }
 
 package struct CalendarBlockText: Equatable, Sendable {
@@ -20,7 +22,7 @@ package struct CalendarBlockText: Equatable, Sendable {
 }
 
 extension Engine {
-    package func calendarPage(_ range: CalendarPageRange) -> CalendarPageData {
+    package func calendarPage(_ range: CalendarPageRange, minimumMinutes: Double = 0) -> CalendarPageData {
         let read = pageRead(range)
         let readable = read.readable
         let events = read.events
@@ -42,20 +44,30 @@ extension Engine {
                 today: CalendarPageDay.key(holding: clock.now, calendar: calendar), calendar: calendar
             )
             : []
+        let timed = all.filter { !$0.isAllDay }
         return CalendarPageData(
             range: range,
             allDay: all.filter(\.isAllDay),
-            blocks: all.filter { !$0.isAllDay },
+            blocks: timed,
             stats: CalendarPageStats.make(events: events, activities: tracked, interval: range.interval),
             monthCells: cells,
-            texts: Dictionary(all.map { ($0.id, text(of: $0)) }) { first, _ in first }
+            texts: Dictionary(all.map { ($0.id, text(of: $0)) }) { first, _ in first },
+            placed: range.kind == .month ? [:] : placed(timed, days: range.days, minimumMinutes: minimumMinutes),
+            placedMinimumMinutes: minimumMinutes
         )
+    }
+
+    private func placed(_ blocks: [CalendarBlock], days: [DayKey], minimumMinutes: Double) -> [DayKey: [CalendarPlacedBlock]] {
+        Dictionary(days.map { key in
+            let column = CalendarPageDay.interval(of: key, calendar: calendar)
+            return (key, CalendarBlockLayout.place(blocks, within: column, minimumMinutes: minimumMinutes))
+        }) { first, _ in first }
     }
 
     private func text(of b: CalendarBlock) -> CalendarBlockText {
         let i = b.interval
         return CalendarBlockText(
-            time: Copywriter.trackerSpan(i.start, i.end, calendar: calendar),
+            time: Fmt.shortRange(i.start, i.end, calendar: calendar),
             spoken: Copywriter.calendarBlockSpoken(b.title, i.start, i.end, calendar: calendar)
         )
     }

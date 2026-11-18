@@ -36,7 +36,7 @@ extension CalendarPage {
     @ViewBuilder func side(_ data: CalendarPageData, kind: ReportRange) -> some View {
         if !layout.drawerEdit, let shown = shownEdit {
             editPanel(shown).frame(width: UIMetrics.activitiesEditWidth)
-        } else if !layout.isNarrow, e.data.prefs.calendarPage.sidePanelShown {
+        } else if !layout.isNarrow, e.data.prefs.calendarPage.sidePanelShown(for: kind) {
             stats(data, kind: kind).frame(width: UIMetrics.calendarSideWidth)
         }
     }

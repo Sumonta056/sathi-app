@@ -16,6 +16,7 @@ extension CalendarGridActions {
             ))
         }
         a.block = { day, block, y in CalendarPage.tap(block, day: day, y: y, engine: engine, focus: &focus.wrappedValue) }
+        a.failed = { error.wrappedValue = $0 }
         if kind == .day {
             a.toggle = { id in
                 CalendarMergePick.toggle(id, in: &selected.wrappedValue)
