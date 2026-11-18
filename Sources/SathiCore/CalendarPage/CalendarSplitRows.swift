@@ -21,7 +21,7 @@ enum CalendarSplitRows {
         var columns: [Column: [Int]] = [:]
         for i in order(items) {
             let x = items[i]
-            guard let r = rows.firstIndex(where: { $0.holds(x.from) }), !rows[r].isFold else { continue }
+            guard let r = row(holding: x.from, in: rows), !rows[r].isFold else { continue }
             let column = Column(day: x.day, half: x.laid.half)
             let above = (columns[column] ?? []).map { items[$0] }.filter { pushes($0.laid, x.laid) }
             let floor = above.map { bottom(of: $0, rows: rows, metrics: m) + m.gap }.max() ?? -Double.infinity
@@ -38,6 +38,12 @@ enum CalendarSplitRows {
 
     static func y(_ minute: Int, _ rows: [CalendarGridRow], _ m: CalendarLayoutMetrics) -> Double {
         CalendarGridLayout.y(minute, rows: rows, pointsPerMinute: m.pointsPerMinute)
+    }
+
+    static func row(holding minute: Int, in rows: [CalendarGridRow]) -> Int? {
+        if let r = rows.firstIndex(where: { $0.holds(minute) }) { return r }
+        guard let last = rows.last, minute >= last.endMinute else { return nil }
+        return rows.count - 1
     }
 
     static func sharesWidth(_ a: CalendarLaidBlock, _ b: CalendarLaidBlock) -> Bool {
