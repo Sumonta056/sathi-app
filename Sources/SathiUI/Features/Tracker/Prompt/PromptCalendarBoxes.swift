@@ -50,31 +50,46 @@ struct PromptCalendarBoxes: View {
         }
     }
 
-    private var shown: [CalendarChoice] {
-        CalendarChips.shown(info.calendars, picked: model.draft.calendarID, all: model.showsAllCalendars)
+    private var counts: [Int] {
+        let top = min(Limits.promptCalendarsShown, info.calendars.count)
+        let low = model.draft.calendarID == nil ? 0 : min(1, top)
+        return Array(stride(from: top, through: low, by: -1))
     }
 
-    private var choices: some View {
-        let shown = shown
-        let hidden = info.calendars.count - shown.count
-        return PromptBoxes {
-            ForEach(shown) { c in
-                let color = Night.category(c.colorHex)
-                PromptBox(
-                    label: CalendarChips.label(c, in: info.calendars), on: !readOnly && model.draft.calendarID == c.id,
-                    id: "prompt.calendar." + c.id, dot: color, look: .solid(color)
-                ) { model.draft.calendarID = c.id }
-                    .disabled(readOnly)
-            }
-            PromptBox(
-                label: Copywriter.activityPromptCalendarNone, on: readOnly || model.draft.calendarID == nil, id: "prompt.calendar.none",
-                dot: Night.promptDim, look: .solid(Night.promptSecondary)
-            ) { model.draft.calendarID = nil }
-                .disabled(readOnly)
-            if hidden > 0, !readOnly {
-                PromptBox(label: Copywriter.activityPromptCalendarMore(hidden), on: false, id: "prompt.calendar.more") {
-                    model.showsAllCalendars = true
+    @ViewBuilder private var choices: some View {
+        if model.showsAllCalendars {
+            PromptBoxes { row(info.calendars) }
+        } else {
+            ViewThatFits(in: .horizontal) {
+                ForEach(counts, id: \.self) { n in
+                    HStack(spacing: UIMetrics.promptBoxGap) { row(shown(n)) }
                 }
+            }
+        }
+    }
+
+    private func shown(_ n: Int) -> [CalendarChoice] {
+        CalendarChips.shown(info.calendars, picked: model.draft.calendarID, all: false, limit: n)
+    }
+
+    @ViewBuilder private func row(_ shown: [CalendarChoice]) -> some View {
+        let hidden = info.calendars.count - shown.count
+        ForEach(shown) { c in
+            let color = Night.category(c.colorHex)
+            PromptBox(
+                label: CalendarChips.label(c, in: info.calendars), on: !readOnly && model.draft.calendarID == c.id,
+                id: "prompt.calendar." + c.id, dot: color, look: .solid(color)
+            ) { model.draft.calendarID = c.id }
+                .disabled(readOnly)
+        }
+        PromptBox(
+            label: Copywriter.activityPromptCalendarNone, on: readOnly || model.draft.calendarID == nil, id: "prompt.calendar.none",
+            dot: Night.promptDim, look: .solid(Night.promptSecondary)
+        ) { model.draft.calendarID = nil }
+            .disabled(readOnly)
+        if hidden > 0, !readOnly {
+            PromptBox(label: Copywriter.activityPromptCalendarMore(hidden), on: false, id: "prompt.calendar.more") {
+                model.showsAllCalendars = true
             }
         }
     }

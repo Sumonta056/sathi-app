@@ -61,11 +61,14 @@ struct ActivityPromptCalendarMoreTests {
         #expect(try Prompt.buttonText(sut, "prompt.calendar.b").contains("Calendar · Google"))
     }
 
-    @Test func twoCalendarsHaveNoMore() throws {
+    @Test func twoCalendarsHaveNoMore() {
         let s = Prompt.state(.whatNow) {
-            $0.calendars = Array(eight.prefix(2))
+            $0.calendars = Array(BackFit.calendars.prefix(2))
+            $0.calendarAccess = .allowed
         }
-        #expect(try !Prompt.has(Prompt.view(s), "prompt.calendar.more"))
+        let boxes = PromptCalendarBoxes(model: ActivityPromptModel(s), state: s, screen: ActivityPromptBuilder.screen(s))
+            .frame(width: BackFit.rowWidth)
+        #expect(BackFit.drawnCalendars(BackFit.host(boxes)) == ["c1", "c2"])
     }
 
     @Test func aShortScreenScrollsTheFormButNotTheFooter() throws {

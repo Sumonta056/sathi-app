@@ -49,14 +49,14 @@ extension UIMetrics {
     static let promptShowAllRadius: CGFloat = 10
     static let promptShowAllDash: [CGFloat] = [4, 3]
     static let promptBodyPadding = EdgeInsets(top: 14, leading: 22, bottom: 14, trailing: 22)
-    static let promptBodyGap: CGFloat = 12
+    static let promptBodyGap: CGFloat = 8
     static let promptFieldHeight: CGFloat = 50
     static let promptFieldRadius: CGFloat = 12
     static let promptFieldFont: CGFloat = 17
     static let promptFieldPadding: CGFloat = 16
     static let promptFieldFocusBorder: CGFloat = 2
     static let promptRowLabelWidth: CGFloat = 84
-    static let promptRowGap: CGFloat = 10
+    static let promptRowGap: CGFloat = 8
     static let promptRowLabelGap: CGFloat = 8
     static let promptRowLabelTop: CGFloat = 8
     static let promptRowFont: CGFloat = 13
@@ -78,7 +78,7 @@ extension UIMetrics {
     static let promptSkipPadding: CGFloat = 10
     static let promptStartPadding: CGFloat = 28
     static let recentKeys = Limits.recentShown
-    static let promptRunPadding = EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16)
+    static let promptRunPadding = EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
     static let promptRunRadius: CGFloat = 14
     static let promptRunBorder: CGFloat = 2
     static let promptRunGap: CGFloat = 8
