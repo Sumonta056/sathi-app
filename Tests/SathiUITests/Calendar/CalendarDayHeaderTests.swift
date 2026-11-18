@@ -9,17 +9,15 @@ import ViewInspector
 @MainActor
 @Suite("Calendar Day header")
 struct CalendarDayHeaderTests {
-    private typealias F = DayFix
-
     private var day: [CalendarLaidBlock] {
         [
-            F.away("Sleep", F.at(7, 0), F.at(9, 0)),
-            F.activity("Slides", F.at(9, 0, 20), F.at(10, 30, 10)),
-            F.activity("Code review", F.at(11, 0), F.at(12, 0)),
-            F.event("Friday Java Brief", F.at(10, 6), F.at(10, 36)),
-            F.event("Frontline Morning Scrum", F.at(10, 30), F.at(11, 0)),
-            F.event("Personal Editorial scrum", F.at(13, 0), F.at(13, 25)),
-            F.todo("Pay rent", F.at(15, 0))
+            DayFix.away("Sleep", DayFix.at(7, 0), DayFix.at(9, 0)),
+            DayFix.activity("Slides", DayFix.at(9, 0, 20), DayFix.at(10, 30, 10)),
+            DayFix.activity("Code review", DayFix.at(11, 0), DayFix.at(12, 0)),
+            DayFix.event("Friday Java Brief", DayFix.at(10, 6), DayFix.at(10, 36)),
+            DayFix.event("Frontline Morning Scrum", DayFix.at(10, 30), DayFix.at(11, 0)),
+            DayFix.event("Personal Editorial scrum", DayFix.at(13, 0), DayFix.at(13, 25)),
+            DayFix.todo("Pay rent", DayFix.at(15, 0))
         ]
     }
 
@@ -34,14 +32,14 @@ struct CalendarDayHeaderTests {
     }
 
     @Test func trackedIsCutToThePageDay() {
-        var a = F.activity("Late", F.at(5, 0, 0, on: 19), F.at(7, 0, 0, on: 19))
-        a.span = DateInterval(start: F.at(5, 0, 0, on: 19), end: F.at(6, 0, 0, on: 19))
+        var a = DayFix.activity("Late", DayFix.at(5, 0, 0, on: 19), DayFix.at(7, 0, 0, on: 19))
+        a.span = DateInterval(start: DayFix.at(5, 0, 0, on: 19), end: DayFix.at(6, 0, 0, on: 19))
         #expect(CalendarDayHeader.tracked([a]) == 60 * 60)
     }
 
     @Test func trackedCountsHiddenActivities() {
-        var a = F.activity("Slides", F.at(9, 0), F.at(10, 0))
-        a.hidden = [F.activity("Notes", F.at(9, 10), F.at(9, 40))]
+        var a = DayFix.activity("Slides", DayFix.at(9, 0), DayFix.at(10, 0))
+        a.hidden = [DayFix.activity("Notes", DayFix.at(9, 10), DayFix.at(9, 40))]
         #expect(CalendarDayHeader.tracked([a]) == 90 * 60)
     }
 
@@ -50,8 +48,8 @@ struct CalendarDayHeaderTests {
     }
 
     @Test func eventsCountsHiddenEvents() {
-        var e = F.event("Friday Java Brief", F.at(10, 6), F.at(10, 36))
-        e.hidden = [F.event("Frontline Morning Scrum", F.at(10, 30), F.at(11, 0))]
+        var e = DayFix.event("Friday Java Brief", DayFix.at(10, 6), DayFix.at(10, 36))
+        e.hidden = [DayFix.event("Frontline Morning Scrum", DayFix.at(10, 30), DayFix.at(11, 0))]
         #expect(CalendarDayHeader.events([e]) == 2)
     }
 }
