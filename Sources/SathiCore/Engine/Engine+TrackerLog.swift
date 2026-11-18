@@ -33,8 +33,9 @@ extension Engine {
     }
 
     var pendingDoneAt: Date? {
-        guard data.live.tracker.running != nil, let p = data.live.tracker.prompt,
-              p.kind == .whatNow, p.resume == nil else { return nil }
+        let open = data.live.tracker.prompt
+        let p = open == nil || open?.kind == .eventAsk ? trackerCalendarRuntime.heldPrompt : open
+        guard data.live.tracker.running != nil, let p, p.kind == .whatNow, p.resume == nil else { return nil }
         return p.doneAt ?? p.switchFrom
     }
 

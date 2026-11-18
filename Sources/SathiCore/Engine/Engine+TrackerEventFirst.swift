@@ -24,28 +24,17 @@ extension Engine {
 
     func askEventFirst(_ e: CalendarEventInfo) {
         let n = clock.now
-        guard !eventAskWaits else {
-            trackerCalendarRuntime.pendingAsk = e
-            return
-        }
-        var waiting = e
-        if let p = data.live.tracker.prompt {
-            if p.kind == .eventAsk {
-                if let old = eventAskEvent(), old.id != e.id, canAskEvent(old, at: n) { waiting = old }
-            } else {
-                holdPrompt(p)
-            }
-        }
+        if let old = eventAskEvent(), old.id != e.id { queueEventAsk(old) }
+        queueEventAsk(e)
+        guard !eventAskWaits else { return }
+        if let p = data.live.tracker.prompt, p.kind != .eventAsk { holdPrompt(p) }
         setTrackerPrompt(PromptState(kind: .eventAsk, shownAt: n, askTime: e.start, eventID: e.id))
-        trackerCalendarRuntime.pendingAsk = waiting
     }
 
     func askPendingEventAgain(_ n: Date) {
-        guard let e = trackerCalendarRuntime.pendingAsk else { return }
-        guard canAskEvent(e, at: n) else {
-            trackerCalendarRuntime.pendingAsk = nil
-            return
-        }
+        let asks = trackerCalendarRuntime.pendingAsks.filter { canAskEvent($0, at: n) }
+        trackerCalendarRuntime.pendingAsks = asks
+        guard let e = trackerCalendarRuntime.pendingAsks.first else { return }
         let p = data.live.tracker.prompt
         guard p?.kind != .eventAsk, !eventAskWaits else { return }
         if let p {
@@ -57,9 +46,19 @@ extension Engine {
 
     func restoreHeldPrompt() {
         guard let held = trackerCalendarRuntime.heldPrompt, data.live.tracker.prompt == nil,
-              trackerCalendarRuntime.pendingAsk == nil else { return }
+              trackerCalendarRuntime.pendingAsks.isEmpty else { return }
         trackerCalendarRuntime.heldPrompt = nil
         setTrackerPrompt(held, byUser: trackerCalendarRuntime.heldByUser)
+    }
+
+    func dropEventAsk(_ id: String?) {
+        trackerCalendarRuntime.pendingAsks.removeAll { $0.id == id }
+    }
+
+    private func queueEventAsk(_ e: CalendarEventInfo) {
+        guard !trackerCalendarRuntime.pendingAsks.contains(where: { $0.id == e.id && $0.start == e.start }) else { return }
+        trackerCalendarRuntime.pendingAsks.append(e)
+        trackerCalendarRuntime.pendingAsks.sort { $0.start < $1.start }
     }
 
     private func holdPrompt(_ p: PromptState) {
