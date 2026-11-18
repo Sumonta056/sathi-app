@@ -33,7 +33,7 @@ enum CalendarBlockNudge {
     private static func covered(_ other: CalendarPlacedBlock, by block: CalendarPlacedBlock, least: TimeInterval) -> [DateInterval] {
         let raisedOver = block.depth > other.depth && block.span.start < other.span.end && other.span.start < block.span.end
         guard raisedOver else { return [other.displaySpan] }
-        return [DateInterval(start: other.displaySpan.start, duration: least)] + other.children.map(\.displaySpan)
+        return [DateInterval(start: other.displaySpan.start, duration: least)] + other.shownChildren.map(\.displaySpan)
     }
 
     private struct Fit {
@@ -61,15 +61,15 @@ enum CalendarBlockNudge {
 
     private static func fill(_ host: inout CalendarPlacedBlock, start: Date, fit: Fit) {
         let shift = start.timeIntervalSince(host.span.start)
-        var cursor = start.addingTimeInterval(host.children.isEmpty ? 0 : fit.least)
-        for c in host.children.indices {
+        var cursor = start.addingTimeInterval(host.shownChildren.isEmpty ? 0 : fit.least)
+        for c in host.children.indices where host.kidsShown {
             let child = host.children[c].span
             let from = fit.start(max(child.start.addingTimeInterval(shift), cursor), real: child.start)
             let shown = fit.span(from, from.addingTimeInterval(max(child.duration, fit.least)))
             host.children[c].displaySpan = shown
             cursor = shown.end
         }
-        let own = start.addingTimeInterval(max(host.span.duration, fit.least))
+        let own = max(host.span.end, start.addingTimeInterval(fit.least))
         host.displaySpan = fit.span(start, max(own, cursor))
     }
 }

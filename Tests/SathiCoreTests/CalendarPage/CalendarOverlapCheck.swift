@@ -16,6 +16,7 @@ enum OverlapCheck {
     }
 
     private static func childProblems(_ host: CalendarPlacedBlock, least: TimeInterval) -> [String] {
+        guard host.kidsShown else { return [] }
         let room = DateInterval(start: host.displaySpan.start.addingTimeInterval(least), end: host.displaySpan.end)
         var found = host.children.filter { $0.displaySpan.start < room.start || $0.displaySpan.end > room.end }
             .map { "\(name($0)) sticks out of \(name(host))" }
@@ -30,7 +31,7 @@ enum OverlapCheck {
         return top.depth > under.depth
             && meets(top.span, under.span)
             && !meets(top.displaySpan, title)
-            && !under.children.contains { meets(top.displaySpan, $0.displaySpan) }
+            && !(under.kidsShown && under.children.contains { meets(top.displaySpan, $0.displaySpan) })
     }
 
     private static func meets(_ a: DateInterval, _ b: DateInterval) -> Bool {

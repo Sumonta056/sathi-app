@@ -13,6 +13,7 @@ struct CalendarBlockContext {
     }
 
     func isSelected(_ block: CalendarBlock) -> Bool {
-        CalendarMergePick.id(of: block).map(selected.contains) ?? false
+        if block.group != nil { return !block.mergeIDs.isEmpty && block.mergeIDs.allSatisfy(selected.contains) }
+        return CalendarMergePick.id(of: block).map(selected.contains) ?? false
     }
 }

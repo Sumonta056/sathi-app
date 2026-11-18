@@ -28,11 +28,14 @@ struct CalendarGridActions {
     var slot: (DayKey, Date, CGFloat) -> Void = { _, _, _ in }
     var block: (DayKey, CalendarBlock, CGFloat) -> Void = { _, _, _ in }
     var toggle: ((ActivityID) -> Void)?
+    var select: (([ActivityID]) -> Void)?
     var failed: (String) -> Void = { _ in }
     var command: () -> Bool = { NSEvent.modifierFlags.contains(.command) }
 
     func press(_ day: DayKey, _ block: CalendarBlock, _ y: CGFloat) {
-        if let toggle, let id = CalendarMergePick.id(of: block), command() {
+        if block.group != nil, let select, command() {
+            select(block.mergeIDs)
+        } else if let toggle, let id = CalendarMergePick.id(of: block), command() {
             toggle(id)
         } else {
             self.block(day, block, y)

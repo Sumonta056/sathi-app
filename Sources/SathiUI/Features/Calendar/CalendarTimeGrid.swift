@@ -11,6 +11,8 @@ struct CalendarTimeGrid: View {
     var selected: Set<ActivityID> = []
     var popover: Binding<CalendarPopoverTarget?> = .constant(nil)
     var rowMinutes = Limits.calendarDefaultRowMinutes
+    var narrow: Set<CalendarLaneShape> = []
+    var measured: (CGFloat) -> Void = { _ in }
     @State private var box = CalendarHoverBox()
 
     static let hourLabels = (0 ..< Limits.calendarGridHours).map {
@@ -56,7 +58,7 @@ struct CalendarTimeGrid: View {
                     labels
                     ForEach(Array(zip(range.days, columns)), id: \.0) { day, math in
                         CalendarDayColumn(
-                            day: day, placed: math.placed(data, day: day), texts: data.texts,
+                            day: day, placed: math.placed(data, day: day, narrow: narrow), texts: data.texts,
                             math: math, now: day == today ? now : nil, categories: categories, calendar: calendar,
                             actions: actions, selected: selected, popover: popover, showsAwayPill: range.kind == .day,
                             hover: { [hover] in hover.block($0, inside: $1) }, weekSides: range.kind == .week
@@ -65,6 +67,7 @@ struct CalendarTimeGrid: View {
                     }
                 }
                 .background(alignment: .top) { hourLines }
+                .background { CalendarColumnWidth(days: range.days.count, measured: measured) }
                 .coordinateSpace(name: CalendarHoverHost.space)
                 .overlay(alignment: .topLeading) {
                     CalendarHoverLayer(host: hover, grid: actions, height: columns.first?.totalHeight ?? 0)
@@ -76,7 +79,7 @@ struct CalendarTimeGrid: View {
                 proxy.scrollTo($0.initialScrollRow(now: now), anchor: .top)
             }
             .onChange(of: rowMinutes) { _ in proxy.scrollTo(initialRow, anchor: .top) }
-            .onChange(of: data) { hover.keep(ids: Set($0.blocks.map(\.id))) }
+            .onChange(of: data) { hover.keep(ids: $0.shownIDs) }
         }
     }
 

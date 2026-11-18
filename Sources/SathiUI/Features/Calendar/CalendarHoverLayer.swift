@@ -37,7 +37,7 @@ struct CalendarHoverLayer: View {
             run.run(action, t)
         } pick: { id in
             host.close()
-            run.open(hidden: id, t)
+            run.open(row: id, t)
         }
         .onHover { host.card($0) }
         .offset(

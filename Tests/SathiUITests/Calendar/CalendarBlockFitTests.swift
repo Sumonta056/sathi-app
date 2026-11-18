@@ -65,10 +65,10 @@ struct CalendarBlockFitTests {
         }
 
         static func block(_ id: String, _ start: Date, _ end: Date) -> CalendarBlock {
-            let a = Activity(text: id, start: start, end: end)
+            let e = CalendarEventInfo(id: id, title: id, start: start, end: end, calendarID: "c")
             return CalendarBlock(
-                id: id, title: id, interval: a.interval, style: .activity(category: nil),
-                source: .activity(a, running: false), isAllDay: false, activityIDs: [a.id]
+                id: id, title: id, interval: DateInterval(start: start, end: end), style: .event(colorHex: 0),
+                source: .event(e), isAllDay: false, activityIDs: []
             )
         }
     }

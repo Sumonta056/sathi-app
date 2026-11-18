@@ -74,6 +74,14 @@ enum RealWeek {
         ("18:30:00", "19:00:00", "Product update")
     ]
 
+    static let tue: [Row] = [
+        Row("07:00:00", "09:20:21", .away, "", nil), Row("09:20:37", "09:42:56", .work, "Demo", "Learning"),
+        Row("09:42:56", "09:51:32", .away, "", nil), Row("09:51:46", "09:58:22", .work, "Demo", "Learning"),
+        Row("09:58:22", "23:30:00", .away, "", nil)
+    ]
+
+    static let tuePlans: [Plan] = [("13:00:00", "17:30:00", "AI class"), ("17:00:00", "18:30:00", "Exam workshop")]
+
     static let wed: [Row] = [
         Row("07:00:00", "09:34:28", .away, "", nil), Row("09:34:28", "09:37:13", .work, "Away", "Break"),
         Row("09:37:13", "10:38:16", .work, "Starting the day", "Browsing"), Row("10:38:16", "12:30:57", .work, "Code review", "Hobby"),

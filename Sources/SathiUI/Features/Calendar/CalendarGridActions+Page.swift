@@ -22,6 +22,10 @@ extension CalendarGridActions {
                 CalendarMergePick.toggle(id, in: &selected.wrappedValue)
                 error.wrappedValue = nil
             }
+            a.select = { ids in
+                selected.wrappedValue.formUnion(ids)
+                error.wrappedValue = nil
+            }
         }
         return a
     }

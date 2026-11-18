@@ -132,7 +132,7 @@ struct CalendarHoverRunTests {
         var first = try Fix.placed(h, "Standup")
         let hidden = try Fix.placed(h, "Write")
         first.hidden = [hidden]
-        Fix.runner(h, spy).open(hidden: hidden.block.id, Fix.target(first))
+        Fix.runner(h, spy).open(row: hidden.block.id, Fix.target(first))
         #expect(spy.opened == [hidden.block.id])
         #expect(spy.toggled.isEmpty)
     }
@@ -144,7 +144,7 @@ struct CalendarHoverRunTests {
         var first = try Fix.placed(h, "Standup")
         let hidden = try Fix.placed(h, "Write")
         first.hidden = [hidden]
-        Fix.runner(h, spy).open(hidden: hidden.block.id, Fix.target(first))
+        Fix.runner(h, spy).open(row: hidden.block.id, Fix.target(first))
         #expect(spy.toggled == [Fix.write.id])
         #expect(spy.opened.isEmpty)
     }

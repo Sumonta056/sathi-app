@@ -16,6 +16,11 @@ enum CalendarBlockFit {
         return min(UIMetrics.calendarTitleLinesMax, max(1, Int(room.rounded(.down))))
     }
 
+    static func activityTitleLines(height: CGFloat, width: CGFloat, below: CGFloat = 0) -> Int {
+        guard CalendarNarrowLanes.isNarrow(width), showsTimeRange(height: height) else { return 1 }
+        return min(UIMetrics.calendarNarrowTitleLinesMax, titleLines(height: height - below))
+    }
+
     private static func fits(_ height: CGFloat, _ needed: CGFloat) -> Bool {
         height + UIMetrics.calendarFitTolerance >= needed
     }

@@ -29,7 +29,7 @@ struct CalendarDayColumn: View {
                     .onContinuousHover(coordinateSpace: .local) { stripeHover($0, frames) }
                 ForEach(placed.filter { !CalendarTodoLayer.holds($0) }, id: \.block.id) { p in
                     let rect = frames.rect(p)
-                    blockView(p, y: rect.minY, frames)
+                    blockView(p, y: rect.minY, width: rect.width, frames)
                         .frame(width: rect.width)
                         .offset(x: rect.minX, y: rect.minY)
                 }
@@ -58,13 +58,13 @@ struct CalendarDayColumn: View {
         .frame(height: math.totalHeight)
     }
 
-    @ViewBuilder private func blockView(_ p: CalendarPlacedBlock, y: CGFloat, _ frames: CalendarHoverFrames) -> some View {
+    @ViewBuilder private func blockView(_ p: CalendarPlacedBlock, y: CGFloat, width: CGFloat, _ frames: CalendarHoverFrames) -> some View {
         if p.isBackdrop {
             backdrop(p, y: y, layer: .stripes)
         } else if Self.isEvent(p) {
-            CalendarEventCard(placed: p, math: math, context: context(frames))
+            CalendarEventCard(placed: p, math: math, context: context(frames), width: width)
         } else {
-            CalendarActivityBlock(placed: p, height: math.height(p.displaySpan), context: context(frames), y: y)
+            CalendarActivityBlock(placed: p, height: math.height(p.displaySpan), context: context(frames), y: y, width: width)
         }
     }
 

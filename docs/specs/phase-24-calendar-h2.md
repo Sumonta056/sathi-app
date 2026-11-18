@@ -205,6 +205,17 @@ The real time stays in `span`, for hover and for edits.
 
 ---
 
+## Option A (2026-11-18): group short runs
+
+The user picked option A after the week-drift mockup. With a 26 pt minimum at 60 pt per hour every short activity shows 26 min tall and pushed the next block down; the real Mon 16 Nov drifted up to 92 min.
+
+- Short runs: back-to-back activities that are each shorter than the minimum (gap ≤ `Limits.calendarGroupRunGapMinutes`, 5) become 1 group block at their real combined time, among top blocks and separately among each host's children. A run still shorter than the minimum that would push its next activity takes 1 neighbour (next, else previous, gap ≤ `Limits.calendarGroupAttachGapMinutes`, 10). New Core file `CalendarBlockRuns`, group value `CalendarBlockGroup` on `CalendarBlock.group`.
+- Title: same title → title + "×N"; longest member ≥ `Limits.calendarGroupLeadShare` (0.6) of the span → its title + "+N"; else "N activities" + the top 2 titles. Color: the longest member's category; category dots when mixed (hidden below 130 pt). Stack icon.
+- Trim, not push: a block below a taller block starts below it but keeps its real end (never shorter than the minimum). The d969c21 no-cover rule stays.
+- Narrow lanes: the UI measures the column width and passes the narrow lane shapes (`CalendarLaneShape`, depth and lanes with a lane < 130 pt) into `Engine.calendarPage`, so the placed result stays in the cached page data. A host in a narrow lane shows an "N inside" chip and keeps its real height; activity titles wrap to 2 lines.
+- Hover: a group lists its members (rows act like a click on that block), "Select all" in Day adds them all to the Merge selection. An event lists its children with groups expanded.
+- Target on the real-week fixtures: max drift ≤ 5 min, 0 covered blocks, no block lost.
+
 ## Decisions (answered 2026-11-18)
 
 1. **Q1. Event pop-up priority:** calendar events come first. The event ask shows at once, on top of other pop-ups and during a busy state. Only Away and a full-screen lock make it wait. "Log and tell" never logs by itself when the tracker is busy or another pop-up is open; it asks. See Track A.
