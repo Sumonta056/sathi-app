@@ -1,5 +1,5 @@
 import Foundation
-import SathiCore
+@testable import SathiCore
 import SathiTestSupport
 import Testing
 
@@ -14,115 +14,111 @@ struct CalendarHoverInfoTests {
         trackerOn: true
     )
 
-    private func info(_ placed: CalendarPlacedBlock) -> CalendarHoverInfo {
-        CalendarHoverInfo.make(placed, lookup: lookup, calendar: cal)
+    enum Kind: String, CaseIterable {
+        case event, readOnlyEvent, activity, todo, away
     }
 
-    private func placed(_ block: CalendarBlock) -> CalendarPlacedBlock {
-        CalendarPlacedBlock(block: block, lane: 0, lanes: 1)
+    private func block(_ k: Kind) -> CalendarBlock {
+        switch k {
+        case .event: return Lay.event("e1", 0, 90)
+        case .readOnlyEvent: return Lay.event("ro", 0, 30)
+        case .activity: return Lay.activity("Spec", 0, 45)
+        case .todo:
+            return CalendarBlock(
+                id: "t-t1", title: "Buy milk", interval: DateInterval(start: Lay.at(30), end: Lay.at(30)),
+                style: .todo(colorHex: 0), source: .todo("t1"), isAllDay: false, activityIDs: []
+            )
+        case .away:
+            let a = Activity(kind: .away, text: "", start: Lay.at(0), end: Lay.at(60), awayPlace: .lunch)
+            return CalendarBlock(
+                id: "w", title: a.awayText, interval: a.interval, style: .away,
+                source: .activity(a, running: false), isAllDay: false, activityIDs: [a.id]
+            )
+        }
     }
 
-    @Test func eventShowsPlanKindCalendarNameAndAllThreeActions() {
-        let i = info(placed(Lay.event("e1", 0, 90)))
-        #expect(i.kind == .event)
-        #expect(i.kindLabel == "Calendar event · Plan")
-        #expect(i.title == "e1")
-        #expect(i.meta == "Work")
-        #expect(i.actions == [.startAsActivity, .edit, .openInCalendar])
+    static func laid(_ b: CalendarBlock) -> CalendarLaidBlock {
+        var half = CalendarHalf.plan
+        if case .activity = b.source { half = .actual }
+        return CalendarLaidBlock(block: b, span: b.interval, half: half, rounded: CalendarRounding.rounded(b.interval))
+    }
+
+    private func info(_ b: CalendarBlock) -> CalendarHoverInfo {
+        CalendarHoverInfo.make(Self.laid(b), among: [], lookup: lookup, calendar: cal)
+    }
+
+    private static let expected: [Kind: (String, [CalendarHoverAction])] = [
+        .event: ("Calendar event · Plan", [.startAsActivity, .edit, .openInCalendar]),
+        .readOnlyEvent: ("Calendar event · Plan", [.startAsActivity, .openInCalendar]),
+        .activity: ("Activity · Actual", [.edit, .delete]),
+        .todo: ("To-do · Apple Reminders", [.markDone, .edit, .openInReminders]),
+        .away: ("Away", [.editAway])
+    ]
+
+    @Test(arguments: Kind.allCases)
+    func kindLineAndActionsPerKind(_ k: Kind) throws {
+        let want = try #require(Self.expected[k])
+        let i = info(block(k))
+        #expect(i.kindLabel == want.0)
+        #expect(i.actions == want.1)
+    }
+
+    @Test(arguments: Kind.allCases)
+    func noKindOffersMergeOrSelectAll(_ k: Kind) {
+        let labels = info(block(k)).actions.map(Copywriter.calendarHoverAction)
+        #expect(!labels.contains("Merge"))
+        #expect(!labels.contains("Select all"))
+    }
+
+    @Test func everyActionHasALabelAndNoneIsMerge() {
+        let labels = CalendarHoverAction.allCases.map(Copywriter.calendarHoverAction)
+        #expect(labels == ["Start as activity", "Edit", "Open in Calendar", "Delete", "Mark done", "Open in Reminders", "Edit Away"])
+    }
+
+    @Test func metaLinePerKind() {
+        #expect(info(block(.event)).meta == "Work")
+        #expect(info(block(.activity)).meta == "No category")
+        #expect(info(block(.todo)).meta == "Groceries")
+        #expect(info(block(.away)).meta == "Lunch")
     }
 
     @Test func eventInTwoCalendarsSaysSoInTheMetaLine() {
         var b = Lay.event("e1", 0, 30)
         b.copies = 2
-        #expect(info(placed(b)).meta == "Work · in 2 calendars")
+        #expect(info(b).meta == "Work · in 2 calendars")
     }
 
-    @Test func readOnlyEventHasNoEdit() {
-        let i = info(placed(Lay.event("ro", 0, 30)))
-        #expect(i.kindLabel == "Calendar event · Plan")
-        #expect(i.actions == [.startAsActivity, .openInCalendar])
-    }
-
-    @Test func activityShowsActualKindCategoryAndEditMergeDelete() {
+    @Test func activityMetaIsItsCategory() {
         var b = Lay.activity("Spec", 0, 45)
         if case var .activity(a, running) = b.source {
             a.category = "Coding"
             b.source = .activity(a, running: running)
         }
-        let i = info(placed(b))
-        #expect(i.kind == .activity)
-        #expect(i.kindLabel == "Activity · Actual")
-        #expect(i.meta == "Coding")
-        #expect(i.actions == [.edit, .merge, .delete])
+        #expect(info(b).meta == "Coding")
     }
 
-    @Test func activityWithNoCategorySaysNoCategory() {
-        #expect(info(placed(Lay.activity("Spec", 0, 45))).meta == "No category")
-    }
-
-    @Test func todoShowsRemindersKindListNameAndTodoActions() {
-        let b = CalendarBlock(
-            id: "t-t1", title: "Buy milk", interval: DateInterval(start: Lay.at(30), end: Lay.at(30)),
-            style: .todo(colorHex: 0), source: .todo("t1"), isAllDay: false, activityIDs: []
-        )
-        let i = info(placed(b))
-        #expect(i.kind == .todo)
-        #expect(i.kindLabel == "To-do · Apple Reminders")
+    @Test func todoShowsOnlyItsDueClock() {
+        let i = info(block(.todo))
         #expect(i.title == "Buy milk")
-        #expect(i.meta == "Groceries")
         #expect(i.time == Copywriter.trackerClock(Lay.at(30), calendar: cal))
         #expect(i.length == nil)
-        #expect(i.actions == [.markDone, .edit, .openInReminders])
     }
 
-    @Test func awayShowsAwayKindReasonAndEditAway() {
-        let a = Activity(kind: .away, text: "", start: Lay.at(0), end: Lay.at(60), awayPlace: .lunch)
-        let b = CalendarBlock(
-            id: "w", title: a.awayText, interval: a.interval, style: .away,
-            source: .activity(a, running: false), isAllDay: false, activityIDs: [a.id]
-        )
-        let i = info(placed(b))
-        #expect(i.kind == .away)
-        #expect(i.kindLabel == "Away")
-        #expect(i.meta == "Lunch")
-        #expect(i.actions == [.editAway])
+    @Test func lengthUsesTheShortForm() {
+        #expect(info(Lay.event("e1", 0, 90)).length == "1h 30m")
     }
 
-    @Test func timeAndLengthComeFromTheRealSpanNotTheDisplaySpan() {
-        var p = placed(Lay.event("e1", 0, 10))
-        p.displaySpan = Lay.span(5, 40)
-        let i = info(p)
-        #expect(i.time == Copywriter.trackerSpan(Lay.at(0), Lay.at(10), calendar: cal))
-        #expect(i.length == "10 min")
+    @Test func runningActivityHasNoActions() {
+        var b = Lay.activity("r", 0, 30)
+        if case let .activity(a, _) = b.source { b.source = .activity(a, running: true) }
+        #expect(info(b).actions.isEmpty)
     }
 
-    @Test func lengthShowsHoursAndMinutes() {
-        #expect(info(placed(Lay.event("e1", 0, 90))).length == "1 h 30 min")
-    }
-
-    @Test func hostListsItsChildrenWithTheirRealTimes() {
-        var host = placed(Lay.event("e1", 0, 60))
-        var child = CalendarPlacedBlock(block: Lay.activity("Notes", 10, 40), lane: 0, lanes: 1, hostID: "e1")
-        child.displaySpan = Lay.span(12, 50)
-        host.children = [child]
-        let i = info(host)
-        #expect(i.childrenTitle == "Done in this event")
-        #expect(i.children == [
-            CalendarHoverChild(id: child.block.id, title: "Notes", time: Copywriter.trackerSpan(Lay.at(10), Lay.at(40), calendar: cal))
-        ])
-    }
-
-    @Test func blockWithNoChildrenHasNoChildrenTitle() {
-        let i = info(placed(Lay.event("e1", 0, 60)))
-        #expect(i.children.isEmpty)
-        #expect(i.childrenTitle == nil)
-    }
-
-    @Test func everyActionHasALabel() {
-        let labels = CalendarHoverAction.allCases.map(Copywriter.calendarHoverAction)
-        #expect(labels == [
-            "Start as activity", "Edit", "Open in Calendar", "Merge", "Delete", "Mark done", "Open in Reminders", "Edit Away",
-            "Select all"
-        ])
+    @Test func blockWithNothingLinkedHasNoListTitles() {
+        let i = info(Lay.event("e1", 0, 60))
+        #expect(i.doneDuring.isEmpty)
+        #expect(i.doneDuringTitle == nil)
+        #expect(i.alsoHereTitle == nil)
+        #expect(i.alsoHere.isEmpty)
     }
 }

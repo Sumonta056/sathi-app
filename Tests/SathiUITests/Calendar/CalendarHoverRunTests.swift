@@ -41,14 +41,6 @@ struct CalendarHoverRunTests {
         #expect(spy.opened == [away.id])
     }
 
-    @Test func mergePicksTheActivityForMergeLikeACommandClick() throws {
-        let h = Fix.harness()
-        let spy = Fix.Spy()
-        try Fix.runner(h, spy).run(.merge, Fix.target(Fix.placed(h, "Write")))
-        #expect(spy.toggled == [Fix.write.id])
-        #expect(spy.opened.isEmpty)
-    }
-
     @Test func deleteRemovesTheActivity() throws {
         let h = Fix.harness()
         try Fix.runner(h, Fix.Spy()).run(.delete, Fix.target(Fix.placed(h, "Write")))

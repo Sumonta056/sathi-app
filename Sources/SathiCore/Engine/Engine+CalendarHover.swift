@@ -7,9 +7,9 @@ extension Engine {
         links.open(URL(fileURLWithPath: Self.remindersAppPath))
     }
 
-    package func calendarHoverInfo(_ placed: CalendarPlacedBlock) -> CalendarHoverInfo {
+    package func calendarHoverInfo(_ laid: CalendarLaidBlock, among day: [CalendarLaidBlock]) -> CalendarHoverInfo {
         var lookup = CalendarHoverLookup(now: clock.now, trackerOn: data.prefs.tracker.isOn)
-        switch placed.block.source {
+        switch laid.block.source {
         case let .event(e):
             let names = calendarPageRead?.readable ?? []
             lookup.calendarNames = Dictionary(names.map { ($0.id, $0.title) }) { first, _ in first }
@@ -20,12 +20,18 @@ extension Engine {
         case .activity:
             break
         }
-        return CalendarHoverInfo.make(placed, lookup: lookup, calendar: calendar)
+        return CalendarHoverInfo.make(laid, among: day, lookup: lookup, calendar: calendar)
     }
 
-    package func calendarHoverInfo(_ laid: CalendarLaidBlock, among day: [CalendarLaidBlock]) -> CalendarHoverInfo {
-        var placed = CalendarPlacedBlock(block: laid.block, span: laid.rounded, lane: laid.lane, lanes: laid.lanes, depth: laid.depth)
-        placed.hidden = laid.hidden.map { CalendarPlacedBlock(block: $0.block, span: $0.rounded, lane: 0, lanes: 1) }
-        return calendarHoverInfo(placed)
+    package func calendarHoverInfo(_ placed: CalendarPlacedBlock) -> CalendarHoverInfo {
+        calendarHoverInfo(Self.laid(placed), among: [])
+    }
+
+    private static func laid(_ placed: CalendarPlacedBlock) -> CalendarLaidBlock {
+        var half = CalendarHalf.plan
+        if case .activity = placed.block.source { half = .actual }
+        var out = CalendarLaidBlock(block: placed.block, span: placed.span, half: half, rounded: CalendarRounding.rounded(placed.span))
+        out.hidden = placed.hidden.map(Self.laid)
+        return out
     }
 }

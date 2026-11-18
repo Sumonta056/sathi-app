@@ -5,19 +5,16 @@ package enum CalendarHoverKind: Equatable, Sendable {
     case activity
     case todo
     case away
-    case group
 }
 
 package enum CalendarHoverAction: Equatable, Sendable, CaseIterable {
     case startAsActivity
     case edit
     case openInCalendar
-    case merge
     case delete
     case markDone
     case openInReminders
     case editAway
-    case selectAll
 }
 
 package struct CalendarHoverChild: Equatable, Identifiable, Sendable {
@@ -62,41 +59,42 @@ package struct CalendarHoverInfo: Equatable, Sendable {
     package var time: String
     package var length: String?
     package var meta: String?
-    package var childrenTitle: String?
-    package var children: [CalendarHoverChild]
+    package var doneDuringTitle: String?
+    package var doneDuring: [CalendarHoverChild] = []
     package var alsoHereTitle: String?
     package var alsoHere: [CalendarHoverChild] = []
     package var actions: [CalendarHoverAction]
 
-    package static func make(_ placed: CalendarPlacedBlock, lookup: CalendarHoverLookup, calendar: Calendar) -> CalendarHoverInfo {
-        let b = placed.block
-        let span = placed.span
+    package static func make(
+        _ laid: CalendarLaidBlock, among day: [CalendarLaidBlock], lookup: CalendarHoverLookup, calendar: Calendar
+    ) -> CalendarHoverInfo {
+        let b = laid.block
+        let r = laid.rounded
         let kind = kind(of: b)
-        let children = b.group == nil
-            ? rows(placed.children.map(\.block), calendar: calendar, short: false)
-            : rows([b], calendar: calendar)
-        let point = span.duration == 0
-        let also = rows(placed.hidden.map(\.block), calendar: calendar)
+        let point = r.duration == 0
+        let done = kind == .event ? rows(doneDuring(b.id, in: day), calendar: calendar) : []
+        let also = rows(laid.hidden.map(\.block), calendar: calendar)
         return CalendarHoverInfo(
             id: b.id,
             kind: kind,
-            kindLabel: b.group.map { Copywriter.calendarHoverGroupKind($0.members.count) } ?? Copywriter.calendarHoverKind(kind),
+            kindLabel: Copywriter.calendarHoverKind(kind),
             title: b.title,
-            time: point
-                ? Copywriter.trackerClock(span.start, calendar: calendar)
-                : Copywriter.trackerSpan(span.start, span.end, calendar: calendar),
-            length: point ? nil : Copywriter.trackerDuration(span.duration),
+            time: point ? Copywriter.trackerClock(r.start, calendar: calendar) : Fmt.shortRange(r.start, r.end, calendar: calendar),
+            length: point ? nil : Copywriter.calendarBlockLength(r),
             meta: meta(of: b, lookup: lookup),
-            childrenTitle: children.isEmpty ? nil : b.group == nil ? Copywriter.calendarHoverChildren : Copywriter.calendarHoverGroupMembers,
-            children: children,
+            doneDuringTitle: done.isEmpty ? nil : Copywriter.calendarHoverDoneDuring,
+            doneDuring: done,
             alsoHereTitle: also.isEmpty ? nil : Copywriter.calendarHoverAlsoHere,
             alsoHere: also,
-            actions: b.group == nil ? actions(of: b, kind: kind, lookup: lookup) : [.selectAll]
+            actions: actions(of: b, kind: kind, lookup: lookup)
         )
     }
 
+    private static func doneDuring(_ eventID: String, in day: [CalendarLaidBlock]) -> [CalendarBlock] {
+        day.flatMap { [$0] + $0.hidden }.filter { $0.doneDuring == eventID }.map(\.block)
+    }
+
     private static func kind(of b: CalendarBlock) -> CalendarHoverKind {
-        if b.group != nil { return .group }
         switch b.source {
         case .event: return .event
         case .todo: return .todo
@@ -105,9 +103,6 @@ package struct CalendarHoverInfo: Equatable, Sendable {
     }
 
     private static func meta(of b: CalendarBlock, lookup: CalendarHoverLookup) -> String? {
-        if let group = b.group {
-            return group.categories.map { $0 ?? Copywriter.trackerNoCategory }.joined(separator: Copywriter.calendarGroupCategorySeparator)
-        }
         switch b.source {
         case let .event(e):
             let copies = b.copies > 1 ? Copywriter.calendarCopiesSpoken(b.copies) : nil
@@ -130,7 +125,7 @@ package struct CalendarHoverInfo: Equatable, Sendable {
         case let .activity(_, running):
             if running { return [] }
             if kind == .away { return [.editAway] }
-            return b.activityIDs.count > 1 ? [.edit, .merge] : [.edit, .merge, .delete]
+            return b.activityIDs.count > 1 ? [.edit] : [.edit, .delete]
         }
     }
 }

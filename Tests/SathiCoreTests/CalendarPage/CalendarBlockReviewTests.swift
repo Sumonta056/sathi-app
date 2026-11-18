@@ -50,8 +50,4 @@ struct CalendarBlockReviewTests {
         #expect(two.count == 1)
         #expect(one.first?.block.id != two.first?.block.id)
     }
-
-    @Test func theGroupKindLabelIsNeutral() {
-        #expect(Copywriter.calendarHoverKind(.group) == "Grouped activities")
-    }
 }
