@@ -9,7 +9,7 @@ package struct CalendarPageRange: Equatable, Sendable {
 
     package static func == (lhs: CalendarPageRange, rhs: CalendarPageRange) -> Bool {
         lhs.kind == rhs.kind && lhs.days == rhs.days && lhs.interval == rhs.interval
-            && lhs.weekDays == rhs.weekDays
+            && (lhs.kind != .week || lhs.weekDays == rhs.weekDays)
             && lhs.calendar.firstWeekday == rhs.calendar.firstWeekday
             && lhs.calendar.timeZone == rhs.calendar.timeZone
     }

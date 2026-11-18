@@ -128,4 +128,11 @@ struct CalendarPageRangeWeekDaysTests {
     func rangesWithDifferentDayCountsDiffer(_ count: Int) {
         #expect(week(now, count) != week(now, 7))
     }
+
+    @Test(arguments: [ReportRange.day, .month])
+    func dayAndMonthEqualityIgnoresTheDayCount(_ kind: ReportRange) {
+        let ranges = [3, 4, 5, 7].map { CalendarPageRange.containing(now, kind: kind, calendar: zone.calendar, weekDays: $0) }
+        #expect(ranges.allSatisfy { $0 == ranges[0] })
+        #expect(ranges.map(\.weekDays) == [3, 4, 5, 7])
+    }
 }
