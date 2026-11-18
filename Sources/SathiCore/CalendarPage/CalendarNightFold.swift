@@ -1,7 +1,7 @@
 import Foundation
 
-package enum CalendarNightFold {
-    package static func rows(busy: [Range<Int>], rowMinutes: Int, metrics: CalendarLayoutMetrics) -> [CalendarGridRow] {
+enum CalendarNightFold {
+    static func rows(busy: [Range<Int>], rowMinutes: Int, metrics: CalendarLayoutMetrics) -> [CalendarGridRow] {
         let step = max(1, rowMinutes)
         let starts = Array(stride(from: 0, to: Limits.minutesPerDay, by: step))
         let quiet = starts.map { s in metrics.foldsNights && !busy.contains { crosses($0, s, s + step) } }

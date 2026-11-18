@@ -1,9 +1,9 @@
 import Foundation
 
-package enum CalendarDoneDuring {
+enum CalendarDoneDuring {
     private static let lead = TimeInterval(Limits.calendarHostLeadMinutes) * Timing.minute
 
-    package static func fits(_ child: DateInterval, in host: DateInterval) -> Bool {
+    static func fits(_ child: DateInterval, in host: DateInterval) -> Bool {
         guard child.duration > 0, child.start >= host.start.addingTimeInterval(-lead) else { return false }
         let inside = min(child.end, host.end).timeIntervalSince(max(child.start, host.start))
         return inside > 0 && inside >= child.duration * Limits.calendarHostShare
