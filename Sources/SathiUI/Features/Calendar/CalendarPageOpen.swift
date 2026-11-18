@@ -28,6 +28,7 @@ struct CalendarGridActions {
     var slot: (DayKey, Date, CGFloat) -> Void = { _, _, _ in }
     var block: (DayKey, CalendarBlock, CGFloat) -> Void = { _, _, _ in }
     var toggle: ((ActivityID) -> Void)?
+    var failed: (String) -> Void = { _ in }
     var command: () -> Bool = { NSEvent.modifierFlags.contains(.command) }
 
     func press(_ day: DayKey, _ block: CalendarBlock, _ y: CGFloat) {

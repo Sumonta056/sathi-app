@@ -7,8 +7,14 @@ struct CalendarHoverTarget: Equatable {
     let rect: CGRect
     let radius: CGFloat
     let prefersLeft: Bool
+    var part = CalendarHoverPart.block
 
     var id: String { placed.block.id }
+}
+
+enum CalendarHoverPart: Equatable {
+    case block
+    case awayPill
 }
 
 @MainActor
@@ -31,7 +37,7 @@ final class CalendarHoverHost: ObservableObject {
     }
 
     func block(_ target: CalendarHoverTarget, inside isInside: Bool) {
-        inside.removeAll { $0.id == target.id }
+        inside.removeAll { $0.id == target.id && $0.part == target.part }
         if isInside { inside.append(target) }
         settle()
     }
@@ -47,6 +53,11 @@ final class CalendarHoverHost: ObservableObject {
         inside = []
         onCard = false
         shown = nil
+    }
+
+    func keep(ids: Set<String>) {
+        guard let id = shown?.id ?? inside.last?.id, !ids.contains(id) else { return }
+        close()
     }
 
     func settled() async {
@@ -71,6 +82,11 @@ final class CalendarHoverHost: ObservableObject {
             shown = next
         }
     }
+}
+
+@MainActor
+final class CalendarHoverBox {
+    private(set) lazy var host = CalendarHoverHost()
 }
 
 enum CalendarHoverPlacement {

@@ -7,15 +7,17 @@ struct CalendarHoverRun {
     let grid: CalendarGridActions
     let editTodo: (CalendarHoverTarget) -> Void
 
-    static func visible(_ info: CalendarHoverInfo, block: CalendarBlock, now: Date, canMerge: Bool) -> [CalendarHoverAction] {
-        if case .activity(_, running: true) = block.source { return [] }
-        return info.actions.filter { action in
-            switch action {
-            case .startAsActivity: return now < block.interval.end
-            case .merge: return canMerge
-            default: return true
-            }
-        }
+    static func visible(_ info: CalendarHoverInfo, canMerge: Bool) -> [CalendarHoverAction] {
+        info.actions.filter { $0 != .merge || canMerge }
+    }
+
+    private func delete(_ id: ActivityID) {
+        if !engine.deleteActivity(id) { grid.failed(Copywriter.activitiesDeleteFailed) }
+    }
+
+    func open(hidden id: String, _ target: CalendarHoverTarget) {
+        guard let hidden = target.placed.hidden.first(where: { $0.block.id == id }) else { return }
+        grid.press(target.day, hidden.block, target.rect.minY)
     }
 
     func run(_ action: CalendarHoverAction, _ target: CalendarHoverTarget) {
@@ -32,7 +34,7 @@ struct CalendarHoverRun {
         case (.merge, _):
             if let id = CalendarMergePick.id(of: block) { grid.toggle?(id) }
         case let (.delete, .activity(a, _)):
-            engine.deleteActivity(a.id)
+            delete(a.id)
         case let (.markDone, .todo(id)):
             engine.completeCalendarTodo(id)
         case (.openInReminders, _):

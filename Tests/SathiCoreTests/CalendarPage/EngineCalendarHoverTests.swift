@@ -10,6 +10,7 @@ struct EngineCalendarHoverTests {
         let h = EngineHarness.tracker(at: wed(10))
         h.useEvents([e])
         guard let block = h.pageDay.blocks.first(where: { $0.title == e.title }) else { return nil }
+        h.clock.now = e.start
         return h.engine.calendarHoverInfo(CalendarPlacedBlock(block: block, lane: 0, lanes: 1))
     }
 
@@ -33,6 +34,7 @@ struct EngineCalendarHoverTests {
             id: "x", title: e.title, interval: DateInterval(start: e.start, end: e.end), style: .event(colorHex: 0),
             source: .event(e), isAllDay: false, activityIDs: []
         )
+        h.clock.now = e.start
         let i = h.engine.calendarHoverInfo(CalendarPlacedBlock(block: block, lane: 0, lanes: 1))
         #expect(i.actions == [.startAsActivity, .openInCalendar])
         #expect(i.meta == nil)

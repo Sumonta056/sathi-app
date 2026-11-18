@@ -2,6 +2,7 @@ import Foundation
 
 extension Copywriter {
     package static let calendarHoverChildren = "Done in this event"
+    package static let calendarHoverAlsoHere = "Also here"
     package static let calendarHoverMetaSeparator = " · "
 
     package static func calendarHoverKind(_ k: CalendarHoverKind) -> String {

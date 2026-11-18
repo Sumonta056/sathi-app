@@ -36,7 +36,7 @@ struct CalendarDayColumn: View {
                 ForEach(showsAwayPill ? placed.filter(\.isBackdrop) : [], id: \.block.id) { p in
                     let y = math.y(for: p.displaySpan.start)
                     backdrop(p, y: y, layer: .label)
-                        .onHover { send(frames.target(p), $0) }
+                        .onHover { send(pill(frames.target(p)), $0) }
                         .frame(width: width)
                         .offset(x: UIMetrics.calendarColumnInset, y: y)
                 }
@@ -86,6 +86,12 @@ struct CalendarDayColumn: View {
             day: day, placed: placed, math: math, width: width, originX: originX,
             prefersLeft: weekSides && CalendarHoverPlacement.prefersLeft(day: day, calendar: calendar)
         )
+    }
+
+    private func pill(_ target: CalendarHoverTarget) -> CalendarHoverTarget {
+        var t = target
+        t.part = .awayPill
+        return t
     }
 
     private func send(_ target: CalendarHoverTarget, _ inside: Bool) {

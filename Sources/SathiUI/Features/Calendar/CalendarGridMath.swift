@@ -15,7 +15,20 @@ struct CalendarGridMath {
     var totalHeight: CGFloat { hourHeight * CGFloat(rows.count) }
 
     var minimumMinutes: Double {
+        Self.minimumMinutes(hourHeight: hourHeight)
+    }
+
+    static func minimumMinutes(rowMinutes: Int) -> Double {
+        minimumMinutes(hourHeight: UIMetrics.calendarHourHeight(rowMinutes: rowMinutes))
+    }
+
+    static func minimumMinutes(hourHeight: CGFloat) -> Double {
         Double(UIMetrics.calendarBlockMinTextHeight / hourHeight) * Timing.hour / Timing.minute
+    }
+
+    func placed(_ data: CalendarPageData, day: DayKey) -> [CalendarPlacedBlock] {
+        guard data.placedMinimumMinutes == minimumMinutes, let cached = data.placed[day] else { return place(data.blocks) }
+        return cached
     }
 
     func place(_ blocks: [CalendarBlock]) -> [CalendarPlacedBlock] {

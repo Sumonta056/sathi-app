@@ -1,10 +1,10 @@
 import Foundation
 
-package enum CalendarBlockHost {
+enum CalendarBlockHost {
     private static let lead = TimeInterval(Limits.calendarHostLeadMinutes) * Timing.minute
 
-    package static func hosts(_ items: [(block: CalendarBlock, span: DateInterval)]) -> [String: String] {
-        let events = items.filter { isHost($0.block) }.sorted { CalendarBlockLayout.precedes($0.span, $1.span) }
+    static func hosts(_ items: [(block: CalendarBlock, span: DateInterval)], excluding: Set<String> = []) -> [String: String] {
+        let events = items.filter { isHost($0.block) && !excluding.contains($0.block.id) }.sorted { CalendarBlockLayout.precedes($0.span, $1.span) }
         var result: [String: String] = [:]
         for item in items where isChild(item.block) {
             if let host = events.first(where: { fits(item.span, in: $0.span) }) { result[item.block.id] = host.block.id }

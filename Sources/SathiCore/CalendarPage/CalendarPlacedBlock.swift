@@ -1,6 +1,6 @@
 import Foundation
 
-package struct CalendarPlacedBlock: Equatable {
+package struct CalendarPlacedBlock: Equatable, Sendable {
     package var block: CalendarBlock
     package var span: DateInterval
     package var displaySpan: DateInterval
@@ -11,7 +11,7 @@ package struct CalendarPlacedBlock: Equatable {
     package var isRaised: Bool
     package var hostID: String?
     package var children: [CalendarPlacedBlock]
-    package var hiddenCount: Int
+    package var hidden: [CalendarPlacedBlock]
 
     package init(
         block: CalendarBlock,
@@ -32,6 +32,8 @@ package struct CalendarPlacedBlock: Equatable {
         isRaised = depth > 0
         self.hostID = hostID
         children = []
-        hiddenCount = 0
+        hidden = []
     }
+
+    package var hiddenCount: Int { hidden.count }
 }

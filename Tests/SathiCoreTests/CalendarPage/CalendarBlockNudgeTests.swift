@@ -83,4 +83,25 @@ struct CalendarBlockNudgeTests {
         let r = Lay.byID(CalendarBlockLayout.place([Lay.activity("a", 0, 8), Lay.activity("b", 8, 16)], within: column, minimumMinutes: 20))
         #expect(r["b"]?.displaySpan == Lay.span(20, 40))
     }
+
+    @Test func blocksNearTheColumnEndStayInsideTheColumn() {
+        let column = Lay.span(0, 60)
+        let blocks = [Lay.activity("a", 50, 52), Lay.activity("b", 52, 54), Lay.activity("c", 54, 56), Lay.activity("d", 56, 58)]
+        let placed = CalendarBlockLayout.place(blocks, within: column, minimumMinutes: 26)
+        #expect(placed.count == 4)
+        for p in placed {
+            #expect(p.displaySpan.start >= column.start)
+            #expect(p.displaySpan.start < column.end)
+            #expect(p.displaySpan.end <= column.end)
+        }
+    }
+
+    @Test func aChildNearTheColumnEndStaysInsideTheColumn() {
+        let column = Lay.span(0, 60)
+        let placed = CalendarBlockLayout.place([Lay.event("e", 40, 60), Lay.activity("a", 50, 58)], within: column, minimumMinutes: 26)
+        let child = placed.first?.children.first
+        #expect(child?.displaySpan.start ?? column.end < column.end)
+        #expect(child?.displaySpan.end ?? column.end <= column.end)
+        #expect(placed.first?.displaySpan.end ?? column.end <= column.end)
+    }
 }

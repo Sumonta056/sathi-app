@@ -5,6 +5,7 @@ struct CalendarHoverCard: View {
     let info: CalendarHoverInfo
     let actions: [CalendarHoverAction]
     let run: (CalendarHoverAction) -> Void
+    var pick: (String) -> Void = { _ in }
 
     private var timeLine: String {
         [info.time, info.length].compactMap { $0 }.joined(separator: Copywriter.calendarHoverMetaSeparator)
@@ -22,7 +23,8 @@ struct CalendarHoverCard: View {
                 .fixedSize(horizontal: false, vertical: true)
             line(timeLine, color: Night.text)
             if let meta = info.meta { line(meta, color: Night.muted) }
-            if let childrenTitle = info.childrenTitle { children(childrenTitle) }
+            if let childrenTitle = info.childrenTitle { rows(childrenTitle, info.children) }
+            if let alsoHereTitle = info.alsoHereTitle { rows(alsoHereTitle, info.alsoHere, picks: true) }
             if !actions.isEmpty { buttons }
         }
         .padding(UIMetrics.calendarHoverPadding)
@@ -41,20 +43,31 @@ struct CalendarHoverCard: View {
             .lineLimit(1)
     }
 
-    private func children(_ title: String) -> some View {
+    private func rows(_ title: String, _ items: [CalendarHoverChild], picks: Bool = false) -> some View {
         VStack(alignment: .leading, spacing: UIMetrics.calendarHoverChildGap) {
             Text(verbatim: title)
                 .font(Typography.tracker(UIMetrics.calendarHoverKindFont, .semibold))
                 .foregroundStyle(Night.faint)
-            ForEach(info.children) { child in
-                HStack(spacing: UIMetrics.calendarHoverButtonGap) {
-                    Text(verbatim: child.title).foregroundStyle(Night.text).lineLimit(1)
-                    Spacer(minLength: 0)
-                    Text(verbatim: child.time).foregroundStyle(Night.muted).lineLimit(1).fixedSize()
+            ForEach(items) { item in
+                if picks {
+                    Button { pick(item.id) } label: { row(item) }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("calendar.hover.also." + item.id)
+                } else {
+                    row(item)
                 }
-                .font(Typography.tracker(UIMetrics.calendarHoverChildFont, .medium))
             }
         }
+    }
+
+    private func row(_ item: CalendarHoverChild) -> some View {
+        HStack(spacing: UIMetrics.calendarHoverButtonGap) {
+            Text(verbatim: item.title).foregroundStyle(Night.text).lineLimit(1)
+            Spacer(minLength: 0)
+            Text(verbatim: item.time).foregroundStyle(Night.muted).lineLimit(1).fixedSize()
+        }
+        .font(Typography.tracker(UIMetrics.calendarHoverChildFont, .medium))
+        .contentShape(Rectangle())
     }
 
     private var buttons: some View {

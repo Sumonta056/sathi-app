@@ -27,7 +27,7 @@ Sources/
     Today/         TodayScreen, TodayShare, ComingUpList
     Quick/         QuickReminder, QuickPrefs, QuickTime, QuickActivity
     TimeBlock/     TimeBlock, TimeBlockLength, TimeBlockPrefs
-    CalendarPage/  CalendarPagePrefs, CalendarPageDay, CalendarPageRange, CalendarPageRead, CalendarBlock, CalendarBlockBuilder, CalendarDisplayJoin, CalendarBlockLayout, CalendarPageStats, CalendarMonthCell, CalendarEventForm, CalendarBlockBuilder+Todo, CalendarBlockHost, CalendarBlockNudge, CalendarHoverInfo
+    CalendarPage/  CalendarPagePrefs, CalendarPageDay, CalendarPageRange, CalendarPageRead, CalendarBlock, CalendarBlockBuilder, CalendarDisplayJoin, CalendarBlockLayout, CalendarPageStats, CalendarMonthCell, CalendarEventForm, CalendarBlockBuilder+Todo, CalendarBlockHost, CalendarBlockNudge, CalendarHoverInfo, CalendarEventStart
     Todos/         Todo, TodoDue (+Fields), TodoList, TodoDraft, TodoListDraft, TodoPrefs, TodoRules (+Color), TodoSnapshot, TodoSmartList, TodoSelection, TodoPageModel, TodoEditForm, TodoAddRule, TodoSaveResult, QuickTodos
     Tracker/       Activity, ActivityKind, ActivityCategory(+List), ActivityDraft, ActivityEdit, ActivityDay, AwayPlan, AwayPlaceList, ActivityMonth, RunningActivity, AwayPlace, AwaySpan, TrackerPrefs(+Hours), TrackerLiveState, PromptKind, PromptState, TrackerPromptState, TrackerPromptActions, TrackerCalendarInfo, TrackerNote(+State), TrackerEndOfDayState, EventMode, KeyShortcut, MonthKey, ManualMergeUndo, PromptTodo, ActivityPromptBuilder+Todo, Rules/ (AskTime, SwitchTimes, TrackerHours, RecentList, ActivityEditCheck, ActivityMerge, StoredRowsMerge, ManualMerge), Calendar/ (EventRules, EventCategoryRule, SpanCut)
     Constants/     Timing, Limits (+Todos, +TodosPage), StorageKeys, SoundName

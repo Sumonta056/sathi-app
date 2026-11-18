@@ -11,9 +11,10 @@ import ViewInspector
 struct CalendarHoverCardTests {
     typealias Fix = CalendarHoverFixtures
 
-    private func card(_ info: CalendarHoverInfo, run: @escaping (CalendarHoverAction) -> Void = { _ in
-    }) throws -> InspectableView<ViewType.ClassifiedView> {
-        try CalendarHoverCard(info: info, actions: info.actions, run: run).inspect()
+    private func card(
+        _ info: CalendarHoverInfo, run: @escaping (CalendarHoverAction) -> Void = { _ in }, pick: @escaping (String) -> Void = { _ in }
+    ) throws -> InspectableView<ViewType.ClassifiedView> {
+        try CalendarHoverCard(info: info, actions: info.actions, run: run, pick: pick).inspect()
     }
 
     private func expectButtons(_ sut: InspectableView<ViewType.ClassifiedView>, _ shown: [String], hidden: [String] = []) {
@@ -26,7 +27,7 @@ struct CalendarHoverCardTests {
     }
 
     @Test func eventShowsItsKindTitleTimeMetaAndButtons() throws {
-        let h = Fix.harness()
+        let h = Fix.harness(at: day(2026, 3, 4, 9, 10))
         let info = try h.engine.calendarHoverInfo(Fix.placed(h, "Standup"))
         let sut = try card(info)
         for line in ["Calendar event · Plan", "Standup", "Gmail Work"] {
@@ -37,7 +38,7 @@ struct CalendarHoverCardTests {
     }
 
     @Test func readOnlyEventHasNoEdit() throws {
-        let h = Fix.harness(events: [Fix.standup(repeating: true)])
+        let h = Fix.harness(at: day(2026, 3, 4, 9, 10), events: [Fix.standup(repeating: true)])
         let sut = try card(h.engine.calendarHoverInfo(Fix.placed(h, "Standup")))
         expectButtons(sut, ["Start as activity", "Open in Calendar"], hidden: ["Edit"])
     }
@@ -96,5 +97,19 @@ struct CalendarHoverCardTests {
         let sut = try card(h.engine.calendarHoverInfo(Fix.placed(h, "Standup")))
         let root = try sut.find(viewWithAccessibilityIdentifier: "calendar.hover.card")
         #expect(throws: (any Error).self) { try root.shadow() }
+    }
+
+    @Test func alsoHereListsTheHiddenBlocksAndATapPicksOne() throws {
+        var picked: [String] = []
+        let info = CalendarHoverInfo(
+            id: "x", kind: .event, kindLabel: "K", title: "T", time: "9:00", length: nil, meta: nil,
+            childrenTitle: nil, children: [], alsoHereTitle: "Also here",
+            alsoHere: [CalendarHoverChild(id: "r", title: "Review", time: "9:10 – 9:40 AM")], actions: []
+        )
+        let sut = try card(info, pick: { picked.append($0) })
+        #expect(throws: Never.self) { try sut.find(text: "Also here") }
+        #expect(throws: Never.self) { try sut.find(text: "9:10 – 9:40 AM") }
+        try sut.find(viewWithAccessibilityIdentifier: "calendar.hover.also.r").button().tap()
+        #expect(picked == ["r"])
     }
 }

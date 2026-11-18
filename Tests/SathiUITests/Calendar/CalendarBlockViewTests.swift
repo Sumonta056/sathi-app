@@ -24,7 +24,7 @@ struct CalendarBlockViewTests {
 
     private func placed(_ b: CalendarBlock, depth: Int = 0, hidden: Int = 0) -> CalendarPlacedBlock {
         var p = CalendarPlacedBlock(block: b, lane: 0, lanes: 1, depth: depth)
-        p.hiddenCount = hidden
+        p.hidden = Array(repeating: CalendarPlacedBlock(block: b, lane: 0, lanes: 1), count: hidden)
         return p
     }
 
@@ -112,6 +112,13 @@ struct CalendarBlockViewTests {
         #expect(look.stroke == Color(hex: 0x4285F4))
         #expect(look.fill == Night.card)
         #expect(look.text == Night.text)
+    }
+
+    @Test func awayIsAGreyFillWithNoOutline() {
+        let look = CalendarBlockLook.of(.away, categories: [])
+        #expect(look.fill == Night.calendarAway)
+        #expect(look.stroke == nil)
+        #expect(look.text == Night.muted)
     }
 
     @Test func raisedBlockHasTheRingAndFlatBlockHasNone() throws {

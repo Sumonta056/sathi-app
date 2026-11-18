@@ -8,7 +8,7 @@ extension Engine {
     }
 
     package func calendarHoverInfo(_ placed: CalendarPlacedBlock) -> CalendarHoverInfo {
-        var lookup = CalendarHoverLookup()
+        var lookup = CalendarHoverLookup(now: clock.now, trackerOn: data.prefs.tracker.isOn)
         switch placed.block.source {
         case let .event(e):
             let names = calendarPageRead?.readable ?? []

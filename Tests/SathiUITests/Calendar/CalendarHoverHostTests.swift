@@ -79,6 +79,37 @@ struct CalendarHoverHostTests {
         #expect(sut.shown?.id == write.id)
     }
 
+    @Test func movingFromTheAwayPillOntoItsStripesKeepsTheCardOpen() async {
+        let sut = host()
+        var pill = write
+        pill.part = .awayPill
+        sut.block(pill, inside: true)
+        await sut.settled()
+        sut.block(write, inside: true)
+        sut.block(pill, inside: false)
+        await sut.settled()
+        #expect(sut.shown?.id == write.id)
+        sut.block(write, inside: false)
+        await sut.settled()
+        #expect(sut.shown == nil)
+    }
+
+    @Test func newDataKeepsTheCardWhileItsBlockIsStillThere() async {
+        let sut = host()
+        sut.block(write, inside: true)
+        await sut.settled()
+        sut.keep(ids: [write.id, other().id])
+        #expect(sut.shown?.id == write.id)
+    }
+
+    @Test func newDataClosesTheCardWhenItsBlockIsGone() async {
+        let sut = host()
+        sut.block(write, inside: true)
+        await sut.settled()
+        sut.keep(ids: [other().id])
+        #expect(sut.shown == nil)
+    }
+
     @Test func closeHidesTheCardAtOnce() async {
         let sut = host()
         sut.block(write, inside: true)

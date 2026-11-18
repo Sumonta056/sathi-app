@@ -21,7 +21,9 @@ struct CalendarPage: View {
 
     var body: some View {
         let range = shown
-        let data = e.calendarAccess == .allowed ? memo.value(range, end: range.interval.end, engine: e) { $0.calendarPage($1) } : nil
+        let data = e.calendarAccess == .allowed ? memo.value(range, end: range.interval.end, engine: e) {
+            $0.calendarPage($1, minimumMinutes: CalendarGridMath.minimumMinutes(rowMinutes: $0.data.prefs.calendarPage.rowMinutes))
+        } : nil
         let sidePanelShown = layout.isNarrow ? narrowStats : e.data.prefs.calendarPage.sidePanelShown(for: range.kind)
         VStack(alignment: .leading, spacing: UIMetrics.reportsPageGap) {
             CalendarPageHeader(
@@ -57,7 +59,7 @@ struct CalendarPage: View {
         if let data {
             HStack(alignment: .top, spacing: UIMetrics.calendarSideGap) {
                 VStack(alignment: .leading, spacing: UIMetrics.calendarSideGap) {
-                    if range.kind == .day { strip(data) }
+                    if range.kind == .day { strip(data) } else if let mergeError { errorLine(mergeError) }
                     grid(range, data)
                 }
                 side(data, kind: range.kind)
@@ -88,6 +90,13 @@ struct CalendarPage: View {
             rows: CalendarMergePick.rows(data.blocks), calendar: e.rangeCalendar, canUndo: e.mergeUndo != nil,
             actions: .merging(e), selected: $selected, error: $mergeError
         )
+    }
+
+    private func errorLine(_ text: String) -> some View {
+        Text(verbatim: text)
+            .font(Typography.hint)
+            .foregroundStyle(Night.tracker)
+            .accessibilityIdentifier("calendar.page.error")
     }
 
     private var rowMinutes: Binding<Int> {

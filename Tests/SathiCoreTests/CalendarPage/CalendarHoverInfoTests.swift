@@ -9,7 +9,9 @@ struct CalendarHoverInfoTests {
     private let lookup = CalendarHoverLookup(
         calendarNames: ["c": "Work"],
         readOnlyEventIDs: ["ro"],
-        todoListNames: ["t1": "Groceries"]
+        todoListNames: ["t1": "Groceries"],
+        now: Lay.at(0),
+        trackerOn: true
     )
 
     private func info(_ placed: CalendarPlacedBlock) -> CalendarHoverInfo {

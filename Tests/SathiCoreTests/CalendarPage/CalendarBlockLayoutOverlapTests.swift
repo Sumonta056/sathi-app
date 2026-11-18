@@ -125,8 +125,9 @@ struct CalendarBlockLayoutOverlapTests {
         #expect(result["a"]?.depth == 0)
         #expect(result["b"]?.depth == 1)
         #expect(result["c"]?.depth == 2)
-        #expect(result["d"]?.depth == 2)
-        #expect(result["e"]?.depth == 2)
+        #expect(result["d"] == nil)
+        #expect(result["e"] == nil)
+        #expect(result["c"]?.hidden.map(\.block.id) == ["d", "e"])
     }
 
     @Test func chainOfLaterStartsCascades() {

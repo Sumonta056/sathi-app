@@ -78,21 +78,21 @@ struct CalendarHoverRunTests {
     @Test func startAsActivityIsHiddenForAPastEvent() throws {
         let h = Fix.harness(at: day(2026, 3, 4, 12))
         let placed = try Fix.placed(h, "Standup")
-        let shown = CalendarHoverRun.visible(h.engine.calendarHoverInfo(placed), block: placed.block, now: h.engine.now, canMerge: true)
+        let shown = CalendarHoverRun.visible(h.engine.calendarHoverInfo(placed), canMerge: true)
         #expect(shown == [.edit, .openInCalendar])
     }
 
     @Test func startAsActivityShowsWhileTheEventIsNotOver() throws {
         let h = Fix.harness(at: day(2026, 3, 4, 9, 29))
         let placed = try Fix.placed(h, "Standup")
-        let shown = CalendarHoverRun.visible(h.engine.calendarHoverInfo(placed), block: placed.block, now: h.engine.now, canMerge: true)
+        let shown = CalendarHoverRun.visible(h.engine.calendarHoverInfo(placed), canMerge: true)
         #expect(shown == [.startAsActivity, .edit, .openInCalendar])
     }
 
     @Test func mergeIsHiddenWhereTheViewCannotMerge() throws {
         let h = Fix.harness()
         let placed = try Fix.placed(h, "Write")
-        let shown = CalendarHoverRun.visible(h.engine.calendarHoverInfo(placed), block: placed.block, now: h.engine.now, canMerge: false)
+        let shown = CalendarHoverRun.visible(h.engine.calendarHoverInfo(placed), canMerge: false)
         #expect(shown == [.edit, .delete])
     }
 
@@ -104,6 +104,48 @@ struct CalendarHoverRunTests {
             source: .activity(a, running: true), isAllDay: false, activityIDs: []
         )
         let info = h.engine.calendarHoverInfo(CalendarPlacedBlock(block: block, lane: 0, lanes: 1))
-        #expect(CalendarHoverRun.visible(info, block: block, now: h.engine.now, canMerge: true).isEmpty)
+        #expect(CalendarHoverRun.visible(info, canMerge: true).isEmpty)
+    }
+
+    @Test func failedDeleteShowsTheErrorLine() {
+        let h = Fix.harness()
+        let spy = Fix.Spy()
+        let gone = Activity(text: "Gone", start: day(2026, 3, 4, 11), end: day(2026, 3, 4, 11, 30))
+        let block = CalendarBlock(
+            id: "g", title: "Gone", interval: gone.interval, style: .activity(category: nil),
+            source: .activity(gone, running: false), isAllDay: false, activityIDs: [gone.id]
+        )
+        Fix.runner(h, spy).run(.delete, Fix.target(CalendarPlacedBlock(block: block, lane: 0, lanes: 1)))
+        #expect(spy.failed == [Copywriter.activitiesDeleteFailed])
+    }
+
+    @Test func doneDeleteShowsNoErrorLine() throws {
+        let h = Fix.harness()
+        let spy = Fix.Spy()
+        try Fix.runner(h, spy).run(.delete, Fix.target(Fix.placed(h, "Write")))
+        #expect(spy.failed.isEmpty)
+    }
+
+    @Test func alsoHereRowRunsTheSameJobAsAClickOnThatBlock() throws {
+        let h = Fix.harness()
+        let spy = Fix.Spy()
+        var first = try Fix.placed(h, "Standup")
+        let hidden = try Fix.placed(h, "Write")
+        first.hidden = [hidden]
+        Fix.runner(h, spy).open(hidden: hidden.block.id, Fix.target(first))
+        #expect(spy.opened == [hidden.block.id])
+        #expect(spy.toggled.isEmpty)
+    }
+
+    @Test func commandClickOnAnAlsoHereRowPicksItForMerge() throws {
+        let h = Fix.harness()
+        let spy = Fix.Spy()
+        spy.command = true
+        var first = try Fix.placed(h, "Standup")
+        let hidden = try Fix.placed(h, "Write")
+        first.hidden = [hidden]
+        Fix.runner(h, spy).open(hidden: hidden.block.id, Fix.target(first))
+        #expect(spy.toggled == [Fix.write.id])
+        #expect(spy.opened.isEmpty)
     }
 }

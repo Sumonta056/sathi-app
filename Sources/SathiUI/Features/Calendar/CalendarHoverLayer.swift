@@ -31,10 +31,13 @@ struct CalendarHoverLayer: View {
     private func card(_ t: CalendarHoverTarget, width: CGFloat) -> some View {
         let info = e.calendarHoverInfo(t.placed)
         let run = CalendarHoverRun(engine: e, grid: grid) { host.todoEdit = $0 }
-        let shown = CalendarHoverRun.visible(info, block: t.placed.block, now: e.now, canMerge: grid.toggle != nil)
+        let shown = CalendarHoverRun.visible(info, canMerge: grid.toggle != nil)
         return CalendarHoverCard(info: info, actions: shown) { action in
             host.close()
             run.run(action, t)
+        } pick: { id in
+            host.close()
+            run.open(hidden: id, t)
         }
         .onHover { host.card($0) }
         .offset(
