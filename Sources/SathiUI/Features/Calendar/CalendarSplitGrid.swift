@@ -17,6 +17,11 @@ struct CalendarSplitGrid: View {
     private var hover: CalendarHoverHost { box.host }
     private var grid: CalendarGridLayout { data.grid ?? CalendarGridLayout(rows: [], days: [:], height: 0, pointsPerMinute: 0) }
 
+    static func ringRadius(_ laid: CalendarLaidBlock, kind: ReportRange) -> CGFloat {
+        if laid.isTodo { return UIMetrics.calendarTodoPillHeight / 2 }
+        return kind == .day ? UIMetrics.calendarDayCardRadius : UIMetrics.calendarWeekBlockRadius
+    }
+
     static func column(total: CGFloat, days: Int) -> CGFloat {
         max(0, total - UIMetrics.calendarHourLabelWidth) / CGFloat(max(1, days))
     }
@@ -110,7 +115,7 @@ struct CalendarSplitGrid: View {
         CalendarHoverTarget(
             day: day, laid: laid, among: among,
             rect: rect.offsetBy(dx: x + UIMetrics.calendarHourLabelWidth, dy: 0),
-            radius: laid.isTodo ? UIMetrics.calendarTodoPillHeight / 2 : UIMetrics.calendarWeekBlockRadius,
+            radius: Self.ringRadius(laid, kind: range.kind),
             prefersLeft: range.kind == .week && CalendarHoverPlacement.prefersLeft(day: day, calendar: calendar)
         )
     }

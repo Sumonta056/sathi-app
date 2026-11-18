@@ -75,4 +75,20 @@ struct CalendarSplitGridTests {
         let sut = try grid(Fix.dayRange(), Fix.grid([:])).inspect()
         #expect(throws: Never.self) { try sut.find(CalendarDayLinks.self) }
     }
+
+    @Test func hoverRingUsesTheDayCardRadiusInDay() {
+        let laid = Fix.laid(Fix.event("Scrum", Fix.at(10), Fix.at(11)), top: 0, bottom: 60)
+        #expect(CalendarSplitGrid.ringRadius(laid, kind: .day) == UIMetrics.calendarDayCardRadius)
+    }
+
+    @Test func hoverRingUsesTheWeekBlockRadiusInWeek() {
+        let laid = Fix.laid(Fix.event("Scrum", Fix.at(10), Fix.at(11)), top: 0, bottom: 60)
+        #expect(CalendarSplitGrid.ringRadius(laid, kind: .week) == UIMetrics.calendarWeekBlockRadius)
+    }
+
+    @Test(arguments: [ReportRange.day, .week])
+    func hoverRingOnAToDoPillIsRound(_ kind: ReportRange) {
+        let laid = Fix.laid(Fix.todo("Pay rent", Fix.at(15)), top: 0, bottom: 22)
+        #expect(CalendarSplitGrid.ringRadius(laid, kind: kind) == UIMetrics.calendarTodoPillHeight / 2)
+    }
 }
