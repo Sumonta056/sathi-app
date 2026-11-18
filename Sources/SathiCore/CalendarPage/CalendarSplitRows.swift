@@ -23,9 +23,11 @@ enum CalendarSplitRows {
             let x = items[i]
             guard let r = row(holding: x.from, in: rows), !rows[r].isFold else { continue }
             let column = Column(day: x.day, half: x.laid.half)
-            let above = (columns[column] ?? []).map { items[$0] }.filter { pushes($0.laid, x.laid) }
+            let placed = (columns[column] ?? []).map { items[$0] }
+            let above = placed.filter { pushes($0.laid, x.laid) }
             let floor = above.map { bottom(of: $0, rows: rows, metrics: m) + m.gap }.max() ?? -Double.infinity
-            let top = max(y(x.from, rows, m), floor)
+            let parent = placed.filter { isParent($0.laid, of: x.laid) }.map(\.laid.top).max() ?? -Double.infinity
+            let top = max(y(x.from, rows, m), floor, parent)
             items[i].laid.top = top
             grow(&rows, at: r, by: top + m.titleRoom - rows[r].bottom)
             columns[column, default: []].append(i)
@@ -59,6 +61,10 @@ enum CalendarSplitRows {
 
     private static func pushes(_ above: CalendarLaidBlock, _ x: CalendarLaidBlock) -> Bool {
         !CalendarSplitLanes.overlaps(above.span, x.span) && sharesWidth(above, x)
+    }
+
+    private static func isParent(_ p: CalendarLaidBlock, of x: CalendarLaidBlock) -> Bool {
+        x.depth > 0 && p.depth == x.depth - 1 && CalendarSplitLanes.overlaps(p.span, x.span)
     }
 
     private static func bottom(of item: Item, rows: [CalendarGridRow], metrics m: CalendarLayoutMetrics) -> Double {

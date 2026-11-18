@@ -90,4 +90,16 @@ struct CalendarSplitRowsTests {
         #expect(SplitCheck.problems(grid, metrics: Split.weekFlat) == [])
         #expect((grid.rowAt(9)?.height ?? 0) > 60)
     }
+
+    @Test func raisedItemNeverSitsAbovePushedParent() {
+        let grid = Split.layout([
+            Split.activity("p0", "09:40", "09:50"), Split.activity("p1", "09:45", "09:50"),
+            Split.activity("a", "10:00", "12:00"), Split.activity("r", "10:30", "11:00"), Split.activity("r2", "10:31", "10:50")
+        ], metrics: Split.metrics(minHeight: 80, awayMinHeight: 80, gap: 4, folds: false))
+        let a = Split.laid(grid, "a")
+        let r = Split.laid(grid, "r")
+        #expect(r?.depth == 1)
+        #expect(a.map { $0.top > Split.y(grid, "10:00") ?? 0 } == true)
+        #expect((r?.top ?? 0) >= (a?.top ?? .infinity))
+    }
 }
