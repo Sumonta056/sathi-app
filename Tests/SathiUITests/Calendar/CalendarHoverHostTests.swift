@@ -18,10 +18,10 @@ struct CalendarHoverHostTests {
         CalendarHoverHost { waits.asked.append($0) }
     }
 
-    private var write: CalendarHoverTarget { Fix.target(CalendarPlacedBlock(block: Fix.away(), lane: 0, lanes: 1)) }
+    private var write: CalendarHoverTarget { Fix.target(Fix.laid(Fix.away())) }
 
     private func other() -> CalendarHoverTarget {
-        Fix.target(CalendarPlacedBlock(block: Fix.todo(), lane: 0, lanes: 1))
+        Fix.target(Fix.laid(Fix.todo()))
     }
 
     @Test func pointerOnABlockOpensTheCardAfterTheOpenDelay() async {
@@ -77,21 +77,6 @@ struct CalendarHoverHostTests {
         sut.block(child, inside: false)
         await sut.settled()
         #expect(sut.shown?.id == write.id)
-    }
-
-    @Test func movingFromTheAwayPillOntoItsStripesKeepsTheCardOpen() async {
-        let sut = host()
-        var pill = write
-        pill.part = .awayPill
-        sut.block(pill, inside: true)
-        await sut.settled()
-        sut.block(write, inside: true)
-        sut.block(pill, inside: false)
-        await sut.settled()
-        #expect(sut.shown?.id == write.id)
-        sut.block(write, inside: false)
-        await sut.settled()
-        #expect(sut.shown == nil)
     }
 
     @Test func newDataKeepsTheCardWhileItsBlockIsStillThere() async {

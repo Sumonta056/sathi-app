@@ -39,7 +39,8 @@ struct CalendarRowZoomTests {
 
     @Test func theGridUsesTheSavedStep() throws {
         let h = EngineHarness(at: day(2026, 3, 4, 12)) { $0.prefs.calendarPage.rowMinutes = 15 }
-        let grid = try page(h, .day).find(CalendarTimeGrid.self).actualView()
-        #expect(grid.rowMinutes == 15)
+        let grid = try page(h, .day).find(CalendarSplitGrid.self).actualView()
+        #expect(grid.data.grid?.rows.count == 96)
+        #expect(grid.data.grid?.rows.first?.endMinute == 15)
     }
 }

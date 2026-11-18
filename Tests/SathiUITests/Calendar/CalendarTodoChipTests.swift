@@ -29,10 +29,12 @@ struct CalendarTodoChipTests {
 
     private func column(_ h: EngineHarness, _ block: CalendarBlock) throws -> InspectableView<ViewType.ClassifiedView> {
         let key = DayKey(day(2026, 3, 4, 12), calendar: h.engine.rangeCalendar)
-        let math = CalendarGridMath(day: key, calendar: h.engine.rangeCalendar, hourHeight: UIMetrics.calendarHourHeight)
-        let column = CalendarDayColumn(
-            day: key, placed: CalendarBlockLayout.place([block], within: math.interval), texts: [:], math: math,
-            now: nil, categories: [], calendar: h.engine.rangeCalendar
+        var laid = CalendarLaidBlock(block: block, span: block.interval, half: .plan)
+        laid.top = 540
+        laid.bottom = 540
+        let grid = CalendarGridLayout(rows: [], days: [key: [laid]], height: 1440, pointsPerMinute: 1)
+        let column = CalendarSplitColumn(
+            day: key, kind: .day, blocks: [laid], grid: grid, width: 500, now: nil, calendar: h.engine.rangeCalendar, categories: []
         )
         return try hosted(column, h).inspect()
     }

@@ -110,17 +110,19 @@ struct CalendarPageEditTests {
 
     @Test func aTapOnABlockCallsTheBlockAction() throws {
         let h = harness()
-        let data = h.engine.calendarPage(range(h, .day))
+        let data = h.engine.calendarPage(range(h, .day), metrics: CalendarSplitMetrics.metrics(kind: .day, rowMinutes: 60, narrow: false))
         let key = DayKey(day(2026, 3, 4, 12), calendar: h.engine.rangeCalendar)
-        let math = CalendarGridMath(day: key, calendar: h.engine.rangeCalendar, hourHeight: UIMetrics.calendarHourHeight)
+        let grid = try #require(data.grid)
+        let blocks = grid.days[key] ?? []
+        let standup = try #require(blocks.first { $0.block.title == "Standup" })
         var tapped: [String] = []
         var actions = CalendarGridActions()
         actions.block = { _, b, _ in tapped.append(b.title) }
-        let column = CalendarDayColumn(
-            day: key, placed: CalendarBlockLayout.place(data.blocks, within: math.interval), texts: data.texts, math: math,
-            now: nil, categories: ActivityCategory.defaults, calendar: h.engine.rangeCalendar, actions: actions
+        let column = CalendarSplitColumn(
+            day: key, kind: .day, blocks: blocks, grid: grid, width: 500, now: nil, calendar: h.engine.rangeCalendar,
+            categories: ActivityCategory.defaults, actions: actions
         )
-        try column.inspect().find(ViewType.Button.self) { try $0.labelView().find(text: "Standup") != nil }.tap()
+        try column.inspect().find(viewWithAccessibilityIdentifier: "calendar.split.block." + standup.id).callOnTapGesture()
         #expect(tapped == ["Standup"])
     }
 }

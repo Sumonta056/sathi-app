@@ -3,18 +3,18 @@ import SwiftUI
 
 struct CalendarHoverTarget: Equatable {
     let day: DayKey
-    let placed: CalendarPlacedBlock
+    let laid: CalendarLaidBlock
+    let among: [CalendarLaidBlock]
     let rect: CGRect
     let radius: CGFloat
     let prefersLeft: Bool
-    var part = CalendarHoverPart.block
 
-    var id: String { placed.block.id }
-}
+    var id: String { laid.id }
 
-enum CalendarHoverPart: Equatable {
-    case block
-    case awayPill
+    func row(_ id: String) -> CalendarBlock? {
+        let all = ([laid] + among).flatMap { [$0] + $0.hidden }
+        return all.first { $0.id == id }?.block
+    }
 }
 
 @MainActor
@@ -37,7 +37,7 @@ final class CalendarHoverHost: ObservableObject {
     }
 
     func block(_ target: CalendarHoverTarget, inside isInside: Bool) {
-        inside.removeAll { $0.id == target.id && $0.part == target.part }
+        inside.removeAll { $0.id == target.id }
         if isInside { inside.append(target) }
         settle()
     }

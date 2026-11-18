@@ -29,8 +29,8 @@ extension CalendarPage {
         }
     }
 
-    func gridActions(kind: ReportRange) -> CalendarGridActions {
-        .page(kind: kind, engine: e, focus: $focus, selected: $selected, error: $mergeError)
+    func gridActions() -> CalendarGridActions {
+        .page(engine: e, focus: $focus, failure: $failure)
     }
 
     @ViewBuilder func side(_ data: CalendarPageData, kind: ReportRange) -> some View {
