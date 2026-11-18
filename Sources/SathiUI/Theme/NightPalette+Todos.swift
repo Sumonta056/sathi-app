@@ -9,6 +9,9 @@ extension Night {
     static let todoField = Color(hex: 0x1A2233)
     static let todoOverdue = tracker
     static let todoDueToday = spark
+    static let todoLink = waterLine
+
+    static func todoSectionRule(_ list: Color) -> Color { list.opacity(0.28) }
 
     static func todoList(_ hex: String) -> Color {
         guard let c = TodoMapping.rgb(fromHex: hex) else { return muted }

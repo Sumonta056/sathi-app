@@ -26,6 +26,7 @@ extension Copywriter {
     package static let todoDelete = "Delete"
     package static let todoKeep = "Keep"
     package static let todoEditing = "Editing"
+    package static let todoEdit = "Edit"
     package static let todoListName = "Name"
     package static let todoListColor = "Color"
     package static let todoListAccount = "Account"

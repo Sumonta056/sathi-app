@@ -14,54 +14,55 @@ struct TodoRow: View {
     }
 
     var body: some View {
-        HStack(alignment: .top, spacing: UIMetrics.todoRowSpacing) {
+        HStack(alignment: .center, spacing: UIMetrics.todoRowSpacing) {
             TodoTick(isDone: todo.isDone, canEdit: canEdit) {
                 let engine = e
                 let id = todo.id
                 let done = !todo.isDone
                 Task { await engine.setTodoDone(id, done) }
             }
-            Button(action: onSelect) {
-                VStack(alignment: .leading, spacing: UIMetrics.todoRowTextSpacing) {
-                    Text(verbatim: todo.title)
-                        .font(Typography.tracker(UIMetrics.todoRowTitleFont, .medium))
-                        .foregroundStyle(todo.isDone ? Night.muted : Night.text)
-                        .strikethrough(todo.isDone)
-                    meta
-                }
+            .overlay { if !canEdit { Color.clear.contentShape(Rectangle()).onTapGesture {} } }
+            Text(Self.attributedTitle(TodoTitlePart.parts(of: todo.title), linked: !todo.isDone))
+                .font(Typography.tracker(UIMetrics.todoRowTitleFont, .medium))
+                .foregroundStyle(todo.isDone ? Night.muted : Night.text)
+                .strikethrough(todo.isDone)
+                .tint(Night.todoLink)
+                .environment(\.openURL, Self.openAction(e))
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .contentShape(Rectangle())
-                .accessibilityIdentifier("todos.row.\(todo.id)")
-            }
-            .buttonStyle(.plain)
+                .accessibilityIdentifier("todos.row.title.\(todo.id)")
+            TodoRowMeta(todo: todo)
         }
         .padding(UIMetrics.todoRowPadding)
+        .contentShape(Rectangle())
+        .onTapGesture(perform: onSelect)
+        .accessibilityElement(children: .contain)
+        .accessibilityAddTraits(.isButton)
+        .accessibilityAction(named: Text(verbatim: Copywriter.todoEdit), onSelect)
+        .accessibilityIdentifier("todos.row.\(todo.id)")
         .overlay(alignment: .bottom) {
             Rectangle().fill(Night.todoRowLine).frame(height: UIMetrics.dividerHeight)
         }
     }
 
-    @ViewBuilder private var meta: some View {
-        if todo.due != nil || todo.repeats {
-            HStack(spacing: UIMetrics.todoChipSpacing) {
-                if let due = todo.due {
-                    HStack(spacing: 0) {
-                        Text(verbatim: Copywriter.todoDueText(due, now: e.now, calendar: e.calendar))
-                            .foregroundStyle(dueColor)
-                    }
-                    .accessibilityIdentifier("todos.row.due.\(todo.id)")
-                }
-                if todo.repeats {
-                    Text(verbatim: Copywriter.todoRepeats).foregroundStyle(Night.muted)
-                }
+    static func attributedTitle(_ parts: [TodoTitlePart], linked: Bool = true) -> AttributedString {
+        parts.reduce(into: AttributedString()) { out, part in
+            switch part {
+            case let .text(s):
+                out += AttributedString(s)
+            case let .link(label, url):
+                var piece = AttributedString(label)
+                guard linked else { return out += piece }
+                piece.link = url
+                piece.underlineStyle = .single
+                out += piece
             }
-            .font(Typography.tracker(UIMetrics.todoRowMetaFont, .semibold))
         }
     }
 
-    private var dueColor: Color {
-        if TodoRules.isOverdue(todo, now: e.now, calendar: e.calendar) { return Night.todoOverdue }
-        if TodoRules.isDueToday(todo, now: e.now, calendar: e.calendar) { return Night.todoDueToday }
-        return Night.muted
+    static func openAction(_ e: Engine) -> OpenURLAction {
+        OpenURLAction { url in
+            e.openTodoLink(url)
+            return .handled
+        }
     }
 }

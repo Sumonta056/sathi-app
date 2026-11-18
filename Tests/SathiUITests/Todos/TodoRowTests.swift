@@ -70,11 +70,13 @@ struct TodoRowTests {
         #expect(h.todos.calls.isEmpty)
     }
 
-    @Test func tapOnTheRowCallsOnSelect() async throws {
+    @Test func tapOnTheRowCallsOnSelectWithoutAButton() async throws {
         let h = await EngineHarness.pageFixture()
         var selected = 0
         let sut = try row(h, makeTodo("a"), onSelect: { selected += 1 })
-        try sut.find(viewWithAccessibilityIdentifier: "todos.row.a").find(ViewType.Button.self, relation: .parent).tap()
+        let body = try sut.find(viewWithAccessibilityIdentifier: "todos.row.a")
+        #expect((try? body.find(ViewType.Button.self, relation: .parent)) == nil)
+        try body.callOnTapGesture()
         #expect(selected == 1)
     }
 
