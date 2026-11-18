@@ -17,9 +17,10 @@ struct CalendarSplitGridTests {
 
     @Test func weekHeadersShowWeekdayDayAndMonth() throws {
         let sut = try grid(Fix.weekRange(3), Fix.grid([:])).inspect()
-        for text in ["Sun 15 Nov", "Mon 16 Nov", "Tue 17 Nov"] {
+        for text in ["Sun", "15", "Mon", "16", "Tue", "17"] {
             #expect(throws: Never.self) { try sut.find(text: text) }
         }
+        #expect(sut.findAll(ViewType.Text.self, where: { try $0.string() == "Nov" }).count == 3)
     }
 
     @Test func weekHasActualAndPlanLabelsUnderEachDay() throws {

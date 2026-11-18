@@ -13,10 +13,7 @@ struct CalendarWeekHeaders: View {
             Color.clear.frame(width: UIMetrics.calendarHourLabelWidth)
             ForEach(days, id: \.self) { day in
                 VStack(spacing: 0) {
-                    Text(verbatim: Copywriter.calendarWeekDayHeader(day, calendar: calendar))
-                        .font(Typography.tracker(UIMetrics.calendarWeekHeaderFont, .bold))
-                        .foregroundStyle(day == today ? Night.tracker : Night.text)
-                        .lineLimit(1)
+                    dayTitle(day)
                         .frame(maxWidth: .infinity, minHeight: UIMetrics.calendarWeekHeaderHeight, maxHeight: UIMetrics.calendarWeekHeaderHeight)
                     HStack(spacing: 0) {
                         label(Copywriter.calendarActualLabel).frame(width: halves.actualWidth)
@@ -31,6 +28,33 @@ struct CalendarWeekHeaders: View {
     }
 
     static let height = UIMetrics.calendarWeekHeaderHeight + UIMetrics.calendarSplitLabelHeight
+
+    private func dayTitle(_ day: DayKey) -> some View {
+        let isToday = day == today
+        return HStack(spacing: UIMetrics.calendarWeekHeaderGap) {
+            Text(verbatim: Copywriter.calendarWeekday(day, calendar: calendar))
+            number(day, isToday: isToday)
+            Text(verbatim: Copywriter.calendarMonthShort(day, calendar: calendar))
+        }
+        .font(Typography.tracker(UIMetrics.calendarWeekHeaderFont, .bold))
+        .foregroundStyle(isToday ? Night.tracker : Night.label)
+        .lineLimit(1)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(Copywriter.calendarWeekDayHeader(day, calendar: calendar))
+    }
+
+    @ViewBuilder private func number(_ day: DayKey, isToday: Bool) -> some View {
+        let text = Text(verbatim: Copywriter.calendarDayNumber(day, calendar: calendar))
+        if isToday {
+            text
+                .foregroundStyle(Night.calendarTodayNumber)
+                .frame(width: UIMetrics.calendarWeekTodayCircle, height: UIMetrics.calendarWeekTodayCircle)
+                .background(Circle().fill(Night.tracker))
+                .accessibilityIdentifier("calendar.week.todayNumber")
+        } else {
+            text.foregroundStyle(Night.text)
+        }
+    }
 
     private func label(_ text: String) -> some View {
         Text(verbatim: text)

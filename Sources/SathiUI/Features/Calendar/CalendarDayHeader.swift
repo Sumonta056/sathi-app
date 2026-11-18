@@ -36,10 +36,17 @@ struct CalendarDayHeader: View {
         return a.kind != .away
     }
 
+    static func parts(_ text: String) -> (String, String) {
+        guard let r = text.range(of: Copywriter.calendarDayHeaderSeparator) else { return (text, "") }
+        return (String(text[..<r.lowerBound]), String(text[r.lowerBound...]))
+    }
+
     private func label(_ text: String) -> some View {
-        Text(verbatim: text)
-            .font(Typography.tracker(UIMetrics.calendarDaySplitHeaderFont, .bold))
-            .foregroundStyle(Night.muted)
-            .lineLimit(1)
+        let (word, rest) = Self.parts(text)
+        return (
+            Text(verbatim: word).font(Typography.tracker(UIMetrics.calendarDaySplitHeaderFont, .heavy)).foregroundColor(Night.text)
+                + Text(verbatim: rest).font(Typography.tracker(UIMetrics.calendarDaySplitHeaderFont, .semibold)).foregroundColor(Night.muted)
+        )
+        .lineLimit(1)
     }
 }

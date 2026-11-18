@@ -8,9 +8,13 @@ extension Copywriter {
     private static let calendarMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
     package static func calendarWeekDayHeader(_ day: DayKey, calendar: Calendar) -> String {
+        calendarWeekday(day, calendar: calendar) + " " + calendarDayNumber(day, calendar: calendar) + " "
+            + calendarMonthShort(day, calendar: calendar)
+    }
+
+    package static func calendarMonthShort(_ day: DayKey, calendar: Calendar) -> String {
         let g = Calendar.gregorian(in: calendar.timeZone)
-        let month = g.component(.month, from: day.start(in: g)) - 1
-        return calendarWeekday(day, calendar: calendar) + " " + calendarDayNumber(day, calendar: calendar) + " " + calendarMonthNames[month]
+        return calendarMonthNames[g.component(.month, from: day.start(in: g)) - 1]
     }
 
     package static func calendarWeekDaysOption(_ n: Int) -> String {
