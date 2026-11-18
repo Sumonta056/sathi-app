@@ -46,15 +46,15 @@ struct CalendarBlockBuilderTests {
         if case .activity = blocks[0].source {} else { Issue.record("expected activity block") }
     }
 
-    @Test func activityWithSourceEventIDStartingInsideHidesIt() {
+    @Test func activityWithSourceEventIDKeepsTheEventInPlan() {
         let blocks = build([event("m1", length: 60)], [activity(at: 10, sourceEventID: "m1")])
-        #expect(blocks.count == 1)
+        #expect(blocks.count == 2)
     }
 
     @Test func repeatingOccurrenceOnAnotherDayStillShows() {
         let other = event("m1", at: 24 * 60)
         let blocks = build([event("m1"), other], [activity(sourceEventID: "m1")])
-        #expect(blocks.count == 2)
+        #expect(blocks.count == 3)
         #expect(blocks.contains { $0.source == .event(other) })
     }
 
@@ -82,8 +82,8 @@ struct CalendarBlockBuilderTests {
         #expect(blocks[0].source == .activity(run, running: true))
     }
 
-    @Test func runningActivityAlsoHidesItsEvent() {
+    @Test func runningActivityKeepsItsSourceEvent() {
         let run = activity("Now", sourceEventID: "e1")
-        #expect(build([event("e1")], [], running: run).count == 1)
+        #expect(build([event("e1")], [], running: run).count == 2)
     }
 }

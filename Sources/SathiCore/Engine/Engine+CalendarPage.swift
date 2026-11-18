@@ -10,6 +10,7 @@ package struct CalendarPageData: Equatable, Sendable {
     package var placed: [DayKey: [CalendarPlacedBlock]] = [:]
     package var placedMinimumMinutes: Double = 0
     package var placedNarrow: Set<CalendarLaneShape> = []
+    package var grid: CalendarGridLayout?
 
     package var shownIDs: Set<String> {
         Set(blocks.map(\.id)).union(placed.values.joined().flatMap { [$0] + $0.children + $0.hidden }.map(\.block.id))
