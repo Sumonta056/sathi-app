@@ -112,4 +112,16 @@ struct CalendarBlockLayoutDisplayTests {
         #expect(placed["a"]?.lanes == 1)
         #expect(placed["a"]?.depth == 0)
     }
+
+    @Test func aToDoTakesNoLaneAndNarrowsNoBlock() {
+        let todo = CalendarBlock(
+            id: "t", title: "t", interval: Lay.span(10, 10), style: .todo(colorHex: 0),
+            source: .todo("t"), isAllDay: false, activityIDs: []
+        )
+        let placed = Lay.byID(CalendarBlockLayout.place([Lay.event("e", 0, 60), todo], minimumMinutes: 26))
+        #expect(placed["e"]?.lanes == 1)
+        #expect(placed["e"]?.hiddenCount == 0)
+        #expect(placed["t"]?.span == Lay.span(10, 10))
+        #expect(placed["t"]?.displaySpan == Lay.span(10, 10))
+    }
 }

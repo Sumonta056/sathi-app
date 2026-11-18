@@ -55,7 +55,7 @@ extension Engine {
     private func text(of b: CalendarBlock) -> CalendarBlockText {
         let i = b.interval
         return CalendarBlockText(
-            time: Copywriter.trackerSpan(i.start, i.end, calendar: calendar),
+            time: Fmt.shortRange(i.start, i.end, calendar: calendar),
             spoken: Copywriter.calendarBlockSpoken(b.title, i.start, i.end, calendar: calendar)
         )
     }

@@ -66,7 +66,7 @@ struct EngineCalendarPageReadTests {
         let data = h.engine.calendarPage(today(h))
         let id = data.blocks[0].id
         let cal = h.engine.calendar
-        #expect(data.texts[id]?.time == Copywriter.trackerSpan(day(2026, 3, 4, 9, 30), day(2026, 3, 4, 10, 30), calendar: cal))
+        #expect(data.texts[id]?.time == Fmt.shortRange(day(2026, 3, 4, 9, 30), day(2026, 3, 4, 10, 30), calendar: cal))
         #expect(data.texts[id]?.spoken == Copywriter.calendarBlockSpoken("e1", day(2026, 3, 4, 9, 30), day(2026, 3, 4, 10, 30), calendar: cal))
     }
 }

@@ -53,4 +53,44 @@ struct CalendarPageGridTests {
         let sut = try page(.month, harness())
         #expect(throws: Never.self) { try sut.find(viewWithAccessibilityIdentifier: "calendar.month.today") }
     }
+
+    private func tracked() -> EngineHarness {
+        let rows = [
+            Activity(text: "Notes", category: "Coding", start: day(2026, 3, 4, 9, 5), end: day(2026, 3, 4, 9, 30)),
+            Activity(text: "Build", category: "Coding", start: day(2026, 3, 4, 10), end: day(2026, 3, 4, 11)),
+            Activity(text: "Short", category: "Coding", start: day(2026, 3, 4, 11), end: day(2026, 3, 4, 11, 8)),
+            Activity(kind: .away, text: "Away", start: day(2026, 3, 4, 13), end: day(2026, 3, 4, 13, 30))
+        ]
+        let h = EngineHarness(at: day(2026, 3, 4, 12), activities: InMemoryActivityStore(activities: rows)) { $0.prefs.tracker.isOn = true }
+        h.calendarWriter.eventsValue = [
+            CalendarEventInfo(id: "s", title: "Standup", start: day(2026, 3, 4, 9), end: day(2026, 3, 4, 10), calendarID: "work")
+        ]
+        return h
+    }
+
+    private func column(_ kind: ReportRange, _ h: EngineHarness) throws -> CalendarDayColumn {
+        let key = DayKey(day(2026, 3, 4), calendar: h.engine.rangeCalendar)
+        return try page(kind, h).find(CalendarDayColumn.self, where: { try $0.actualView().day == key }).actualView()
+    }
+
+    private func awayLabels(_ kind: ReportRange, _ h: EngineHarness) throws -> Int {
+        try page(kind, h).findAll(where: { (try? $0.accessibilityIdentifier()) == "calendar.awayBackdrop.label" }).count
+    }
+
+    @Test func dayAndWeekPlaceTheSameBlocks() throws {
+        let h = tracked()
+        let day = try column(.day, h).placed
+        let week = try column(.week, h).placed
+        #expect(!day.isEmpty)
+        #expect(day == week)
+        #expect(day.contains { !$0.children.isEmpty })
+    }
+
+    @Test func weekAwayIsStripesWithNoLabel() throws {
+        #expect(try awayLabels(.week, tracked()) == 0)
+    }
+
+    @Test func dayAwayKeepsThePill() throws {
+        #expect(try awayLabels(.day, tracked()) == 1)
+    }
 }

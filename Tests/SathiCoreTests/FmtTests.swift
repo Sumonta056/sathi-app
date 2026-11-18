@@ -1,5 +1,6 @@
 import Foundation
 import SathiCore
+import SathiTestSupport
 import Testing
 
 @Suite("Fmt")
@@ -33,5 +34,19 @@ struct FmtTests {
     @Test(arguments: [(0.1, 0.0), (0.13, 0.25), (1.3, 1.25), (1.4, 1.5)])
     func roundToGlassStep(_ value: Double, _ expected: Double) {
         #expect(Fmt.roundToGlassStep(value) == expected)
+    }
+
+    @Test(arguments: [
+        ((17, 0), (18, 30), "5:00 – 6:30 PM"),
+        ((9, 5), (9, 13), "9:05 – 9:13 AM"),
+        ((11, 30), (12, 30), "11:30 AM – 12:30 PM"),
+        ((23, 30), (24, 30), "11:30 PM – 12:30 AM"),
+        ((12, 0), (13, 0), "12:00 – 1:00 PM")
+    ])
+    func shortRange(_ from: (Int, Int), _ to: (Int, Int), _ expected: String) {
+        let z = FixedZone.berlin
+        let start = z.date(2026, 11, 12, from.0, from.1)
+        let end = z.date(2026, 11, 12, 0).addingTimeInterval(TimeInterval((to.0 * 60 + to.1) * 60))
+        #expect(Fmt.shortRange(start, end, calendar: z.calendar) == expected)
     }
 }

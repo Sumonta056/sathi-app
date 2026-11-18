@@ -65,9 +65,9 @@ struct CalendarGridMathTests {
         let heights = [60, 30, 15].map {
             CalendarGridMath(day: key, calendar: z.calendar, hourHeight: UIMetrics.calendarHourHeight(rowMinutes: $0)).height(span)
         }
-        #expect(!CalendarBlockView.showsText(height: heights[0]))
-        #expect(CalendarBlockView.showsText(height: heights[1]))
-        #expect(CalendarBlockView.showsTimeRange(height: heights[2]))
+        #expect(!CalendarBlockFit.showsText(height: heights[0]))
+        #expect(CalendarBlockFit.showsText(height: heights[1]))
+        #expect(CalendarBlockFit.showsTimeRange(height: heights[2]))
     }
 
     @Test func fallBackDayKeepsWallClockRows() {

@@ -45,10 +45,17 @@ package enum CalendarBlockLayout {
         let backdrops = items.filter { $0.block.style == .away }.map {
             CalendarPlacedBlock(block: $0.block, span: $0.span, lane: 0, lanes: 1, isBackdrop: true)
         }
-        let top = items.filter { $0.block.style != .away && hosts[$0.block.id] == nil }.sorted { precedes($0.span, $1.span) }
+        let todos = items.filter { isTodo($0.block) }.map { CalendarPlacedBlock(block: $0.block, span: $0.span, lane: 0, lanes: 1) }
+        let top = items.filter { $0.block.style != .away && !isTodo($0.block) && hosts[$0.block.id] == nil }
+            .sorted { precedes($0.span, $1.span) }
         let children = items.filter { hosts[$0.block.id] != nil }.sorted { precedes($0.span, $1.span) }
         let placed = stack(top).map { adopt($0, children, hosts: hosts) }
-        return CalendarBlockNudge.apply(backdrops + placed, minimumMinutes: minimumMinutes)
+        return CalendarBlockNudge.apply(backdrops + placed, minimumMinutes: minimumMinutes) + todos
+    }
+
+    private static func isTodo(_ b: CalendarBlock) -> Bool {
+        if case .todo = b.source { return true }
+        return false
     }
 
     private static func stack(_ sorted: [Item]) -> [CalendarPlacedBlock] {
