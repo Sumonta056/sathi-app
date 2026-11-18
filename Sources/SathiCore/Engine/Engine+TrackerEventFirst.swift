@@ -32,6 +32,8 @@ extension Engine {
     }
 
     func askPendingEventAgain(_ n: Date) {
+        guard !isAwayForEvents else { return }
+        if eventAskWaits { logWaitedEvents(until: n) }
         let asks = trackerCalendarRuntime.pendingAsks.filter { canAskEvent($0, at: n) }
         trackerCalendarRuntime.pendingAsks = asks
         guard let e = trackerCalendarRuntime.pendingAsks.first else { return }
@@ -49,6 +51,20 @@ extension Engine {
               trackerCalendarRuntime.pendingAsks.isEmpty else { return }
         trackerCalendarRuntime.heldPrompt = nil
         setTrackerPrompt(held, byUser: trackerCalendarRuntime.heldByUser)
+    }
+
+    @discardableResult
+    func logWaitedEvents(until end: Date) -> [Activity] {
+        guard readsCalendarEvents else { return [] }
+        let queue = trackerCalendarRuntime.pendingAsks
+        let over = queue.filter { $0.end <= end && !isDismissed($0) && !isLogged($0) }
+        trackerCalendarRuntime.pendingAsks = queue.filter { $0.end > end }
+        if let id = data.live.tracker.prompt?.eventID, data.live.tracker.prompt?.kind == .eventAsk,
+           over.contains(where: { $0.id == id }) { clearTrackerPrompt(keepsHeld: true) }
+        over.forEach(logAskedEvent)
+        return over.compactMap { e in
+            storedActivities(on: e.start).first { $0.kind == .event && $0.sourceEventID == e.id && $0.start == e.start.wholeSecond }
+        }
     }
 
     func dropEventAsk(_ id: String?) {

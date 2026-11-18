@@ -32,6 +32,7 @@ extension Engine {
         data.live.tracker.awayCause = nil
         data.live.tracker.awayPlan = nil
         data.live.tracker.lastInput = back
+        let waited = logWaitedEvents(until: back)
         var eventSpan: DateInterval?
         if let r = data.live.tracker.running, r.kind == .buddy, trackerSessionRuns { return requestTick() }
         if let r = data.live.tracker.running, r.kind == .event {
@@ -46,7 +47,7 @@ extension Engine {
         items.forEach(storeActivity)
         trackerRuntime.awayItems = items.map(\.id)
         trackerRuntime.lastAway = AwaySpan(start: since, end: back, cause: cause, place: place, placeName: plan?.name)
-        trackerRuntime.loggedWhileAway = logEventsWhileAway(from: since, to: back)
+        trackerRuntime.loggedWhileAway = waited + logEventsWhileAway(from: since, to: back)
         if welcomes, trackerHours.isInside(back) {
             setTrackerPrompt(PromptState(kind: .welcomeBack, shownAt: back, askTime: back))
         }
