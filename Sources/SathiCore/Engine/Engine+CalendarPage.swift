@@ -6,6 +6,7 @@ package struct CalendarPageData: Equatable, Sendable {
     package var blocks: [CalendarBlock]
     package var stats: CalendarPageStats
     package var monthCells: [[CalendarMonthCell]]
+    package var calendarNames: [String: String] = [:]
     package var grid: CalendarGridLayout?
 }
 
@@ -37,7 +38,8 @@ extension Engine {
             allDay: all.filter(\.isAllDay),
             blocks: all.filter { !$0.isAllDay },
             stats: CalendarPageStats.make(events: events, activities: tracked, interval: range.interval),
-            monthCells: cells
+            monthCells: cells,
+            calendarNames: Dictionary(readable.map { ($0.id, $0.title) }) { first, _ in first }
         )
     }
 

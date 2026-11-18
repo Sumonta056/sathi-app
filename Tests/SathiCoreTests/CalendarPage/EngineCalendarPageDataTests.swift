@@ -115,4 +115,16 @@ struct EngineCalendarPageDataTests {
         let month = h.engine.calendarPageBase(wednesday(h, kind: .month))
         #expect(month.monthCells.flatMap { $0 }.filter(\.isToday).map(\.day.raw) == ["2026-03-04"])
     }
+
+    @Test func calendarNamesComeWithThePageData() {
+        let h = EngineHarness(at: day(2026, 3, 4, 12))
+        let data = h.engine.calendarPageBase(wednesday(h))
+        #expect(data.calendarNames == ["work": "Gmail Work", "home": "Home"])
+    }
+
+    @Test func calendarNamesAreEmptyWithoutAccess() {
+        let h = EngineHarness(at: day(2026, 3, 4, 12))
+        h.engine.calendarAccess = .denied
+        #expect(h.engine.calendarPageBase(wednesday(h)).calendarNames.isEmpty)
+    }
 }

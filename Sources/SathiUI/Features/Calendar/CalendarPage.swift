@@ -84,7 +84,7 @@ struct CalendarPage: View {
             CalendarSplitGrid(
                 range: range, data: data, now: e.now, calendar: e.rangeCalendar, categories: e.activityCategories,
                 actions: gridActions(), popover: $focus.popover, narrow: range.kind == .week && narrowWeek,
-                calendarNames: range.kind == .day ? calendarNames : [:]
+                calendarNames: range.kind == .day ? data.calendarNames : [:]
             ) { column in
                 guard range.kind == .week else { return }
                 let next = CalendarSplitMetrics.isNarrow(column: column, kind: .week)
@@ -98,10 +98,6 @@ struct CalendarPage: View {
     static func pickDays(_ n: Int, engine: Engine) -> CalendarPageRange {
         engine.setCalendarWeekDays(n)
         return engine.calendarPageToday(.week)
-    }
-
-    private var calendarNames: [String: String] {
-        Dictionary(e.shownCalendarGroups().flatMap(\.calendars).map { ($0.choice.id, $0.choice.title) }) { first, _ in first }
     }
 
     private func errorLine(_ text: String) -> some View {
