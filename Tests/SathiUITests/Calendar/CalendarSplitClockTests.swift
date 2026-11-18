@@ -11,7 +11,15 @@ struct CalendarSplitClockTests {
     typealias Fix = CalendarSplitViewFixtures
 
     private var grown: CalendarGridLayout {
-        Fix.grid([:], rows: Fix.rows([(0, 60, 60, false), (60, 120, 90, false), (120, 300, 22, true), (300, 360, 60, false)]))
+        Fix.grid(
+            [:],
+            rows: Fix.rows([
+                Fix.Row(start: 0, end: 60, height: 60),
+                Fix.Row(start: 60, end: 120, height: 90),
+                Fix.Row(start: 120, end: 300, height: 22, fold: true),
+                Fix.Row(start: 300, end: 360, height: 60)
+            ])
+        )
     }
 
     @Test func minuteCountsFromSixAM() {
@@ -64,7 +72,11 @@ struct CalendarSplitClockTests {
     }
 
     @Test func zoomedRowsLabelOnlyTheHour() {
-        let rows = Fix.rows([(0, 30, 30, false), (30, 60, 30, false), (60, 90, 30, false)])
+        let rows = Fix.rows([
+            Fix.Row(start: 0, end: 30, height: 30),
+            Fix.Row(start: 30, end: 60, height: 30),
+            Fix.Row(start: 60, end: 90, height: 30)
+        ])
         #expect(CalendarSplitClock.labels(Fix.grid([:], rows: rows)).map(\.text) == ["6 AM", "7 AM"])
     }
 }

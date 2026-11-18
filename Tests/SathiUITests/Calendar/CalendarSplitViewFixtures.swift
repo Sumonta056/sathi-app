@@ -1,10 +1,9 @@
 import Foundation
-import SathiCore
+@testable import SathiCore
 import SathiTestSupport
 @testable import SathiUI
 import SwiftUI
 
-@MainActor
 enum CalendarSplitViewFixtures {
     final class Spy {
         var opened: [String] = []
@@ -56,16 +55,23 @@ enum CalendarSplitViewFixtures {
         return l
     }
 
-    static func rows(_ spans: [(Int, Int, Double, Bool)]) -> [CalendarGridRow] {
+    struct Row {
+        let start: Int
+        let end: Int
+        let height: Double
+        var fold = false
+    }
+
+    static func rows(_ spans: [Row]) -> [CalendarGridRow] {
         var top = 0.0
-        return spans.map { start, end, height, fold in
-            defer { top += height }
-            return CalendarGridRow(startMinute: start, endMinute: end, top: top, height: height, isFold: fold)
+        return spans.map { r in
+            defer { top += r.height }
+            return CalendarGridRow(startMinute: r.start, endMinute: r.end, top: top, height: r.height, isFold: r.fold)
         }
     }
 
     static func hourRows(_ count: Int = 24) -> [CalendarGridRow] {
-        rows((0 ..< count).map { ($0 * 60, $0 * 60 + 60, 60, false) })
+        rows((0 ..< count).map { Row(start: $0 * 60, end: $0 * 60 + 60, height: 60) })
     }
 
     static func grid(_ days: [DayKey: [CalendarLaidBlock]], rows: [CalendarGridRow] = hourRows()) -> CalendarGridLayout {

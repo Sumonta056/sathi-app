@@ -35,7 +35,11 @@ struct CalendarSplitGridTests {
     }
 
     @Test func aFoldRowIsAStripWithItsText() throws {
-        let rows = Fix.rows([(0, 60, 60, false), (60, 180, 22, true), (180, 240, 60, false)])
+        let rows = Fix.rows([
+            Fix.Row(start: 0, end: 60, height: 60),
+            Fix.Row(start: 60, end: 180, height: 22, fold: true),
+            Fix.Row(start: 180, end: 240, height: 60)
+        ])
         let sut = try grid(Fix.weekRange(3), Fix.grid([:], rows: rows)).inspect()
         #expect(throws: Never.self) { try sut.find(text: "7:00 – 9:00 AM · away or nothing on every shown day") }
     }

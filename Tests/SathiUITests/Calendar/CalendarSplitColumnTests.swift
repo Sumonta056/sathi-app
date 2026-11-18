@@ -24,7 +24,7 @@ struct CalendarSplitColumnTests {
         )
     }
 
-    private func tap(_ sut: InspectableView<ViewType.View<CalendarSplitColumn>>, _ laid: CalendarLaidBlock) throws {
+    private func tap(_ sut: InspectableView<ViewType.ClassifiedView>, _ laid: CalendarLaidBlock) throws {
         try sut.find(viewWithAccessibilityIdentifier: "calendar.split.block." + laid.id).callOnTapGesture()
     }
 

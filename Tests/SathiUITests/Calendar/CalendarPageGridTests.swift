@@ -34,7 +34,7 @@ struct CalendarPageGridTests {
         #expect(throws: Never.self) { try sut.find(text: "Standup") }
         #expect(throws: Never.self) { try sut.find(text: "Holiday") }
         #expect(throws: Never.self) { try sut.find(text: Copywriter.calendarAllDay) }
-        #expect(throws: Never.self) { try sut.find(text: "Midday") }
+        #expect(throws: Never.self) { try sut.find(text: "9 AM") }
     }
 
     @Test func nowLineOnlyInTodaysColumn() throws {
@@ -68,29 +68,31 @@ struct CalendarPageGridTests {
         return h
     }
 
-    private func column(_ kind: ReportRange, _ h: EngineHarness) throws -> CalendarDayColumn {
+    private func column(_ kind: ReportRange, _ h: EngineHarness) throws -> CalendarSplitColumn {
         let key = DayKey(day(2026, 3, 4), calendar: h.engine.rangeCalendar)
-        return try page(kind, h).find(CalendarDayColumn.self, where: { try $0.actualView().day == key }).actualView()
+        return try page(kind, h).find(CalendarSplitColumn.self, where: { try $0.actualView().day == key }).actualView()
     }
 
-    private func awayLabels(_ kind: ReportRange, _ h: EngineHarness) throws -> Int {
-        try page(kind, h).findAll(where: { (try? $0.accessibilityIdentifier()) == "calendar.awayBackdrop.label" }).count
+    @Test func dayShowsEveryRowAsOneBlockAwayIncluded() throws {
+        let titles = try column(.day, tracked()).blocks.map(\.block.title)
+        #expect(Set(titles) == ["Standup", "Notes", "Build", "Short", "Away"])
     }
 
-    @Test func dayAndWeekPlaceTheSameBlocks() throws {
+    @Test func weekLeavesAnAwayInsideAFoldStripToTheStrip() throws {
         let h = tracked()
-        let day = try column(.day, h).placed
-        let week = try column(.week, h).placed
-        #expect(!day.isEmpty)
-        #expect(day == week)
-        #expect(day.contains { !$0.children.isEmpty })
+        let titles = try column(.week, h).blocks.map(\.block.title)
+        #expect(Set(titles) == ["Standup", "Notes", "Build", "Short"])
+        #expect(throws: Never.self) { try page(.week, h).find(viewWithAccessibilityIdentifier: "calendar.fold") }
     }
 
-    @Test func weekAwayIsStripesWithNoLabel() throws {
-        #expect(try awayLabels(.week, tracked()) == 0)
+    @Test func activitiesAreActualAndEventsArePlan() throws {
+        let blocks = try column(.day, tracked()).blocks
+        #expect(blocks.filter { $0.half == .plan }.map(\.block.title) == ["Standup"])
     }
 
-    @Test func dayAwayKeepsThePill() throws {
-        #expect(try awayLabels(.day, tracked()) == 1)
+    @Test func dayDrawsCardsAndWeekDrawsBlocks() throws {
+        let h = tracked()
+        #expect(try page(.day, h).findAll(CalendarDayCard.self).count == 5)
+        #expect(try page(.week, h).findAll(CalendarWeekBlock.self).count == 4)
     }
 }
