@@ -39,7 +39,6 @@ struct CalendarSplitColumn: View {
                 .onTapGesture(coordinateSpace: .local) { p in
                     actions.slot(day, CalendarSplitClock.slotStart(y: p.y, grid: grid, day: day, calendar: calendar), p.y)
                 }
-            if kind == .week { middle(halves) }
             if kind == .day {
                 CalendarDayLinks(blocks: cards, halves: halves, colors: colors)
                     .allowsHitTesting(false)
@@ -89,14 +88,6 @@ struct CalendarSplitColumn: View {
         }
     }
 
-    private func middle(_ halves: CalendarSplitHalves) -> some View {
-        CalendarDashedRule(vertical: true)
-            .stroke(Night.border, style: StrokeStyle(lineWidth: UIMetrics.calendarLine, dash: UIMetrics.calendarDashedLine))
-            .frame(width: UIMetrics.calendarLine, height: grid.height)
-            .offset(x: halves.planX)
-            .allowsHitTesting(false)
-    }
-
     @ViewBuilder private var nowLine: some View {
         if let now, CalendarPageDay.interval(of: day, calendar: calendar).contains(now) {
             let y = grid.y(atMinute: CalendarSplitClock.minute(now, day: day, calendar: calendar))
@@ -116,21 +107,5 @@ struct CalendarSplitColumn: View {
 
     private var anchor: CGRect {
         CGRect(x: 0, y: popover.wrappedValue?.y ?? 0, width: width, height: UIMetrics.calendarLine)
-    }
-}
-
-struct CalendarDashedRule: Shape {
-    var vertical = false
-
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        if vertical {
-            path.move(to: CGPoint(x: rect.midX, y: rect.minY))
-            path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
-        } else {
-            path.move(to: CGPoint(x: rect.minX, y: rect.midY))
-            path.addLine(to: CGPoint(x: rect.maxX, y: rect.midY))
-        }
-        return path
     }
 }

@@ -68,7 +68,8 @@ enum CalendarSplitRows {
     }
 
     private static func bottom(of item: Item, rows: [CalendarGridRow], metrics m: CalendarLayoutMetrics) -> Double {
-        max(item.laid.top + m.least(for: item.laid.block), y(item.to, rows, m))
+        if let r = rows.first(where: { $0.holds(item.to) }), r.isFold, item.to > item.from { return y(item.to, rows, m) }
+        return max(item.laid.top + m.least(for: item.laid.block), y(item.to, rows, m))
     }
 
     private static func grow(_ rows: inout [CalendarGridRow], at r: Int, by extra: Double) {

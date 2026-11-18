@@ -13,6 +13,7 @@ package struct CalendarLaidBlock: Equatable, Identifiable, Sendable {
     package var hidden: [CalendarLaidBlock] = []
     package var doneDuring: String?
     package var doneDuringCount = 0
+    package var part = 0
 
     package init(block: CalendarBlock, span: DateInterval, half: CalendarHalf, rounded: DateInterval? = nil) {
         self.block = block
@@ -21,7 +22,7 @@ package struct CalendarLaidBlock: Equatable, Identifiable, Sendable {
         self.half = half
     }
 
-    package var id: String { block.id }
+    package var id: String { part == 0 ? block.id : "\(block.id)#\(part)" }
     package var isRaised: Bool { depth > 0 }
     package var isTodo: Bool {
         if case .todo = block.source { return true }

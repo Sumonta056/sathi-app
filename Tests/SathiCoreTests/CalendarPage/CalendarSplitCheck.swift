@@ -54,14 +54,15 @@ enum SplitCheck {
     private static func blockProblems(_ b: CalendarLaidBlock, in all: [CalendarLaidBlock], _ scope: Scope) -> [String] {
         let (grid, key, metrics, ppm) = (scope.grid, scope.key, scope.metrics, scope.ppm)
         let name = "\(key.raw) \(b.block.title) \(Split.minute(b.span.start, on: key))"
-        let startMinute = Split.minute(b.span.start, on: key)
-        guard let row = Split.row(grid, holding: startMinute), !row.isFold,
-              let ys = Split.y(grid, startMinute, ppm: ppm) else { return [] }
+        guard let shown = shownMinutes(b, key: key, grid: grid),
+              let row = Split.row(grid, holding: shown.lowerBound), !row.isFold,
+              let ys = Split.y(grid, shown.lowerBound, ppm: ppm) else { return [] }
         var found: [String] = []
         let least = b.block.style == .away ? metrics.awayMinHeight : metrics.minHeight
+        let endsAtStrip = Split.row(grid, holding: shown.upperBound)?.isFold == true && !shown.isEmpty
         if b.top < ys - tolerance { found.append("\(name) moved up: \(b.top) < \(ys)") }
-        if b.bottom < b.top + least - tolerance { found.append("\(name) under minimum height") }
-        if let ye = Split.y(grid, Split.minute(b.span.end, on: key), ppm: ppm), b.bottom < ye - tolerance {
+        if !endsAtStrip, b.bottom < b.top + least - tolerance { found.append("\(name) under minimum height") }
+        if let ye = Split.y(grid, shown.upperBound, ppm: ppm), b.bottom < ye - tolerance {
             found.append("\(name) ends above its real end")
         }
         if b.top + metrics.titleRoom > row.top + row.height + tolerance { found.append("\(name) title leaves its start row") }
@@ -73,6 +74,13 @@ enum SplitCheck {
             if !pusher { found.append("\(name) pushed to \(b.top) without a block one gap above") }
         }
         return found
+    }
+
+    private static func shownMinutes(_ b: CalendarLaidBlock, key: DayKey, grid: CalendarGridLayout) -> Range<Int>? {
+        let real = Split.minute(b.span.start, on: key) ..< max(Split.minute(b.span.start, on: key), Split.minute(b.span.end, on: key))
+        if real.isEmpty { return real }
+        let parts = CalendarFoldParts.open(real, rows: grid.rows)
+        return parts.indices.contains(b.part) ? parts[b.part] : nil
     }
 
     private static func pairProblems(_ blocks: [CalendarLaidBlock], key: DayKey) -> [String] {

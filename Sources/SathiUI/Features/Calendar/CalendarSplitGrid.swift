@@ -77,7 +77,7 @@ struct CalendarSplitGrid: View {
                 HStack(alignment: .top, spacing: 0) {
                     CalendarSplitRail(grid: grid)
                     columns(column)
-                        .background(alignment: .topLeading) { CalendarSplitLines(grid: grid, showsFoldText: range.kind == .week) }
+                        .background(alignment: .topLeading) { lines(column) }
                 }
                 .frame(height: CGFloat(grid.height), alignment: .top)
                 .overlay(alignment: .topLeading) {
@@ -91,6 +91,13 @@ struct CalendarSplitGrid: View {
             }
             .onChange(of: data.grid) { next in hover.keep(ids: Set(next?.days.values.joined().flatMap { [$0] + $0.hidden }.map(\.id) ?? [])) }
         }
+    }
+
+    private func lines(_ column: CGFloat) -> some View {
+        CalendarSplitLines(
+            grid: grid, showsFoldText: range.kind == .week, columns: range.days.count, width: column,
+            planX: range.kind == .week ? CalendarSplitGeometry.halves(column: column, kind: .week).planX : nil
+        )
     }
 
     private var initialRow: Int {
@@ -108,7 +115,6 @@ struct CalendarSplitGrid: View {
                 ) { laid, rect, inside in
                     hover.block(target(laid, among: blocks, day: day, rect: rect, x: CGFloat(index) * width), inside: inside)
                 }
-                .overlay(alignment: .leading) { Night.divider.frame(width: UIMetrics.calendarLine) }
             }
         }
     }

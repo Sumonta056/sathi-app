@@ -12,10 +12,10 @@ package enum CalendarSplitLayout {
         let base = CalendarNightFold.rows(busy: busy, rowMinutes: rowMinutes, metrics: metrics)
         var items: [CalendarSplitRows.Item] = []
         for d in columns.indices {
-            let open = cut[d].filter { !$0.isTodo && item($0, day: d, column: columns[d], rows: base) != nil }
+            let open = cut[d].filter { !$0.isTodo && !parts($0, day: d, column: columns[d], rows: base).isEmpty }
             let shown = CalendarSplitLanes.arrange(open.filter { $0.half == .actual })
                 + CalendarSplitLanes.arrange(open.filter { $0.half == .plan })
-            items += shown.compactMap { item($0, day: d, column: columns[d], rows: base) }
+            items += shown.flatMap { parts($0, day: d, column: columns[d], rows: base) }
         }
         let placed = CalendarSplitRows.place(items, rows: base, metrics: metrics)
         let rows = placed.rows
@@ -46,13 +46,19 @@ package enum CalendarSplitLayout {
         return CalendarLaidBlock(block: block, span: span, half: .plan, rounded: r)
     }
 
-    private static func item(
+    private static func parts(
         _ b: CalendarLaidBlock, day: Int, column: CalendarDayMinutes, rows: [CalendarGridRow]
-    ) -> CalendarSplitRows.Item? {
+    ) -> [CalendarSplitRows.Item] {
         let m = column.minutes(b.span)
         let start = opening(m.lowerBound, rows: rows)
-        guard start < m.upperBound || (m.isEmpty && start == m.lowerBound) else { return nil }
-        return CalendarSplitRows.Item(laid: b, day: day, from: start, to: m.upperBound)
+        if m.isEmpty {
+            return start == m.lowerBound ? [CalendarSplitRows.Item(laid: b, day: day, from: start, to: start)] : []
+        }
+        return CalendarFoldParts.open(start ..< max(start, m.upperBound), rows: rows).enumerated().map { index, part in
+            var laid = b
+            laid.part = index
+            return CalendarSplitRows.Item(laid: laid, day: day, from: part.lowerBound, to: part.upperBound)
+        }
     }
 
     private static func opening(_ minute: Int, rows: [CalendarGridRow]) -> Int {
