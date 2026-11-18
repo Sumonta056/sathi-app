@@ -17,7 +17,7 @@ struct EngineTrackerEventAskCutTests {
         return String(format: "%02d:%02d", c.hour ?? 0, c.minute ?? 0)
     }
 
-    @Test func aYesAfterTheEventEndKeepsWorkStartedAfterTheEndRunning() {
+    @Test func anAskClosedByWorkStartedAfterTheEventEndIsNotAskedAgain() {
         let h = EngineHarness.tracker(at: wed(9, 55))
         h.useEvents([standup], mode: .askFirst)
         h.advance(minutes: 5)
@@ -25,14 +25,13 @@ struct EngineTrackerEventAskCutTests {
         h.clock.advance(minutes: 80)
         h.start("Coding", minutes: 60)
         h.advance(minutes: 20)
-        h.answerAskWhenShown()
+        #expect(h.promptKind != .eventAsk)
         #expect(h.running?.text == "Coding")
         #expect(h.running?.start == wed(11, 20))
-        #expect(spans(h) == ["Standup 10:00-11:00"])
-        #expect(h.eventItems.first?.kind == .event)
+        #expect(h.eventItems.isEmpty)
     }
 
-    @Test func aYesAfterTheEventEndKeepsThePartOfStoredWorkAfterTheEnd() {
+    @Test func anAskClosedByWorkIsNotAskedAgainAfterTheEventEnd() {
         let h = EngineHarness.tracker(at: wed(9))
         h.useEvents([standup], mode: .askFirst)
         h.start("Spec", minutes: 120)
@@ -43,10 +42,9 @@ struct EngineTrackerEventAskCutTests {
         h.clock.advance(minutes: 70)
         h.start("Mail", minutes: 30)
         h.advance(minutes: 10)
-        h.answerAskWhenShown()
-        #expect(spans(h) == ["Spec 09:00-10:00", "Standup 10:00-11:00", "Review 11:00-12:00"])
+        #expect(h.promptKind != .eventAsk)
+        #expect(spans(h) == ["Spec 09:00-10:50", "Review 10:50-12:00"])
         #expect(h.running?.text == "Mail")
-        #expect(h.running?.start == wed(12))
     }
 
     @Test func aYesAfterTheEventEndCutsTheRunningActivityAroundTheEvent() {

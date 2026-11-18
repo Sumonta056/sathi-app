@@ -51,7 +51,8 @@ extension Engine {
         showTrackerPromptNow(stored)
     }
 
-    func clearTrackerPrompt() {
+    func clearTrackerPrompt(keepsHeld: Bool = false) {
+        if !keepsHeld { trackerCalendarRuntime.heldPrompt = nil }
         closeShownTrackerPrompt()
         data.live.tracker.prompt = nil
         trackerRuntime.promptByUser = false
@@ -81,7 +82,8 @@ extension Engine {
         switch p.kind {
         case .center: return true
         case .welcomeBack: return pausedUntil == nil && timeBlock?.isRunning != true && !trackerSessionRuns
-        case .whatNow, .stillOnIt, .eventAsk, .todoDue: return !trackerIsBusy && data.live.tracker.awaySince == nil
+        case .eventAsk: return !trackerIsQuiet && !eventAskWaits
+        case .whatNow, .stillOnIt, .todoDue: return !trackerIsBusy && data.live.tracker.awaySince == nil
         }
     }
 

@@ -42,7 +42,7 @@ extension Engine {
         case .center, .welcomeBack, .eventAsk, .todoDue:
             break
         }
-        clearTrackerPrompt()
+        clearTrackerPrompt(keepsHeld: p.kind == .eventAsk)
         requestTick()
     }
 
@@ -89,7 +89,7 @@ extension Engine {
     }
 
     package func iWasHere() {
-        guard data.live.tracker.prompt?.kind == .welcomeBack, trackerRuntime.lastAway?.fromIdle == true else { return }
+        guard data.live.tracker.prompt?.kind == .welcomeBack, offersIWasHere else { return }
         restoreAwayItem()
         clearTrackerPrompt()
         clearAwayRuntime()
@@ -97,9 +97,10 @@ extension Engine {
     }
 
     package func closeTrackerPrompt() {
-        guard data.live.tracker.prompt != nil else { return }
-        if let done = pendingDoneAt { endRunningActivity(at: done) }
-        clearTrackerPrompt()
+        guard let p = data.live.tracker.prompt else { return }
+        let asks = p.kind == .eventAsk
+        if !asks, let done = pendingDoneAt { endRunningActivity(at: done) }
+        clearTrackerPrompt(keepsHeld: asks)
         if data.live.tracker.running == nil {
             trackerRuntime.whatNowAt = clock.now.wholeSecond.addingTimeInterval(trackerAskEvery)
         }

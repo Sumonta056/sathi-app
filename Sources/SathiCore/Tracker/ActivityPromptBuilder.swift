@@ -89,7 +89,7 @@ package enum ActivityPromptBuilder {
             title: Copy.trackerWhatAreYouDoingNow, message: backMessage(s), startLabel: Copy.trackerStart, skip: .close
         )
         p.showsWhere = true
-        p.showsIWasHere = s.away?.fromIdle == true
+        p.showsIWasHere = s.away?.fromIdle == true && s.offersIWasHere
         p.keep = s.lastActivity.map { .backTo($0.text) }
         p.card = backCard(s, detail: s.stoppedByAway == nil ? "" : p.message)
         if p.card != nil, let away = s.away {

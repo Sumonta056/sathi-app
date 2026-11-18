@@ -28,6 +28,7 @@ extension Engine {
         if kind == .stillOnIt { s.waitedMinutes = AskTime.waitedMinutes(shownAt: p.shownAt, now: n) }
         if kind == .welcomeBack {
             s.away = trackerRuntime.lastAway
+            s.offersIWasHere = offersIWasHere
             s.loggedWhileAway = trackerRuntime.loggedWhileAway
             s.stoppedByAway = trackerRuntime.endedByAway?.text
         }

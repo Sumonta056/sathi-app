@@ -20,6 +20,7 @@ package struct TrackerPromptState {
     package var switchTimes: [Date] = []
     package var waitedMinutes: Int?
     package var away: AwaySpan?
+    package var offersIWasHere = true
     package var loggedWhileAway: [Activity] = []
     package var runningEvent: CalendarEventInfo?
     package var event: CalendarEventInfo?

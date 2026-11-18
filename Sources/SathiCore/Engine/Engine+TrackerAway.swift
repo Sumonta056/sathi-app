@@ -34,24 +34,20 @@ extension Engine {
         data.live.tracker.lastInput = back
         var eventSpan: DateInterval?
         if let r = data.live.tracker.running, r.kind == .buddy, trackerSessionRuns { return requestTick() }
+        let waited = cause == .onBreak ? [] : logWaitedEvents(until: max(back, clock.now.wholeSecond))
         if let r = data.live.tracker.running, r.kind == .event {
-            guard back >= r.confirmedUntil else { return requestTick() }
+            guard back >= r.confirmedUntil else {
+                awayRows(from: since, to: min(back, r.start), place: place, name: plan?.name).forEach(storeActivity)
+                return requestTick()
+            }
             eventSpan = DateInterval(start: r.start, end: max(r.start, r.confirmedUntil))
             endRunningActivity(at: r.confirmedUntil)
         }
-        let items = trackerHours.clip(DateInterval(start: since, end: back))
-            .flatMap { SpanCut.cut($0, removing: (eventSpan.map { [$0] } ?? []) + loggedSpans(from: since, to: back)) }
-            .map {
-                Activity(
-                    kind: .away, text: Copywriter.trackerAwayText(place, name: plan?.name),
-                    start: $0.start, end: $0.end, awayPlace: place, awayPlaceName: plan?.name
-                )
-            }
-            .filter { $0.length >= Timing.activityMinimum }
+        let items = awayRows(from: since, to: back, removing: eventSpan.map { [$0] } ?? [], place: place, name: plan?.name)
         items.forEach(storeActivity)
         trackerRuntime.awayItems = items.map(\.id)
         trackerRuntime.lastAway = AwaySpan(start: since, end: back, cause: cause, place: place, placeName: plan?.name)
-        trackerRuntime.loggedWhileAway = logEventsWhileAway(from: since, to: back)
+        trackerRuntime.loggedWhileAway = waited + logEventsWhileAway(from: since, to: back)
         if welcomes, trackerHours.isInside(back) {
             setTrackerPrompt(PromptState(kind: .welcomeBack, shownAt: back, askTime: back))
         }
@@ -128,6 +124,10 @@ extension Engine {
         trackerRuntime.endedByAway = nil
     }
 
+    var offersIWasHere: Bool {
+        trackerRuntime.lastAway?.fromIdle == true && data.live.tracker.running == nil && trackerRuntime.loggedWhileAway.isEmpty
+    }
+
     var trackerActiveSessionRuns: Bool { HabitID.allCases.contains { session($0).map { !$0.isPaused } ?? false } }
 
     var idleSince: Date? {
@@ -140,6 +140,21 @@ extension Engine {
         guard !cause.endsAtOnce, pendingDoneAt == nil else { return false }
         if r.kind == .buddy { return trackerSessionRuns }
         return r.kind == .event && at < r.confirmedUntil
+    }
+
+    private func awayRows(
+        from since: Date, to back: Date, removing extra: [DateInterval] = [], place: AwayPlace?, name: String?
+    ) -> [Activity] {
+        guard back > since else { return [] }
+        return trackerHours.clip(DateInterval(start: since, end: back))
+            .flatMap { SpanCut.cut($0, removing: extra + loggedSpans(from: since, to: back)) }
+            .map {
+                Activity(
+                    kind: .away, text: Copywriter.trackerAwayText(place, name: name),
+                    start: $0.start, end: $0.end, awayPlace: place, awayPlaceName: name
+                )
+            }
+            .filter { $0.length >= Timing.activityMinimum }
     }
 
     private func loggedSpans(from since: Date, to back: Date) -> [DateInterval] {

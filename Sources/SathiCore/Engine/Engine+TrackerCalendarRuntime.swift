@@ -10,5 +10,7 @@ struct TrackerCalendarRuntime: Equatable {
     var checkedUntil: Date?
     var dismissed: Set<String> = []
     var undo: RunningActivity?
-    var pendingAsk: CalendarEventInfo?
+    var pendingAsks: [CalendarEventInfo] = []
+    var heldPrompt: PromptState?
+    var heldByUser = false
 }

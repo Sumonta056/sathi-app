@@ -10,7 +10,7 @@ struct EngineTrackerEventFixTests {
         h.saved.filter { $0.kind == .away }.map { [$0.start, $0.end] }
     }
 
-    @Test func anAskFirstPromptLostToALockAsksAgainAfterWelcomeBack() {
+    @Test func anAskFirstPromptLostToALockIsLoggedByItselfWhenTheEventEndsWhileAway() {
         let h = EngineHarness.tracker(at: wed(10)) { $0.prefs.tracker.askEveryMinutes = 60 }
         h.useEvents([meeting(from: wed(10, 30), to: wed(11))], mode: .askFirst)
         h.start("Spec", minutes: 60)
@@ -23,9 +23,7 @@ struct EngineTrackerEventFixTests {
         #expect(h.promptKind == .welcomeBack)
         h.engine.closeTrackerPrompt()
         h.engine.tick()
-        #expect(h.promptKind == .eventAsk)
-        h.engine.answerEventAsk(true)
-        #expect(h.running == nil)
+        #expect(h.promptKind != .eventAsk)
         #expect(h.eventItems.map { [$0.start, $0.end] } == [[wed(10, 30), wed(11)]])
         #expect(h.saved.first { $0.text == "Spec" }?.end == wed(10, 30))
         #expect(awayItems(h) == [[wed(11), wed(11, 15)]])

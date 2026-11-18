@@ -43,13 +43,13 @@ extension Engine {
         if trackerCalendarRuntime.note?.event.id == eventID { closeEventNote() }
         if let e = eventAskEvent(), e.id == eventID {
             dismissEvent(e)
-            clearTrackerPrompt()
+            clearTrackerPrompt(keepsHeld: true)
         }
         if let e = cachedEvent(eventID) { dismissEvent(e) }
-        if let e = trackerCalendarRuntime.pendingAsk, e.id == eventID {
+        for e in trackerCalendarRuntime.pendingAsks where e.id == eventID {
             dismissEvent(e)
-            trackerCalendarRuntime.pendingAsk = nil
         }
+        dropEventAsk(eventID)
         if turnLoggedEventIntoAway(eventID) {
             requestTick()
             return
@@ -71,10 +71,10 @@ extension Engine {
     }
 
     package func answerEventAsk(_ yes: Bool) {
-        guard data.live.tracker.prompt?.kind == .eventAsk else { return }
+        guard let p = data.live.tracker.prompt, p.kind == .eventAsk else { return }
         let e = eventAskEvent()
-        clearTrackerPrompt()
-        trackerCalendarRuntime.pendingAsk = nil
+        clearTrackerPrompt(keepsHeld: true)
+        dropEventAsk(p.eventID)
         if let e {
             if yes {
                 logAskedEvent(e)
@@ -103,7 +103,7 @@ extension Engine {
 
     func eventAskEvent() -> CalendarEventInfo? {
         guard let p = data.live.tracker.prompt, p.kind == .eventAsk, let id = p.eventID else { return nil }
-        if let e = trackerCalendarRuntime.pendingAsk, e.id == id, e.start.wholeSecond == p.askTime { return e }
+        if let e = trackerCalendarRuntime.pendingAsks.first(where: { $0.id == id && $0.start.wholeSecond == p.askTime }) { return e }
         return cachedEvent(id, at: p.askTime)
     }
 }
