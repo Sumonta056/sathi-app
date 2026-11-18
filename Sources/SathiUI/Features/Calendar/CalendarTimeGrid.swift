@@ -53,7 +53,7 @@ struct CalendarTimeGrid: View {
                     labels
                     ForEach(Array(zip(range.days, columns)), id: \.0) { day, math in
                         CalendarDayColumn(
-                            day: day, placed: CalendarBlockLayout.place(data.blocks, within: math.interval), texts: data.texts,
+                            day: day, placed: math.place(data.blocks), texts: data.texts,
                             math: math, now: day == today ? now : nil, categories: categories, calendar: calendar,
                             actions: actions, selected: selected, popover: popover
                         )
