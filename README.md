@@ -103,6 +103,10 @@ Sathi notices when you are away (screen lock, sleep, or no input for 30 min) and
 
 Reports → Activities shows each day and month: a timeline, totals by category, a standup text to copy, and an export to JSON and CSV. When tracker hours end, an end-of-day popup shows your day.
 
+## Calendar page
+
+See your plan and what you did on one grid. Turn it on in Settings → General (it is off by default and marked Experimental). The Calendar page shows your calendar events and your activities from 6 AM to 6 AM in Day, Week, or Month view, and you can create, edit, and delete events. In Day and Week, each event is a card (the plan) that holds the activities you did during it (the actual). Activities outside an event are solid blocks, and to-dos sit as pills on a dashed line at their due time. Hover a block for a card with actions: Start as activity, Edit, Merge, Delete, Mark done, and Open in Calendar or Reminders. Day and Week have a row zoom. A side panel shows stats; Week hides it by default.
+
 ## Reports and settings
 
 - The Reports window shows each habit by day, week, or month, with a chart, a streak calendar, your best day, and your longest streak.
