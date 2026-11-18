@@ -42,7 +42,7 @@ extension Engine {
         case .center, .welcomeBack, .eventAsk, .todoDue:
             break
         }
-        clearTrackerPrompt()
+        clearTrackerPrompt(keepsHeld: p.kind == .eventAsk)
         requestTick()
     }
 
@@ -99,7 +99,7 @@ extension Engine {
     package func closeTrackerPrompt() {
         guard data.live.tracker.prompt != nil else { return }
         if let done = pendingDoneAt { endRunningActivity(at: done) }
-        clearTrackerPrompt()
+        clearTrackerPrompt(keepsHeld: data.live.tracker.prompt?.kind == .eventAsk)
         if data.live.tracker.running == nil {
             trackerRuntime.whatNowAt = clock.now.wholeSecond.addingTimeInterval(trackerAskEvery)
         }

@@ -7,6 +7,7 @@ extension Engine {
         refreshEventsIfDue(n)
         if readsCalendarEvents { handleEventStarts(n) }
         askPendingEventAgain(n)
+        restoreHeldPrompt()
         openWhatNowAtEventEnd(n)
         showStillOnItLate(n)
     }
@@ -23,7 +24,10 @@ extension Engine {
         data.live.tracker.running?.confirmedUntil = end
         trackerRuntime.whatNowAt = nil
         if let kind = data.live.tracker.prompt?.kind, kind == .whatNow || kind == .stillOnIt || kind == .eventAsk {
-            clearTrackerPrompt()
+            clearTrackerPrompt(keepsHeld: true)
+        }
+        if let kind = trackerCalendarRuntime.heldPrompt?.kind, kind == .whatNow || kind == .stillOnIt {
+            trackerCalendarRuntime.heldPrompt = nil
         }
         storesChanged()
     }
@@ -61,8 +65,7 @@ extension Engine {
             return
         }
         trackerCalendarRuntime.checkedUntil = max(from, n)
-        guard trackerCalendarRuntime.events.contains(where: { $0.start > from && $0.start <= n }),
-              data.live.tracker.awaySince == nil, pausedUntil == nil, timeBlock?.isRunning != true, !trackerSessionRuns
+        guard trackerCalendarRuntime.events.contains(where: { $0.start > from && $0.start <= n }), !isAwayForEvents
         else { return }
         let starting = usableEvents(trackerCalendarRuntime.events, near: n).filter {
             $0.start > from && $0.start <= n && n < $0.end && !isDismissed($0) && !isLogged($0)
@@ -78,31 +81,16 @@ extension Engine {
             }
         }
         switch trackerPrefs.eventMode {
-        case .logAndTell:
+        case .logAndTell where !eventLogNeedsAsk:
             let quiet = trackerIsQuiet
             let old = data.live.tracker.running
             logEvent(e, at: e.start)
             guard !quiet else { return }
             showEventNote(.event(e))
             trackerCalendarRuntime.undo = old
-        case .askFirst:
-            let p = data.live.tracker.prompt
-            guard p == nil || p?.kind == .stillOnIt || (p?.kind == .whatNow && p?.switchFrom == nil) else { return }
-            let n = clock.now
-            setTrackerPrompt(PromptState(kind: .eventAsk, shownAt: n, askTime: e.start, eventID: e.id))
-            trackerCalendarRuntime.pendingAsk = e
+        case .logAndTell, .askFirst:
+            askEventFirst(e)
         }
-    }
-
-    private func askPendingEventAgain(_ n: Date) {
-        guard let e = trackerCalendarRuntime.pendingAsk else { return }
-        guard readsCalendarEvents, calendar.isDate(e.start, inSameDayAs: n), !isLogged(e), !isDismissed(e) else {
-            trackerCalendarRuntime.pendingAsk = nil
-            return
-        }
-        let t = data.live.tracker
-        guard t.prompt == nil, t.awaySince == nil, !trackerIsBusy, !isAnyLockShowing else { return }
-        setTrackerPrompt(PromptState(kind: .eventAsk, shownAt: n, askTime: e.start, eventID: e.id))
     }
 
     private func runningEventEnd(_ r: RunningActivity) -> Date {
