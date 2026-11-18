@@ -91,4 +91,34 @@ struct CalendarPageStatsTests {
             CalendarCategoryTime(name: "Mail", seconds: 20 * 60)
         ])
     }
+
+    @Test func eachRowIsRoundedOnceToTheMinute() {
+        let rows = [
+            row(.work, "Mail", zone.date(2026, 3, 4, 10, 0).addingTimeInterval(40), zone.date(2026, 3, 4, 10, 20).addingTimeInterval(10)),
+            row(.work, "Mail", zone.date(2026, 3, 4, 10, 30).addingTimeInterval(31), zone.date(2026, 3, 4, 10, 40).addingTimeInterval(29)),
+            row(.work, nil, zone.date(2026, 3, 4, 11, 0).addingTimeInterval(29), zone.date(2026, 3, 4, 11, 10).addingTimeInterval(31)),
+            row(.away, nil, zone.date(2026, 3, 4, 12, 0).addingTimeInterval(31), zone.date(2026, 3, 4, 12, 30).addingTimeInterval(29))
+        ]
+        let stats = CalendarPageStats.make(events: [], activities: rows, interval: wedDay)
+        #expect(stats.tracked == 39 * 60)
+        #expect(stats.byCategory == [
+            CalendarCategoryTime(name: "Mail", seconds: 28 * 60),
+            CalendarCategoryTime(name: nil, seconds: 11 * 60)
+        ])
+        #expect(stats.away == 29 * 60)
+        #expect(CalendarPageStats.tracked(rows, in: wedDay) == 39 * 60)
+    }
+
+    @Test func plannedUsesRoundedEventTimes() {
+        var declined = event("x", zone.date(2026, 3, 4, 12), zone.date(2026, 3, 4, 13))
+        declined.declined = true
+        let events = [
+            event("a", zone.date(2026, 3, 4, 10).addingTimeInterval(40), zone.date(2026, 3, 4, 10, 30).addingTimeInterval(10)),
+            event("b", zone.date(2026, 3, 4, 10, 20), zone.date(2026, 3, 4, 11).addingTimeInterval(31)),
+            event("d", zone.date(2026, 3, 4), zone.date(2026, 3, 5), allDay: true),
+            declined
+        ]
+        let stats = CalendarPageStats.make(events: events, activities: [], interval: wedDay)
+        #expect(stats.planned == 60 * 60)
+    }
 }
