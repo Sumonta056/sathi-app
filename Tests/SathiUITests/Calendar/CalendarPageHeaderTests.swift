@@ -104,6 +104,20 @@ struct CalendarPageHeaderTests {
         #expect(CalendarHeaderLayout.rows([200, 300], width: 400, gap: 10) == [[0], [1]])
     }
 
+    @Test(arguments: [UIMetrics.mainWindowSize.width - UIMetrics.mainSidebarWidth - 40, 1100, 1400])
+    func weekHeaderUsesTheSameRowsAsDayAtTheSameWidth(_ width: CGFloat) {
+        #expect(height(.week, width: width) == height(.day, width: width))
+    }
+
+    private func height(_ kind: ReportRange, width: CGFloat) -> CGFloat {
+        let stats = CalendarPageStats(tracked: 21 * 3600 + 5 * 60, planned: 6 * 3600 + 40 * 60)
+        let header = CalendarPageHeader(
+            range: box(kind).binding, now: now, calendar: cal, stats: stats,
+            rowMinutes: .constant(60), weekDays: 7
+        )
+        return NSHostingController(rootView: header).sizeThatFits(in: CGSize(width: width, height: 0)).height
+    }
+
     @Test func showsTheSixAMNote() throws {
         #expect(throws: Never.self) { try header(box(.week)).find(text: "6 AM to 6 AM") }
     }

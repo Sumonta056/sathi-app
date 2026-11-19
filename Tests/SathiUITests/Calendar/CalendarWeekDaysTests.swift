@@ -23,8 +23,27 @@ struct CalendarWeekDaysTests {
     @Test func weekShowsTheFourDayCounts() throws {
         let sut = try page(EngineHarness(at: day(2026, 3, 4, 12)), .week)
         for text in ["3 days", "4 days", "5 days", "7 days"] {
-            #expect(throws: Never.self) { try Find.button(sut, holding: text) }
+            #expect(throws: Never.self) { try sut.find(ViewType.Menu.self).find(button: text) }
         }
+    }
+
+    @Test func theDayCountIsAMenuThatListsTheFourCounts() throws {
+        let menu = try CalendarWeekDaysControl(days: 7) { _ in }.inspect().find(ViewType.Menu.self)
+        let titles = try menu.findAll(ViewType.Button.self).map { try $0.labelView().text().string() }
+        #expect(titles == ["3 days", "4 days", "5 days", "7 days"])
+    }
+
+    @Test func theMenuButtonShowsTheCurrentCount() throws {
+        let menu = try CalendarWeekDaysControl(days: 5) { _ in }.inspect().find(ViewType.Menu.self)
+        #expect(throws: Never.self) { try menu.labelView().find(text: "5 days") }
+        #expect(throws: Never.self) { try menu.labelView().find(ViewType.Image.self) }
+    }
+
+    @Test func aMenuPickSendsTheCount() throws {
+        var picked: [Int] = []
+        let menu = try CalendarWeekDaysControl(days: 7) { picked.append($0) }.inspect().find(ViewType.Menu.self)
+        try menu.find(button: "4 days").tap()
+        #expect(picked == [4])
     }
 
     @Test(arguments: [ReportRange.day, .month])
@@ -35,7 +54,7 @@ struct CalendarWeekDaysTests {
 
     @Test func aTapSavesTheCount() throws {
         let h = EngineHarness(at: day(2026, 3, 4, 12))
-        try Find.button(page(h, .week), holding: "4 days").tap()
+        try page(h, .week).find(ViewType.Menu.self).find(button: "4 days").tap()
         #expect(h.engine.data.prefs.calendarPage.weekDays == 4)
     }
 
@@ -51,7 +70,7 @@ struct CalendarWeekDaysTests {
         let b = Box(.containing(day(2026, 3, 4, 12), kind: .week, calendar: .current))
         var picked: [Int] = []
         let header = CalendarPageHeader(range: b.binding, now: day(2026, 3, 4, 12), calendar: .current, weekDays: 7) { picked.append($0) }
-        try Find.button(header.inspect(), holding: "3 days").tap()
+        try header.inspect().find(ViewType.Menu.self).find(button: "3 days").tap()
         #expect(picked == [3])
     }
 

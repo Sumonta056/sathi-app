@@ -17,6 +17,8 @@ extension Copywriter {
         return calendarMonthNames[g.component(.month, from: day.start(in: g)) - 1]
     }
 
+    package static let calendarWeekDaysLabel = "Days shown"
+
     package static func calendarWeekDaysOption(_ n: Int) -> String {
         "\(n) days"
     }
