@@ -66,6 +66,7 @@ package final class Engine: ObservableObject {
     var streakCache: [HabitID: Int] = [:]
     var streakCacheDay: Date?
     var allStreakCache: AllStreakCache?
+    var yesterdayWorkCache: YesterdayWorkCache?
     var breathCueMark: Date?
     var minuteTickMark: Date?
     var storeRevision = 0

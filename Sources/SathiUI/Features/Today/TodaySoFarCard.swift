@@ -18,6 +18,9 @@ struct TodaySoFarCard: View {
                 .overlay(nowMarker(hours))
                 ActivityAxis(hours: hours, calendar: calendar)
                     .overlay(nowLabel(hours))
+                if !sofar.categories.isEmpty || !sofar.away.isEmpty {
+                    TodaySoFarBreakdown(sofar: sofar, categories: categories)
+                }
             } else if !sofar.isOn {
                 Text(verbatim: Copywriter.todaySoFarOffHint)
                     .font(Typography.tracker(UIMetrics.todayPanelNoteFont, .regular))
@@ -39,11 +42,21 @@ struct TodaySoFarCard: View {
                 Text(verbatim: Copywriter.categoryTableHours(sofar.logged))
                     .font(Typography.tracker(UIMetrics.todaySoFarTotalFont, .heavy))
                     .foregroundStyle(Night.text)
+                if sofar.change != .none {
+                    Text(verbatim: Copywriter.todaySoFarChange(sofar.change))
+                        .font(Typography.tracker(UIMetrics.todayComingDetailFont, .heavy))
+                        .foregroundStyle(changeColor)
+                }
                 Text(verbatim: Copywriter.todayLoggedSummary(percent: TodayShare.percent(logged: sofar.logged, hours: sofar.hours, now: now)))
                     .font(Typography.tracker(UIMetrics.todayComingDetailFont, .regular))
                     .foregroundStyle(Night.muted)
             }
         }
+    }
+
+    private var changeColor: Color {
+        if case .up = sofar.change { return Night.sprout }
+        return Night.muted
     }
 
     private func fraction(_ hours: DateInterval) -> CGFloat? {
