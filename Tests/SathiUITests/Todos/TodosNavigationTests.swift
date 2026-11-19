@@ -21,14 +21,14 @@ struct TodosNavigationTests {
     @Test func sidebarHasNoTodosPageItemWhenOff() throws {
         let texts = try shown(EngineHarness())
         #expect(texts.filter { $0 == "To-dos" }.count == 1)
-        #expect(texts.filter(["Today", "Activities", "Reports"].contains) == ["Today", "Activities", "Reports"])
+        #expect(texts.filter(["Dashboard", "Activities"].contains) == ["Dashboard", "Activities"])
     }
 
-    @Test func sidebarShowsTodosAfterTodayWhenOn() throws {
+    @Test func sidebarShowsTodosUnderPlanAfterActivitiesWhenOn() throws {
         let texts = try shown(EngineHarness { $0.prefs.todos.isOn = true })
         #expect(texts.filter { $0 == "To-dos" }.count == 2)
-        let pages = texts.filter(["Today", "To-dos", "Activities", "Reports"].contains)
-        #expect(Array(pages.prefix(4)) == ["Today", "To-dos", "Activities", "Reports"])
+        let pages = texts.filter(["Dashboard", "Activities", "PLAN", "To-dos"].contains)
+        #expect(Array(pages.prefix(4)) == ["Dashboard", "Activities", "PLAN", "To-dos"])
     }
 
     @Test func tapOnTheTodosItemOpensThePage() throws {
