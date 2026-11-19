@@ -13,7 +13,8 @@ struct CalendarFoldCrossTests {
 
     @Test func awayEndingInsideAStripEndsAtTheStripTop() {
         let grid = Split.layout(
-            [Split.activity("work", "10:00", "11:00"), Split.away("out", "10:30", "13:00")], metrics: Split.week
+            [Split.activity("work", "10:00", "11:00"), Split.away("out", "10:30", "13:00"), Split.activity("late", "16:00", "17:00")],
+            metrics: Split.week
         )
         let strip = grid.rowAt(2)
         #expect(strip?.isFold == true)
@@ -38,7 +39,8 @@ struct CalendarFoldCrossTests {
 
     @Test func aShortPartAboveAStripNeverReachesIntoIt() {
         let grid = Split.layout(
-            [Split.activity("work", "10:00", "11:00"), Split.away("out", "10:55", "13:00")], metrics: Split.week
+            [Split.activity("work", "10:00", "11:00"), Split.away("out", "10:55", "13:00"), Split.activity("late", "16:00", "17:00")],
+            metrics: Split.week
         )
         #expect(Split.laid(grid, "out")?.bottom == grid.rows.first { $0.isFold && $0.startMinute == 300 }?.top)
         #expect(coversNoStrip(grid))

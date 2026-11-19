@@ -79,4 +79,34 @@ struct CalendarSplitClockTests {
         ])
         #expect(CalendarSplitClock.labels(Fix.grid([:], rows: rows)).map(\.text) == ["6 AM", "7 AM"])
     }
+
+    private func trimmed(now: Date) -> CalendarGridLayout {
+        let m = CalendarSplitMetrics.metrics(kind: .week, rowMinutes: 60, narrow: false)
+        return CalendarSplitLayout.layout(
+            [Fix.activity("work", Fix.at(10), Fix.at(11))], days: [Fix.monday], calendar: Fix.cal, rowMinutes: 60, metrics: m, now: now
+        )
+    }
+
+    @Test func theFirstScrollFindsNowWhenTheEndRowsAreRemoved() {
+        let now = Fix.at(15, 30)
+        let grid = trimmed(now: now)
+        let range = CalendarPageRange.containing(day: Fix.monday, kind: .day, calendar: Fix.cal)
+        let row = CalendarSplitClock.initialRow(grid, range: range, now: now, calendar: Fix.cal)
+        #expect(grid.rows.last?.endMinute == 600)
+        #expect(grid.rows[row].holds(570))
+        #expect(!grid.rows[row].isFold)
+    }
+
+    @Test func theNowLineSitsInsideTheTrimmedGrid() {
+        let grid = trimmed(now: Fix.at(15, 30))
+        let y = grid.y(atMinute: 570)
+        #expect(y > grid.rows[grid.rows.count - 1].top)
+        #expect(y < grid.height)
+    }
+
+    @Test func aClickAtTheBottomOfATrimmedGridIsInTheLastOpenRow() {
+        let grid = trimmed(now: Fix.at(15, 30))
+        let slot = CalendarSplitClock.slotStart(y: CGFloat(grid.height) - 1, grid: grid, day: Fix.monday, calendar: Fix.cal)
+        #expect(slot == Fix.at(15, 45))
+    }
 }

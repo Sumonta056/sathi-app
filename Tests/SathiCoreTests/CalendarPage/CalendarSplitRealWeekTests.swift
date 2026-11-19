@@ -98,8 +98,9 @@ struct CalendarSplitRealWeekTests {
         #expect(grid.rows.first?.isFold == false)
         #expect(Split.row(grid, holding: 60)?.isFold == false)
         #expect(Split.row(grid, holding: 7 * 60)?.isFold == false)
-        #expect(Split.row(grid, holding: 22 * 60)?.isFold == true)
-        #expect(Split.row(grid, holding: 22 * 60)?.startMinute == 17 * 60)
+        #expect(Split.row(grid, holding: 22 * 60) == nil)
+        #expect(grid.rows.last?.isFold == false)
+        #expect(grid.rows.last?.endMinute == 17 * 60)
     }
 
     @Test func noRowEverShrinks() {

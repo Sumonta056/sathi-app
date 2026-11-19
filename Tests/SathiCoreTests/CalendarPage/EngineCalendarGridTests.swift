@@ -44,7 +44,7 @@ struct EngineCalendarGridTests {
         #expect(grid != nil)
         #expect(grid.map { Set($0.days.keys) } == Set(data.range.days))
         #expect(grid?.rows.first?.startMinute == 0)
-        #expect(grid?.rows.last?.endMinute == Limits.minutesPerDay)
+        #expect(kind == .week || grid?.rows.last?.endMinute == Limits.minutesPerDay)
         #expect(block(grid, titled: "a")?.half == .plan)
     }
 
@@ -102,9 +102,17 @@ struct EngineCalendarGridTests {
         let h = harness()
         let data = h.engine.calendarPage(range(h, .week), metrics: weekMetrics)
         let expected = CalendarSplitLayout.layout(
-            data.blocks, days: data.range.days, calendar: h.engine.calendar, rowMinutes: 60, metrics: weekMetrics
+            data.blocks, days: data.range.days, calendar: h.engine.calendar, rowMinutes: 60, metrics: weekMetrics,
+            now: h.engine.now
         )
         #expect(data.grid == expected)
+    }
+
+    @Test func theWeekKeepsTheRowThatHoldsNowOpen() {
+        let h = harness()
+        let grid = h.engine.calendarPage(range(h, .week), metrics: weekMetrics).grid
+        let noon = 6 * 60
+        #expect(grid?.rows.contains { $0.holds(noon) && !$0.isFold } == true)
     }
 
     @Test func eventWrittenForAnActivityIsNotInTheGrid() {

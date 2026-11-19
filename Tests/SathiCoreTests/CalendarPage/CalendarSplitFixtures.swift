@@ -70,9 +70,10 @@ enum Split {
     }
 
     static func layout(
-        _ blocks: [CalendarBlock], days: [DayKey] = [page], rowMinutes: Int = 60, metrics: CalendarLayoutMetrics = day
+        _ blocks: [CalendarBlock], days: [DayKey] = [page], rowMinutes: Int = 60, metrics: CalendarLayoutMetrics = day,
+        now: Date? = nil
     ) -> CalendarGridLayout {
-        CalendarSplitLayout.layout(blocks, days: days, calendar: calendar, rowMinutes: rowMinutes, metrics: metrics)
+        CalendarSplitLayout.layout(blocks, days: days, calendar: calendar, rowMinutes: rowMinutes, metrics: metrics, now: now)
     }
 
     static func laid(_ grid: CalendarGridLayout, _ id: String, on key: DayKey = page) -> CalendarLaidBlock? {

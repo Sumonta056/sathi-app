@@ -2,13 +2,14 @@ import Foundation
 
 package enum CalendarSplitLayout {
     package static func layout(
-        _ blocks: [CalendarBlock], days: [DayKey], calendar: Calendar, rowMinutes: Int, metrics: CalendarLayoutMetrics
+        _ blocks: [CalendarBlock], days: [DayKey], calendar: Calendar, rowMinutes: Int, metrics: CalendarLayoutMetrics,
+        now: Date? = nil
     ) -> CalendarGridLayout {
         let columns = days.map { CalendarDayMinutes(day: $0, calendar: calendar) }
         let cut = columns.map { column in blocks.filter { !$0.isAllDay }.compactMap { laid($0, in: column.interval) } }
         let busy = columns.indices.flatMap { d in
             cut[d].filter { $0.block.style != .away }.map { columns[d].minutes($0.span) }
-        }
+        } + nowRow(now, columns: columns)
         let base = CalendarNightFold.rows(busy: busy, rowMinutes: rowMinutes, metrics: metrics)
         var items: [CalendarSplitRows.Item] = []
         for d in columns.indices {
@@ -18,7 +19,7 @@ package enum CalendarSplitLayout {
             items += shown.flatMap { parts($0, day: d, column: columns[d], rows: base) }
         }
         let placed = CalendarSplitRows.place(items, rows: base, metrics: metrics)
-        let rows = placed.rows
+        let rows = CalendarNightFold.trimmed(placed.rows)
         var result: [DayKey: [CalendarLaidBlock]] = [:]
         for (d, key) in days.enumerated() {
             let column = columns[d]
@@ -35,6 +36,12 @@ package enum CalendarSplitLayout {
             rows: rows, days: result, height: max(rows.last?.bottom ?? 0, bottoms.max() ?? 0),
             pointsPerMinute: metrics.pointsPerMinute
         )
+    }
+
+    private static func nowRow(_ now: Date?, columns: [CalendarDayMinutes]) -> [Range<Int>] {
+        guard let now, let column = columns.first(where: { $0.interval.contains(now) && now < $0.interval.end }) else { return [] }
+        let m = column.minute(now)
+        return [m ..< m]
     }
 
     private static func laid(_ block: CalendarBlock, in column: DateInterval) -> CalendarLaidBlock? {

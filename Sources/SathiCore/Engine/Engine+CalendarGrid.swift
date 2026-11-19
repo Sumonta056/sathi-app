@@ -8,7 +8,7 @@ extension Engine {
         shaped.foldsNights = range.kind == .week
         page.grid = CalendarSplitLayout.layout(
             page.blocks, days: range.days, calendar: calendar,
-            rowMinutes: data.prefs.calendarPage.rowMinutes, metrics: shaped
+            rowMinutes: data.prefs.calendarPage.rowMinutes, metrics: shaped, now: clock.now
         )
         return page
     }

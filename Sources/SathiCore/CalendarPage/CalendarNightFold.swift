@@ -24,6 +24,11 @@ enum CalendarNightFold {
         return rows
     }
 
+    static func trimmed(_ rows: [CalendarGridRow]) -> [CalendarGridRow] {
+        guard let last = rows.last, last.isFold, last.startMinute > 0 else { return rows }
+        return Array(rows.dropLast())
+    }
+
     private static func crosses(_ span: Range<Int>, _ from: Int, _ to: Int) -> Bool {
         span.isEmpty ? from <= span.lowerBound && span.lowerBound < to : span.lowerBound < to && span.upperBound > from
     }

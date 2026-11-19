@@ -59,7 +59,8 @@ enum SplitCheck {
               let ys = Split.y(grid, shown.lowerBound, ppm: ppm) else { return [] }
         var found: [String] = []
         let least = b.block.style == .away ? metrics.awayMinHeight : metrics.minHeight
-        let endsAtStrip = Split.row(grid, holding: shown.upperBound)?.isFold == true && !shown.isEmpty
+        let endRow = Split.row(grid, holding: shown.upperBound)
+        let endsAtStrip = !shown.isEmpty && (endRow?.isFold == true || shown.upperBound >= (grid.rows.last?.endMinute ?? 0))
         if b.top < ys - tolerance { found.append("\(name) moved up: \(b.top) < \(ys)") }
         if !endsAtStrip, b.bottom < b.top + least - tolerance { found.append("\(name) under minimum height") }
         if let ye = Split.y(grid, shown.upperBound, ppm: ppm), b.bottom < ye - tolerance {
