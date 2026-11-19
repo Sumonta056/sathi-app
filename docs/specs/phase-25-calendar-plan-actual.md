@@ -34,7 +34,7 @@ The "elastic hour" layout, display only, pure, cached in the page data (as `plac
   - Items that overlap in real time and start less than `Limits.calendarSideBySideMinutes` (30) apart sit side by side: 2 lanes at most (`calendarLanesMax`), half width each. A third one goes into a "+N" badge on the first lane. The hover card lists it.
   - An item that starts 30 min or more after an item it overlaps is **raised**: depth + 1, moved right by `UIMetrics.calendarCascadeIndent` (14 pt), a 2 pt ring in the page color (`#121826`), no shadow. Depth stops at `calendarCascadeMaxDepth` (2). A deeper item goes into "+N".
   - Items that do not overlap in real time never share a lane width.
-- **Night fold (Week).** A run of 2 or more rows where every shown day has only Away or nothing becomes one 22 pt striped strip ("7:00 – 9:00 AM · away or nothing on every shown day"). A row that a non-Away block crosses never folds.
+- **Night fold (Week).** A run of 2 or more rows where every shown day has only Away or nothing becomes one 22 pt striped strip ("7:00 – 9:00 AM · away or nothing on every shown day"). A row that a non-Away block crosses never folds. A run that reaches the end of the grid (6 AM) and does not start at 6 AM is not drawn: its rows are removed and the grid ends at the last open row (no strip at the bottom). The row that holds now never folds (the layout takes `now`).
 - **"Done during".** An activity is done during an event when it starts no earlier than the event start − 5 min (`calendarHostLeadMinutes`) and at least half of it is inside the event (`calendarHostShare` 0.5).
 - **Which events are Plan.** Every shown calendar event, except the events that Sathi wrote for a tracked activity (the activity's `eventID`): those are the activity itself and do not show as plan. An event the user started an activity from (`sourceEventID`) shows in Plan, and the activity shows in Actual with the "done during" link.
 
@@ -42,17 +42,18 @@ Remove what this phase replaces, in the same wave: host and child nesting, optio
 
 ## B2. Day view
 
+- The page opens on Day (the page day that holds now) when no date is given; a Month date click opens that date. Row zoom default stays 1 h; saved prefs are kept.
 - Header: "Actual · 6h 31m" (tracked time, no Away) and "Plan · 3 events".
 - Left time rail with hour labels, a line at each hour, a dashed line every 15 min.
 - **Activity card** (Activities row style): 3 pt left edge in the category color, fill = category color mixed on the card color, bold title (wraps up to 3 lines when tall), time "10:38 AM – 12:31 PM", category name in its color, "Calendar" or "Not in calendar" tag, length on the right ("1h 53m"), edit pencil. Away card: dim, stripes, title "Away · Sleep", time and length.
 - **Event card**: outline in the calendar color, card fill, calendar icon, title (up to 3 lines), time, calendar name (dark colors made lighter for text only), "N done during" tag, length on the right. Hover shows "Start as activity" and Open.
-- A 26 pt gutter between the halves holds the "done during" link: a line in the event's color from the activity to its event, with a dot on the activity. When the event is in a "+N", the link goes to the card that holds it.
+- A 26 pt gutter between the halves holds the "done during" link: a line in the event's color from the activity to its event, with a dot on the activity. When the event is in a "+N", the link goes to the card that holds it. The gutter has a solid `Night.divider` line at the end of the Actual half and a dashed line at the start of the Plan half, both full grid height, drawn under the link lines.
 - No "Free" rows: empty time is empty space.
 - Every Day card always shows all its fields: title, time range, category (or calendar name), tag, and length. A card never drops the time or the length because it is short; the minimum height (46 pt) makes them fit. The old phase 24 look (full-width flat blocks, time on tall blocks only, length on short blocks only) must not remain anywhere in Day.
 
 ## B3. Week view
 
-- **Day count** control in the header: "3 days · 4 days · 5 days · 7 days". New saved pref `calendarPage.weekDays` (3, 4, 5 or 7; default 7; lenient decode, an unknown value gives 7). Use the `/data-migration` skill.
+- **Day count** menu button in the header: it shows the current count ("7 days" and a chevron) and opens a menu with 3, 4, 5 and 7 days; a pick saves the count and resets the range. The Week header stays on 1 row like Day (title left, summary in the middle, controls right); below the 1-row width it may wrap, as Day does. New saved pref `calendarPage.weekDays` (3, 4, 5 or 7; default 7; lenient decode, an unknown value gives 7). Use the `/data-migration` skill.
 - Range: 7 days keeps the Saturday-start week. 3, 4, 5 days put today in the middle, leaning to the past: 3 = 1 day back and 1 ahead, 4 = 2 back and 1 ahead, 5 = 2 back and 2 ahead. ‹ › moves by N days. "Today" goes back to the default range.
 - Day header "Mon 16 Nov", then "ACTUAL | PLAN" labels.
 - Blocks: title (up to 3 lines when tall) and "2:36 – 3:02 PM · 26m". Away: dim block with stripes. "Done during": a small dot in the event's color on the activity.
