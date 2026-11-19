@@ -74,7 +74,5 @@ extension UIMetrics {
     static let todoSwatch: CGFloat = 36
     static let todoSwatchRing: CGFloat = 3
     static let todoSwatchColumns = 6
-    static let todoGateWidth: CGFloat = 420
-    static let todoGateIcon: CGFloat = 40
     static let todoBorder: CGFloat = 1
 }

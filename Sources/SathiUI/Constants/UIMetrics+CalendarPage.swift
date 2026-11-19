@@ -4,7 +4,6 @@ import SwiftUI
 extension UIMetrics {
     static let calendarTitleGap: CGFloat = 6
     static let calendarTodayPadding = EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
-    static let calendarGateGap: CGFloat = 10
     static let calendarHourHeight: CGFloat = 60
     static let calendarSubLineOpacity: Double = 0.45
     static let calendarRowZoomGap: CGFloat = 6

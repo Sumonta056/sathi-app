@@ -16,6 +16,9 @@ struct CopywriterCalendarPageTests {
         #expect(Copywriter.calendarExperimentalTag == "Experimental")
         #expect(Copywriter.calendarSettingLabel == "Calendar page (experimental)")
         #expect(Copywriter.calendarToday == "Today")
+        #expect(Copywriter.calendarGateTitle == "Your calendar, in Sathi")
+        #expect(Copywriter.calendarGateNotice == "Sathi needs calendar access to show your events.")
+        #expect(Copywriter.calendarGateDenied == "Calendar access is off. Turn it on in System Settings.")
     }
 
     @Test func monthTitleIsMonthAndYear() {

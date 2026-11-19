@@ -13,7 +13,9 @@ extension Copywriter {
     package static let calendarSettingLabel = "Calendar page (experimental)"
     package static let calendarSettingHint = "Shows your events and activities on one time grid."
     package static let calendarToday = "Today"
+    package static let calendarGateTitle = "Your calendar, in Sathi"
     package static let calendarGateNotice = "Sathi needs calendar access to show your events."
+    package static let calendarGateDenied = "Calendar access is off. Turn it on in System Settings."
 
     package static func calendarRangeTitle(_ range: CalendarPageRange, calendar: Calendar) -> CalendarRangeTitle {
         let zone = calendar.timeZone

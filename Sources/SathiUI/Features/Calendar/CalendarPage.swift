@@ -29,11 +29,9 @@ struct CalendarPage: View {
         } : nil
         let sidePanelShown = layout.isNarrow ? narrowStats : e.data.prefs.calendarPage.sidePanelShown(for: range.kind)
         VStack(alignment: .leading, spacing: UIMetrics.reportsPageGap) {
-            CalendarPageHeader(
-                range: binding(range), now: e.now, calendar: e.rangeCalendar, stats: data?.stats, sidePanelShown: sidePanelShown,
-                toggleSidePanel: { toggleSidePanel(range.kind) }, rowMinutes: rowMinutes, today: e.calendarPageToday,
-                weekDays: e.data.prefs.calendarPage.weekDays, pickDays: { picked = Self.pickDays($0, engine: e) }
-            )
+            if let data {
+                header(range, data, sidePanelShown: sidePanelShown)
+            }
             content(range, data)
         }
         .padding(UIMetrics.mainContentPadding)
@@ -45,6 +43,14 @@ struct CalendarPage: View {
         .onDisappear { e.calendarPageClosed() }
         .onChange(of: day) { _ in picked = nil }
         .modifier(CalendarRangeReset(range: range, focus: $focus, failure: $failure))
+    }
+
+    private func header(_ range: CalendarPageRange, _ data: CalendarPageData, sidePanelShown: Bool) -> some View {
+        CalendarPageHeader(
+            range: binding(range), now: e.now, calendar: e.rangeCalendar, stats: data.stats, sidePanelShown: sidePanelShown,
+            toggleSidePanel: { toggleSidePanel(range.kind) }, rowMinutes: rowMinutes, today: e.calendarPageToday,
+            weekDays: e.data.prefs.calendarPage.weekDays, pickDays: { picked = Self.pickDays($0, engine: e) }
+        )
     }
 
     private func toggleSidePanel(_ kind: ReportRange) {
