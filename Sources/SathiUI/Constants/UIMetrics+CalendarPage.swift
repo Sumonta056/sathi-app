@@ -15,7 +15,7 @@ extension UIMetrics {
     static let calendarAllDayHeight: CGFloat = 22
     static let calendarNowLineWidth: CGFloat = 1.5
     static let calendarMonthCellMinHeight: CGFloat = 96
-    static let calendarHourLabelWidth: CGFloat = 52
+    static let calendarHourLabelWidth: CGFloat = 58
     static let calendarHourFont: CGFloat = 10
     static let calendarLine: CGFloat = 1
     static let calendarLaneGap: CGFloat = 2
@@ -32,6 +32,9 @@ extension UIMetrics {
     static let calendarChipPadding = EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)
     static let calendarChipRadius: CGFloat = 4
     static let calendarNowPillFont: CGFloat = 9
+    static let calendarNowPillTrailing: CGFloat = 2
+    static let calendarNowDot: CGFloat = 7
+    static let calendarNowPillHeight: CGFloat = 13
     static let calendarNowPillPadding = EdgeInsets(top: 1, leading: 4, bottom: 1, trailing: 4)
     static let calendarMonthPadding: CGFloat = 6
     static let calendarMonthNumberFont: CGFloat = 12

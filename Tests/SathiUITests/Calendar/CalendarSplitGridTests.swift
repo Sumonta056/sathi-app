@@ -57,6 +57,27 @@ struct CalendarSplitGridTests {
         #expect(sut.findAll(CalendarNowLine.self).count == 1)
     }
 
+    @Test(arguments: [false, true])
+    func theNowPillIsInTheHourGutter(_ isWeek: Bool) throws {
+        let range = isWeek ? Fix.weekRange(3) : Fix.dayRange()
+        let clock = Copywriter.trackerClock(Fix.at(12), calendar: Fix.cal)
+        let rail = try grid(range, Fix.grid([:])).inspect().find(CalendarSplitRail.self)
+        #expect(throws: Never.self) { try rail.find(text: clock) }
+    }
+
+    @Test func theNowLineHasNoTextOnIt() throws {
+        let clock = Copywriter.trackerClock(Fix.at(12), calendar: Fix.cal)
+        let line = try grid(Fix.weekRange(3), Fix.grid([:])).inspect().find(CalendarNowLine.self)
+        #expect(Find.lacks(line, text: clock))
+    }
+
+    @Test func aRangeWithoutNowHasNoNowPill() throws {
+        let later = Fix.at(12).addingTimeInterval(14 * 86400)
+        let clock = Copywriter.trackerClock(later, calendar: Fix.cal)
+        let rail = try grid(Fix.weekRange(3), Fix.grid([:]), now: later).inspect().find(CalendarSplitRail.self)
+        #expect(Find.lacks(rail, text: clock))
+    }
+
     @Test func theGridHidesTheScrollBar() throws {
         let scroll = try grid(Fix.weekRange(3), Fix.grid([:])).inspect().find(ViewType.ScrollView.self)
         #expect(try scroll.showsIndicators() == false)

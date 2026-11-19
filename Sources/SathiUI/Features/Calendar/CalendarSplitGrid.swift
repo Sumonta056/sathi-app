@@ -66,6 +66,7 @@ struct CalendarSplitGrid: View {
     }
 
     private var today: DayKey { CalendarPageDay.key(holding: now, calendar: calendar) }
+    private var showsNow: Bool { range.days.contains(today) }
 
     private var line: some View {
         Night.divider.frame(height: UIMetrics.calendarLine)
@@ -75,7 +76,7 @@ struct CalendarSplitGrid: View {
         ScrollViewReader { proxy in
             ScrollView(.vertical, showsIndicators: false) {
                 HStack(alignment: .top, spacing: 0) {
-                    CalendarSplitRail(grid: grid)
+                    CalendarSplitRail(grid: grid, now: showsNow ? now : nil, day: today, calendar: calendar)
                     columns(column)
                         .background(alignment: .topLeading) { lines(column) }
                 }

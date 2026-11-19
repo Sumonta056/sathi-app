@@ -90,10 +90,10 @@ struct CalendarSplitColumn: View {
 
     @ViewBuilder private var nowLine: some View {
         if let now, CalendarPageDay.interval(of: day, calendar: calendar).contains(now) {
-            let y = grid.y(atMinute: CalendarSplitClock.minute(now, day: day, calendar: calendar))
-            CalendarNowLine(now: now, calendar: calendar)
+            let y = CalendarNowMark.y(grid, now: now, day: day, calendar: calendar)
+            CalendarNowLine()
                 .frame(width: width)
-                .position(x: width / 2, y: CGFloat(y))
+                .position(x: width / 2, y: y)
                 .allowsHitTesting(false)
         }
     }
