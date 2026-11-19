@@ -12,7 +12,7 @@ On busy days the phase 24 grid moved short blocks far from their real time and d
 
 ## Decisions (answered 2026-11-18)
 
-1. Day and Week split each day into **Actual** (activities, left, 60 %) and **Plan** (calendar events, right, 40 %).
+1. Day and Week split each day into **Actual** (activities, left, 50 %) and **Plan** (calendar events, right, 50 %). Changed from 60 / 40 by the user on 2026-11-19: both halves have the same width.
 2. The Calendar page has **no Merge**: no checkboxes, no ⌘-click selection, no Merge strip, no Merge button in the hover card. Merge stays on the Activities page.
 3. Every item is **one block from its real start to its real end**, also across hour rows.
 4. Overlap: **side by side only when 2 items start less than 30 min apart**. Otherwise the later item is **raised** on top. The earlier item keeps full width.
@@ -104,7 +104,7 @@ Real events for fixtures (from macOS Calendar, 14–20 Nov 2026, Asia/Dhaka):
 | Block gap | `UIMetrics+CalendarPage` | Week 2 pt, Day 4 pt |
 | Title room in start row | `UIMetrics+CalendarPage` | 22 pt |
 | Night fold strip | `UIMetrics+CalendarPage` | 22 pt; fold run ≥ 2 rows (`Limits`) |
-| Actual share | `UIMetrics+CalendarPage` | 0.6 |
+| Actual share | `UIMetrics+CalendarSplit` | 0.5 |
 | Narrow mode below | `UIMetrics+CalendarPage` | Actual 120 pt |
 | Day link gutter | `UIMetrics+CalendarPage` | 26 pt |
 | Week day counts | `Limits+CalendarPage` | [3, 4, 5, 7], default 7 |

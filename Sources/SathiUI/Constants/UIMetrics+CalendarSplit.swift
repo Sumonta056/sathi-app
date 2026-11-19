@@ -10,7 +10,7 @@ extension UIMetrics {
     static let calendarWeekBlockGap: Double = 2
     static let calendarTitleRoom: Double = 22
     static let calendarFoldHeight: Double = 22
-    static let calendarActualShare: CGFloat = 0.6
+    static let calendarActualShare: CGFloat = 0.5
     static let calendarNarrowActualWidth: CGFloat = 120
     static let calendarDayLinkGutter: CGFloat = 26
     static let calendarSplitLabelHeight: CGFloat = 18

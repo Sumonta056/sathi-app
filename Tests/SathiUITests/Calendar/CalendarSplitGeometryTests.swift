@@ -13,35 +13,35 @@ struct CalendarSplitGeometryTests {
     @Test func dayHalvesKeepTheLinkGutterBetweenActualAndPlan() {
         let h = CalendarSplitGeometry.halves(column: 526, kind: .day)
         #expect(h.actualX == 0)
-        #expect(h.actualWidth == 300)
-        #expect(h.planX == 326)
-        #expect(h.planWidth == 200)
+        #expect(h.actualWidth == 250)
+        #expect(h.planX == 276)
+        #expect(h.planWidth == 250)
     }
 
-    @Test func weekHalvesSplitSixtyFortyWithNoGutter() {
+    @Test func weekHalvesSplitFiftyFiftyWithNoGutter() {
         let h = CalendarSplitGeometry.halves(column: 300, kind: .week)
         #expect(h.actualX == 0)
-        #expect(h.actualWidth == 180)
-        #expect(h.planX == 180)
-        #expect(h.planWidth == 120)
+        #expect(h.actualWidth == 150)
+        #expect(h.planX == 150)
+        #expect(h.planWidth == 150)
     }
 
     @Test func aFullWidthBlockFillsItsHalfAtItsTopAndBottom() {
         let halves = CalendarSplitGeometry.halves(column: 300, kind: .week)
         let laid = Fix.laid(Fix.event("Scrum", Fix.at(10), Fix.at(11)), top: 240, bottom: 300)
         let r = CalendarSplitGeometry.rect(laid, halves: halves)
-        #expect(r.minX == 180)
+        #expect(r.minX == 150)
         #expect(r.minY == 240)
         #expect(r.height == 60)
-        #expect(r.width == 120 - UIMetrics.calendarLaneGap)
+        #expect(r.width == 150 - UIMetrics.calendarLaneGap)
     }
 
     @Test func theSecondLaneStartsHalfWayIntoTheHalf() {
         let halves = CalendarSplitGeometry.halves(column: 300, kind: .week)
         let laid = Fix.laid(Fix.activity("B", Fix.at(10), Fix.at(11)), top: 0, bottom: 60, lane: 1, lanes: 2)
         let r = CalendarSplitGeometry.rect(laid, halves: halves)
-        #expect(r.minX == 90)
-        #expect(r.width == 90 - UIMetrics.calendarLaneGap)
+        #expect(r.minX == 75)
+        #expect(r.width == 75 - UIMetrics.calendarLaneGap)
     }
 
     @Test(arguments: [1, 2])
@@ -51,7 +51,7 @@ struct CalendarSplitGeometryTests {
         let r = CalendarSplitGeometry.rect(laid, halves: halves)
         let indent = CGFloat(depth) * UIMetrics.calendarCascadeIndent
         #expect(r.minX == indent)
-        #expect(r.width == 180 - indent - UIMetrics.calendarLaneGap)
+        #expect(r.width == 150 - indent - UIMetrics.calendarLaneGap)
     }
 
     @Test func aRaisedSecondLaneUsesTheIndentedWidth() {
@@ -59,7 +59,7 @@ struct CalendarSplitGeometryTests {
         let laid = Fix.laid(Fix.event("B", Fix.at(10), Fix.at(11)), top: 0, bottom: 60, lane: 1, lanes: 2, depth: 1)
         let r = CalendarSplitGeometry.rect(laid, halves: halves)
         let indent = UIMetrics.calendarCascadeIndent
-        #expect(r.minX == 180 + indent + (120 - indent) / 2)
+        #expect(r.minX == 150 + indent + (150 - indent) / 2)
     }
 
     @Test func theTodoPillSitsInThePlanHalfAtTheLaidTop() {
@@ -73,7 +73,7 @@ struct CalendarSplitGeometryTests {
         #expect(r.height == UIMetrics.calendarTodoPillHeight)
     }
 
-    @Test(arguments: [(190.0, true), (200.0, false), (400.0, false)])
+    @Test(arguments: [(230.0, true), (240.0, false), (400.0, false)])
     func weekIsNarrowBelowOneHundredTwentyPointsOfActual(_ column: Double, _ narrow: Bool) {
         #expect(CalendarSplitMetrics.isNarrow(column: column, kind: .week) == narrow)
     }
