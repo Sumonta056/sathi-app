@@ -69,9 +69,9 @@ struct TodosNavigationTests {
         #expect(route.page == .dashboard(.day))
     }
 
-    @Test func todosRouteShowsTodayWhenOff() throws {
+    @Test func todosRouteShowsTheDashboardWhenOff() throws {
         let sut = try main(.todos, on: false)
-        #expect(throws: Never.self) { try sut.find(TodayPage.self) }
+        #expect(throws: Never.self) { try sut.find(DashboardPage.self) }
         #expect((try? sut.find(TodosPage.self)) == nil)
     }
 

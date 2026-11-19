@@ -5,8 +5,8 @@ import SathiTestSupport
 import Testing
 
 @MainActor
-@Suite("Dashboard memo")
-struct DashboardMemoTests {
+@Suite("Today streak memo")
+struct TodayStreakMemoTests {
     private final class Counter {
         var builds = 0
     }

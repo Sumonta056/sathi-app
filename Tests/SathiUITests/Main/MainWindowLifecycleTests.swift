@@ -78,4 +78,13 @@ struct MainWindowLifecycleTests {
         #expect(c.mainRoute?.page == .dashboard(.day))
         #expect(spy.shown.count == 1)
     }
+
+    @Test func everyOpenStartsAFreshPage() {
+        let h = EngineHarness()
+        let c = controller(h, Spy())
+        c.showMain(.dashboard(.week))
+        let first = c.mainRoute?.opens
+        c.showMain(.dashboard(.week))
+        #expect(c.mainRoute?.opens != first)
+    }
 }

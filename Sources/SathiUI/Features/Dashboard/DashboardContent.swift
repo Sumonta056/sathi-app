@@ -1,5 +1,6 @@
 import Foundation
 import SathiCore
+import SwiftUI
 
 enum DashboardContent: Equatable {
     case today
@@ -9,6 +10,7 @@ enum DashboardContent: Equatable {
 
 extension DashboardPage {
     static func content(range: StatsRange, now: Date, selected: HabitID?) -> DashboardContent {
-        fatalError("Track B")
+        if let selected { return .buddy(selected) }
+        return range.kind == .day && range.holds(now) ? .today : .all
     }
 }
