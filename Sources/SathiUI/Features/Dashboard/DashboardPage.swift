@@ -6,7 +6,7 @@ struct DashboardPage: View {
     @State private var picked: StatsRange?
     @State private var selected: HabitID?
     @State private var memo = RangeMemo<StatsRange, ReportsOverview>()
-    @State private var scoreMemo = RangeMemo<StatsRange, DashboardScore?>()
+    @State private var dash = DashboardMemo()
     @EnvironmentObject var e: Engine
 
     init(kind: ReportRange, range: StatsRange? = nil, selected: HabitID? = nil) {
@@ -22,7 +22,7 @@ struct DashboardPage: View {
         let content = Self.content(range: range, now: e.now, selected: shown)
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .leading, spacing: UIMetrics.reportsPageGap) {
-                DashboardHeader(range: rangeBinding(range), score: score(content, range))
+                DashboardHeader(range: rangeBinding(range), dateLine: dash.dateLine(engine: e), score: score(content, range, overview))
                 ReportsTabRow(scores: overview.scores, selected: Binding(get: { shown }, set: { selected = $0 }))
                 page(content, range: range, overview: overview)
             }
@@ -43,9 +43,9 @@ struct DashboardPage: View {
         }
     }
 
-    private func score(_ content: DashboardContent, _ range: StatsRange) -> DashboardScore? {
+    private func score(_ content: DashboardContent, _ range: StatsRange, _ overview: ReportsOverview) -> DashboardScore? {
         guard content == .today else { return nil }
-        return scoreMemo.value(range, range: range, engine: e) { $0.dashboardScore($1) }
+        return dash.score(range, overview: overview, engine: e)
     }
 
     private func rangeBinding(_ range: StatsRange) -> Binding<StatsRange> {

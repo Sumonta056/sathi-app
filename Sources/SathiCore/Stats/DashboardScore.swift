@@ -13,3 +13,13 @@ package struct DashboardScore: Equatable, Sendable {
         self.isUp = isUp
     }
 }
+
+package struct DashboardYesterday: Equatable, Sendable {
+    package var metAt: [Date]
+    package var firstProgress: Date?
+
+    package init(metAt: [Date], firstProgress: Date?) {
+        self.metAt = metAt
+        self.firstProgress = firstProgress
+    }
+}

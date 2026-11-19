@@ -4,6 +4,7 @@ import SwiftUI
 struct DashboardHeader: View {
     @EnvironmentObject var e: Engine
     @Binding var range: StatsRange
+    let dateLine: String
     let score: DashboardScore?
 
     private var holdsToday: Bool {
@@ -19,7 +20,7 @@ struct DashboardHeader: View {
 
     private var titles: some View {
         VStack(alignment: .leading, spacing: UIMetrics.todayHeaderGap) {
-            Text(verbatim: e.dashboardDateLine)
+            Text(verbatim: dateLine)
                 .font(Typography.tracker(UIMetrics.todayDateFont, .semibold))
                 .tracking(UIMetrics.todayDateTracking)
                 .foregroundStyle(Night.label)
