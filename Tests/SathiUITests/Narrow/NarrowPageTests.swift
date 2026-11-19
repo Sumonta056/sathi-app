@@ -40,14 +40,16 @@ struct NarrowPageTests {
     }
 
     private func dayContent(_ layout: MainLayout) throws -> InspectableView<ViewType.ClassifiedView> {
-        try TodayDayContent().environmentObject(EngineHarness.tracker().engine).environment(\.mainLayout, layout).inspect()
+        let work = Activity(text: "Task", category: "Coding", start: day(2026, 3, 4, 10), end: day(2026, 3, 4, 11))
+        let h = EngineHarness.tracker(at: day(2026, 3, 4, 14), activities: [work])
+        return try TodayDayContent().environmentObject(h.engine).environment(\.mainLayout, layout).inspect()
     }
 
     private func texts(_ sut: InspectableView<some BaseViewType>) -> [String] {
         sut.findAll(ViewType.Text.self).compactMap { try? $0.string() }
     }
 
-    @Test func narrowDayStacksTheStreakCalendarFirstThenComingUp() throws {
+    @Test func narrowDayStacksTheStreakCalendarThenComingUpThenBreakdown() throws {
         let sut = try dayContent(NarrowSupport.narrow)
         let stack = try sut.find(viewWithAccessibilityIdentifier: MainLayout.stackedIdentifier)
         #expect(throws: Never.self) { try stack.find(ViewType.VStack.self) }
@@ -56,16 +58,19 @@ struct NarrowPageTests {
         let all = texts(stack)
         let month = try #require(all.firstIndex(of: "March 2026"))
         let coming = try #require(all.firstIndex(of: "Coming up"))
+        let breakdown = try #require(all.firstIndex(of: "Breakdown"))
         #expect(month < coming)
+        #expect(coming < breakdown)
         #expect((try? sut.find(ViewType.ScrollView.self)) == nil)
     }
 
-    @Test func wideDayPutsTheStreakCalendarBesideComingUp() throws {
+    @Test func wideDayPutsTheStreakCalendarComingUpAndBreakdownInOneRow() throws {
         let sut = try dayContent(NarrowSupport.wide)
         #expect((try? sut.find(viewWithAccessibilityIdentifier: MainLayout.stackedIdentifier)) == nil)
         let row = try sut.find(TodayLowerRow.self)
         let both = row.findAll(ViewType.HStack.self).contains {
             (try? $0.find(StreakOverviewView.self)) != nil && (try? $0.find(TodayComingUp.self)) != nil
+                && (try? $0.find(DayBreakdownCard.self)) != nil
         }
         #expect(both)
     }

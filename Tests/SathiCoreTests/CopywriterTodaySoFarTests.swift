@@ -14,4 +14,10 @@ struct CopywriterTodaySoFarTests {
     @Test func noChangeIsEmpty() {
         #expect(Copywriter.todaySoFarChange(.none) == "")
     }
+
+    @Test func breakdownCardTitleAndSummary() {
+        #expect(Copywriter.dayBreakdownTitle == "Breakdown")
+        #expect(Copywriter.dayBreakdownSummary(count: 2, total: 3 * 3600) == "2 categories · 3h 0m")
+        #expect(Copywriter.dayBreakdownSummary(count: 1, total: 30 * 60) == "1 category · 30m")
+    }
 }

@@ -16,11 +16,8 @@ struct TodaySoFarCard: View {
                     height: UIMetrics.todayRibbonHeight, radius: UIMetrics.todayRibbonRadius, showsLabels: false
                 )
                 .overlay(nowMarker(hours))
-                ActivityAxis(hours: hours, calendar: calendar)
+                ActivityAxis(hours: hours, calendar: calendar, nowAt: fraction(hours))
                     .overlay(nowLabel(hours))
-                if !sofar.categories.isEmpty || !sofar.away.isEmpty {
-                    TodaySoFarBreakdown(sofar: sofar, categories: categories)
-                }
             } else if !sofar.isOn {
                 Text(verbatim: Copywriter.todaySoFarOffHint)
                     .font(Typography.tracker(UIMetrics.todayPanelNoteFont, .regular))
@@ -72,10 +69,7 @@ struct TodaySoFarCard: View {
                     .font(Typography.hint.weight(.heavy))
                     .foregroundStyle(Night.text)
                     .fixedSize()
-                    .position(
-                        x: min(max(g.size.width * fraction, UIMetrics.todayNowLabelHalfWidth), g.size.width - UIMetrics.todayNowLabelHalfWidth),
-                        y: g.size.height / 2
-                    )
+                    .position(x: ActivityAxis.labelX(width: g.size.width, fraction: fraction), y: g.size.height / 2)
             }
         }
     }

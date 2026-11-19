@@ -47,18 +47,19 @@ struct TodayDayContentTests {
         #expect(throws: Never.self) { try content(harness()).find(text: "+2h 0m vs yesterday") }
     }
 
-    @Test func showsTheBreakdownLineInsideTodaySoFar() throws {
-        let card = try content(harness()).find(TodaySoFarCard.self)
-        for text in ["Coding", "2h 0m", "67%", "Meetings", "1h 0m", "33%", "Lunch · Away", "30m", "—"] {
+    @Test func showsTheBreakdownCardInTheLowerRowNotInTodaySoFar() throws {
+        let sut = try content(harness())
+        let card = try sut.find(DayBreakdownCard.self)
+        for text in ["Breakdown", "Coding", "2h 0m", "67%", "Meetings", "1h 0m", "33%", "Lunch · Away", "30m", "—"] {
             #expect(throws: Never.self) { try card.find(text: text) }
         }
+        #expect(try Find.lacks(sut.find(TodaySoFarCard.self), text: "Coding"))
     }
 
-    @Test func hasNoBreakdownNoHeaderAndNoScroll() throws {
+    @Test func todaySoFarHasNoBreakdownAndThePageHasNoHeaderAndNoScroll() throws {
         let h = harness()
         let sut = try content(h)
-        _ = try sut.find(TodaySoFarCard.self)
-        #expect(Find.lacks(sut, text: "Breakdown"))
+        #expect(try Find.lacks(sut.find(TodaySoFarCard.self), text: "Breakdown"))
         #expect(Find.lacks(sut, text: h.engine.todayScreen.greeting))
         #expect(Find.lacks(sut, text: Copywriter.todayQuickReminder))
         #expect((try? sut.find(ViewType.ScrollView.self)) == nil)
@@ -90,8 +91,12 @@ struct TodayDayContentTests {
         try hosted(TodaySoFarCard(sofar: s, categories: [], calendar: cal, now: day(2026, 3, 4, 12)), EngineHarness()).inspect()
     }
 
+    private func breakdown(_ s: TodaySoFar) throws -> InspectableView<ViewType.ClassifiedView> {
+        try hosted(DayBreakdownCard(sofar: s, categories: []), EngineHarness()).inspect()
+    }
+
     @Test func breakdownIsLongestFirstWithAwayLastAndADash() throws {
-        let all = try texts(card(sofar(change: .up(40 * 60))))
+        let all = try texts(breakdown(sofar(change: .up(40 * 60))))
         let work = try #require(all.firstIndex(of: "Work"))
         let reading = try #require(all.firstIndex(of: "Reading"))
         let walk = try #require(all.firstIndex(of: "Walk · Away"))
@@ -121,11 +126,11 @@ struct TodayDayContentTests {
         let names = ["A1", "B2", "C3", "D4", "E5", "F6"]
         let acts = names.enumerated().map { i, name in work(4, 8 + i, 9 + i, name) }
         let h = EngineHarness.tracker(at: day(2026, 3, 4, 15), activities: acts) { $0.prefs.tracker.startMinutes = 8 * 60 }
-        let all = try texts(content(h).find(TodaySoFarCard.self))
+        let all = try texts(content(h).find(DayBreakdownCard.self))
         #expect(names.allSatisfy(all.contains))
     }
 
-    @Test func noRowsMeansNoBreakdownLine() {
+    @Test func noRowsMeansNoBreakdownCard() {
         let s = TodaySoFar(
             isOn: true,
             hours: DateInterval(start: day(2026, 3, 4, 9), end: day(2026, 3, 4, 18)),
@@ -133,6 +138,7 @@ struct TodayDayContentTests {
             logged: 0,
             categories: []
         )
-        #expect((try? card(s).find(TodaySoFarBreakdown.self)) == nil)
+        #expect(!TodayLowerRow.showsBreakdown(s))
+        #expect(!TodayLowerRow.showsBreakdown(.off))
     }
 }

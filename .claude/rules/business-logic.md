@@ -155,9 +155,9 @@ Full rules are in `docs/specs/phase-18-app-window.md`.
 Full rules are in `docs/specs/phase-26-dashboard.md`.
 
 1. Dashboard has 1 range switch (Stats rule 14) and 1 tab row (Stats rule 8). Both stay while the user moves between ranges; a range change keeps the selected tab.
-2. Day + All buddies shows: the date eyebrow, the greeting, the score line, Now, the 4 buddy cards, "Today so far", the streak month calendar, and Coming up.
+2. Day + All buddies shows: the date eyebrow, the greeting, the score line, Now, the 4 buddy cards, "Today so far", then 1 bottom row of 3 cards: the streak month calendar, Coming up, and Breakdown (rule 4). Below the narrow width the 3 cards stack in that order. With the tracker off, or with no rows, the Breakdown card is hidden (user, 2026-11-19).
 3. The score line: "{met} of {possible} goals today" from the day `ReportsOverview` score, then " · " and its change text ("+1 vs yesterday", "same as yesterday"). With no buddy on, the line is hidden. With no data in both days, the change part is hidden (Stats rule 15).
-4. "Today so far" shows the logged total and its change vs yesterday (Stats rule 15, Day words), the timeline, and 1 breakdown line: each category (dot, name, time, percent), longest first, away rows last with "—" (Activity tracker rule 11b). With the tracker off the card shows as now.
+4. "Today so far" shows the logged total and its change vs yesterday (Stats rule 15, Day words) and the timeline. The "Now {time}" label under the timeline hides each hour number it would cover. The Breakdown card shows the title "Breakdown" and "{n} categories · {total}" ("1 category"), then 1 row for each category (dot, name, time, percent, and a bar of its share of the logged time), longest first, away rows last with "—" and no bar (Activity tracker rule 11b). With the tracker off "Today so far" shows as now.
 5. Day + All buddies on a past day (‹): the page shows the Reports "All buddies" content for that day, as Reports does now. Only the day that holds now shows the Today content.
 6. Week or Month + All buddies: Stats rule 8. Any range + a buddy tab: Stats rule 9.
 7. The streak calendar on Day opens on the current month (Stats rule 11).

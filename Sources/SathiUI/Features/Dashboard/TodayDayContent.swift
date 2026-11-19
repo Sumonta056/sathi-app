@@ -17,7 +17,7 @@ struct TodayDayContent: View {
             TodayNowCard(e: e, now: screen.now, calendar: cal)
             TodayBuddyGrid(e: e, buddies: screen.buddies, calendar: cal)
             TodaySoFarCard(sofar: screen.sofar, categories: e.activityCategories, calendar: cal, now: screen.at)
-            TodayLowerRow(items: screen.comingUp, calendar: cal, now: screen.at)
+            TodayLowerRow(items: screen.comingUp, sofar: screen.sofar, categories: e.activityCategories, calendar: cal, now: screen.at)
         }
         .frame(maxWidth: .infinity, alignment: .topLeading)
     }

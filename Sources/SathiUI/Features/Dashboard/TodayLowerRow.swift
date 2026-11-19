@@ -3,6 +3,8 @@ import SwiftUI
 
 struct TodayLowerRow: View {
     let items: [ComingUpItem]
+    let sofar: TodaySoFar
+    let categories: [ActivityCategory]
     let calendar: Calendar
     let now: Date
     @Environment(\.mainLayout) private var layout
@@ -17,12 +19,14 @@ struct TodayLowerRow: View {
             VStack(alignment: .leading, spacing: UIMetrics.dayLowerRowGap) {
                 streak(data, month)
                 coming
+                breakdown
             }
             .accessibilityIdentifier(MainLayout.stackedIdentifier)
         } else {
             HStack(alignment: .top, spacing: UIMetrics.dayLowerRowGap) {
                 streak(data, month)
                 coming
+                breakdown.frame(width: UIMetrics.dayBreakdownCardWidth)
             }
             .fixedSize(horizontal: false, vertical: true)
         }
@@ -36,6 +40,16 @@ struct TodayLowerRow: View {
 
     private var coming: some View {
         TodayComingUp(items: items, calendar: calendar, now: now)
+    }
+
+    @ViewBuilder private var breakdown: some View {
+        if Self.showsBreakdown(sofar) {
+            DayBreakdownCard(sofar: sofar, categories: categories)
+        }
+    }
+
+    static func showsBreakdown(_ sofar: TodaySoFar) -> Bool {
+        sofar.isOn && !(sofar.categories.isEmpty && sofar.away.isEmpty)
     }
 
     static func streakMonth(_ month: StatsRange, memo: RangeMemo<StatsRange, OverviewMonth>, engine: Engine) -> OverviewMonth {
