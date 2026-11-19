@@ -6,6 +6,10 @@ enum CalendarDayCardFit {
         return p.top + p.bottom + UIMetrics.calendarDayTitleLine + UIMetrics.calendarDayLineGap + UIMetrics.calendarDayMetaLine
     }
 
+    static func isCompact(height: CGFloat) -> Bool {
+        height < UIMetrics.calendarDayCardMinHeight
+    }
+
     static func titleLines(height: CGFloat) -> Int {
         let p = UIMetrics.calendarDayCardPadding
         let room = height - p.top - p.bottom - UIMetrics.calendarDayMetaLine - UIMetrics.calendarDayLineGap

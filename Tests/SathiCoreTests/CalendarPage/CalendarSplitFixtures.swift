@@ -12,12 +12,14 @@ enum Split {
     static let weekFlat = metrics(minHeight: 34, awayMinHeight: 34, gap: 2, folds: false)
     static let weekNarrow = metrics(minHeight: 22, awayMinHeight: 22, gap: 2, folds: true)
     static let day = metrics(minHeight: 46, awayMinHeight: 40, gap: 4, folds: false)
+    static let dayCompact = metrics(minHeight: 46, awayMinHeight: 40, gap: 4, folds: false, compactHeight: 26)
 
     static func metrics(
-        pointsPerMinute: Double = 1, minHeight: Double, awayMinHeight: Double, gap: Double, folds: Bool
+        pointsPerMinute: Double = 1, minHeight: Double, awayMinHeight: Double, gap: Double, folds: Bool,
+        compactHeight: Double? = nil
     ) -> CalendarLayoutMetrics {
         CalendarLayoutMetrics(
-            pointsPerMinute: pointsPerMinute, minHeight: minHeight, awayMinHeight: awayMinHeight,
+            pointsPerMinute: pointsPerMinute, minHeight: minHeight, awayMinHeight: awayMinHeight, compactHeight: compactHeight,
             gap: gap, titleRoom: 22, foldHeight: 22, foldsNights: folds
         )
     }

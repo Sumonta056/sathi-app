@@ -29,7 +29,8 @@ enum CalendarSplitRows {
             let parent = placed.filter { isParent($0.laid, of: x.laid) }.map(\.laid.top).max() ?? -Double.infinity
             let top = max(y(x.from, rows, m), floor, parent)
             items[i].laid.top = top
-            grow(&rows, at: r, by: top + m.titleRoom - rows[r].bottom)
+            let room = fitsWhole(x, in: r, rows: rows) ? m.least(for: x.laid.block, minutes: x.to - x.from) : m.titleRoom
+            grow(&rows, at: r, by: top + max(m.titleRoom, room) - rows[r].bottom)
             columns[column, default: []].append(i)
         }
         for i in items.indices {
@@ -69,7 +70,14 @@ enum CalendarSplitRows {
 
     private static func bottom(of item: Item, rows: [CalendarGridRow], metrics m: CalendarLayoutMetrics) -> Double {
         if let r = rows.first(where: { $0.holds(item.to) }), r.isFold, item.to > item.from { return y(item.to, rows, m) }
-        return max(item.laid.top + m.least(for: item.laid.block), y(item.to, rows, m))
+        return max(item.laid.top + m.least(for: item.laid.block, minutes: item.to - item.from), y(item.to, rows, m))
+    }
+
+    private static func fitsWhole(_ x: Item, in r: Int, rows: [CalendarGridRow]) -> Bool {
+        guard x.to <= rows[r].endMinute else { return false }
+        guard x.to == rows[r].endMinute else { return true }
+        guard let next = rows.first(where: { $0.holds(x.to) }) else { return false }
+        return !next.isFold
     }
 
     private static func grow(_ rows: inout [CalendarGridRow], at r: Int, by extra: Double) {

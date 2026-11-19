@@ -42,6 +42,48 @@ struct CalendarDayCardTests {
         #expect(shows(sut, "Coding Hobby"))
     }
 
+    @Test(arguments: [nil, "ev-1"])
+    func compactActivityCardShowsOneLine(_ eventID: String?) {
+        let short = DayFix.activity("Check mail", DayFix.at(12, 24), DayFix.at(12, 26), eventID: eventID, bottom: 26)
+        let sut = DayFix.card(short)
+        #expect(shows(sut, "Check mail"))
+        #expect(shows(sut, "12:24 – 12:26 PM"))
+        #expect(shows(sut, "2m"))
+        #expect(!shows(sut, "Coding Hobby"))
+        #expect(!shows(sut, "Not in calendar"))
+        #expect(!shows(sut, "Calendar"))
+        #expect((try? sut.inspect().find(viewWithAccessibilityIdentifier: "calendar.day.edit")) == nil)
+    }
+
+    @Test func compactEventCardShowsOneLine() throws {
+        var e = DayFix.event("Standup", DayFix.at(13, 0), DayFix.at(13, 3), bottom: 26)
+        e.doneDuringCount = 1
+        let sut = DayFix.card(e, calendarName: "Work")
+        #expect(shows(sut, "Standup"))
+        #expect(shows(sut, "1:00 – 1:03 PM"))
+        #expect(shows(sut, "3m"))
+        #expect(!shows(sut, "Work"))
+        #expect(!shows(sut, "1 done during"))
+        let names = try sut.inspect().findAll(ViewType.Image.self).compactMap { try? $0.actualImage().name() }
+        #expect(names.contains("calendar"))
+    }
+
+    @Test func compactEventCardKeepsItsHiddenCountBadge() {
+        var e = DayFix.event("Standup", DayFix.at(13, 0), DayFix.at(13, 10), bottom: 26)
+        e.hidden = [DayFix.event("Sync", DayFix.at(13, 0), DayFix.at(13, 10))]
+        #expect(shows(DayFix.card(e), Copywriter.calendarHiddenCount(1)))
+    }
+
+    @Test func cardBelowTheDayMinimumHeightIsCompact() {
+        let card = DayFix.activity("Plan", DayFix.at(9, 0), DayFix.at(9, 45), bottom: UIMetrics.calendarDayCardMinHeight - 1)
+        #expect(!shows(DayFix.card(card), "Coding Hobby"))
+    }
+
+    @Test func compactHeightIsBelowTheTwoLineHeight() {
+        #expect(UIMetrics.calendarDayCompactMinHeight == 26)
+        #expect(UIMetrics.calendarDayCompactMinHeight < CalendarDayCardFit.twoLineHeight(away: false))
+    }
+
     @Test func runningActivityIsAnActivityCard() {
         let running = DayFix.activity("Code review", DayFix.at(10, 38), DayFix.at(11, 8), running: true)
         let sut = DayFix.card(running)

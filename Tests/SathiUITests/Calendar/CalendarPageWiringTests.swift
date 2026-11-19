@@ -53,11 +53,12 @@ struct CalendarPageWiringTests {
         #expect(grid.data.grid?.days.values.joined().contains { $0.block.title == "Write" } == true)
     }
 
-    @Test func dayGetsTheMinimumHeightOfADayCard() throws {
+    @Test func dayGetsTheCompactHeightOfAShortDayCard() throws {
         let h = harness()
         h.engine.refreshCalendarAccess()
         let grid = try hosted(CalendarPage(range: range(h)), h).inspect().find(CalendarSplitGrid.self).actualView()
         let write = try #require(grid.data.grid?.days.values.joined().first { $0.block.title == "Write" })
-        #expect(write.bottom - write.top >= UIMetrics.calendarDayCardMinHeight)
+        #expect(write.bottom - write.top >= UIMetrics.calendarDayCompactMinHeight)
+        #expect(write.bottom - write.top < UIMetrics.calendarDayCardMinHeight)
     }
 }
