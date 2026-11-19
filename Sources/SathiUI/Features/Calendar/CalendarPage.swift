@@ -56,7 +56,7 @@ struct CalendarPage: View {
         if let picked { return picked }
         let calendar = e.rangeCalendar
         let weekDays = e.data.prefs.calendarPage.weekDays
-        guard let day else { return .containing(e.now, kind: .week, calendar: calendar, weekDays: weekDays) }
+        guard let day else { return .containing(e.now, kind: .day, calendar: calendar, weekDays: weekDays) }
         return .containing(day: day, kind: .day, calendar: calendar, weekDays: weekDays)
     }
 
