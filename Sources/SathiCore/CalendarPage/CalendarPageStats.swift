@@ -46,6 +46,7 @@ package struct CalendarPageStats: Equatable, Sendable {
 
     private static func planned(_ events: [CalendarEventInfo], in interval: DateInterval) -> TimeInterval {
         let spans = events.filter { !$0.isAllDay && !$0.declined }
+            .map { CalendarRounding.rounded(DateInterval(start: $0.start, end: max($0.start, $0.end))) }
             .map { (max($0.start, interval.start), min($0.end, interval.end)) }
             .filter { $0.0 < $0.1 }
             .sorted { $0.0 < $1.0 }
@@ -64,6 +65,7 @@ package struct CalendarPageStats: Equatable, Sendable {
     }
 
     private static func clipped(_ start: Date, _ end: Date, to interval: DateInterval) -> TimeInterval {
-        max(0, min(end, interval.end).timeIntervalSince(max(start, interval.start)))
+        let r = CalendarRounding.rounded(DateInterval(start: start, end: max(start, end)))
+        return max(0, min(r.end, interval.end).timeIntervalSince(max(r.start, interval.start)))
     }
 }

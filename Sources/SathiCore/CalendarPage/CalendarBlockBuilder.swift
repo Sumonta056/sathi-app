@@ -19,7 +19,7 @@ package enum CalendarBlockBuilder {
     }
 
     package static func hides(_ e: CalendarEventInfo, in activities: [Activity]) -> Bool {
-        activities.contains { $0.eventID == e.id || CalendarTitleMatch.joins($0, e) } || EventRules.isLogged(e, in: activities)
+        activities.contains { $0.eventID == e.id }
     }
 
     private static func eventBlock(_ e: CalendarEventInfo, copies: Int, colors: [String: UInt32]) -> CalendarBlock {

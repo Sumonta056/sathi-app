@@ -18,7 +18,6 @@ struct TodosPage: View {
                 }
             } else {
                 TodoAccessGate()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
         .onAppear { e.refreshTodos() }

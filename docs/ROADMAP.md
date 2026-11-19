@@ -250,6 +250,23 @@ Branches: Track A `fix/event-ask-held`, Track B `feat/calendar-week-h2` (worktre
 - [ ] User: hand tests, `perf.sh --windows`, merge to `main`, push
 - [ ] Website screenshots (later, `/sathi-website`)
 
+## Phase 25: Calendar Day and Week, Plan | Actual
+
+Spec: `docs/specs/phase-25-calendar-plan-actual.md`. Design: https://claude.ai/artifact/QpmNuNugfzU3GCvNQRG79d
+Branch: `feat/calendar-plan-actual` (worktree `../Sathi-plan-actual`), one branch and worktree per track.
+
+- [x] Rules (Calendar page rules 5, 5a, 5b, 11, 12, 14, 15) and this entry
+- [x] B5: to-dos in the split: option A, pill on a dashed due line in the Plan half (https://claude.ai/artifact/5qcmvor46ZBi7F6sQ2B3ub)
+- [ ] T1 (B1): Core layout (halves, lanes, raised, push, row growth, night fold, done during, rounded once)
+- [ ] T2 (B3 data): `calendarPage.weekDays` pref (3, 4, 5, 7) and range math (`/data-migration`)
+- [ ] T3 (B2): Day view cards, link gutter, header
+- [ ] T4 (B3 UI): Week view, day count control, narrow mode, night fold strip
+- [ ] T5 (B4): hover card and actions, no Merge on the Calendar page
+- [ ] Remove the replaced layout (host nesting, option A grouping, trim, narrow-lane chip, old nudge) and its tests
+- [ ] Checks (tests, lint, release build), `perf.sh`, `ui-verifier` against the mockup, code review, `CLAUDE.md` module map and README
+- [ ] User: hand tests, `perf.sh --windows`, merge to `main`, push
+- [ ] Website screenshots (later, `/sathi-website`)
+
 ## Later
 
 - Days off: a lock or Nudgy bubble that shows at 23:58 stays after midnight into a day off (only a settings change closes it, rule 11). Close it at the first tick of a new day if users notice

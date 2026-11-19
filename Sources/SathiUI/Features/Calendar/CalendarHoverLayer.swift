@@ -29,10 +29,9 @@ struct CalendarHoverLayer: View {
     }
 
     private func card(_ t: CalendarHoverTarget, width: CGFloat) -> some View {
-        let info = e.calendarHoverInfo(t.placed)
+        let info = e.calendarHoverInfo(t.laid, among: t.among)
         let run = CalendarHoverRun(engine: e, grid: grid) { host.todoEdit = $0 }
-        let shown = CalendarHoverRun.visible(info, canMerge: grid.toggle != nil)
-        return CalendarHoverCard(info: info, actions: shown) { action in
+        return CalendarHoverCard(info: info, actions: info.actions) { action in
             host.close()
             run.run(action, t)
         } pick: { id in
@@ -50,7 +49,7 @@ struct CalendarHoverLayer: View {
         Color.clear
             .frame(width: t.rect.width, height: t.rect.height)
             .popover(isPresented: editing, arrowEdge: .trailing) {
-                if case let .todo(id) = t.placed.block.source {
+                if case let .todo(id) = t.laid.block.source {
                     CalendarTodoPopover(todoID: id) { host.todoEdit = nil }
                         .environmentObject(e)
                 }

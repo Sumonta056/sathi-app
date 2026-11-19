@@ -16,10 +16,24 @@ struct CalendarPageLifecycleTests {
         try hosted(view, h).inspect().find(CalendarPageHeader.self).actualView().range
     }
 
-    @Test func theSidebarOpensOnTheWeekThatHoldsNow() throws {
+    @Test func theSidebarOpensOnTheDayThatHoldsNow() throws {
         let h = EngineHarness()
-        let expected = CalendarPageRange.containing(h.engine.now, kind: .week, calendar: h.engine.rangeCalendar)
-        #expect(try shownRange(CalendarPage(), h) == expected)
+        let shown = try shownRange(CalendarPage(), h)
+        #expect(shown.kind == .day)
+        #expect(shown.holds(h.engine.now))
+        #expect(shown == CalendarPageRange.containing(h.engine.now, kind: .day, calendar: h.engine.rangeCalendar))
+    }
+
+    @Test func atHalfPastOneTheFirstDayIsThePageDayThatHoldsNow() throws {
+        let h = EngineHarness(at: day(2026, 11, 19, 1, 30))
+        let shown = try shownRange(CalendarPage(), h)
+        #expect(shown.kind == .day)
+        #expect(shown.days == [DayKey(day(2026, 11, 18), calendar: h.engine.rangeCalendar)])
+    }
+
+    @Test func theFirstOpenKeepsTheRowZoomDefaultOfOneHour() {
+        #expect(CalendarPagePrefs().rowMinutes == 60)
+        #expect(Limits.calendarDefaultRowMinutes == 60)
     }
 
     @Test func aDayArgumentStillOpensThatDay() throws {

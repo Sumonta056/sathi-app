@@ -91,13 +91,15 @@ struct CalendarTodoPopoverTests {
     @Test func aChipTapInTheGridNeverRunsTheSlotAction() async throws {
         let h = await loaded()
         let key = DayKey(day(2026, 3, 4, 12), calendar: h.engine.rangeCalendar)
-        let math = CalendarGridMath(day: key, calendar: h.engine.rangeCalendar, hourHeight: UIMetrics.calendarHourHeight)
+        var laid = CalendarLaidBlock(block: block(), span: block().interval, half: .plan)
+        laid.top = 540
+        laid.bottom = 540
         var slots = 0
         var actions = CalendarGridActions()
         actions.slot = { _, _, _ in slots += 1 }
-        let column = CalendarDayColumn(
-            day: key, placed: CalendarBlockLayout.place([block()], within: math.interval), texts: [:], math: math,
-            now: nil, categories: [], calendar: h.engine.rangeCalendar, actions: actions
+        let column = CalendarSplitColumn(
+            day: key, kind: .day, blocks: [laid], grid: CalendarGridLayout(rows: [], days: [key: [laid]], height: 1440, pointsPerMinute: 1),
+            width: 500, now: nil, calendar: h.engine.rangeCalendar, categories: [], actions: actions
         )
         let sut = try hosted(column, h).inspect()
         try sut.find(viewWithAccessibilityIdentifier: "calendar.todo.chip.a").button().tap()

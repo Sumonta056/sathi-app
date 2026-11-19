@@ -71,30 +71,6 @@ struct CalendarPageRangeTests {
         #expect(week.changed(to: .day, now: now).days.map(\.raw) == ["2026-02-28"])
     }
 
-    @Test func scrollRowCountsFromSixAM() {
-        let wed = CalendarPageRange.containing(monday.date(2026, 3, 4, 12), kind: .day, calendar: monday.calendar)
-        #expect(wed.initialScrollRow(now: monday.date(2026, 3, 4, 10, 15)) == 4)
-        #expect(wed.initialScrollRow(now: monday.date(2026, 3, 5, 1, 30)) == 19)
-        #expect(wed.initialScrollRow(now: monday.date(2026, 3, 5, 6, 0)) == 0)
-        #expect(wed.initialScrollRow(now: monday.date(2026, 3, 9, 10, 0)) == 0)
-    }
-
-    @Test func scrollRowOnDstDaysMatchesRows() throws {
-        for (raw, now) in [("2026-03-28", monday.date(2026, 3, 29, 4, 15)), ("2026-10-24", monday.date(2026, 10, 25, 4, 15))] {
-            let key = try #require(DayKey(raw: raw))
-            let range = CalendarPageRange.containing(
-                key.start(in: monday.calendar).addingTimeInterval(12 * 3600),
-                kind: .day,
-                calendar: monday.calendar
-            )
-            let rows = CalendarPageDay.hourStarts(of: key, calendar: monday.calendar)
-            let row = range.initialScrollRow(now: now)
-            #expect(row == 22)
-            #expect(rows[row] <= now)
-            #expect(rows[row + 1] > now)
-        }
-    }
-
     @Test func regionFirstWeekdayDoesNotChangeTheMonthGrid() {
         let date = monday.date(2026, 3, 10, 12)
         let a = CalendarPageRange.containing(date, kind: .month, calendar: monday.calendar)

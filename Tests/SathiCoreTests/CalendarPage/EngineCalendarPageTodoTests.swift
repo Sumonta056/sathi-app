@@ -26,7 +26,7 @@ struct EngineCalendarPageTodoTests {
 
     @Test func timedTodoShowsAsAChipInTheGrid() async {
         let h = await loaded([timed("a")])
-        let data = h.engine.calendarPage(h.calendarDay())
+        let data = h.engine.calendarPageBase(h.calendarDay())
         #expect(sources(data.blocks) == [.todo("a")])
         #expect(data.blocks.first?.interval.start == day(2026, 3, 4, 15))
         #expect(data.allDay.isEmpty)
@@ -34,23 +34,23 @@ struct EngineCalendarPageTodoTests {
 
     @Test func dateOnlyTodoShowsInTheAllDayRow() async {
         let h = await loaded([dateOnly("d")])
-        let data = h.engine.calendarPage(h.calendarDay())
+        let data = h.engine.calendarPageBase(h.calendarDay())
         #expect(sources(data.allDay) == [.todo("d")])
         #expect(data.blocks.isEmpty)
     }
 
     @Test func todoChipUsesTheListColor() async {
         let h = await loaded([timed("a")])
-        let data = h.engine.calendarPage(h.calendarDay())
+        let data = h.engine.calendarPageBase(h.calendarDay())
         #expect(data.blocks.first?.style == .todo(colorHex: 0xFF3B30))
     }
 
     @Test func todoOnAnotherDayIsNotInThisDay() async {
         let other = makeTodo("x", due: TodoDue(date: day(2026, 3, 6, 10), hasTime: true))
         let h = await loaded([other])
-        let data = h.engine.calendarPage(h.calendarDay())
+        let data = h.engine.calendarPageBase(h.calendarDay())
         #expect(data.blocks.isEmpty && data.allDay.isEmpty)
-        let week = h.engine.calendarPage(.containing(day(2026, 3, 4, 12), kind: .week, calendar: h.engine.calendar))
+        let week = h.engine.calendarPageBase(.containing(day(2026, 3, 4, 12), kind: .week, calendar: h.engine.calendar))
         #expect(sources(week.blocks) == [.todo("x")])
     }
 
@@ -60,26 +60,26 @@ struct EngineCalendarPageTodoTests {
         )
         let h = await loaded([done, timed("a")])
         #expect(h.engine.todoSnapshot.recentCompleted.map(\.id) == ["z"])
-        #expect(sources(h.engine.calendarPage(h.calendarDay()).blocks) == [.todo("a")])
+        #expect(sources(h.engine.calendarPageBase(h.calendarDay()).blocks) == [.todo("a")])
     }
 
     @Test func hiddenTodoListHidesItsChips() async {
         let h = await loaded([timed("a", list: "inbox"), timed("b", list: "errands", hour: 16), dateOnly("c", list: "errands")], hidden: ["errands"])
-        let data = h.engine.calendarPage(h.calendarDay())
+        let data = h.engine.calendarPageBase(h.calendarDay())
         #expect(sources(data.blocks) == [.todo("a")])
         #expect(data.allDay.isEmpty)
     }
 
     @Test func showingTheListAgainBringsTheChipsBack() async {
         let h = await loaded([timed("b", list: "errands")], hidden: ["errands"])
-        #expect(h.engine.calendarPage(h.calendarDay()).blocks.isEmpty)
+        #expect(h.engine.calendarPageBase(h.calendarDay()).blocks.isEmpty)
         h.engine.setCalendarShown("errands", true)
-        #expect(sources(h.engine.calendarPage(h.calendarDay()).blocks) == [.todo("b")])
+        #expect(sources(h.engine.calendarPageBase(h.calendarDay()).blocks) == [.todo("b")])
     }
 
     @Test func todosOffShowNoChips() async {
         let h = await loaded([timed("a")], on: false)
-        let data = h.engine.calendarPage(h.calendarDay())
+        let data = h.engine.calendarPageBase(h.calendarDay())
         #expect(data.blocks.isEmpty && data.allDay.isEmpty)
     }
 
@@ -87,16 +87,16 @@ struct EngineCalendarPageTodoTests {
         let h = EngineHarness.withCalendarTodos(lists: lists, todos: [timed("a")])
         h.todos.access = .denied
         await h.loadTodos()
-        #expect(h.engine.calendarPage(h.calendarDay()).blocks.isEmpty)
+        #expect(h.engine.calendarPageBase(h.calendarDay()).blocks.isEmpty)
     }
 
     @Test func aStoreChangeShowsInThePageWithoutChangingTheRange() async {
         let h = await loaded([timed("a")])
-        _ = h.engine.calendarPage(h.calendarDay())
+        _ = h.engine.calendarPageBase(h.calendarDay())
         h.todos.todosValue = [timed("a"), timed("n", hour: 17)]
         h.todos.revision += 1
         await h.loadTodos()
-        #expect(sources(h.engine.calendarPage(h.calendarDay()).blocks) == [.todo("a"), .todo("n")])
+        #expect(sources(h.engine.calendarPageBase(h.calendarDay()).blocks) == [.todo("a"), .todo("n")])
     }
 
     @Test func todosDoNotCountInPlannedOrTracked() async {
@@ -105,10 +105,10 @@ struct EngineCalendarPageTodoTests {
         )]
         let plain = EngineHarness(at: day(2026, 3, 4, 12))
         plain.calendarWriter.eventsValue = events
-        let base = plain.engine.calendarPage(plain.calendarDay()).stats
+        let base = plain.engine.calendarPageBase(plain.calendarDay()).stats
         let h = await loaded([timed("a"), dateOnly("d")])
         h.calendarWriter.eventsValue = events
-        let data = h.engine.calendarPage(h.calendarDay())
+        let data = h.engine.calendarPageBase(h.calendarDay())
         #expect(data.blocks.count == 2)
         #expect(data.stats == base)
         #expect(data.stats.planned == 3600)
@@ -117,7 +117,7 @@ struct EngineCalendarPageTodoTests {
 
     @Test func todosAreNeverWrittenToACalendar() async {
         let h = await loaded([timed("a")])
-        _ = h.engine.calendarPage(h.calendarDay())
+        _ = h.engine.calendarPageBase(h.calendarDay())
         #expect(h.calendarWriter.saved.isEmpty)
         #expect(h.calendarWriter.updated.isEmpty)
         #expect(h.calendarWriter.deleted.isEmpty)
@@ -136,7 +136,7 @@ struct EngineCalendarPageTodoTests {
         h.todos.revision += 1
         await h.engine.todoRuntime.refreshTask?.value
         await h.loadTodos()
-        #expect(h.engine.calendarPage(h.calendarDay()).blocks.isEmpty)
+        #expect(h.engine.calendarPageBase(h.calendarDay()).blocks.isEmpty)
     }
 
     @Test func openingThePageReadsTheTodos() async {
@@ -161,6 +161,6 @@ struct EngineCalendarPageTodoTests {
         h.engine.completeCalendarTodo("a")
         await h.engine.todoRuntime.refreshTask?.value
         #expect(h.todos.readRequests.count == before + 1)
-        #expect(sources(h.engine.calendarPage(h.calendarDay()).blocks) == [.todo("a")])
+        #expect(sources(h.engine.calendarPageBase(h.calendarDay()).blocks) == [.todo("a")])
     }
 }

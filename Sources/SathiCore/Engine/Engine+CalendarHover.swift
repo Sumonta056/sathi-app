@@ -7,9 +7,9 @@ extension Engine {
         links.open(URL(fileURLWithPath: Self.remindersAppPath))
     }
 
-    package func calendarHoverInfo(_ placed: CalendarPlacedBlock) -> CalendarHoverInfo {
+    package func calendarHoverInfo(_ laid: CalendarLaidBlock, among day: [CalendarLaidBlock]) -> CalendarHoverInfo {
         var lookup = CalendarHoverLookup(now: clock.now, trackerOn: data.prefs.tracker.isOn)
-        switch placed.block.source {
+        switch laid.block.source {
         case let .event(e):
             let names = calendarPageRead?.readable ?? []
             lookup.calendarNames = Dictionary(names.map { ($0.id, $0.title) }) { first, _ in first }
@@ -20,6 +20,6 @@ extension Engine {
         case .activity:
             break
         }
-        return CalendarHoverInfo.make(placed, lookup: lookup, calendar: calendar)
+        return CalendarHoverInfo.make(laid, among: day, lookup: lookup, calendar: calendar)
     }
 }

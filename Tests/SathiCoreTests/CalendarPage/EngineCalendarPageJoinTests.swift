@@ -1,5 +1,5 @@
 import Foundation
-import SathiCore
+@testable import SathiCore
 import SathiTestSupport
 import Testing
 
@@ -10,7 +10,7 @@ struct EngineCalendarPageJoinTests {
     private let b = Activity(text: "Code", category: "Coding", start: wed(10, 34), end: wed(11))
 
     private func codeSpans(_ h: EngineHarness, _ kind: ReportRange) -> [DateInterval] {
-        h.engine.calendarPage(.containing(wed(12), kind: kind, calendar: h.engine.calendar)).blocks
+        h.engine.calendarPageBase(.containing(wed(12), kind: kind, calendar: h.engine.calendar)).blocks
             .filter { $0.title == "Code" }
             .map(\.interval)
     }

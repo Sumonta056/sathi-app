@@ -27,14 +27,4 @@ enum Lay {
             source: .activity(a, running: false), isAllDay: false, activityIDs: [a.id]
         )
     }
-
-    static func away(_ id: String, _ from: Int, _ to: Int) -> CalendarBlock {
-        var b = activity(id, from, to)
-        b.style = .away
-        return b
-    }
-
-    static func byID(_ placed: [CalendarPlacedBlock]) -> [String: CalendarPlacedBlock] {
-        Dictionary(uniqueKeysWithValues: placed.map { ($0.block.id, $0) })
-    }
 }

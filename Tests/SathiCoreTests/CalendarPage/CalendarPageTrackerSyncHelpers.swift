@@ -1,5 +1,5 @@
 import Foundation
-import SathiCore
+@testable import SathiCore
 import SathiTestSupport
 
 extension EngineHarness {
@@ -22,7 +22,7 @@ extension EngineHarness {
     }
 
     var pageDay: CalendarPageData {
-        engine.calendarPage(.containing(wed(12), kind: .day, calendar: engine.calendar))
+        engine.calendarPageBase(.containing(wed(12), kind: .day, calendar: engine.calendar))
     }
 
     func pageShowsEvent(_ id: String) -> Bool {

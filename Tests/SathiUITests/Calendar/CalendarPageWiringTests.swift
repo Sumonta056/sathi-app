@@ -6,87 +6,58 @@ import SwiftUI
 import Testing
 import ViewInspector
 
+private let write = Activity(text: "Write", category: "Coding", start: day(2026, 3, 4, 10), end: day(2026, 3, 4, 10, 30))
+
 @MainActor
 @Suite("Calendar page wiring")
 struct CalendarPageWiringTests {
-    typealias Fix = CalendarMergeSupport
-
-    private final class FocusBox {
+    private final class Box {
         var focus = CalendarPageFocus(
-            editing: CalendarActivityEdit(day: DayKey(day(2026, 3, 4, 12), calendar: .current), target: .activity(Fix.first.id))
+            editing: CalendarActivityEdit(day: DayKey(day(2026, 3, 4, 12), calendar: .current), target: .activity(write.id))
         )
-        var binding: Binding<CalendarPageFocus> { Binding(get: { self.focus }, set: { self.focus = $0 }) }
+        var failure: String? = "old"
+        var focusBinding: Binding<CalendarPageFocus> { Binding(get: { self.focus }, set: { self.focus = $0 }) }
+        var failureBinding: Binding<String?> { Binding(get: { self.failure }, set: { self.failure = $0 }) }
     }
 
-    private func blocks(_ h: EngineHarness) -> [CalendarBlock] {
-        h.engine.calendarPage(Fix.range(h)).blocks
+    private func harness() -> EngineHarness {
+        EngineHarness(at: day(2026, 3, 4, 12), activities: InMemoryActivityStore(activities: [write])) { $0.prefs.tracker.isOn = true }
     }
 
-    private func nextDay(_ h: EngineHarness) -> CalendarPageRange {
-        .containing(day(2026, 3, 5, 12), kind: .day, calendar: h.engine.rangeCalendar)
+    private func range(_ h: EngineHarness, _ date: Date = day(2026, 3, 4, 12)) -> CalendarPageRange {
+        .containing(date, kind: .day, calendar: h.engine.rangeCalendar)
     }
 
-    @Test func aRangeChangeClearsTheSelectionTheErrorTheFocusAndUndo() throws {
-        let h = Fix.harness([Fix.first, Fix.second])
-        let box = Fix.Box(), focus = FocusBox()
-        box.selected = [Fix.first.id]
-        box.error = "old"
-        var clears = 0
-        let reset = CalendarRangeReset(
-            range: Fix.range(h), focus: focus.binding, selected: box.selectedBinding, error: box.errorBinding
-        ) { clears += 1 }
-        try Color.clear.modifier(reset).inspect().callOnChange(newValue: nextDay(h))
-        #expect(box.selected.isEmpty)
-        #expect(box.error == nil)
-        #expect(focus.focus.editing == nil)
-        #expect(focus.focus.popover == nil)
-        #expect(clears == 1)
-    }
-
-    @Test func goneRowsLeaveTheSelectionAndClearTheError() throws {
-        let h = Fix.harness([Fix.first, Fix.second])
-        let box = Fix.Box()
-        box.selected = [Fix.first.id, Fix.second.id]
-        box.error = "stale"
-        let prune = CalendarSelectionPrune(blocks: blocks(h), selected: box.selectedBinding, error: box.errorBinding)
-        let left = blocks(h).filter { $0.title != "Review" }
-        try Color.clear.modifier(prune).inspect().callOnChange(newValue: left)
-        #expect(box.selected == [Fix.first.id])
-        #expect(box.error == nil)
-    }
-
-    @Test func aChangeThatKeepsTheSelectionKeepsTheError() throws {
-        let h = Fix.harness([Fix.first, Fix.second])
-        let box = Fix.Box()
-        box.selected = [Fix.first.id]
-        box.error = "still true"
-        let prune = CalendarSelectionPrune(blocks: blocks(h), selected: box.selectedBinding, error: box.errorBinding)
-        try Color.clear.modifier(prune).inspect().callOnChange(newValue: blocks(h))
-        #expect(box.selected == [Fix.first.id])
-        #expect(box.error == "still true")
+    @Test func aRangeChangeClearsTheFocusAndTheErrorLine() throws {
+        let h = harness()
+        let box = Box()
+        let reset = CalendarRangeReset(range: range(h), focus: box.focusBinding, failure: box.failureBinding)
+        try Color.clear.modifier(reset).inspect().callOnChange(newValue: range(h, day(2026, 3, 5, 12)))
+        #expect(box.focus.editing == nil)
+        #expect(box.focus.popover == nil)
+        #expect(box.failure == nil)
     }
 
     @Test func thePageResetsOnARangeChange() throws {
-        let h = Fix.harness([Fix.first])
+        let h = harness()
         #expect(throws: Never.self) {
             try hosted(CalendarPage(), h).inspect().find(ViewType.VStack.self).modifier(CalendarRangeReset.self)
         }
     }
 
-    @Test func thePagePrunesOnABlockChange() throws {
-        let h = Fix.harness([Fix.first])
+    @Test func thePageAsksTheEngineForTheSplitLayout() throws {
+        let h = harness()
         h.engine.refreshCalendarAccess()
-        #expect(throws: Never.self) {
-            try hosted(CalendarPage(), h).inspect().find(ViewType.HStack.self).modifier(CalendarSelectionPrune.self)
-        }
+        let grid = try hosted(CalendarPage(range: range(h)), h).inspect().find(CalendarSplitGrid.self).actualView()
+        #expect(grid.data.grid != nil)
+        #expect(grid.data.grid?.days.values.joined().contains { $0.block.title == "Write" } == true)
     }
 
-    @Test func thePageRangeChangeClearsTheEngineUndo() throws {
-        let h = Fix.harness([Fix.first, Fix.second])
-        #expect(h.engine.mergeActivities([Fix.first.id, Fix.second.id]) == .merged(Fix.first.id))
-        #expect(h.engine.mergeUndo != nil)
-        let reset = try hosted(CalendarPage(), h).inspect().find(ViewType.VStack.self).modifier(CalendarRangeReset.self)
-        try reset.actualView().clearUndo()
-        #expect(h.engine.mergeUndo == nil)
+    @Test func dayGetsTheMinimumHeightOfADayCard() throws {
+        let h = harness()
+        h.engine.refreshCalendarAccess()
+        let grid = try hosted(CalendarPage(range: range(h)), h).inspect().find(CalendarSplitGrid.self).actualView()
+        let write = try #require(grid.data.grid?.days.values.joined().first { $0.block.title == "Write" })
+        #expect(write.bottom - write.top >= UIMetrics.calendarDayCardMinHeight)
     }
 }

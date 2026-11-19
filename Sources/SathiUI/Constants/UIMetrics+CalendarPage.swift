@@ -3,10 +3,7 @@ import SwiftUI
 
 extension UIMetrics {
     static let calendarTitleGap: CGFloat = 6
-    static let calendarNoteFont: CGFloat = 11
-    static let calendarHeaderSpacing: CGFloat = 4
     static let calendarTodayPadding = EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
-    static let calendarGateGap: CGFloat = 10
     static let calendarHourHeight: CGFloat = 60
     static let calendarSubLineOpacity: Double = 0.45
     static let calendarRowZoomGap: CGFloat = 6
@@ -14,56 +11,41 @@ extension UIMetrics {
     static func calendarHourHeight(rowMinutes: Int) -> CGFloat {
         calendarHourHeight * CGFloat(Limits.minutesPerHour / max(1, rowMinutes))
     }
-    static let calendarBlockMinTextHeight: CGFloat = 26
-    static let calendarFitTolerance: CGFloat = 0.01
-    static let calendarEventRadius: CGFloat = 8
-    static let calendarTitleLinesMax = 3
-    static let calendarTitleLineHeight: CGFloat = 15
-    static let calendarTimeLineHeight: CGFloat = 13
     static let calendarIconFont: CGFloat = 10
-    static let calendarChildInset: CGFloat = 4
-    static let calendarTimeRangeMinHeight: CGFloat = 34
     static let calendarAllDayHeight: CGFloat = 22
     static let calendarNowLineWidth: CGFloat = 1.5
     static let calendarMonthCellMinHeight: CGFloat = 96
-    static let calendarBarMinHeight: CGFloat = 3
-    static let calendarHourLabelWidth: CGFloat = 52
+    static let calendarHourLabelWidth: CGFloat = 58
     static let calendarHourFont: CGFloat = 10
     static let calendarLine: CGFloat = 1
     static let calendarLaneGap: CGFloat = 2
     static let calendarColumnInset: CGFloat = 3
-    static let calendarBlockRadius: CGFloat = 5
-    static let calendarBlockPadding = EdgeInsets(top: 3, leading: 6, bottom: 3, trailing: 6)
-    static let calendarBlockFont: CGFloat = 12
-    static let calendarBlockTimeFont: CGFloat = 10.5
-    static let calendarBlockSpacing: CGFloat = 1
     static let calendarActivityTint: Double = 0.28
     static let calendarTimeOpacity: Double = 0.8
     static let calendarGridRadius: CGFloat = 14
     static let calendarDayHeaderHeight: CGFloat = 34
     static let calendarDayHeaderFont: CGFloat = 12
     static let calendarDayCircle: CGFloat = 22
-    static let calendarHeaderGap: CGFloat = 5
     static let calendarChipFont: CGFloat = 10
     static let calendarChipHeight: CGFloat = 18
     static let calendarChipGap: CGFloat = 3
     static let calendarChipPadding = EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)
     static let calendarChipRadius: CGFloat = 4
     static let calendarNowPillFont: CGFloat = 9
+    static let calendarNowPillTrailing: CGFloat = 2
+    static let calendarNowDot: CGFloat = 7
+    static let calendarNowPillHeight: CGFloat = 13
     static let calendarNowPillPadding = EdgeInsets(top: 1, leading: 4, bottom: 1, trailing: 4)
     static let calendarMonthPadding: CGFloat = 6
     static let calendarMonthNumberFont: CGFloat = 12
     static let calendarMonthTrackedFont: CGFloat = 10
     static let calendarOutsideOpacity: Double = 0.4
-    static let calendarTodayBorder: CGFloat = 1.5
     static let calendarCascadeIndent: CGFloat = 14
     static let calendarRaisedRing: CGFloat = 2
     static let calendarCopiesFont: CGFloat = 9
     static let calendarCopiesGap: CGFloat = 4
-    static let calendarAwayFillOpacity: Double = 0.5
     static let calendarCopiesPadding = EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 4)
     static let calendarStripeSpacing: CGFloat = 10
     static let calendarStripeWidth: CGFloat = 2.5
     static let calendarStripeOpacity: Double = 0.55
-    static let calendarAwayLabelHeight: CGFloat = 18
 }

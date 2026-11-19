@@ -46,4 +46,8 @@ extension UIMetrics {
     static let fontSectionLabel: CGFloat = 11
     static let fontEyebrow: CGFloat = 12
     static let fontPillStyle: CGFloat = 14
+    static let accessGateWidth: CGFloat = 420
+    static let accessGateIcon: CGFloat = 40
+    static let accessGateSpacing: CGFloat = 16
+    static let accessGatePadding: CGFloat = 22
 }
