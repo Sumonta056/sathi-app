@@ -1,12 +1,27 @@
 import SathiCore
 import SwiftUI
 
+struct CalendarHalfDividers: Equatable {
+    var solid: [CGFloat] = []
+    var dashed: [CGFloat] = []
+}
+
 struct CalendarSplitLines: View {
     let grid: CalendarGridLayout
     let showsFoldText: Bool
     var columns = 0
     var width: CGFloat = 0
-    var planX: CGFloat?
+    var kind: ReportRange = .month
+
+    static func halfDividers(kind: ReportRange, column: CGFloat, columns: Int) -> CalendarHalfDividers {
+        guard kind != .month else { return CalendarHalfDividers() }
+        let halves = CalendarSplitGeometry.halves(column: column, kind: kind)
+        let starts = (0 ..< columns).map { CGFloat($0) * column }
+        return CalendarHalfDividers(
+            solid: kind == .day ? starts.map { $0 + halves.actualWidth } : [],
+            dashed: starts.map { $0 + halves.planX }
+        )
+    }
 
     var body: some View {
         let marks = CalendarSplitClock.marks(grid)
@@ -18,15 +33,13 @@ struct CalendarSplitLines: View {
                     with: .color(Night.divider.opacity(UIMetrics.calendarSubLineOpacity)),
                     style: StrokeStyle(lineWidth: UIMetrics.calendarLine, dash: UIMetrics.calendarDashedLine)
                 )
-                let dividers = verticals(at: { CGFloat($0) * width }, height: size.height)
+                let halves = Self.halfDividers(kind: kind, column: width, columns: columns)
+                let dividers = verticals((0 ..< columns).map { CGFloat($0) * width } + halves.solid, height: size.height)
                 ctx.stroke(dividers, with: .color(Night.divider), lineWidth: UIMetrics.calendarLine)
-                if let planX {
-                    let middles = verticals(at: { CGFloat($0) * width + planX }, height: size.height)
-                    ctx.stroke(
-                        middles, with: .color(Night.border),
-                        style: StrokeStyle(lineWidth: UIMetrics.calendarLine, dash: UIMetrics.calendarDashedLine)
-                    )
-                }
+                ctx.stroke(
+                    verticals(halves.dashed, height: size.height), with: .color(Night.border),
+                    style: StrokeStyle(lineWidth: UIMetrics.calendarLine, dash: UIMetrics.calendarDashedLine)
+                )
             }
             ForEach(Array(grid.rows.enumerated()).filter(\.element.isFold), id: \.offset) { _, row in
                 fold(row).offset(y: CGFloat(row.top))
@@ -45,10 +58,10 @@ struct CalendarSplitLines: View {
         return p
     }
 
-    private func verticals(at x: (Int) -> CGFloat, height: CGFloat) -> Path {
+    private func verticals(_ xs: [CGFloat], height: CGFloat) -> Path {
         var p = Path()
-        for i in 0 ..< columns {
-            let left = x(i) + UIMetrics.calendarLine / 2
+        for x in xs {
+            let left = x + UIMetrics.calendarLine / 2
             p.move(to: CGPoint(x: left, y: 0))
             p.addLine(to: CGPoint(x: left, y: height))
         }

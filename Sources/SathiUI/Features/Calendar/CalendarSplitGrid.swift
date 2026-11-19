@@ -95,8 +95,7 @@ struct CalendarSplitGrid: View {
 
     private func lines(_ column: CGFloat) -> some View {
         CalendarSplitLines(
-            grid: grid, showsFoldText: range.kind == .week, columns: range.days.count, width: column,
-            planX: range.kind == .week ? CalendarSplitGeometry.halves(column: column, kind: .week).planX : nil
+            grid: grid, showsFoldText: range.kind == .week, columns: range.days.count, width: column, kind: range.kind
         )
     }
 
