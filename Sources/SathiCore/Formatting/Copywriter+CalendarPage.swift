@@ -13,7 +13,6 @@ extension Copywriter {
     package static let calendarSettingLabel = "Calendar page (experimental)"
     package static let calendarSettingHint = "Shows your events and activities on one time grid."
     package static let calendarToday = "Today"
-    package static let calendarDayBoundary = "6 AM to 6 AM"
     package static let calendarGateNotice = "Sathi needs calendar access to show your events."
 
     package static func calendarRangeTitle(_ range: CalendarPageRange, calendar: Calendar) -> CalendarRangeTitle {

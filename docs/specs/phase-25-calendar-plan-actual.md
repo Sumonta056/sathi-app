@@ -12,14 +12,15 @@ On busy days the phase 24 grid moved short blocks far from their real time and d
 
 ## Decisions (answered 2026-11-18)
 
-1. Day and Week split each day into **Actual** (activities, left, 50 %) and **Plan** (calendar events, right, 50 %). Changed from 60 / 40 by the user on 2026-11-19: both halves have the same width.
+1. Day and Week split each day into **Actual** (activities, left, 50 %) and **Plan** (calendar events, right, 50 %). Changed from 60 / 40 by the user on 2026-11-19: both halves have the same width. Narrow mode stays Actual < 120 pt, so Week turns narrow below a 240 pt day column (it was 200 pt).
 2. The Calendar page has **no Merge**: no checkboxes, no ⌘-click selection, no Merge strip, no Merge button in the hover card. Merge stays on the Activities page.
 3. Every item is **one block from its real start to its real end**, also across hour rows.
 4. Overlap: **side by side only when 2 items start less than 30 min apart**. Otherwise the later item is **raised** on top. The earlier item keeps full width.
 5. Every **Away** row shows as a normal dim block, also when it is shorter than 5 min. Items are in strict start-time order.
 6. Week has a **day count**: 3, 4, 5 or 7 days.
 7. **Exact numbers**: round each start and end to the nearest minute once. Length = rounded end − rounded start. Use the same values in cards, hover cards, and tests.
-8. Rejected, do not build: Plan | Actual narrow sub-columns at 7 days with option A, the list without time positions, continuation tints and "↳ until" labels, "+N away" folds, side bars.
+8. The header has **no "6 AM to 6 AM" note** under the title in Day, Week, or Month (user, 2026-11-19).
+9. Rejected, do not build: Plan | Actual narrow sub-columns at 7 days with option A, the list without time positions, continuation tints and "↳ until" labels, "+N away" folds, side bars.
 
 ## B1. Layout core (`SathiCore/CalendarPage`)
 
@@ -99,14 +100,14 @@ Real events for fixtures (from macOS Calendar, 14–20 Nov 2026, Asia/Dhaka):
 
 | Constant | File | Value |
 |---|---|---|
-| Day card minimum height | `UIMetrics+CalendarPage` | 46 pt (Away 40 pt) |
-| Week block minimum height | `UIMetrics+CalendarPage` | 34 pt (narrow 22 pt) |
-| Block gap | `UIMetrics+CalendarPage` | Week 2 pt, Day 4 pt |
-| Title room in start row | `UIMetrics+CalendarPage` | 22 pt |
-| Night fold strip | `UIMetrics+CalendarPage` | 22 pt; fold run ≥ 2 rows (`Limits`) |
+| Day card minimum height | `UIMetrics+CalendarSplit` | 46 pt (Away 40 pt) |
+| Week block minimum height | `UIMetrics+CalendarSplit` | 34 pt (narrow 22 pt) |
+| Block gap | `UIMetrics+CalendarSplit` | Week 2 pt, Day 4 pt |
+| Title room in start row | `UIMetrics+CalendarSplit` | 22 pt |
+| Night fold strip | `UIMetrics+CalendarSplit` | 22 pt; fold run ≥ 2 rows (`Limits`) |
 | Actual share | `UIMetrics+CalendarSplit` | 0.5 |
-| Narrow mode below | `UIMetrics+CalendarPage` | Actual 120 pt |
-| Day link gutter | `UIMetrics+CalendarPage` | 26 pt |
+| Narrow mode below | `UIMetrics+CalendarSplit` | Actual 120 pt |
+| Day link gutter | `UIMetrics+CalendarSplit` | 26 pt |
 | Week day counts | `Limits+CalendarPage` | [3, 4, 5, 7], default 7 |
 | Side by side, lanes, cascade, host lead and share | `Limits+CalendarPage` | keep 30 min, 2, 2, 5 min, 0.5 |
 

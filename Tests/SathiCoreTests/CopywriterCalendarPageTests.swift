@@ -16,7 +16,6 @@ struct CopywriterCalendarPageTests {
         #expect(Copywriter.calendarExperimentalTag == "Experimental")
         #expect(Copywriter.calendarSettingLabel == "Calendar page (experimental)")
         #expect(Copywriter.calendarToday == "Today")
-        #expect(Copywriter.calendarDayBoundary == "6 AM to 6 AM")
     }
 
     @Test func monthTitleIsMonthAndYear() {

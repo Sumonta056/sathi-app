@@ -34,21 +34,16 @@ struct CalendarPageHeader: View {
 
     private var titleBlock: some View {
         let title = Copywriter.calendarRangeTitle(range, calendar: calendar)
-        return VStack(alignment: .leading, spacing: UIMetrics.calendarHeaderSpacing) {
-            HStack(alignment: .firstTextBaseline, spacing: UIMetrics.calendarTitleGap) {
-                Text(verbatim: title.main)
-                    .font(Typography.tracker(UIMetrics.mainPageTitleFont, .heavy))
-                    .foregroundStyle(Night.text)
-                Text(verbatim: title.year)
-                    .font(Typography.tracker(UIMetrics.mainPageTitleFont, .regular))
-                    .foregroundStyle(Night.muted)
-            }
-            .lineLimit(1)
-            .fixedSize()
-            Text(verbatim: Copywriter.calendarDayBoundary)
-                .font(Typography.tracker(UIMetrics.calendarNoteFont, .semibold))
-                .foregroundStyle(Night.faint)
+        return HStack(alignment: .firstTextBaseline, spacing: UIMetrics.calendarTitleGap) {
+            Text(verbatim: title.main)
+                .font(Typography.tracker(UIMetrics.mainPageTitleFont, .heavy))
+                .foregroundStyle(Night.text)
+            Text(verbatim: title.year)
+                .font(Typography.tracker(UIMetrics.mainPageTitleFont, .regular))
+                .foregroundStyle(Night.muted)
         }
+        .lineLimit(1)
+        .fixedSize()
     }
 
     private var kind: Binding<ReportRange> {

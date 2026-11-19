@@ -118,7 +118,9 @@ struct CalendarPageHeaderTests {
         return NSHostingController(rootView: header).sizeThatFits(in: CGSize(width: width, height: 0)).height
     }
 
-    @Test func showsTheSixAMNote() throws {
-        #expect(throws: Never.self) { try header(box(.week)).find(text: "6 AM to 6 AM") }
+    @Test(arguments: [ReportRange.day, .week, .month])
+    func hasNoSixAMNote(_ kind: ReportRange) throws {
+        let sut = try header(box(kind))
+        #expect(throws: (any Error).self) { try sut.find(text: "6 AM to 6 AM") }
     }
 }
