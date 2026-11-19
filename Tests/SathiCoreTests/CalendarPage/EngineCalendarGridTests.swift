@@ -7,10 +7,10 @@ import Testing
 @Suite("Engine calendar page grid")
 struct EngineCalendarGridTests {
     private let dayMetrics = CalendarLayoutMetrics(
-        pointsPerMinute: 1, minHeight: 46, awayMinHeight: 40, gap: 4, titleRoom: 22, foldHeight: 22, foldsNights: false
+        pointsPerMinute: 1, minHeight: 46, awayMinHeight: 40, compactHeight: nil, gap: 4, titleRoom: 22, foldHeight: 22, foldsNights: false
     )
     private let weekMetrics = CalendarLayoutMetrics(
-        pointsPerMinute: 1, minHeight: 34, awayMinHeight: 34, gap: 2, titleRoom: 22, foldHeight: 22, foldsNights: true
+        pointsPerMinute: 1, minHeight: 34, awayMinHeight: 34, compactHeight: nil, gap: 2, titleRoom: 22, foldHeight: 22, foldsNights: true
     )
 
     private func event(_ id: String, _ from: Date, _ to: Date) -> CalendarEventInfo {
@@ -82,7 +82,7 @@ struct EngineCalendarGridTests {
         let h = harness()
         h.engine.setCalendarRowMinutes(30)
         let zoomed = CalendarLayoutMetrics(
-            pointsPerMinute: 2, minHeight: 46, awayMinHeight: 40, gap: 4, titleRoom: 22, foldHeight: 22, foldsNights: false
+            pointsPerMinute: 2, minHeight: 46, awayMinHeight: 40, compactHeight: nil, gap: 4, titleRoom: 22, foldHeight: 22, foldsNights: false
         )
         let grid = h.engine.calendarPage(range(h, .day), metrics: zoomed).grid
         #expect(grid?.rows.count == 48)

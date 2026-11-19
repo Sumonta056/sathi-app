@@ -79,7 +79,7 @@ package enum CalendarSplitLayout {
         var b = b
         let span = column.minutes(b.span)
         b.top = CalendarSplitRows.y(opening(span.lowerBound, rows: rows), rows, m)
-        b.bottom = b.isTodo ? b.top : max(b.top + m.least(for: b.block), CalendarSplitRows.y(span.upperBound, rows, m))
+        b.bottom = b.isTodo ? b.top : max(b.top + m.least(for: b.block, minutes: span.count), CalendarSplitRows.y(span.upperBound, rows, m))
         return b
     }
 }

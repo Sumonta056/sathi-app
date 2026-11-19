@@ -4,6 +4,7 @@ extension UIMetrics {
     static let calendarDayCardRadius: CGFloat = 8
     static let calendarDayCardPadding = EdgeInsets(top: 6, leading: 11, bottom: 6, trailing: 7)
     static let calendarDayAwayPadding = EdgeInsets(top: 4, leading: 11, bottom: 4, trailing: 7)
+    static let calendarDayCompactPadding = EdgeInsets(top: 4, leading: 11, bottom: 4, trailing: 7)
     static let calendarDayTitleFont: CGFloat = 13
     static let calendarDayTitleLine: CGFloat = 17
     static let calendarDayMetaFont: CGFloat = 11

@@ -4,6 +4,7 @@ import SwiftUI
 extension UIMetrics {
     static let calendarDayCardMinHeight: Double = 46
     static let calendarDayAwayMinHeight: Double = 40
+    static let calendarDayCompactMinHeight: Double = 26
     static let calendarWeekBlockMinHeight: Double = 34
     static let calendarWeekNarrowMinHeight: Double = 22
     static let calendarDayBlockGap: Double = 4

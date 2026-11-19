@@ -16,6 +16,7 @@ enum CalendarSplitMetrics {
             pointsPerMinute: perMinute,
             minHeight: least,
             awayMinHeight: isDay ? UIMetrics.calendarDayAwayMinHeight : least,
+            compactHeight: isDay ? UIMetrics.calendarDayCompactMinHeight : nil,
             gap: isDay ? UIMetrics.calendarDayBlockGap : UIMetrics.calendarWeekBlockGap,
             titleRoom: UIMetrics.calendarTitleRoom,
             foldHeight: UIMetrics.calendarFoldHeight,

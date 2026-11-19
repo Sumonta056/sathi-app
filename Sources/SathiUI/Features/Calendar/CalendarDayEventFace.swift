@@ -15,6 +15,18 @@ struct CalendarDayEventFace: View {
     var body: some View {
         let color = Color(hex: hex)
         let text = Color(hex: CalendarDayTextColor.hex(hex))
+        let outline = color.opacity(UIMetrics.calendarDayEventOutlineOpacity)
+        if CalendarDayCardFit.isCompact(height: size.height) {
+            CalendarDayCompactRow(laid: laid, time: time, icon: text)
+                .modifier(CalendarDayChrome(
+                    size: size, padding: UIMetrics.calendarDayCompactPadding, fill: Night.card, edge: color, outline: outline
+                ))
+        } else {
+            full(color: color, text: text, outline: outline)
+        }
+    }
+
+    private func full(color: Color, text: Color, outline: Color) -> some View {
         HStack(alignment: .top, spacing: UIMetrics.calendarDayRowGap) {
             VStack(alignment: .leading, spacing: UIMetrics.calendarDayLineGap) {
                 HStack(alignment: .firstTextBaseline, spacing: UIMetrics.calendarDayIconGap) {
@@ -40,8 +52,7 @@ struct CalendarDayEventFace: View {
             CalendarDayParts.length(laid.rounded)
         }
         .modifier(CalendarDayChrome(
-            size: size, fill: Night.card, edge: color,
-            outline: color.opacity(UIMetrics.calendarDayEventOutlineOpacity)
+            size: size, fill: Night.card, edge: color, outline: outline
         ))
     }
 }

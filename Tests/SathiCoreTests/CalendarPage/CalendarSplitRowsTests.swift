@@ -7,6 +7,7 @@ struct CalendarSplitRowsTests {
     private let hourRows = 24
     private let tenAMRow = 4
     private let grown = 12.0
+    private let grownToFit = 36.0
 
     @Test func oneRowPerZoomStepAtTheBaseScale() {
         let grid = Split.layout([])
@@ -34,14 +35,14 @@ struct CalendarSplitRowsTests {
         #expect(b?.top == 290)
         #expect(b?.bottom == 336)
         #expect(grid.rowAt(tenAMRow)?.top == 240)
-        #expect(grid.rowAt(tenAMRow)?.height == 60 + grown)
-        #expect(grid.rowAt(tenAMRow + 1)?.top == 300 + grown)
+        #expect(grid.rowAt(tenAMRow)?.height == 60 + grownToFit)
+        #expect(grid.rowAt(tenAMRow + 1)?.top == 300 + grownToFit)
         #expect(grid.rows.enumerated().allSatisfy { $0.offset == tenAMRow || $0.element.height == 60 })
-        #expect(grid.height == 1440 + grown)
+        #expect(grid.height == 1440 + grownToFit)
     }
 
-    @Test func titleRoomFitsWithoutGrowth() {
-        let grid = Split.layout([Split.activity("a", "10:00", "10:05"), Split.activity("b", "10:10", "10:40")], metrics: Split.weekFlat)
+    @Test func crossingBlockGetsOnlyTitleRoom() {
+        let grid = Split.layout([Split.activity("a", "10:00", "10:05"), Split.activity("b", "10:10", "11:10")], metrics: Split.weekFlat)
         #expect(grid.rowAt(tenAMRow)?.height == 60)
     }
 
@@ -62,9 +63,9 @@ struct CalendarSplitRowsTests {
             ],
             days: [Split.page, tuesday]
         )
-        #expect(grid.rowAt(tenAMRow)?.height == 60 + grown)
-        #expect(Split.laid(grid, "tue", on: tuesday)?.top == 300 + grown)
-        #expect(Split.laid(grid, "tue", on: tuesday)?.bottom == 360 + grown)
+        #expect(grid.rowAt(tenAMRow)?.height == 60 + grownToFit)
+        #expect(Split.laid(grid, "tue", on: tuesday)?.top == 300 + grownToFit)
+        #expect(Split.laid(grid, "tue", on: tuesday)?.bottom == 360 + grownToFit)
     }
 
     @Test func zoomedRowGrowsWithTheSameScale() {
@@ -75,7 +76,7 @@ struct CalendarSplitRowsTests {
         let rowTop = 480.0
         let rowHeight = 60.0
         let pushedTop = rowTop + m.minHeight + m.gap
-        let growth = pushedTop + m.titleRoom - (rowTop + rowHeight)
+        let growth = pushedTop + m.minHeight - (rowTop + rowHeight)
         #expect(Split.laid(grid, "b")?.top == pushedTop)
         #expect(grid.rowAt(tenAMHalfRow)?.height == rowHeight + growth)
         #expect(grid.rowAt(tenAMHalfRow + 1)?.top == rowTop + rowHeight + growth)

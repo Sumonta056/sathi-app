@@ -13,6 +13,15 @@ struct CalendarDayActivityFace: View {
         let hex = ActivityColors.hex(activity.category, in: categories)
         let color = Color(hex: hex)
         let fill = RGB(hex: NightHex.card).mix(RGB(hex: hex), UIMetrics.calendarDayActivityTint).color()
+        if CalendarDayCardFit.isCompact(height: size.height) {
+            CalendarDayCompactRow(laid: laid, time: time)
+                .modifier(CalendarDayChrome(size: size, padding: UIMetrics.calendarDayCompactPadding, fill: fill, edge: color))
+        } else {
+            full(color: color, fill: fill)
+        }
+    }
+
+    private func full(color: Color, fill: Color) -> some View {
         HStack(alignment: .top, spacing: UIMetrics.calendarDayRowGap) {
             VStack(alignment: .leading, spacing: UIMetrics.calendarDayLineGap) {
                 HStack(alignment: .firstTextBaseline, spacing: UIMetrics.calendarDayIconGap) {
