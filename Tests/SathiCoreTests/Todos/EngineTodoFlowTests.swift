@@ -105,6 +105,6 @@ struct EngineTodoFlowTests {
     @Test func openMainTodosFallsBackToTodayWhenOff() {
         let h = fresh(access: .allowed, on: false)
         h.engine.openMain(.todos)
-        #expect(h.presenter.calls.last == .showMain(.today))
+        #expect(h.presenter.calls.last == .showMain(.dashboard(.day)))
     }
 }

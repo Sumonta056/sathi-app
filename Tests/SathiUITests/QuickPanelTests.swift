@@ -89,13 +89,13 @@ struct QuickPanelTests {
     @Test func openSathiOpensToday() throws {
         let h = Glance.harness()
         try panel(h).find(viewWithAccessibilityIdentifier: "quick.openSathi").button().tap()
-        #expect(h.presenter.calls.last == .showMain(.today))
+        #expect(h.presenter.calls.last == .showMain(.dashboard(.day)))
     }
 
     @Test func reportsLinkOpensReports() throws {
         let h = Glance.harness()
         try panel(h).find(viewWithAccessibilityIdentifier: "quick.reports").button().tap()
-        #expect(h.presenter.calls.last == .showMain(.reports))
+        #expect(h.presenter.calls.last == .showMain(.dashboard(.week)))
     }
 
     @Test func settingsLinkOpensGeneralSettings() throws {

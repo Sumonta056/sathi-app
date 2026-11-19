@@ -48,8 +48,8 @@ struct MainSidebarList: View {
             MainLogo(close: close)
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: UIMetrics.mainSidebarSpacing) {
-                    MainSidebarItem(title: Copywriter.mainPageToday, icon: "sun.max", isSelected: route.page == .today) {
-                        route.page = .today
+                    MainSidebarItem(title: Copywriter.mainPageToday, icon: "sun.max", isSelected: route.page == .dashboard(.day)) {
+                        route.page = .dashboard(.day)
                     }
                     if e.data.prefs.todos.isOn {
                         MainSidebarItem(title: Copywriter.mainPageTodos, icon: "checkmark.circle", isSelected: route.page == .todos) {
@@ -64,8 +64,8 @@ struct MainSidebarList: View {
                             route.page = .calendar(nil)
                         }
                     }
-                    MainSidebarItem(title: Copywriter.mainPageReports, icon: "chart.bar", isSelected: route.page == .reports) {
-                        route.page = .reports
+                    MainSidebarItem(title: Copywriter.mainPageReports, icon: "chart.bar", isSelected: route.page == .dashboard(.week)) {
+                        route.page = .dashboard(.week)
                     }
                     Text(verbatim: Copywriter.sidebarSettingsHeading)
                         .font(Typography.tracker(UIMetrics.sidebarHeadingFont, .heavy))

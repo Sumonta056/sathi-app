@@ -83,10 +83,10 @@ extension Engine {
     }
 
     package func openMain(_ page: MainPage) {
-        presenter.showMain(page == .todos && !data.prefs.todos.isOn ? .today : page)
+        presenter.showMain(page == .todos && !data.prefs.todos.isOn ? .dashboard(.day) : page)
     }
     package func openSettings(_ page: SettingsPage = .general) { openMain(.settings(page)) }
-    package func openReports() { openMain(.reports) }
+    package func openReports() { openMain(.dashboard(.week)) }
 
     package func play(_ name: SoundName) {
         guard data.prefs.general.soundOn else { return }

@@ -22,7 +22,7 @@ struct NarrowLayoutTests {
 
     @Test func narrowSidebarShowsTheRailAndKeepsTheSavedChoice() throws {
         let box = Box()
-        let sut = try MainSidebar(route: MainRoute(.today), isOpen: box.binding)
+        let sut = try MainSidebar(route: MainRoute(.dashboard(.day)), isOpen: box.binding)
             .environmentObject(EngineHarness().engine)
             .environment(\.mainLayout, NarrowSupport.narrow)
             .inspect()
@@ -33,7 +33,7 @@ struct NarrowLayoutTests {
 
     @Test func wideSidebarStillShowsTheSavedOpenList() throws {
         let box = Box()
-        let sut = try MainSidebar(route: MainRoute(.today), isOpen: box.binding)
+        let sut = try MainSidebar(route: MainRoute(.dashboard(.day)), isOpen: box.binding)
             .environmentObject(EngineHarness().engine)
             .environment(\.mainLayout, NarrowSupport.wide)
             .inspect()

@@ -13,11 +13,11 @@ struct MainViewTests {
     }
 
     @Test func showsTheSidebar() throws {
-        #expect(throws: Never.self) { try main(.today).find(MainSidebar.self) }
+        #expect(throws: Never.self) { try main(.dashboard(.day)).find(MainSidebar.self) }
     }
 
     @Test func hasTheWindowDragStrip() throws {
-        #expect(throws: Never.self) { try main(.today).find(WindowDragStrip.self) }
+        #expect(throws: Never.self) { try main(.dashboard(.day)).find(WindowDragStrip.self) }
     }
 
     @Test func trackerSettingsPageShowsTheTrackerSettings() throws {
@@ -45,7 +45,7 @@ struct MainViewTests {
     }
 
     @Test func reportsPageShowsTheReports() throws {
-        #expect(throws: Never.self) { try main(.reports).find(ReportsPage.self) }
+        #expect(throws: Never.self) { try main(.dashboard(.week)).find(ReportsPage.self) }
     }
 
     @Test func activitiesPageShowsTheActivityReports() throws {
@@ -53,7 +53,7 @@ struct MainViewTests {
     }
 
     @Test func todayPageShowsTheTodayPage() throws {
-        #expect(throws: Never.self) { try main(.today).find(TodayPage.self) }
+        #expect(throws: Never.self) { try main(.dashboard(.day)).find(TodayPage.self) }
     }
 
     @Test func calendarRouteShowsTodayWhenTheSwitchIsOff() throws {
@@ -68,7 +68,7 @@ struct MainViewTests {
     }
 
     @Test func routeChangeSwitchesThePage() throws {
-        let route = MainRoute(.today)
+        let route = MainRoute(.dashboard(.day))
         let view = MainView(route: route).environmentObject(EngineHarness().engine)
         route.page = .settings(.tracker)
         #expect(throws: Never.self) { try view.inspect().find(TrackerSettingsPage.self) }

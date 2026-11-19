@@ -58,7 +58,7 @@ struct CalendarPageLifecycleTests {
     @Test func calendarRouteSettlesOnTodayWhenTheSwitchIsOff() {
         let route = MainRoute(.calendar(nil))
         route.settle(calendarOn: false, todosOn: false)
-        #expect(route.page == .today)
+        #expect(route.page == .dashboard(.day))
     }
 
     @Test func calendarRouteStaysWhenTheSwitchIsOn() {
@@ -68,15 +68,15 @@ struct CalendarPageLifecycleTests {
     }
 
     @Test func otherRoutesAreNotChangedBySettling() {
-        let route = MainRoute(.reports)
+        let route = MainRoute(.dashboard(.week))
         route.settle(calendarOn: false, todosOn: false)
-        #expect(route.page == .reports)
+        #expect(route.page == .dashboard(.week))
     }
 
     @Test func mainViewSettlesAtOnceWhenOff() throws {
         let route = MainRoute(.calendar(nil))
         let sut = try MainView(route: route).environmentObject(EngineHarness().engine).inspect()
         try sut.find(ViewType.HStack.self).callOnAppear()
-        #expect(route.page == .today)
+        #expect(route.page == .dashboard(.day))
     }
 }

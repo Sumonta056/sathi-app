@@ -7,7 +7,7 @@ struct OpenSathiButton: View {
     var body: some View {
         Button {
             MenuBarWindow.close()
-            e.openMain(.today)
+            e.openMain(.dashboard(.day))
         } label: {
             Text(verbatim: Copywriter.quickPanelOpen)
                 .font(Typography.cardTitle)

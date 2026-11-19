@@ -319,3 +319,4 @@ Branches: Track A `fix/event-ask-held`, Track B `feat/calendar-week-h2` (worktre
 | 2026-10-24 | Phase 1 fix: a schedule change just after midnight counts the new day, not yesterday. |
 | 2026-11-15 | Phase 22: the Main window opens filling the visible frame of the pointer display and relies on macOS tiling (no own snap); pages use a narrow layout below 900 px wide. The activity prompt has one size, 1040×720, with no scroll, and a native drag. No saved-data change. |
 | 2026-11-18 | Phase 24: calendar events come first; an event ask shows on top of other tracker pop-ups and during busy states, and only Away and a lock make it wait. The Calendar Week side panel has its own saved choice (`sidePanelShownWeek`, default hidden). The hour height is 60 pt in all views. |
+| 2026-11-19 | Phase 26: Today and Reports become 1 Dashboard page with one Day / Week / Month switch; sidebar Dashboard, Activities, PLAN (To-dos, Calendar). No saved-data change. |

@@ -1,0 +1,3 @@
+import CoreGraphics
+
+extension UIMetrics {}

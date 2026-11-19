@@ -24,7 +24,7 @@ struct MainWindowLifecycleTests {
         let h = EngineHarness()
         let spy = Spy()
         let c = controller(h, spy)
-        c.showMain(.today)
+        c.showMain(.dashboard(.day))
         let first = try #require(c.mainWindow)
         c.showMain(.settings(.tracker))
         #expect(c.mainWindow === first)
@@ -37,7 +37,7 @@ struct MainWindowLifecycleTests {
         let h = EngineHarness()
         let spy = Spy()
         let c = controller(h, spy)
-        c.showMain(.reports)
+        c.showMain(.dashboard(.week))
         let window = try #require(c.mainWindow)
         c.mainWillClose()
         #expect(c.mainWindow == nil)
@@ -50,23 +50,23 @@ struct MainWindowLifecycleTests {
         let h = EngineHarness()
         let spy = Spy()
         let c = controller(h, spy)
-        c.showMain(.reports)
+        c.showMain(.dashboard(.week))
         let old = try #require(c.mainWindow)
         c.mainWillClose()
-        c.showMain(.today)
+        c.showMain(.dashboard(.day))
         #expect(c.mainWindow !== old)
-        #expect(c.mainRoute?.page == .today)
+        #expect(c.mainRoute?.page == .dashboard(.day))
     }
 
     @Test func reopenBringsTheOpenWindowBackOnItsPage() throws {
         let h = EngineHarness()
         let spy = Spy()
         let c = controller(h, spy)
-        c.showMain(.reports)
+        c.showMain(.dashboard(.week))
         let window = try #require(c.mainWindow)
         c.reopenMain()
         #expect(c.mainWindow === window)
-        #expect(c.mainRoute?.page == .reports)
+        #expect(c.mainRoute?.page == .dashboard(.week))
         #expect(spy.shown.count == 2)
     }
 
@@ -75,7 +75,7 @@ struct MainWindowLifecycleTests {
         let spy = Spy()
         let c = controller(h, spy)
         c.reopenMain()
-        #expect(c.mainRoute?.page == .today)
+        #expect(c.mainRoute?.page == .dashboard(.day))
         #expect(spy.shown.count == 1)
     }
 }

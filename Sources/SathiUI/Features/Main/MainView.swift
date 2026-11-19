@@ -35,20 +35,19 @@ struct MainView: View {
     }
 
     @ViewBuilder private func calendarPage(_ day: DayKey?) -> some View {
-        if e.data.prefs.calendarPage.isOn { CalendarPage(day: day) } else { TodayPage() }
+        if e.data.prefs.calendarPage.isOn { CalendarPage(day: day) } else { DashboardPage(kind: .day) }
     }
 
     @ViewBuilder private var todosPage: some View {
-        if e.data.prefs.todos.isOn { TodosPage() } else { TodayPage() }
+        if e.data.prefs.todos.isOn { TodosPage() } else { DashboardPage(kind: .day) }
     }
 
     @ViewBuilder private var page: some View {
         switch route.page {
-        case .today: TodayPage()
+        case let .dashboard(kind): DashboardPage(kind: kind)
         case .todos: todosPage
         case let .activities(day): ActivitiesPage(day: day)
         case let .calendar(day): calendarPage(day)
-        case .reports: ReportsPage()
         case let .settings(page): SettingsPageView(page: page)
         }
     }

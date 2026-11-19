@@ -32,7 +32,7 @@ struct TodoModelsTests {
 
     @Test func mainPageHasATodosPage() {
         #expect(MainPage.todos == MainPage.todos)
-        #expect(MainPage.todos != MainPage.today)
+        #expect(MainPage.todos != MainPage.dashboard(.day))
     }
 
     @Test func listColorsAreTwelveUniqueHexValues() {

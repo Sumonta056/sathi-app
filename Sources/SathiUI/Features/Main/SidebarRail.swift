@@ -13,7 +13,7 @@ struct SidebarRail: View {
                 .padding(.bottom, UIMetrics.sidebarRailLogoGap)
             ScrollView(showsIndicators: false) {
                 VStack(spacing: UIMetrics.sidebarRailSpacing) {
-                    pageButton(Copywriter.mainPageToday, "sun.max", route.page == .today) { route.page = .today }
+                    pageButton(Copywriter.mainPageToday, "sun.max", route.page == .dashboard(.day)) { route.page = .dashboard(.day) }
                     if e.data.prefs.todos.isOn {
                         pageButton(Copywriter.mainPageTodos, "checkmark.circle", route.page == .todos) { route.page = .todos }
                     }
@@ -21,7 +21,7 @@ struct SidebarRail: View {
                     if e.data.prefs.calendarPage.isOn {
                         pageButton(Copywriter.calendarPageTitle, "calendar", isCalendar) { route.page = .calendar(nil) }
                     }
-                    pageButton(Copywriter.mainPageReports, "chart.bar", route.page == .reports) { route.page = .reports }
+                    pageButton(Copywriter.mainPageReports, "chart.bar", route.page == .dashboard(.week)) { route.page = .dashboard(.week) }
                     Rectangle().fill(Night.border)
                         .frame(width: UIMetrics.sidebarRailDividerWidth, height: UIMetrics.dividerHeight)
                         .padding(.vertical, UIMetrics.sidebarRailDividerGap)

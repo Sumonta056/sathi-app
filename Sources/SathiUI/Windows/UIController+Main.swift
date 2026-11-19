@@ -20,7 +20,7 @@ extension UIController {
     }
 
     package func reopenMain() {
-        guard let mainWindow else { return showMain(.today) }
+        guard let mainWindow else { return showMain(.dashboard(.day)) }
         placeIfOpening(mainWindow, isNew: false)
         mainWindowShown(mainWindow)
     }
