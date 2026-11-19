@@ -1,10 +1,8 @@
 import Foundation
 
 extension Copywriter {
-    package static let mainPageToday = "Today"
     package static let mainAppName = "Sathi"
     package static let mainPageActivities = "Activities"
-    package static let mainPageReports = "Reports"
     package static let mainTrackerOn = "TRACKER ON"
     package static let mainTrackerOff = "TRACKER OFF"
     package static let mainMenuFile = "File"

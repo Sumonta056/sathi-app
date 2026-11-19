@@ -43,7 +43,7 @@ struct DashboardHeader: View {
                 .frame(width: UIMetrics.dashboardDividerWidth, height: UIMetrics.dashboardDividerHeight)
             if holdsToday {
                 Button { e.openQuickAdd() } label: { Text(verbatim: Copywriter.todayQuickReminder) }
-                    .buttonStyle(TodayHeaderButton())
+                    .buttonStyle(DashboardHeaderButton())
                 BreakMenu()
             } else {
                 ReportsExportButton(range: range)

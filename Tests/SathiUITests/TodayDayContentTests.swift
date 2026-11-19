@@ -54,13 +54,11 @@ struct TodayDayContentTests {
         }
     }
 
-    @Test func hasNoBreakdownCardNoHeaderAndNoScroll() throws {
+    @Test func hasNoBreakdownNoHeaderAndNoScroll() throws {
         let h = harness()
         let sut = try content(h)
         _ = try sut.find(TodaySoFarCard.self)
         #expect(Find.lacks(sut, text: "Breakdown"))
-        #expect((try? sut.find(TodayBreakdownCard.self)) == nil)
-        #expect((try? sut.find(TodayHeader.self)) == nil)
         #expect(Find.lacks(sut, text: h.engine.todayScreen.greeting))
         #expect(Find.lacks(sut, text: Copywriter.todayQuickReminder))
         #expect((try? sut.find(ViewType.ScrollView.self)) == nil)

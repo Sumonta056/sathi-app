@@ -51,17 +51,6 @@ struct TodayV2Tests {
         #expect(throws: Never.self) { try sut.find(text: Copywriter.todaySoFarOffHint) }
     }
 
-    @Test func breakdownCardUsesTheTableWithTwoColumns() throws {
-        let h = EngineHarness()
-        let sut = try hosted(TodayBreakdownCard(sofar: sofar(), categories: []), h).inspect()
-        #expect(throws: Never.self) { try sut.find(text: "Breakdown") }
-        #expect(throws: Never.self) { try sut.find(text: "Work") }
-        let table = try sut.find(CategoryTableView.self).actualView()
-        #expect(table.columns == 2)
-        #expect(table.showsChange == false)
-        #expect(table.summary == "2 categories")
-    }
-
     @Test func comingUpRowShowsTimeAndBadge() throws {
         let item = ComingUpItem(kind: .trackerAsk, title: "Still on it?", time: now.addingTimeInterval(11 * 60))
         let sut = try hosted(TodayComingUp(items: [item], calendar: cal, now: now), EngineHarness()).inspect()
@@ -80,11 +69,6 @@ struct TodayV2Tests {
     @Test func emptyComingUpSaysNothingMore() throws {
         let sut = try hosted(TodayComingUp(items: [], calendar: cal, now: now), EngineHarness()).inspect()
         #expect(throws: Never.self) { try sut.find(text: "Nothing more today.") }
-    }
-
-    @Test func breakdownHidesTheTotal() throws {
-        let sut = try hosted(TodayBreakdownCard(sofar: sofar(), categories: []), EngineHarness()).inspect()
-        #expect(Find.lacks(sut, text: "3h 0m"))
     }
 
     @Test func categoryTableShowsTotalByDefault() throws {

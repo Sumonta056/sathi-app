@@ -101,7 +101,7 @@ struct NarrowLayoutTests {
     }
 
     private func reports(_ layout: MainLayout) throws -> InspectableView<ViewType.ClassifiedView> {
-        try ReportsPage(range: ReportsFixture.week(), selected: nil)
+        try DashboardPage(kind: .week, range: ReportsFixture.week())
             .environmentObject(ReportsFixture.harness().engine)
             .environment(\.mainLayout, layout)
             .inspect()
