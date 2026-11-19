@@ -53,4 +53,32 @@ struct EngineTodaySoFarChangeTests {
         #expect(s.away.map(\.name) == ["Lunch"])
         #expect(s.away.map(\.seconds) == [1800])
     }
+
+    @Test func onlyTodayHasDataBeforeTheCutShowsTheChange() {
+        let h = EngineHarness.tracker(at: day(2026, 3, 4, 9), activities: [work(4, 8, 9), work(3, 10, 18)]) {
+            $0.prefs.tracker.startMinutes = 8 * 60
+        }
+        #expect(h.engine.todayScreen.sofar.change == .up(3600))
+    }
+
+    @Test func twoBuildsInOneDayReadYesterdaysMonthOnce() {
+        let h = EngineHarness.tracker(at: day(2026, 4, 1, 14), activities: [
+            Activity(text: "Task", category: "Work", start: day(2026, 3, 31, 10), end: day(2026, 3, 31, 11))
+        ])
+        let march = MonthKey(day(2026, 3, 31, 10), calendar: h.engine.calendar)
+        _ = h.engine.todayScreen
+        let first = h.activities.reads.filter { $0 == march }.count
+        h.clock.now = day(2026, 4, 1, 14, 1)
+        _ = h.engine.todayScreen
+        #expect(first > 0)
+        #expect(h.activities.reads.filter { $0 == march }.count == first)
+    }
+
+    @Test func aDataChangeRebuildsYesterday() {
+        let old = work(3, 10, 11)
+        let h = EngineHarness.tracker(at: now, activities: [work(4, 10, 12), old])
+        #expect(h.engine.todayScreen.sofar.change == .up(3600))
+        #expect(h.engine.deleteActivity(old.id))
+        #expect(h.engine.todayScreen.sofar.change == .up(2 * 3600))
+    }
 }

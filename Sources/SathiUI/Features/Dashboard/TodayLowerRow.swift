@@ -45,6 +45,13 @@ struct TodayLowerRow: View {
     static func streakMonth(
         _ month: StatsRange, memo: RangeMemo<StatsRange, OverviewMonth>, engine: Engine, build: (Engine, StatsRange) -> OverviewMonth
     ) -> OverviewMonth {
-        memo.value(month, end: month.interval.start, engine: engine, build: build)
+        perDay(month, memo: memo, engine: engine, build: build)
+    }
+
+    private static func perDay(
+        _ month: StatsRange, memo: RangeMemo<StatsRange, OverviewMonth>, engine: Engine, build: (Engine, StatsRange) -> OverviewMonth
+    ) -> OverviewMonth {
+        let pastEnd = month.interval.start
+        return memo.value(month, end: pastEnd, engine: engine, build: build)
     }
 }

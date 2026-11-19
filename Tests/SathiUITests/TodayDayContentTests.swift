@@ -118,4 +118,23 @@ struct TodayDayContentTests {
         #expect(!all.contains("—"))
         #expect(!all.contains { $0.contains("yesterday") })
     }
+
+    @Test func breakdownShowsEveryCategory() throws {
+        let names = ["A1", "B2", "C3", "D4", "E5", "F6"]
+        let acts = names.enumerated().map { i, name in work(4, 8 + i, 9 + i, name) }
+        let h = EngineHarness.tracker(at: day(2026, 3, 4, 15), activities: acts) { $0.prefs.tracker.startMinutes = 8 * 60 }
+        let all = try texts(content(h).find(TodaySoFarCard.self))
+        #expect(names.allSatisfy(all.contains))
+    }
+
+    @Test func noRowsMeansNoBreakdownLine() {
+        let s = TodaySoFar(
+            isOn: true,
+            hours: DateInterval(start: day(2026, 3, 4, 9), end: day(2026, 3, 4, 18)),
+            segments: [],
+            logged: 0,
+            categories: []
+        )
+        #expect((try? card(s).find(TodaySoFarBreakdown.self)) == nil)
+    }
 }

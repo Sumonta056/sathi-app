@@ -18,7 +18,9 @@ struct TodaySoFarCard: View {
                 .overlay(nowMarker(hours))
                 ActivityAxis(hours: hours, calendar: calendar)
                     .overlay(nowLabel(hours))
-                TodaySoFarBreakdown(sofar: sofar, categories: categories)
+                if !sofar.categories.isEmpty || !sofar.away.isEmpty {
+                    TodaySoFarBreakdown(sofar: sofar, categories: categories)
+                }
             } else if !sofar.isOn {
                 Text(verbatim: Copywriter.todaySoFarOffHint)
                     .font(Typography.tracker(UIMetrics.todayPanelNoteFont, .regular))
