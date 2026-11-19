@@ -1,5 +1,7 @@
 # Phase 18: Main window, quick panel, one activity prompt, stats ranges
 
+> Today and Reports pages are replaced by the Dashboard (phase 26).
+
 Sathi gets one normal macOS window with a sidebar: Today, Activities, Reports, and Settings. The menu bar panel becomes a short quick panel. The 5 tracker prompts become 1 activity prompt at the screen center. Reports and Activities get a Day / Week / Month range with ‹ › and a compare with the range before.
 
 Branch: `feat/app-window` (worktree `../Sathi-app-window`). Plan: `docs/superpowers/plans/phase-18-app-window.md`.

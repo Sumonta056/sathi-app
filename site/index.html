@@ -170,7 +170,7 @@
               <span class="mb-apple"></span><b>Finder</b><span>File</span><span>Edit</span><span>View</span>
               <span class="mb-right"><span class="mb-drop">1h 52m</span><span>Thu 26 Mar 10:30</span></span>
             </div>
-            <img class="d-window" src="screenshots/reports.png" alt="Sathi Reports window with weekly averages, a water chart, and a March streak calendar" width="1780" height="1240" fetchpriority="high" />
+            <img class="d-window" src="screenshots/dashboard.png" alt="Sathi Dashboard, Day: a good morning greeting, 1 of 4 goals today, the 4 buddy cards, a March streak calendar, and Coming up" width="2240" height="1720" fetchpriority="high" />
             <img class="d-menu" src="screenshots/menu-bar.png" alt="Sathi menu bar popover: good morning greeting, a 9-day streak, progress rings for water, reading, meditation, and gym, and Reminder and Time block buttons" width="760" height="946" />
           </div>
         </div>
@@ -236,7 +236,7 @@
             <div class="g-set" role="presentation"><span class="g-group">App</span>
             <button role="tab" aria-selected="false" aria-controls="p-menu-bar" id="t-menu-bar" data-shot="menu-bar" tabindex="-1">Menu bar</button>
             <button role="tab" aria-selected="false" aria-controls="p-day-summary" id="t-day-summary" data-shot="day-summary" tabindex="-1">Day summary</button>
-            <button role="tab" aria-selected="false" aria-controls="p-reports" id="t-reports" data-shot="reports" tabindex="-1">Reports</button>
+            <button role="tab" aria-selected="false" aria-controls="p-dashboard" id="t-dashboard" data-shot="dashboard" tabindex="-1">Dashboard</button>
             <button role="tab" aria-selected="false" aria-controls="p-settings" id="t-settings" data-shot="settings" tabindex="-1">Settings</button>
             </div>
           </div>
@@ -335,8 +335,8 @@
               <figcaption><b>Your day.</b> When tracker hours end, a popup shows your day: a timeline, totals by category, and a standup text to copy.</figcaption>
             </figure>
             <figure class="g-panel pos-center" role="tabpanel" id="p-tracker-report" aria-labelledby="t-tracker-report" style="--w: 59.7%" hidden>
-              <img src="screenshots/tracker-report.png" alt="Reports, Activities, Day: real work, top category, activities with 2 from the calendar, Away, a timeline with a lunch break, and the activity log" width="1720" height="1328" loading="lazy" />
-              <figcaption><b>Report.</b> Reports, Activities shows each day and month. Meetings from the calendars you tick log themselves.</figcaption>
+              <img src="screenshots/tracker-report.png" alt="Activities page, Day: real work, top category, activities with 2 from the calendar, Away, a timeline with a lunch break, and the activity log" width="1720" height="1328" loading="lazy" />
+              <figcaption><b>Report.</b> The Activities page shows each day and month. Meetings from the calendars you tick log themselves.</figcaption>
             </figure>
             <figure class="g-panel pos-menu" role="tabpanel" id="p-menu-bar" aria-labelledby="t-menu-bar" style="--w: 26.4%" hidden>
               <img src="screenshots/menu-bar.png" alt="Menu bar popover: one row per buddy with a ring, the next reminder, and an action button, then Reminder and Time block buttons, and a Take a break menu" width="760" height="946" loading="lazy" />
@@ -346,9 +346,9 @@
               <img src="screenshots/day-summary.png" alt="Day summary popup: Good day, Alex, 3 of 4 goals met, with a progress row and streak for each buddy, and a Good night button" width="756" height="774" loading="lazy" />
               <figcaption><b>Day summary.</b> Every evening at 10 PM, a calm popup shows how each buddy did today. Change the time in Settings.</figcaption>
             </figure>
-            <figure class="g-panel pos-center" role="tabpanel" id="p-reports" aria-labelledby="t-reports" style="--w: 59.7%" hidden>
-              <img src="screenshots/reports.png" alt="Reports window: weekly averages for each habit, a water bar chart with the daily goal line, and a March streak calendar" width="1780" height="1240" loading="lazy" />
-              <figcaption><b>Reports.</b> Each habit by day, week, or month, with your best day and longest streak.</figcaption>
+            <figure class="g-panel pos-center" role="tabpanel" id="p-dashboard" aria-labelledby="t-dashboard" style="--w: 59.7%" hidden>
+              <img src="screenshots/dashboard.png" alt="Sathi Dashboard, Day: the score line, Now, the 4 buddy cards, Today so far, a March streak calendar, and Coming up" width="2240" height="1720" loading="lazy" />
+              <figcaption><b>Dashboard.</b> Today, your week, or your month on 1 page, with a tab for each buddy and your streak.</figcaption>
             </figure>
             <figure class="g-panel pos-center" role="tabpanel" id="p-settings" aria-labelledby="t-settings" style="--w: 59.7%" hidden>
               <img src="screenshots/settings.png" alt="Water settings: reminder interval chips from 15 to 120 minutes, active hours, weekdays, glass or sip bottle, and days off" width="1780" height="1240" loading="lazy" />
@@ -477,7 +477,7 @@
         <div class="wrap feature">
           <div class="f-txt">
             <h3><span class="dot tracker"></span>Activity tracker</h3>
-            <p>Keep a log of your work day without a stopwatch. A calm corner popup asks what you do, and Reports shows each day and month.</p>
+            <p>Keep a log of your work day without a stopwatch. A calm corner popup asks what you do, and the Activities page shows each day and month.</p>
             <ul class="checks">
               <li>Off by default. Turn it on in Settings, My day</li>
               <li>The popups never take the keyboard. Press ⌃⌥⌘Space to log from anywhere</li>
@@ -510,17 +510,17 @@
 
         <div class="wrap feature">
           <div class="f-txt">
-            <h3><span class="dot sprout"></span>Reports and streaks</h3>
-            <p>See your week at a glance, and keep the streak calendar green.</p>
+            <h3><span class="dot sprout"></span>Dashboard and streaks</h3>
+            <p>See your day, week, or month on 1 page, and keep the streak calendar green.</p>
             <ul class="checks">
-              <li>Each habit by day, week, or month</li>
-              <li>Average per day and percent of your goal</li>
+              <li>Today: goals met vs yesterday, every buddy, and what comes next</li>
+              <li>Week and month: a score, a day-by-day grid, and 1 tab per buddy</li>
               <li>A streak calendar, your best day, and your longest streak</li>
             </ul>
-            <a class="more" href="#gallery" data-show="reports">See the Reports window →</a>
+            <a class="more" href="#gallery" data-show="dashboard">See the Dashboard →</a>
           </div>
           <div class="f-shot framed">
-            <img src="screenshots/reports.png" alt="Sathi Reports window" width="1780" height="1240" loading="lazy" />
+            <img src="screenshots/dashboard-week.png" alt="Sathi Dashboard, Week: a week score of 14 of 28 goals, a day-by-day grid for the 4 buddies, and a March streak calendar" width="2240" height="1720" loading="lazy" />
           </div>
         </div>
 

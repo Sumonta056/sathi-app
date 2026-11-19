@@ -267,6 +267,19 @@ Branch: `feat/calendar-plan-actual` (worktree `../Sathi-plan-actual`), one branc
 - [ ] User: hand tests, `perf.sh --windows`, merge to `main`, push
 - [ ] Website screenshots (later, `/sathi-website`)
 
+## Phase 26: Dashboard (Today + Reports)
+
+Spec: `docs/specs/phase-26-dashboard.md`. Design: canvas FfUGQ7LCFnq4BmRn2LJGTH (option B + streak calendar on Day). Branch: `feat/dashboard` (worktrees `../Sathi-dash-a`, `-b`, `-c`).
+
+- [x] Track 0: contract (business rules, `MainPage.dashboard(ReportRange)`, stubs)
+- [x] Track A: sidebar order, PLAN group, To-dos due-today badge, Quick panel Dashboard link
+- [x] Track B: Dashboard page, range header, score line, tab row on every range
+- [x] Track C: Day content, Today so far change and breakdown line, streak lower row
+- [x] Merges (A, C, B), open token resets page state on each open, `main` (phase 25) merged in
+- [x] Track D: remove Today and Reports pages, dead copy and constants; docs, README, website
+- [ ] Checks: release build, install, `perf.sh`, `ui-verifier`, screenshots at 1440 and 800 wide, hand tests
+- [ ] User: `perf.sh --windows`, merge to `main`, push
+
 ## Later
 
 - Days off: a lock or Nudgy bubble that shows at 23:58 stays after midnight into a day off (only a settings change closes it, rule 11). Close it at the first tick of a new day if users notice

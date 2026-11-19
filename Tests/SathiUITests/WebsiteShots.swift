@@ -30,9 +30,16 @@ struct WebsiteShots {
         )
     }
 
-    @Test func reports() throws {
+    private static let pageSize = CGSize(width: 1120, height: 860)
+
+    @Test func dashboard() throws {
         let h = harness()
-        try save(DashboardPage(kind: .week).frame(width: UIMetrics.mainWindowMinSize.width, height: UIMetrics.mainWindowMinSize.height), "reports", h)
+        try save(DashboardPage(kind: .day).frame(width: Self.pageSize.width, height: Self.pageSize.height), "dashboard", h)
+    }
+
+    @Test func dashboardWeek() throws {
+        let h = harness()
+        try save(DashboardPage(kind: .week).frame(width: Self.pageSize.width, height: Self.pageSize.height), "dashboard-week", h)
     }
 
     @Test func waterBubble() throws {

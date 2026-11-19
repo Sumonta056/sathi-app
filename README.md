@@ -101,22 +101,23 @@ Keep a log of your work day without a stopwatch. Turn it on in Settings → My d
 
 Sathi notices when you are away (screen lock, sleep, or no input for 30 min) and asks **Welcome back** when you return. It never adds time that you did not confirm. With your permission it can write an activity to a calendar, and it can log events from the calendars you tick, so meetings log themselves. Buddy sessions log their own activity. A **No popups until it ends** switch keeps every popup quiet while you focus.
 
-Reports → Activities shows each day and month: a timeline, totals by category, a standup text to copy, and an export to JSON and CSV. When tracker hours end, an end-of-day popup shows your day.
+The Activities page shows each day and month: a timeline, totals by category, a standup text to copy, and an export to JSON and CSV. When tracker hours end, an end-of-day popup shows your day.
 
 ## Calendar page
 
 See your plan and what you did on one grid. Turn it on in Settings → General (it is off by default and marked Experimental). The Calendar page shows your calendar events and your activities from 6 AM to 6 AM in Day, Week, or Month view, and you can create, edit, and delete events. Day and Week split each day into Actual (your activities, left) and Plan (your calendar events, right), and every item sits at its real time. In Day, a line links an activity to the event you did it during. Week shows 3, 4, 5, or 7 days. To-dos sit as pills on a dashed line at their due time. Hover a block for a card with actions: Start as activity, Edit, Delete, Mark done, and Open in Calendar or Reminders. To merge activities, use the Activities page. Day and Week have a row zoom. A side panel shows stats; Week hides it by default.
 
-## Reports and settings
+## Dashboard and settings
 
-- The Reports window shows each habit by day, week, or month, with a chart, a streak calendar, your best day, and your longest streak.
+- The main window opens on the Dashboard. Day shows how many goals you met today vs yesterday, what you do now, the 4 buddies, today so far, your streak calendar, and what comes next. Week and Month show a score, a day-by-day grid, and your streak. A tab for each buddy shows its chart, your best day, and your longest streak, on every range.
+- The sidebar lists Dashboard and Activities, then a PLAN group with To-dos (a badge counts what is due today) and Calendar. PLAN hides when both are off.
 - Each buddy has its own Settings page. Water: interval, active hours, container, goal, strictness. Reading: time, weekdays, session length, style, reading list, strictness. Meditation: daily goal, session length, interval, active hours, breathing style, strictness, and a Sound card for the voice guide, music, bell, tick, and a preview. Gym: sessions a day, session length, work hours, work days, your workout ideas (add or remove, 1 to 8), strictness. You pick times on a grid in 5-minute steps. Every buddy also has its own weekdays and a list of days off (pick them on a month calendar): on a day off that buddy stays quiet, and the day never breaks its streak.
 - The General tab holds your name, snooze length, snooze limit, when no answer counts as a snooze, sound, the day summary, quick reminders, and open at login.
 - The Activity tracker page holds hours, days and days off, ask time, usual length, Away after, categories, calendars to write and read, the shortcut, the end-of-day popup, and the sound.
 - The Time blocks page holds calendar access, the default calendar, menu bar or corner pill, and the sound.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/reports.png" alt="Reports window with weekly averages, a water bar chart, and a streak calendar" width="640" />
+  <img src="https://raw.githubusercontent.com/Sumonta056/sathi-app/main/site/screenshots/dashboard.png" alt="Sathi Dashboard, Day: a good morning greeting, 1 of 4 goals today, the 4 buddy cards, a March streak calendar, and Coming up" width="640" />
 </p>
 
 ## Privacy
