@@ -16,7 +16,7 @@ struct TodaySoFarCard: View {
                     height: UIMetrics.todayRibbonHeight, radius: UIMetrics.todayRibbonRadius, showsLabels: false
                 )
                 .overlay(nowMarker(hours))
-                ActivityAxis(hours: hours, calendar: calendar)
+                ActivityAxis(hours: hours, calendar: calendar, nowAt: fraction(hours))
                     .overlay(nowLabel(hours))
             } else if !sofar.isOn {
                 Text(verbatim: Copywriter.todaySoFarOffHint)
@@ -39,11 +39,21 @@ struct TodaySoFarCard: View {
                 Text(verbatim: Copywriter.categoryTableHours(sofar.logged))
                     .font(Typography.tracker(UIMetrics.todaySoFarTotalFont, .heavy))
                     .foregroundStyle(Night.text)
+                if sofar.change != .none {
+                    Text(verbatim: Copywriter.todaySoFarChange(sofar.change))
+                        .font(Typography.tracker(UIMetrics.todayComingDetailFont, .heavy))
+                        .foregroundStyle(changeColor)
+                }
                 Text(verbatim: Copywriter.todayLoggedSummary(percent: TodayShare.percent(logged: sofar.logged, hours: sofar.hours, now: now)))
                     .font(Typography.tracker(UIMetrics.todayComingDetailFont, .regular))
                     .foregroundStyle(Night.muted)
             }
         }
+    }
+
+    private var changeColor: Color {
+        if case .up = sofar.change { return Night.sprout }
+        return Night.muted
     }
 
     private func fraction(_ hours: DateInterval) -> CGFloat? {
@@ -59,10 +69,7 @@ struct TodaySoFarCard: View {
                     .font(Typography.hint.weight(.heavy))
                     .foregroundStyle(Night.text)
                     .fixedSize()
-                    .position(
-                        x: min(max(g.size.width * fraction, UIMetrics.todayNowLabelHalfWidth), g.size.width - UIMetrics.todayNowLabelHalfWidth),
-                        y: g.size.height / 2
-                    )
+                    .position(x: ActivityAxis.labelX(width: g.size.width, fraction: fraction), y: g.size.height / 2)
             }
         }
     }

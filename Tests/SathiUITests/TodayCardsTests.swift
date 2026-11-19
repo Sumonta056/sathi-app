@@ -7,8 +7,8 @@ import Testing
 import ViewInspector
 
 @MainActor
-@Suite("Today page")
-struct TodayPageTests {
+@Suite("Today cards")
+struct TodayCardsTests {
     private let cal: Calendar = {
         var c = Calendar(identifier: .gregorian)
         c.timeZone = TimeZone(identifier: "UTC") ?? .current
@@ -132,20 +132,5 @@ struct TodayPageTests {
         let b = buddy(.meditation, status: .next(day(2026, 3, 4, 16, 0)))
         try hosted(TodayBuddyCard(e: h.engine, buddy: b, calendar: cal), h).inspect().find(button: "Breathe now").tap()
         #expect(h.presenter.calls.contains(.showSession(.meditation)))
-    }
-
-    @Test func headerShowsDateAndGreeting() throws {
-        let h = EngineHarness()
-        let sut = try hosted(TodayHeader(e: h.engine, dateLine: "TUESDAY, 4 MARCH", greeting: "Good morning"), h).inspect()
-        #expect(throws: Never.self) { try sut.find(text: "TUESDAY, 4 MARCH") }
-        #expect(throws: Never.self) { try sut.find(text: "Good morning") }
-        #expect(throws: Never.self) { try sut.find(BreakMenu.self) }
-    }
-
-    @Test func quickReminderButtonOpensTheAddPopup() throws {
-        let h = EngineHarness()
-        let sut = try hosted(TodayHeader(e: h.engine, dateLine: "X", greeting: "Y"), h).inspect()
-        try Find.button(sut, holding: "Quick reminder").tap()
-        #expect(h.presenter.calls.last == .showQuickAdd)
     }
 }

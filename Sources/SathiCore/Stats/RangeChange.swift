@@ -1,6 +1,6 @@
 import Foundation
 
-package enum RangeChange: Equatable {
+package enum RangeChange: Equatable, Sendable {
     case up(Double)
     case down(Double)
     case same

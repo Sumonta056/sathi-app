@@ -6,7 +6,7 @@ extension Copywriter {
     package static let quickPanelReminder = "Quick reminder"
     package static let quickPanelSwitch = "Switch"
     package static let quickPanelOpen = "Open Sathi"
-    package static let quickPanelReports = "Reports"
+    package static let quickPanelDashboard = "Dashboard"
     package static let quickPanelSettings = "Settings"
     package static let quickPanelQuit = "Quit"
     package static let quickPanelGoalMet = "✓ Goal met"

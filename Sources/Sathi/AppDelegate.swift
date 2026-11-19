@@ -10,7 +10,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let event = NSAppleEventManager.shared().currentAppleEvent
         let propData = event?.paramDescriptor(forKeyword: keyAEPropData)?.enumCodeValue
         if !LaunchKind.isLoginItem(propData: propData) {
-            AppEnvironment.engine.openMain(.today)
+            AppEnvironment.engine.openMain(.dashboard(.day))
         }
     }
 

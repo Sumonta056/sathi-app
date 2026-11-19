@@ -8,7 +8,7 @@ import ViewInspector
 @MainActor
 @Suite("Main sidebar")
 struct MainSidebarTests {
-    private static let pages = ["Today", "Activities", "Reports"]
+    private static let pages = ["Dashboard", "Activities"]
     private static let subPages = [
         "General",
         "Fota · water",
@@ -37,12 +37,12 @@ struct MainSidebarTests {
     }
 
     @Test func listsThePagesInOrder() throws {
-        let shown = try texts(EngineHarness(), MainRoute(.today))
+        let shown = try texts(EngineHarness(), MainRoute(.dashboard(.day)))
         #expect(shown.filter(Self.pages.contains) == Self.pages)
     }
 
     @Test func settingsListIsAlwaysOpenWithTenItemsInOrder() throws {
-        for page in [MainPage.today, .reports, .settings(.tracker)] {
+        for page in [MainPage.dashboard(.day), .dashboard(.week), .settings(.tracker)] {
             let shown = try texts(EngineHarness(), MainRoute(page))
             #expect(shown.filter(Self.subPages.contains) == Self.subPages)
             #expect(shown.contains("SETTINGS"))
@@ -50,7 +50,7 @@ struct MainSidebarTests {
     }
 
     @Test func trackerOffShowsTrackerOff() throws {
-        let shown = try texts(EngineHarness(), MainRoute(.today))
+        let shown = try texts(EngineHarness(), MainRoute(.dashboard(.day)))
         #expect(shown.contains("TRACKER OFF"))
         #expect(!shown.contains("TRACKER ON"))
     }
@@ -61,7 +61,7 @@ struct MainSidebarTests {
             $0.prefs.tracker.endMinutes = 18 * 60
             $0.prefs.tracker.askEveryMinutes = 30
         }
-        let shown = try texts(h, MainRoute(.today))
+        let shown = try texts(h, MainRoute(.dashboard(.day)))
         let span = Copywriter.trackerSpan(day(2026, 3, 4, 9), day(2026, 3, 4, 18), calendar: .current)
         #expect(shown.contains("TRACKER ON"))
         #expect(shown.contains(span + " · asks every 30 min"))
@@ -69,15 +69,15 @@ struct MainSidebarTests {
     }
 
     @Test func tapOnAPageShowsThatPage() throws {
-        let route = MainRoute(.today)
-        try Find.button(sidebar(EngineHarness(), route).inspect(), holding: "Reports").tap()
-        #expect(route.page == .reports)
+        let route = MainRoute(.settings(.sound))
+        try Find.button(sidebar(EngineHarness(), route).inspect(), holding: "Dashboard").tap()
+        #expect(route.page == .dashboard(.day))
         try Find.button(sidebar(EngineHarness(), route).inspect(), holding: "Activities").tap()
         #expect(route.page == .activities(nil))
     }
 
     @Test func tapOnASettingsItemShowsThatSettingsPage() throws {
-        let route = MainRoute(.today)
+        let route = MainRoute(.dashboard(.day))
         try Find.button(sidebar(EngineHarness(), route).inspect(), holding: "Shanti · calm").tap()
         #expect(route.page == .settings(.habit(.meditation)))
         try Find.button(sidebar(EngineHarness(), route).inspect(), holding: "Sound").tap()
@@ -87,19 +87,19 @@ struct MainSidebarTests {
     @Test func selectedItemsHaveTheSelectedTrait() throws {
         let sut = try sidebar(EngineHarness(), MainRoute(.settings(.tracker))).inspect()
         #expect(try A11y.isSelected(Find.button(sut, holding: "Activity tracker")))
-        #expect(try !A11y.isSelected(Find.button(sut, holding: "Today")))
+        #expect(try !A11y.isSelected(Find.button(sut, holding: "Dashboard")))
         #expect(try !A11y.isSelected(Find.button(sut, holding: "General")))
     }
 
     @Test func openSidebarHasACloseButtonThatCloses() throws {
         let box = Box(true)
-        let sut = try MainSidebar(route: MainRoute(.today), isOpen: box.binding).environmentObject(EngineHarness().engine).inspect()
+        let sut = try MainSidebar(route: MainRoute(.dashboard(.day)), isOpen: box.binding).environmentObject(EngineHarness().engine).inspect()
         try Find.button(sut, label: "Close sidebar").tap()
         #expect(!box.open)
     }
 
     @Test func openSidebarShowsTheFooterWithTwoLinks() throws {
-        let sut = try sidebar(EngineHarness(), MainRoute(.today)).inspect()
+        let sut = try sidebar(EngineHarness(), MainRoute(.dashboard(.day))).inspect()
         #expect(throws: Never.self) { try sut.find(text: Copywriter.sidebarFooter(version: SidebarFooter.version)) }
         #expect(throws: Never.self) { try sut.find(viewWithAccessibilityLabel: "GitHub") }
         #expect(throws: Never.self) { try sut.find(viewWithAccessibilityLabel: "Portfolio") }
@@ -107,14 +107,14 @@ struct MainSidebarTests {
 
     @Test func closedSidebarHasAnOpenButtonThatOpens() throws {
         let box = Box(false)
-        let sut = try MainSidebar(route: MainRoute(.today), isOpen: box.binding).environmentObject(EngineHarness().engine).inspect()
+        let sut = try MainSidebar(route: MainRoute(.dashboard(.day)), isOpen: box.binding).environmentObject(EngineHarness().engine).inspect()
         try Find.button(sut, label: "Open sidebar").tap()
         #expect(box.open)
     }
 
     @Test func closedRailHidesTheHeadingTrackerBlockAndFooter() throws {
-        let sut = try sidebar(EngineHarness(), MainRoute(.today), open: false).inspect()
-        let shown = try texts(EngineHarness(), MainRoute(.today), open: false)
+        let sut = try sidebar(EngineHarness(), MainRoute(.dashboard(.day)), open: false).inspect()
+        let shown = try texts(EngineHarness(), MainRoute(.dashboard(.day)), open: false)
         #expect(!shown.contains("SETTINGS"))
         #expect(!shown.contains("TRACKER OFF"))
         #expect(throws: (any Error).self) { try sut.find(TrackerStatusBlock.self) }
@@ -122,22 +122,22 @@ struct MainSidebarTests {
     }
 
     @Test func closedRailShowsTheVersion() throws {
-        let shown = try texts(EngineHarness(), MainRoute(.today), open: false)
+        let shown = try texts(EngineHarness(), MainRoute(.dashboard(.day)), open: false)
         #expect(shown.contains(Copywriter.sidebarVersion(SidebarFooter.version)))
     }
 
     @Test func closedRailLabelsEveryIcon() throws {
-        let sut = try sidebar(EngineHarness(), MainRoute(.today), open: false).inspect()
+        let sut = try sidebar(EngineHarness(), MainRoute(.dashboard(.day)), open: false).inspect()
         for label in Self.pages + Self.subPages + ["GitHub", Copywriter.sidebarTrackerOffHint] {
             #expect(throws: Never.self) { try sut.find(viewWithAccessibilityLabel: label) }
         }
     }
 
     @Test func closedRailTapsNavigate() throws {
-        let route = MainRoute(.today)
+        let route = MainRoute(.settings(.general))
         let sut = try sidebar(EngineHarness(), route, open: false).inspect()
-        try Find.button(sut, label: "Reports").tap()
-        #expect(route.page == .reports)
+        try Find.button(sut, label: "Dashboard").tap()
+        #expect(route.page == .dashboard(.day))
         try Find.button(sut, label: "Sound").tap()
         #expect(route.page == .settings(.sound))
     }
@@ -149,12 +149,12 @@ struct MainSidebarTests {
     }
 
     @Test func closedRailShowsTrackerOnHintWhenOn() throws {
-        let sut = try sidebar(EngineHarness.tracker { _ in }, MainRoute(.today), open: false).inspect()
+        let sut = try sidebar(EngineHarness.tracker { _ in }, MainRoute(.dashboard(.day)), open: false).inspect()
         #expect(throws: Never.self) { try sut.find(viewWithAccessibilityLabel: Copywriter.sidebarTrackerOnHint) }
     }
 
     @Test func openListScrollsItsMiddleAndPinsTheFooter() throws {
-        let sut = try sidebar(EngineHarness(), MainRoute(.today)).inspect()
+        let sut = try sidebar(EngineHarness(), MainRoute(.dashboard(.day))).inspect()
         let scroll = try sut.find(ViewType.ScrollView.self)
         #expect(throws: Never.self) { try scroll.find(text: "Sound") }
         #expect(throws: (any Error).self) { try scroll.find(SidebarFooter.self) }
@@ -162,7 +162,7 @@ struct MainSidebarTests {
     }
 
     @Test func railScrollsItsTilesAndPinsTheBottom() throws {
-        let sut = try sidebar(EngineHarness(), MainRoute(.today), open: false).inspect()
+        let sut = try sidebar(EngineHarness(), MainRoute(.dashboard(.day)), open: false).inspect()
         let scroll = try sut.find(ViewType.ScrollView.self)
         #expect(throws: Never.self) { try scroll.find(viewWithAccessibilityLabel: "Sound") }
         #expect(throws: (any Error).self) { try scroll.find(viewWithAccessibilityLabel: Copywriter.sidebarTrackerOffHint) }

@@ -13,18 +13,17 @@ struct SidebarRail: View {
                 .padding(.bottom, UIMetrics.sidebarRailLogoGap)
             ScrollView(showsIndicators: false) {
                 VStack(spacing: UIMetrics.sidebarRailSpacing) {
-                    pageButton(Copywriter.mainPageToday, "sun.max", route.page == .today) { route.page = .today }
-                    if e.data.prefs.todos.isOn {
-                        pageButton(Copywriter.mainPageTodos, "checkmark.circle", route.page == .todos) { route.page = .todos }
-                    }
+                    pageButton(Copywriter.mainPageDashboard, "square.grid.2x2", isDashboard) { route.page = .dashboard(.day) }
                     pageButton(Copywriter.mainPageActivities, "list.bullet", isActivities) { route.page = .activities(nil) }
-                    if e.data.prefs.calendarPage.isOn {
+                    if todosOn || calendarOn { divider }
+                    if todosOn {
+                        pageButton(Copywriter.mainPageTodos, "checkmark.circle", route.page == .todos, help: todosHelp) { route.page = .todos }
+                            .overlay(alignment: .topTrailing) { todosDot }
+                    }
+                    if calendarOn {
                         pageButton(Copywriter.calendarPageTitle, "calendar", isCalendar) { route.page = .calendar(nil) }
                     }
-                    pageButton(Copywriter.mainPageReports, "chart.bar", route.page == .reports) { route.page = .reports }
-                    Rectangle().fill(Night.border)
-                        .frame(width: UIMetrics.sidebarRailDividerWidth, height: UIMetrics.dividerHeight)
-                        .padding(.vertical, UIMetrics.sidebarRailDividerGap)
+                    divider
                     ForEach(SettingsPage.all, id: \.self) { settingsTile($0) }
                 }
             }
@@ -52,7 +51,35 @@ struct SidebarRail: View {
             .accessibilityHidden(true)
     }
 
-    private func pageButton(_ title: String, _ icon: String, _ on: Bool, _ action: @escaping () -> Void) -> some View {
+    private var todosOn: Bool { e.data.prefs.todos.isOn }
+    private var calendarOn: Bool { e.data.prefs.calendarPage.isOn }
+
+    private var divider: some View {
+        Rectangle().fill(Night.border)
+            .frame(width: UIMetrics.sidebarRailDividerWidth, height: UIMetrics.dividerHeight)
+            .padding(.vertical, UIMetrics.sidebarRailDividerGap)
+            .accessibilityIdentifier("rail.divider")
+    }
+
+    private var todosHelp: String? {
+        let n = e.todosBadgeCount
+        return n > 0 ? Copywriter.todosBadge(n) : nil
+    }
+
+    @ViewBuilder private var todosDot: some View {
+        let n = e.todosBadgeCount
+        if n > 0 {
+            Circle()
+                .fill(Night.tracker)
+                .frame(width: UIMetrics.sidebarRailBadgeDot, height: UIMetrics.sidebarRailBadgeDot)
+                .padding(UIMetrics.sidebarRailBadgeDotInset)
+                .allowsHitTesting(false)
+                .accessibilityLabel(Copywriter.todosBadge(n))
+                .accessibilityIdentifier("rail.todosDot")
+        }
+    }
+
+    private func pageButton(_ title: String, _ icon: String, _ on: Bool, help: String? = nil, _ action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: icon)
                 .font(.system(size: UIMetrics.sidebarRailPageIcon))
@@ -62,7 +89,7 @@ struct SidebarRail: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .help(title)
+        .help(help ?? title)
         .accessibilityLabel(title)
         .accessibilityAddTraits(on ? .isSelected : [])
     }
@@ -104,6 +131,11 @@ struct SidebarRail: View {
         }
         .help(Copywriter.sidebarGitHub)
         .accessibilityLabel(Copywriter.sidebarGitHub)
+    }
+
+    private var isDashboard: Bool {
+        if case .dashboard = route.page { return true }
+        return false
     }
 
     private var isCalendar: Bool {

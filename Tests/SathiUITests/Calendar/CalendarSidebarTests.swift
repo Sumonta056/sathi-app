@@ -21,35 +21,35 @@ struct CalendarSidebarTests {
     }
 
     @Test func calendarOffHasNoCalendarItem() throws {
-        let shown = try texts(EngineHarness(), MainRoute(.today))
+        let shown = try texts(EngineHarness(), MainRoute(.dashboard(.day)))
         #expect(!shown.contains("Calendar"))
         #expect(!shown.contains("Experimental"))
     }
 
     @Test func calendarOnShowsAfterActivitiesWithoutATag() throws {
-        let shown = try texts(calendarOn(), MainRoute(.today))
-        #expect(shown.filter(["Today", "Activities", "Calendar", "Reports"].contains) == ["Today", "Activities", "Calendar", "Reports"])
+        let shown = try texts(calendarOn(), MainRoute(.dashboard(.day)))
+        #expect(shown.filter(["Dashboard", "Activities", "PLAN", "Calendar"].contains) == ["Dashboard", "Activities", "PLAN", "Calendar"])
         #expect(!shown.contains("Experimental"))
     }
 
     @Test func railHasNoExperimentalTag() throws {
-        let rail = try sidebar(calendarOn(), MainRoute(.today), open: false).inspect()
+        let rail = try sidebar(calendarOn(), MainRoute(.dashboard(.day)), open: false).inspect()
         let shown = rail.findAll(ViewType.Text.self).compactMap { try? $0.string() }
         #expect(!shown.contains("Experimental"))
     }
 
     @Test func calendarTapShowsTheCalendarPage() throws {
-        let route = MainRoute(.today)
+        let route = MainRoute(.dashboard(.day))
         try Find.button(sidebar(calendarOn(), route).inspect(), holding: "Calendar").tap()
         #expect(route.page == .calendar(nil))
     }
 
     @Test func calendarRailIconIsLabeledAndTaps() throws {
-        let route = MainRoute(.today)
+        let route = MainRoute(.dashboard(.day))
         let sut = try sidebar(calendarOn(), route, open: false).inspect()
         try Find.button(sut, label: "Calendar").tap()
         #expect(route.page == .calendar(nil))
-        let off = try sidebar(EngineHarness(), MainRoute(.today), open: false).inspect()
+        let off = try sidebar(EngineHarness(), MainRoute(.dashboard(.day)), open: false).inspect()
         #expect((try? off.find(viewWithAccessibilityLabel: "Calendar")) == nil)
     }
 }

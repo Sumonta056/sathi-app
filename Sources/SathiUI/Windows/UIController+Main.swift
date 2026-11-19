@@ -6,7 +6,7 @@ extension UIController {
         guard let engine else { return }
         var isNew = false
         if let mainRoute {
-            mainRoute.page = page
+            mainRoute.open(page)
         } else {
             isNew = true
             let route = MainRoute(page)
@@ -20,7 +20,7 @@ extension UIController {
     }
 
     package func reopenMain() {
-        guard let mainWindow else { return showMain(.today) }
+        guard let mainWindow else { return showMain(.dashboard(.day)) }
         placeIfOpening(mainWindow, isNew: false)
         mainWindowShown(mainWindow)
     }

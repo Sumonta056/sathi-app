@@ -121,7 +121,7 @@ struct MainFrameMemoryTests {
         c.mainFrames = m
         c.mainWindowShown = { _ in }
         c.engine = h.engine
-        c.showMain(.today)
+        c.showMain(.dashboard(.day))
         let shown = try #require(c.mainWindow)
         #expect(shown.frame == saved)
         shown.close()
@@ -139,7 +139,7 @@ struct MainFrameMemoryTests {
         c.mainFrames = m
         c.mainWindowShown = { _ in }
         c.engine = h.engine
-        c.showMain(.today)
+        c.showMain(.dashboard(.day))
         let shown = try #require(c.mainWindow)
         #expect(NSScreen.screens.contains { $0.visibleFrame.contains(shown.frame) })
         #expect(m.frame() == shown.frame)

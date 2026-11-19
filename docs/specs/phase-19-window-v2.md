@@ -1,5 +1,7 @@
 # Phase 19 — Main window v2 (Activities, Reports, Today, Sidebar)
 
+> Today and Reports pages are replaced by the Dashboard (phase 26).
+
 Approved by the user on 2026-11-11. The mockups are the visual source of truth:
 `docs/design/phase-19/*.dc.html` (open in a browser; Night colors, Figtree font).
 

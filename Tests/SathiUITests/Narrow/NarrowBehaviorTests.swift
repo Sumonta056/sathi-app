@@ -17,7 +17,7 @@ struct NarrowBehaviorTests {
     }
 
     private func overlay(_ box: Box, _ layout: MainLayout) throws -> InspectableView<ViewType.ClassifiedView> {
-        try MainSidebarOverlay(route: MainRoute(.today), isShown: box.binding)
+        try MainSidebarOverlay(route: MainRoute(.dashboard(.day)), isShown: box.binding)
             .environmentObject(EngineHarness().engine)
             .environment(\.mainLayout, layout)
             .inspect()
@@ -26,7 +26,7 @@ struct NarrowBehaviorTests {
     @Test func railButtonOpensTheSidebarOverlayWhenNarrow() throws {
         let box = Box()
         box.on = false
-        let sut = try MainSidebar(route: MainRoute(.today), isOpen: .constant(true)) { box.on = true }
+        let sut = try MainSidebar(route: MainRoute(.dashboard(.day)), isOpen: .constant(true)) { box.on = true }
             .environmentObject(EngineHarness().engine)
             .environment(\.mainLayout, NarrowSupport.narrow)
             .inspect()
@@ -50,7 +50,7 @@ struct NarrowBehaviorTests {
     @Test func aPageChangeClosesTheOverlay() throws {
         let box = Box()
         let sut = try overlay(box, NarrowSupport.narrow)
-        try sut.find(ViewType.ZStack.self).callOnChange(newValue: MainPage.reports)
+        try sut.find(ViewType.ZStack.self).callOnChange(newValue: MainPage.dashboard(.week))
         #expect(!box.on)
     }
 

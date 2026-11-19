@@ -1,7 +1,6 @@
 import Foundation
 
 extension Copywriter {
-    package static let todayBreakdownTitle = "Breakdown"
     package static let todayNowMarker = "Now"
 
     package static func todayLoggedSummary(percent: Int?) -> String {

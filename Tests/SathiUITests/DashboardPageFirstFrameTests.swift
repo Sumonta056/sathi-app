@@ -7,8 +7,8 @@ import Testing
 import ViewInspector
 
 @MainActor
-@Suite("Today page first frame")
-struct TodayPageFirstFrameTests {
+@Suite("Dashboard page first frame")
+struct DashboardPageFirstFrameTests {
     private let cal = Calendar(identifier: .gregorian)
 
     @Test func idleWithoutNextAskShowsNoAskLine() throws {
@@ -19,8 +19,8 @@ struct TodayPageFirstFrameTests {
     }
 
     @Test func pageShowsTheFirstScreenBeforeAppear() throws {
-        let sut = try hosted(TodayPage(), EngineHarness()).inspect()
-        #expect(throws: Never.self) { try sut.find(TodayHeader.self) }
+        let sut = try hosted(DashboardPage(kind: .day), EngineHarness()).inspect()
+        #expect(throws: Never.self) { try sut.find(DashboardHeader.self) }
     }
 
     @Test func onlyARunningNowCardIsRed() throws {

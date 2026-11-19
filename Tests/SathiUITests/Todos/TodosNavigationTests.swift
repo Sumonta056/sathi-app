@@ -9,7 +9,7 @@ import ViewInspector
 @Suite("Todos navigation")
 struct TodosNavigationTests {
     private func shown(_ h: EngineHarness) throws -> [String] {
-        let sidebar = MainSidebar(route: MainRoute(.today), isOpen: .constant(true)).environmentObject(h.engine)
+        let sidebar = MainSidebar(route: MainRoute(.dashboard(.day)), isOpen: .constant(true)).environmentObject(h.engine)
         return try sidebar.inspect().findAll(ViewType.Text.self).compactMap { try? $0.string() }
     }
 
@@ -21,19 +21,19 @@ struct TodosNavigationTests {
     @Test func sidebarHasNoTodosPageItemWhenOff() throws {
         let texts = try shown(EngineHarness())
         #expect(texts.filter { $0 == "To-dos" }.count == 1)
-        #expect(texts.filter(["Today", "Activities", "Reports"].contains) == ["Today", "Activities", "Reports"])
+        #expect(texts.filter(["Dashboard", "Activities"].contains) == ["Dashboard", "Activities"])
     }
 
-    @Test func sidebarShowsTodosAfterTodayWhenOn() throws {
+    @Test func sidebarShowsTodosUnderPlanAfterActivitiesWhenOn() throws {
         let texts = try shown(EngineHarness { $0.prefs.todos.isOn = true })
         #expect(texts.filter { $0 == "To-dos" }.count == 2)
-        let pages = texts.filter(["Today", "To-dos", "Activities", "Reports"].contains)
-        #expect(Array(pages.prefix(4)) == ["Today", "To-dos", "Activities", "Reports"])
+        let pages = texts.filter(["Dashboard", "Activities", "PLAN", "To-dos"].contains)
+        #expect(Array(pages.prefix(4)) == ["Dashboard", "Activities", "PLAN", "To-dos"])
     }
 
     @Test func tapOnTheTodosItemOpensThePage() throws {
         let h = EngineHarness { $0.prefs.todos.isOn = true }
-        let route = MainRoute(.today)
+        let route = MainRoute(.dashboard(.day))
         let sidebar = MainSidebar(route: route, isOpen: .constant(true)).environmentObject(h.engine)
         try Find.button(sidebar.inspect(), holding: "To-dos").tap()
         #expect(route.page == .todos)
@@ -41,7 +41,7 @@ struct TodosNavigationTests {
 
     @Test func settingsItemOpensTheTodosSettingsPage() throws {
         let h = EngineHarness()
-        let route = MainRoute(.today)
+        let route = MainRoute(.dashboard(.day))
         let sidebar = MainSidebar(route: route, isOpen: .constant(true)).environmentObject(h.engine)
         try Find.button(sidebar.inspect(), holding: "To-dos").tap()
         #expect(route.page == .settings(.todos))
@@ -49,7 +49,7 @@ struct TodosNavigationTests {
 
     @Test func closedRailLabelsTheTodosPageIconWhenOn() throws {
         let h = EngineHarness { $0.prefs.todos.isOn = true }
-        let rail = MainSidebar(route: MainRoute(.today), isOpen: .constant(false)).environmentObject(h.engine)
+        let rail = MainSidebar(route: MainRoute(.dashboard(.day)), isOpen: .constant(false)).environmentObject(h.engine)
         let hits = try rail.inspect().findAll(where: { (try? $0.accessibilityLabel().string()) == "To-dos" })
         #expect(hits.count >= 2)
     }
@@ -57,7 +57,7 @@ struct TodosNavigationTests {
     @Test func routeSettleSendsTodosToTodayWhenOff() {
         let route = MainRoute(.todos)
         route.settle(calendarOn: true, todosOn: false)
-        #expect(route.page == .today)
+        #expect(route.page == .dashboard(.day))
         let on = MainRoute(.todos)
         on.settle(calendarOn: false, todosOn: true)
         #expect(on.page == .todos)
@@ -66,12 +66,12 @@ struct TodosNavigationTests {
     @Test func routeSettleStillSendsCalendarToTodayWhenOff() {
         let route = MainRoute(.calendar(nil))
         route.settle(calendarOn: false, todosOn: true)
-        #expect(route.page == .today)
+        #expect(route.page == .dashboard(.day))
     }
 
-    @Test func todosRouteShowsTodayWhenOff() throws {
+    @Test func todosRouteShowsTheDashboardWhenOff() throws {
         let sut = try main(.todos, on: false)
-        #expect(throws: Never.self) { try sut.find(TodayPage.self) }
+        #expect(throws: Never.self) { try sut.find(DashboardPage.self) }
         #expect((try? sut.find(TodosPage.self)) == nil)
     }
 

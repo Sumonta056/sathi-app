@@ -1,11 +1,10 @@
 import Foundation
 
 package enum MainPage: Equatable, Sendable {
-    case today
+    case dashboard(ReportRange)
     case todos
     case activities(DayKey?)
     case calendar(DayKey?)
-    case reports
     case settings(SettingsPage)
 }
 

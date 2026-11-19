@@ -35,7 +35,6 @@ extension UIMetrics {
     static let todayBuddyStatusFont: CGFloat = 12
     static let todayBarHeight: CGFloat = 6
     static let todayBarRadius: CGFloat = 3
-    static let todayLowerWeights: [CGFloat] = [1.7, 1]
     static let todayPanelPadding = EdgeInsets(top: 18, leading: 20, bottom: 18, trailing: 20)
     static let todayPanelTitleFont: CGFloat = 15
     static let todayPanelNoteFont: CGFloat = 13

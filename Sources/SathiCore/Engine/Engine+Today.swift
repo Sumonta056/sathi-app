@@ -78,19 +78,6 @@ extension Engine {
         return clock.now.addingTimeInterval(remaining(id)).wholeMinute
     }
 
-    private func todaySoFar(_ n: Date) -> TodaySoFar {
-        guard trackerPrefs.isOn else { return .off }
-        var day = activityDay(DayKey(n, calendar: calendar))
-        if let r = runningActivity, let shown = day.running {
-            day.running = r.activity(until: max(r.start, min(n, shown.end)))
-        }
-        let stats = ActivityDayStats(day)
-        return TodaySoFar(
-            isOn: true, hours: day.hours, segments: stats.segments, logged: stats.realWork,
-            categories: Array(stats.categories.prefix(Limits.todayCategoryRows))
-        )
-    }
-
     private func comingUpItems(_ statuses: [HabitID: TodayBuddyStatus]) -> [ComingUpItem] {
         var items: [ComingUpItem] = []
         if let ask = trackerNextPopup {

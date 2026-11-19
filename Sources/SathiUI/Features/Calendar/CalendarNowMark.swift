@@ -3,7 +3,7 @@ import SwiftUI
 
 enum CalendarNowMark {
     static func y(_ grid: CalendarGridLayout, now: Date, day: DayKey, calendar: Calendar) -> CGFloat {
-        CGFloat(grid.y(atMinute: CalendarSplitClock.minute(now, day: day, calendar: calendar)))
+        CGFloat(grid.nowY(now, minute: CalendarSplitClock.minute(now, day: day, calendar: calendar), day: day))
     }
 
     static func pillY(_ y: CGFloat, gridHeight: CGFloat) -> CGFloat {

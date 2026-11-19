@@ -12,7 +12,7 @@ struct MainWindowTests {
     }
 
     private func make(_ watcher: WindowCloseWatcher) -> NSWindow {
-        MainWindow.make(engine: EngineHarness().engine, route: MainRoute(.today), closeWatcher: watcher)
+        MainWindow.make(engine: EngineHarness().engine, route: MainRoute(.dashboard(.day)), closeWatcher: watcher)
     }
 
     @Test func windowIsATitledResizableWindow() {

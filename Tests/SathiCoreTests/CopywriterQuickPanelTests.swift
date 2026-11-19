@@ -16,6 +16,10 @@ struct CopywriterQuickPanelTests {
         )
     }
 
+    @Test func dashboardLinkSaysDashboard() {
+        #expect(Copywriter.quickPanelDashboard == "Dashboard")
+    }
+
     @Test func clockShowsShortWeekdayAndTime() {
         let text = Copywriter.quickPanelClock(day(2026, 3, 3, 14, 52), calendar: cal)
         #expect(text.hasPrefix("Tue"))

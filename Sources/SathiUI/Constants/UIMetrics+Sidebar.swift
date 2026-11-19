@@ -41,4 +41,9 @@ extension UIMetrics {
     static let sidebarDotHalo: CGFloat = 4
     static let sidebarDotBottomGap: CGFloat = 4
     static let sidebarRailBottomPadding: CGFloat = 14
+    static let sidebarBadgeFont: CGFloat = 11
+    static let sidebarBadgePadding = EdgeInsets(top: 1, leading: 6, bottom: 1, trailing: 6)
+    static let sidebarBadgeMinWidth: CGFloat = 20
+    static let sidebarRailBadgeDot: CGFloat = 7
+    static let sidebarRailBadgeDotInset: CGFloat = 6
 }

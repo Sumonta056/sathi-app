@@ -18,16 +18,16 @@ struct EngineMainPageTests {
         #expect(h.presenter.calls.last == .showMain(.settings(.tracker)))
     }
 
-    @Test func openReportsShowsTheReportsPage() {
+    @Test func openMainShowsTheDashboardOnDay() {
         let h = EngineHarness()
-        h.engine.openReports()
-        #expect(h.presenter.calls.last == .showMain(.reports))
+        h.engine.openMain(.dashboard(.day))
+        #expect(h.presenter.calls.last == .showMain(.dashboard(.day)))
     }
 
-    @Test func openMainShowsThePageAsGiven() {
+    @Test func openMainShowsTheDashboardOnTheAskedRange() {
         let h = EngineHarness()
-        h.engine.openMain(.today)
-        #expect(h.presenter.calls.last == .showMain(.today))
+        h.engine.openMain(.dashboard(.month))
+        #expect(h.presenter.calls.last == .showMain(.dashboard(.month)))
     }
 
     @Test func openMainShowsTheCalendarPage() {
@@ -36,10 +36,10 @@ struct EngineMainPageTests {
         #expect(h.presenter.calls.last == .showMain(.calendar(nil)))
     }
 
-    @Test func openMainTodosFallsBackToTodayWhenTodosIsOff() {
+    @Test func openMainTodosFallsBackToDashboardDayWhenTodosIsOff() {
         let h = EngineHarness()
         h.engine.openMain(.todos)
-        #expect(h.presenter.calls.last == .showMain(.today))
+        #expect(h.presenter.calls.last == .showMain(.dashboard(.day)))
     }
 
     @Test func openMainTodosShowsTheTodosPageWhenOn() {

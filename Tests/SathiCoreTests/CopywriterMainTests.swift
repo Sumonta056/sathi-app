@@ -8,9 +8,7 @@ struct CopywriterMainTests {
     private let zone = FixedZone.berlin
 
     @Test func pagesHaveTheirSidebarNames() {
-        #expect(Copywriter.mainPageToday == "Today")
         #expect(Copywriter.mainPageActivities == "Activities")
-        #expect(Copywriter.mainPageReports == "Reports")
     }
 
     @Test func settingsPagesHaveTheirSidebarNamesInOrder() {

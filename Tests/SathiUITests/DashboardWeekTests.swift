@@ -6,18 +6,12 @@ import Testing
 import ViewInspector
 
 @MainActor
-@Suite("Reports page")
-struct ReportsPageTests {
+@Suite("Dashboard week")
+struct DashboardWeekTests {
     private func page(_ given: EngineHarness? = nil, selected: HabitID? = nil) throws
         -> InspectableView<ViewType.ClassifiedView> {
         let h = given ?? ReportsFixture.harness()
-        return try ReportsPage(range: ReportsFixture.week(), selected: selected).environmentObject(h.engine).inspect()
-    }
-
-    @Test func showsTheTitleTheRangeBarAndExport() throws {
-        let sut = try page()
-        #expect(throws: Never.self) { try sut.find(text: "Reports") }
-        #expect(throws: Never.self) { try Find.button(sut, holding: "Export CSV") }
+        return try DashboardPage(kind: .week, range: ReportsFixture.week(), selected: selected).environmentObject(h.engine).inspect()
     }
 
     @Test func theTabRowHasAllBuddiesThenOneTabPerBuddyWithGoalDays() throws {

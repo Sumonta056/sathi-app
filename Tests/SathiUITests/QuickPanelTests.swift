@@ -89,13 +89,21 @@ struct QuickPanelTests {
     @Test func openSathiOpensToday() throws {
         let h = Glance.harness()
         try panel(h).find(viewWithAccessibilityIdentifier: "quick.openSathi").button().tap()
-        #expect(h.presenter.calls.last == .showMain(.today))
+        #expect(h.presenter.calls.last == .showMain(.dashboard(.day)))
     }
 
-    @Test func reportsLinkOpensReports() throws {
+    @Test func dashboardLinkOpensTheDashboardOnDay() throws {
         let h = Glance.harness()
-        try panel(h).find(viewWithAccessibilityIdentifier: "quick.reports").button().tap()
-        #expect(h.presenter.calls.last == .showMain(.reports))
+        try panel(h).find(viewWithAccessibilityIdentifier: "quick.dashboard").button().tap()
+        #expect(h.presenter.calls.last == .showMain(.dashboard(.day)))
+    }
+
+    @Test func dashboardLinkSaysDashboardAndNoReportsLinkIsLeft() throws {
+        let sut = try panel(Glance.harness())
+        let link = try sut.find(viewWithAccessibilityIdentifier: "quick.dashboard")
+        #expect(throws: Never.self) { try link.find(text: "Dashboard") }
+        #expect((try? sut.find(viewWithAccessibilityIdentifier: "quick.reports")) == nil)
+        #expect(Find.lacks(sut, text: "Reports"))
     }
 
     @Test func settingsLinkOpensGeneralSettings() throws {
