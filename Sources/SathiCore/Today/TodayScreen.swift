@@ -44,13 +44,20 @@ package struct TodaySoFar: Equatable, Sendable {
     package var segments: [ActivitySegment]
     package var logged: TimeInterval
     package var categories: [ActivityCategoryTotal]
+    package var away: [ActivityCategoryTotal]
+    package var change: RangeChange
 
-    package init(isOn: Bool, hours: DateInterval? = nil, segments: [ActivitySegment], logged: TimeInterval, categories: [ActivityCategoryTotal]) {
+    package init(
+        isOn: Bool, hours: DateInterval? = nil, segments: [ActivitySegment], logged: TimeInterval,
+        categories: [ActivityCategoryTotal], away: [ActivityCategoryTotal] = [], change: RangeChange = .none
+    ) {
         self.isOn = isOn
         self.hours = hours
         self.segments = segments
         self.logged = logged
         self.categories = categories
+        self.away = away
+        self.change = change
     }
 
     package static let off = TodaySoFar(isOn: false, hours: nil, segments: [], logged: 0, categories: [])
