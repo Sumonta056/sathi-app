@@ -13,7 +13,6 @@ struct SidebarBadge: View {
             .padding(UIMetrics.sidebarBadgePadding)
             .frame(minWidth: UIMetrics.sidebarBadgeMinWidth)
             .background(Capsule().fill(Night.trackerFill))
-            .help(label)
             .accessibilityIdentifier(id)
     }
 }

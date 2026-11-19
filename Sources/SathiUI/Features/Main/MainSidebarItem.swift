@@ -1,3 +1,4 @@
+import SathiCore
 import SwiftUI
 
 struct MainSidebarItem: View {
@@ -24,6 +25,8 @@ struct MainSidebarItem: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .help(badge?.label ?? "")
+        .accessibilityLabel(badge.map { Copywriter.sidebarBadged(title, $0.label) } ?? title)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }

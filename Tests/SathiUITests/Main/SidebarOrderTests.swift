@@ -127,4 +127,22 @@ struct SidebarOrderTests {
         let h = await EngineHarness.todosReady(items: [])
         #expect((try? sidebar(h, open: false).find(viewWithAccessibilityIdentifier: "rail.todosDot")) == nil)
     }
+
+    private func railDividers(_ h: EngineHarness) throws -> Int {
+        try sidebar(h, open: false).findAll(where: { (try? $0.accessibilityIdentifier()) == "rail.divider" }).count
+    }
+
+    @Test func railHasOneDividerWhenThePlanGroupIsEmpty() throws {
+        #expect(try railDividers(harness(todos: false, calendar: false)) == 1)
+    }
+
+    @Test func railAddsADividerBeforeThePlanItems() throws {
+        #expect(try railDividers(harness(todos: false, calendar: true)) == 2)
+    }
+
+    @Test func todosItemSpeaksTheDueCount() async throws {
+        let h = await EngineHarness.todosReady(items: dueItems(3))
+        let item = try Find.button(sidebar(h), holding: "To-dos")
+        #expect(try item.accessibilityLabel().string() == "To-dos, 3 due today")
+    }
 }

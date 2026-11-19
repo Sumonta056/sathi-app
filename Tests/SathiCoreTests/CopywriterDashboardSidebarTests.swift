@@ -16,4 +16,8 @@ struct CopywriterDashboardSidebarTests {
     func badgeLabelSaysHowManyAreDueToday(_ n: Int, _ expected: String) {
         #expect(Copywriter.todosBadge(n) == expected)
     }
+
+    @Test func badgedItemLabelJoinsTitleAndBadge() {
+        #expect(Copywriter.sidebarBadged("To-dos", "3 due today") == "To-dos, 3 due today")
+    }
 }

@@ -17,7 +17,7 @@ struct SidebarRail: View {
                     pageButton(Copywriter.mainPageActivities, "list.bullet", isActivities) { route.page = .activities(nil) }
                     if todosOn || calendarOn { divider }
                     if todosOn {
-                        pageButton(Copywriter.mainPageTodos, "checkmark.circle", route.page == .todos) { route.page = .todos }
+                        pageButton(Copywriter.mainPageTodos, "checkmark.circle", route.page == .todos, help: todosHelp) { route.page = .todos }
                             .overlay(alignment: .topTrailing) { todosDot }
                     }
                     if calendarOn {
@@ -58,6 +58,12 @@ struct SidebarRail: View {
         Rectangle().fill(Night.border)
             .frame(width: UIMetrics.sidebarRailDividerWidth, height: UIMetrics.dividerHeight)
             .padding(.vertical, UIMetrics.sidebarRailDividerGap)
+            .accessibilityIdentifier("rail.divider")
+    }
+
+    private var todosHelp: String? {
+        let n = e.todosBadgeCount
+        return n > 0 ? Copywriter.todosBadge(n) : nil
     }
 
     @ViewBuilder private var todosDot: some View {
@@ -67,13 +73,13 @@ struct SidebarRail: View {
                 .fill(Night.tracker)
                 .frame(width: UIMetrics.sidebarRailBadgeDot, height: UIMetrics.sidebarRailBadgeDot)
                 .padding(UIMetrics.sidebarRailBadgeDotInset)
-                .help(Copywriter.todosBadge(n))
+                .allowsHitTesting(false)
                 .accessibilityLabel(Copywriter.todosBadge(n))
                 .accessibilityIdentifier("rail.todosDot")
         }
     }
 
-    private func pageButton(_ title: String, _ icon: String, _ on: Bool, _ action: @escaping () -> Void) -> some View {
+    private func pageButton(_ title: String, _ icon: String, _ on: Bool, help: String? = nil, _ action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: icon)
                 .font(.system(size: UIMetrics.sidebarRailPageIcon))
@@ -83,7 +89,7 @@ struct SidebarRail: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .help(title)
+        .help(help ?? title)
         .accessibilityLabel(title)
         .accessibilityAddTraits(on ? .isSelected : [])
     }
