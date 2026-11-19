@@ -119,7 +119,7 @@ The user does many different things in a work day and keeps notes by hand to tra
 ### Settings
 
 38. A new sidebar group "My day" holds "Activity tracker" and, below it, "Time blocks". No NEW badge (it does not fit the sidebar width).
-39. Activity tracker page: on/off, Hours (the `TimeMenu` 5-minute grid), Days and days off (the shared `WeekdayRow` and `DaysOffCard`), Ask every (`Limits.trackerAskChips` 10, 15, 20, 30, 60), Usual length, Away after (`Limits.idleChips` 10, 20, 30, 60), Categories (add, rename, delete, color; at most `Limits.categoryMax` 12), Calendar (access, on by default, default calendar), Keyboard shortcut (default ⌃⌥⌘Space, Change), "Show my day when tracker hours end", and "Sound with each prompt".
+39. Activity tracker page: on/off, Hours (the `TimeMenu` 5-minute grid), Days and days off (the shared `WeekdayRow` and `DaysOffCard`), Ask every (`Limits.trackerAskChips` 10, 15, 20, 30, 60), Usual length, Away after (`Limits.idleChips` 10, 20, 30, 60), Categories (add, rename, delete, color; at most `Limits.categoryMax` 16), Calendar (access, on by default, default calendar), Keyboard shortcut (default ⌃⌥⌘Space, Change), "Show my day when tracker hours end", and "Sound with each prompt".
 40. A deleted category stays on old activities as text. New activities cannot pick it.
 
 ### Menu

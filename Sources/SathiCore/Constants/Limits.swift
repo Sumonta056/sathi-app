@@ -76,7 +76,7 @@ package enum Limits {
     package static let promptCalendarsShown = 5
     package static let trackerAskChips = [10, 15, 20, 30, 60]
     package static let idleChips = [10, 20, 30, 60]
-    package static let categoryMax = 12
+    package static let categoryMax = 16
     package static let awayPlaceMax = 8
     package static let awayPlaceNameMax = 24
     package static let categoryNameMax = 24

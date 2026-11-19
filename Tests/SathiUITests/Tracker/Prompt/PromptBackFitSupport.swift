@@ -30,11 +30,22 @@ enum BackFit {
         "Evening walk in the park", "Prayer at the mosque now"
     ]
 
-    static let categories: [ActivityCategory] = [
+    static let categories = colored([
+        "Coding Hobby", "Client Meeting", "Cefalo Meetings", "Code Review", "Learning", "Coding Client",
+        "Reading", "Browsing", "Break", "Gym", "Organizing", "Meditation", "Office Work", "Planning",
+        "Email", "Admin"
+    ])
+
+    static let longCategories = colored([
         "Coding Hobby", "Client Meeting", "Cefalo Meetings", "Code Review", "Planning Work",
         "Reading Articles", "Writing Docs", "Learning Swift", "Email and Chat", "Design Mockups",
-        "Interview Prep", "Support Tickets"
-    ].enumerated().map { ActivityCategory(name: $1, colorHex: ActivityCategory.palette[$0 % ActivityCategory.palette.count]) }
+        "Interview Prep", "Support Tickets", "Team Standups", "Research Notes", "Client Proposals",
+        "Admin and Billing"
+    ])
+
+    private static func colored(_ names: [String]) -> [ActivityCategory] {
+        names.enumerated().map { ActivityCategory(name: $1, colorHex: ActivityCategory.palette[$0 % ActivityCategory.palette.count]) }
+    }
 
     static func state(picked: String? = nil) -> TrackerPromptState {
         Prompt.state(.welcomeBack) { s in
@@ -63,8 +74,16 @@ enum BackFit {
     }
 
     static func hasScroll(_ v: NSView) -> Bool {
-        if v is NSScrollView { return true }
-        return v.subviews.contains { hasScroll($0) }
+        scrollView(v) != nil
+    }
+
+    static func scrollView(_ v: NSView) -> NSScrollView? {
+        if let s = v as? NSScrollView { return s }
+        return v.subviews.lazy.compactMap { scrollView($0) }.first
+    }
+
+    static func scrollBarHidden(_ s: NSScrollView) -> Bool {
+        !s.hasVerticalScroller
     }
 
     static func drawnCalendars(_ host: NSView) -> Set<String> {
