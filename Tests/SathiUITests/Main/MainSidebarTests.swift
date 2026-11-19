@@ -8,7 +8,7 @@ import ViewInspector
 @MainActor
 @Suite("Main sidebar")
 struct MainSidebarTests {
-    private static let pages = ["Today", "Activities", "Reports"]
+    private static let pages = ["Dashboard", "Activities"]
     private static let subPages = [
         "General",
         "Fota · water",
@@ -69,9 +69,9 @@ struct MainSidebarTests {
     }
 
     @Test func tapOnAPageShowsThatPage() throws {
-        let route = MainRoute(.dashboard(.day))
-        try Find.button(sidebar(EngineHarness(), route).inspect(), holding: "Reports").tap()
-        #expect(route.page == .dashboard(.week))
+        let route = MainRoute(.settings(.sound))
+        try Find.button(sidebar(EngineHarness(), route).inspect(), holding: "Dashboard").tap()
+        #expect(route.page == .dashboard(.day))
         try Find.button(sidebar(EngineHarness(), route).inspect(), holding: "Activities").tap()
         #expect(route.page == .activities(nil))
     }
@@ -87,7 +87,7 @@ struct MainSidebarTests {
     @Test func selectedItemsHaveTheSelectedTrait() throws {
         let sut = try sidebar(EngineHarness(), MainRoute(.settings(.tracker))).inspect()
         #expect(try A11y.isSelected(Find.button(sut, holding: "Activity tracker")))
-        #expect(try !A11y.isSelected(Find.button(sut, holding: "Today")))
+        #expect(try !A11y.isSelected(Find.button(sut, holding: "Dashboard")))
         #expect(try !A11y.isSelected(Find.button(sut, holding: "General")))
     }
 
@@ -134,10 +134,10 @@ struct MainSidebarTests {
     }
 
     @Test func closedRailTapsNavigate() throws {
-        let route = MainRoute(.dashboard(.day))
+        let route = MainRoute(.settings(.general))
         let sut = try sidebar(EngineHarness(), route, open: false).inspect()
-        try Find.button(sut, label: "Reports").tap()
-        #expect(route.page == .dashboard(.week))
+        try Find.button(sut, label: "Dashboard").tap()
+        #expect(route.page == .dashboard(.day))
         try Find.button(sut, label: "Sound").tap()
         #expect(route.page == .settings(.sound))
     }

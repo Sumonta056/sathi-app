@@ -7,7 +7,7 @@ struct QuickLinks: View {
 
     var body: some View {
         HStack {
-            link(Copywriter.quickPanelReports, id: "quick.reports") { e.openReports() }
+            link(Copywriter.quickPanelDashboard, id: "quick.dashboard") { e.openMain(.dashboard(.day)) }
             Spacer()
             link(Copywriter.quickPanelSettings, id: "quick.settings") { e.openSettings() }
             Spacer()

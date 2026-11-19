@@ -48,30 +48,14 @@ struct MainSidebarList: View {
             MainLogo(close: close)
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: UIMetrics.mainSidebarSpacing) {
-                    MainSidebarItem(title: Copywriter.mainPageToday, icon: "sun.max", isSelected: route.page == .dashboard(.day)) {
+                    MainSidebarItem(title: Copywriter.mainPageDashboard, icon: "square.grid.2x2", isSelected: isDashboard) {
                         route.page = .dashboard(.day)
-                    }
-                    if e.data.prefs.todos.isOn {
-                        MainSidebarItem(title: Copywriter.mainPageTodos, icon: "checkmark.circle", isSelected: route.page == .todos) {
-                            route.page = .todos
-                        }
                     }
                     MainSidebarItem(title: Copywriter.mainPageActivities, icon: "list.bullet", isSelected: isActivities) {
                         route.page = .activities(nil)
                     }
-                    if e.data.prefs.calendarPage.isOn {
-                        MainSidebarItem(title: Copywriter.calendarPageTitle, icon: "calendar", isSelected: isCalendar) {
-                            route.page = .calendar(nil)
-                        }
-                    }
-                    MainSidebarItem(title: Copywriter.mainPageReports, icon: "chart.bar", isSelected: route.page == .dashboard(.week)) {
-                        route.page = .dashboard(.week)
-                    }
-                    Text(verbatim: Copywriter.sidebarSettingsHeading)
-                        .font(Typography.tracker(UIMetrics.sidebarHeadingFont, .heavy))
-                        .tracking(UIMetrics.sidebarHeadingTracking)
-                        .foregroundStyle(Night.faint)
-                        .padding(UIMetrics.sidebarHeadingPadding)
+                    SidebarPlanGroup(route: route)
+                    SidebarHeading(title: Copywriter.sidebarSettingsHeading)
                     ForEach(SettingsPage.all, id: \.self) { page in
                         SidebarSettingsRow(page: page, isSelected: settingsPage == page) { route.page = .settings(page) }
                     }
@@ -95,8 +79,8 @@ struct MainSidebarList: View {
         return false
     }
 
-    private var isCalendar: Bool {
-        if case .calendar = route.page { return true }
+    private var isDashboard: Bool {
+        if case .dashboard = route.page { return true }
         return false
     }
 

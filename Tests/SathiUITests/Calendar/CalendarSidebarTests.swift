@@ -28,7 +28,7 @@ struct CalendarSidebarTests {
 
     @Test func calendarOnShowsAfterActivitiesWithoutATag() throws {
         let shown = try texts(calendarOn(), MainRoute(.dashboard(.day)))
-        #expect(shown.filter(["Today", "Activities", "Calendar", "Reports"].contains) == ["Today", "Activities", "Calendar", "Reports"])
+        #expect(shown.filter(["Dashboard", "Activities", "PLAN", "Calendar"].contains) == ["Dashboard", "Activities", "PLAN", "Calendar"])
         #expect(!shown.contains("Experimental"))
     }
 
