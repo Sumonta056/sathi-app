@@ -6,19 +6,16 @@ struct CalendarAccessGate: View {
 
     var body: some View {
         let engine = e
-        VStack(alignment: .leading, spacing: UIMetrics.calendarGateGap) {
-            Text(verbatim: Copywriter.calendarGateNotice)
-                .font(Typography.hint)
-                .foregroundStyle(Night.muted)
-            if engine.calendarAccess == .denied {
-                Button(Copywriter.blockOpenSettings) { engine.openCalendarSettings() }
-                    .buttonStyle(GhostButton(accent: Night.sprout))
-                    .accessibilityIdentifier("calendar.access.open")
-            } else {
-                Button(Copywriter.blockAllowCalendarAccess) { Task { await engine.requestCalendarAccess() } }
-                    .buttonStyle(GhostButton(accent: Night.sprout))
-                    .accessibilityIdentifier("calendar.access.allow")
-            }
+        let denied = engine.calendarAccess == .denied
+        AccessGateCard(
+            icon: "calendar",
+            accent: Night.sprout,
+            title: Copywriter.calendarGateTitle,
+            message: denied ? Copywriter.calendarGateDenied : Copywriter.calendarGateNotice,
+            button: denied ? Copywriter.blockOpenSettings : Copywriter.blockAllowCalendarAccess,
+            buttonID: denied ? "calendar.access.open" : "calendar.access.allow"
+        ) {
+            if denied { engine.openCalendarSettings() } else { Task { await engine.requestCalendarAccess() } }
         }
     }
 }

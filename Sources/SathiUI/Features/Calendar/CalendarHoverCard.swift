@@ -23,7 +23,7 @@ struct CalendarHoverCard: View {
                 .fixedSize(horizontal: false, vertical: true)
             line(timeLine, color: Night.text)
             if let meta = info.meta { line(meta, color: Night.muted) }
-            if let childrenTitle = info.childrenTitle { rows(childrenTitle, info.children, key: "row") }
+            if let doneTitle = info.doneDuringTitle { rows(doneTitle, info.doneDuring, key: "done") }
             if let alsoHereTitle = info.alsoHereTitle { rows(alsoHereTitle, info.alsoHere, key: "also") }
             if !actions.isEmpty { buttons }
         }

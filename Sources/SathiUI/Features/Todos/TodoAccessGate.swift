@@ -6,28 +6,16 @@ struct TodoAccessGate: View {
 
     var body: some View {
         let engine = e
-        VStack(spacing: UIMetrics.todoFormSpacing) {
-            Image(systemName: "checkmark.circle")
-                .font(.system(size: UIMetrics.todoGateIcon, weight: .bold))
-                .foregroundStyle(Night.todo)
-            Text(verbatim: Copywriter.todoGateTitle)
-                .font(Typography.cardTitle)
-                .foregroundStyle(Night.text)
-            Text(verbatim: engine.todoAccess == .denied ? Copywriter.todoGateDenied : Copywriter.todoGateNotAsked)
-                .font(Typography.hint)
-                .foregroundStyle(Night.muted)
-                .multilineTextAlignment(.center)
-            if engine.todoAccess == .denied {
-                Button { engine.openTodoSettings() } label: { Text(verbatim: Copywriter.todoOpenSettings) }
-                    .buttonStyle(GhostButton(accent: Night.todo))
-                    .accessibilityIdentifier("todos.access.open")
-            } else {
-                Button { Task { await engine.requestTodoAccess() } } label: { Text(verbatim: Copywriter.todoAllowAccess) }
-                    .buttonStyle(GhostButton(accent: Night.todo))
-                    .accessibilityIdentifier("todos.access.allow")
-            }
+        let denied = engine.todoAccess == .denied
+        AccessGateCard(
+            icon: "checkmark.circle",
+            accent: Night.todo,
+            title: Copywriter.todoGateTitle,
+            message: denied ? Copywriter.todoGateDenied : Copywriter.todoGateNotAsked,
+            button: denied ? Copywriter.todoOpenSettings : Copywriter.todoAllowAccess,
+            buttonID: denied ? "todos.access.open" : "todos.access.allow"
+        ) {
+            if denied { engine.openTodoSettings() } else { Task { await engine.requestTodoAccess() } }
         }
-        .padding(UIMetrics.todoFormPadding)
-        .frame(width: UIMetrics.todoGateWidth)
     }
 }

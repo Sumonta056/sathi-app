@@ -39,6 +39,10 @@ struct CalendarBlockBuilderMatchTests {
         blocks.filter { if case .event = $0.source { true } else { false } }
     }
 
+    func activityBlocks(_ blocks: [CalendarBlock]) -> [CalendarBlock] {
+        blocks.filter { if case .activity = $0.source { true } else { false } }
+    }
+
     @Test func blockHasOneCopyByDefault() {
         let blocks = build([event("e1")])
         #expect(blocks.map(\.copies) == [1])
@@ -81,17 +85,17 @@ struct CalendarBlockBuilderMatchTests {
         #expect(blocks.allSatisfy { $0.copies == 1 })
     }
 
-    @Test func activityWithTheEventTitleHidesItAndIsJoined() {
+    @Test func activityWithTheEventTitleKeepsItAndIsJoined() {
         let blocks = build([event("e1", "Standup")], [activity("standup ", at: 10)])
-        #expect(eventBlocks(blocks).isEmpty)
-        #expect(blocks.count == 1)
-        #expect(blocks[0].style == .joined(category: "Focus"))
+        #expect(eventBlocks(blocks).count == 1)
+        #expect(blocks.count == 2)
+        #expect(activityBlocks(blocks).map(\.style) == [.joined(category: "Focus")])
     }
 
     @Test func titleJoinTrimsTheEventTitleToo() {
         let blocks = build([event("e1", "  STANDUP\n")], [activity("Standup", at: 20)])
-        #expect(eventBlocks(blocks).isEmpty)
-        #expect(blocks[0].style == .joined(category: "Focus"))
+        #expect(eventBlocks(blocks).count == 1)
+        #expect(activityBlocks(blocks).map(\.style) == [.joined(category: "Focus")])
     }
 
     @Test func sameTitleWithoutOverlapShowsBoth() {
@@ -118,9 +122,9 @@ struct CalendarBlockBuilderMatchTests {
         #expect(blocks.count == 2)
     }
 
-    @Test func titleJoinHidesEveryCopy() {
+    @Test func titleJoinKeepsTheCopiesAsOneCard() {
         let blocks = build([event("e1", calendar: "c1"), event("e2", calendar: "c2")], [activity("Standup", at: 5)])
-        #expect(eventBlocks(blocks).isEmpty)
+        #expect(eventBlocks(blocks).map(\.copies) == [2])
     }
 
     @Test func twinsInOneCalendarStayTwoBlocks() {
@@ -135,10 +139,10 @@ struct CalendarBlockBuilderMatchTests {
         #expect(blocks.map(\.source) == [.event(low)])
     }
 
-    @Test func runningActivityHidesEventByTitle() {
+    @Test func runningActivityWithTheEventTitleKeepsIt() {
         let blocks = build([event("e1")], running: activity("Standup", at: 5))
-        #expect(eventBlocks(blocks).isEmpty)
-        #expect(blocks.map(\.style) == [.joined(category: "Focus")])
+        #expect(eventBlocks(blocks).count == 1)
+        #expect(activityBlocks(blocks).map(\.style) == [.joined(category: "Focus")])
     }
 
     @Test func weekGroupIsJoinedWhenALaterRowMatches() {
@@ -146,6 +150,6 @@ struct CalendarBlockBuilderMatchTests {
         let blocks = CalendarBlockBuilder.blocks(
             events: [event("e1", at: 60, length: 15)], activities: rows, running: nil, colors: ["c1": 0x112233], joins: true
         )
-        #expect(blocks.map(\.style) == [.joined(category: "Focus")])
+        #expect(activityBlocks(blocks).map(\.style) == [.joined(category: "Focus")])
     }
 }

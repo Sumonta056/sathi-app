@@ -6,10 +6,9 @@ struct CalendarPage: View {
     @State private var picked: CalendarPageRange?
     @State private var memo = RangeMemo<CalendarPageRequest, CalendarPageData>()
     @State var focus: CalendarPageFocus
-    @State var selected: Set<ActivityID> = []
-    @State var mergeError: String?
+    @State var failure: String?
     @State var narrowStats: Bool
-    @State var narrowLanes = CalendarLaneMemory.remembered
+    @State var narrowWeek = CalendarNarrowMemory.week
     @Environment(\.mainLayout) var layout
     @EnvironmentObject var e: Engine
 
@@ -22,18 +21,17 @@ struct CalendarPage: View {
 
     var body: some View {
         let range = shown
-        let request = CalendarPageRequest(range: range, narrow: CalendarLaneMemory.narrow(narrowLanes, for: range.kind))
+        let request = CalendarPageRequest(range: range, narrow: range.kind == .week && narrowWeek)
         let data = e.calendarAccess == .allowed ? memo.value(request, end: range.interval.end, engine: e) {
-            $0.calendarPage(
-                $1.range, minimumMinutes: CalendarGridMath.minimumMinutes(rowMinutes: $0.data.prefs.calendarPage.rowMinutes), narrow: $1.narrow
-            )
+            $0.calendarPage($1.range, metrics: CalendarSplitMetrics.metrics(
+                kind: $1.range.kind, rowMinutes: $0.data.prefs.calendarPage.rowMinutes, narrow: $1.narrow
+            ))
         } : nil
         let sidePanelShown = layout.isNarrow ? narrowStats : e.data.prefs.calendarPage.sidePanelShown(for: range.kind)
         VStack(alignment: .leading, spacing: UIMetrics.reportsPageGap) {
-            CalendarPageHeader(
-                range: binding(range), now: e.now, calendar: e.rangeCalendar, stats: data?.stats, sidePanelShown: sidePanelShown,
-                toggleSidePanel: { toggleSidePanel(range.kind) }, rowMinutes: rowMinutes
-            )
+            if let data {
+                header(range, data, sidePanelShown: sidePanelShown)
+            }
             content(range, data)
         }
         .padding(UIMetrics.mainContentPadding)
@@ -44,7 +42,15 @@ struct CalendarPage: View {
         }
         .onDisappear { e.calendarPageClosed() }
         .onChange(of: day) { _ in picked = nil }
-        .modifier(CalendarRangeReset(range: range, focus: $focus, selected: $selected, error: $mergeError) { e.clearMergeUndo() })
+        .modifier(CalendarRangeReset(range: range, focus: $focus, failure: $failure))
+    }
+
+    private func header(_ range: CalendarPageRange, _ data: CalendarPageData, sidePanelShown: Bool) -> some View {
+        CalendarPageHeader(
+            range: binding(range), now: e.now, calendar: e.rangeCalendar, stats: data.stats, sidePanelShown: sidePanelShown,
+            toggleSidePanel: { toggleSidePanel(range.kind) }, rowMinutes: rowMinutes, today: e.calendarPageToday,
+            weekDays: e.data.prefs.calendarPage.weekDays, pickDays: { picked = Self.pickDays($0, engine: e) }
+        )
     }
 
     private func toggleSidePanel(_ kind: ReportRange) {
@@ -55,21 +61,21 @@ struct CalendarPage: View {
     private var shown: CalendarPageRange {
         if let picked { return picked }
         let calendar = e.rangeCalendar
-        guard let day else { return .containing(e.now, kind: .week, calendar: calendar) }
-        return .containing(day: day, kind: .day, calendar: calendar)
+        let weekDays = e.data.prefs.calendarPage.weekDays
+        guard let day else { return .containing(e.now, kind: .day, calendar: calendar, weekDays: weekDays) }
+        return .containing(day: day, kind: .day, calendar: calendar, weekDays: weekDays)
     }
 
     @ViewBuilder private func content(_ range: CalendarPageRange, _ data: CalendarPageData?) -> some View {
         if let data {
             HStack(alignment: .top, spacing: UIMetrics.calendarSideGap) {
                 VStack(alignment: .leading, spacing: UIMetrics.calendarSideGap) {
-                    if range.kind == .day { strip(data) } else if let mergeError { errorLine(mergeError) }
+                    if let failure { errorLine(failure) }
                     grid(range, data)
                 }
                 side(data, kind: range.kind)
             }
             .overlay(alignment: .topTrailing) { floating(data, kind: range.kind) }
-            .modifier(CalendarSelectionPrune(blocks: data.blocks, selected: $selected, error: $mergeError))
         } else {
             CalendarAccessGate()
         }
@@ -81,24 +87,22 @@ struct CalendarPage: View {
                 CalendarMonthGrid(cells: data.monthCells, range: binding(range), calendar: e.rangeCalendar, categories: e.activityCategories)
             }
         } else {
-            CalendarTimeGrid(
+            CalendarSplitGrid(
                 range: range, data: data, now: e.now, calendar: e.rangeCalendar, categories: e.activityCategories,
-                actions: gridActions(kind: range.kind), selected: range.kind == .day ? selected : [], popover: $focus.popover,
-                rowMinutes: e.data.prefs.calendarPage.rowMinutes, narrow: CalendarLaneMemory.narrow(narrowLanes, for: range.kind),
-                measured: { width in
-                    guard let next = CalendarLaneMemory.next(narrowLanes, kind: range.kind, columnWidth: width) else { return }
-                    CalendarLaneMemory.remembered = next
-                    narrowLanes = next
-                }
-            )
+                actions: gridActions(), popover: $focus.popover, narrow: range.kind == .week && narrowWeek,
+                calendarNames: range.kind == .day ? data.calendarNames : [:]
+            ) { measure in
+                let next = CalendarSplitMetrics.narrow(measure, current: narrowWeek)
+                guard next != narrowWeek else { return }
+                CalendarNarrowMemory.week = next
+                narrowWeek = next
+            }
         }
     }
 
-    private func strip(_ data: CalendarPageData) -> some View {
-        CalendarMergeStrip(
-            rows: CalendarMergePick.rows(data.blocks), calendar: e.rangeCalendar, canUndo: e.mergeUndo != nil,
-            actions: .merging(e), selected: $selected, error: $mergeError
-        )
+    static func pickDays(_ n: Int, engine: Engine) -> CalendarPageRange {
+        engine.setCalendarWeekDays(n)
+        return engine.calendarPageToday(.week)
     }
 
     private func errorLine(_ text: String) -> some View {

@@ -13,3 +13,12 @@ struct CalendarBlockBadge: View {
             .fixedSize()
     }
 }
+
+struct CalendarBlockBadges: View {
+    let laid: CalendarLaidBlock
+
+    var body: some View {
+        if laid.block.copies > 1 { CalendarBlockBadge(text: Copywriter.calendarCopies(laid.block.copies)) }
+        if !laid.hidden.isEmpty { CalendarBlockBadge(text: Copywriter.calendarHiddenCount(laid.hidden.count)) }
+    }
+}

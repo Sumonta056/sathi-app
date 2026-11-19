@@ -10,7 +10,7 @@ struct EngineCalendarPageCloseTests {
         let h = EngineHarness.tracker(at: wed(10), activities: [Activity(text: "Old", start: day(2026, 1, 5, 9), end: day(2026, 1, 5, 10))])
         h.calendarWriter.eventsValue = [pageEvent()]
         h.engine.calendarPageOpened()
-        _ = h.engine.calendarPage(.containing(day(2026, 1, 5, 12), kind: .month, calendar: h.engine.calendar))
+        _ = h.engine.calendarPageBase(.containing(day(2026, 1, 5, 12), kind: .month, calendar: h.engine.calendar))
         return h
     }
 
@@ -42,7 +42,7 @@ struct EngineCalendarPageCloseTests {
         h.engine.calendarPageClosed()
         let reads = h.calendarWriter.eventReads.count
         h.engine.calendarPageOpened()
-        _ = h.engine.calendarPage(.containing(day(2026, 1, 5, 12), kind: .month, calendar: h.engine.calendar))
+        _ = h.engine.calendarPageBase(.containing(day(2026, 1, 5, 12), kind: .month, calendar: h.engine.calendar))
         #expect(h.calendarWriter.eventReads.count == reads + 1)
     }
 }

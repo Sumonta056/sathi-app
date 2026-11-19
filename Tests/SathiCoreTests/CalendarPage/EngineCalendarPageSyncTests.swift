@@ -1,5 +1,5 @@
 import Foundation
-import SathiCore
+@testable import SathiCore
 import SathiTestSupport
 import Testing
 
@@ -39,7 +39,7 @@ struct EngineCalendarPageSyncTests {
         let read = {
             memo.value(range, end: range.interval.end, engine: h.engine) { e, r in
                 c.builds += 1
-                return e.calendarPage(r)
+                return e.calendarPageBase(r)
             }
         }
         h.engine.calendarPageOpened()

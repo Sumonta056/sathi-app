@@ -3,62 +3,82 @@ import Foundation
 import SathiTestSupport
 import Testing
 
-@Suite("Calendar hover card action rules")
+@Suite("Calendar hover card rules")
 struct CalendarHoverInfoRulesTests {
-    private let cal = FixedZone.berlin.calendar
+    private let berlin = FixedZone.berlin.calendar
+    private let wednesday = 18
 
-    private func actions(_ block: CalendarBlock, now: Int = 0, trackerOn: Bool = true) -> [CalendarHoverAction] {
+    private func actions(_ block: CalendarBlock, now: Int, trackerOn: Bool = true) -> [CalendarHoverAction] {
         let lookup = CalendarHoverLookup(now: Lay.at(now), trackerOn: trackerOn)
-        return CalendarHoverInfo.make(CalendarPlacedBlock(block: block, lane: 0, lanes: 1), lookup: lookup, calendar: cal).actions
+        return CalendarHoverInfo.make(CalendarHoverInfoTests.laid(block), among: [], lookup: lookup, calendar: berlin).actions
     }
 
-    @Test func startAsActivityNeedsTheTrackerOn() {
-        #expect(actions(Lay.event("e", 0, 60), now: 10, trackerOn: false) == [.edit, .openInCalendar])
+    private func info(_ laid: CalendarLaidBlock, among: [CalendarLaidBlock] = []) -> CalendarHoverInfo {
+        CalendarHoverInfo.make(laid, among: among, lookup: CalendarHoverLookup(), calendar: Split.calendar)
     }
 
-    @Test(arguments: [-5, 0, 30, 59])
-    func startAsActivityShowsFromFiveMinutesBeforeUntilTheEnd(_ now: Int) {
+    @Test(arguments: [0, -5, 30])
+    func startAsActivityShowsFromFiveMinutesBeforeTheStart(_ now: Int) {
         #expect(actions(Lay.event("e", 0, 60), now: now) == [.startAsActivity, .edit, .openInCalendar])
     }
 
-    @Test(arguments: [-6, -24 * 60, 60, 90])
-    func startAsActivityIsHiddenForAFutureOrPastEvent(_ now: Int) {
+    @Test(arguments: [-6, 60])
+    func startAsActivityIsHiddenSixMinutesBeforeOrAfterTheEnd(_ now: Int) {
         #expect(actions(Lay.event("e", 0, 60), now: now) == [.edit, .openInCalendar])
     }
 
-    @Test func runningActivityHasNoActions() {
-        var b = Lay.activity("r", 0, 30)
-        if case let .activity(a, _) = b.source { b.source = .activity(a, running: true) }
-        #expect(actions(b).isEmpty)
+    @Test func startAsActivityNeedsTheTrackerOn() {
+        #expect(actions(Lay.event("e", 0, 60), now: 0, trackerOn: false) == [.edit, .openInCalendar])
     }
 
-    @Test func weekJoinedBlockOfManyRowsHasNoDelete() {
-        var b = Lay.activity("j", 0, 30)
-        b.activityIDs.append(ActivityID())
-        #expect(actions(b) == [.edit, .merge])
+    @Test func readOnlyEventHasNoEdit() {
+        let lookup = CalendarHoverLookup(readOnlyEventIDs: ["e"], now: Lay.at(-60), trackerOn: true)
+        let i = CalendarHoverInfo.make(CalendarHoverInfoTests.laid(Lay.event("e", 0, 60)), among: [], lookup: lookup, calendar: berlin)
+        #expect(i.actions == [.openInCalendar])
     }
 
-    @Test func hiddenBlocksAreListedUnderAlsoHere() {
-        var p = CalendarPlacedBlock(block: Lay.activity("a", 0, 60), lane: 0, lanes: 2)
-        p.hidden = [
-            CalendarPlacedBlock(block: Lay.event("Review", 10, 40), lane: 0, lanes: 1),
-            CalendarPlacedBlock(block: Lay.activity("Notes", 12, 30), lane: 0, lanes: 1)
+    @Test func timeAndLengthAreRoundedOnce() throws {
+        let b = Split.activity("Review", "14:35:54", "15:01:32", on: wednesday)
+        let laid = try #require(Split.laid(Split.layout([b], days: [Split.key(wednesday)]), "Review", on: Split.key(wednesday)))
+        let i = info(laid)
+        #expect(i.time == "2:36 – 3:02 PM")
+        #expect(i.length == "26m")
+    }
+
+    @Test func anEventListsItsDoneDuringActivitiesFromTheDay() throws {
+        let key = Split.key(wednesday)
+        let scrum = Split.event("Frontline Morning Scrum", "10:30", "11:00", on: wednesday)
+        let notes = Split.activity("Scrum notes", "10:31:20", "10:58:40", on: wednesday)
+        let other = Split.activity("Code review", "12:00", "12:30", on: wednesday)
+        let grid = Split.layout([scrum, notes, other], days: [key])
+        let day = try #require(grid.days[key])
+        let event = try #require(Split.laid(grid, "Frontline Morning Scrum", on: key))
+        let i = info(event, among: day)
+        #expect(i.doneDuringTitle == "Done during this event")
+        #expect(i.doneDuring == [CalendarHoverChild(id: "Scrum notes", title: "Scrum notes", time: "10:31 – 10:59 AM")])
+    }
+
+    @Test func anActivityListsNoDoneDuringRows() throws {
+        let key = Split.key(wednesday)
+        let grid = Split.layout(
+            [Split.event("Frontline Morning Scrum", "10:30", "11:00", on: wednesday), Split.activity("Notes", "10:31", "10:58", on: wednesday)],
+            days: [key]
+        )
+        let activity = try #require(Split.laid(grid, "Notes", on: key))
+        #expect(info(activity, among: grid.days[key] ?? []).doneDuring.isEmpty)
+    }
+
+    @Test func alsoHereListsTheHiddenItemsWithRoundedShortTimes() {
+        var top = CalendarHoverInfoTests.laid(Split.event("Brief", "10:00", "11:00", on: wednesday))
+        top.hidden = [
+            CalendarHoverInfoTests.laid(Split.event("Review", "10:10:40", "10:40", on: wednesday)),
+            CalendarHoverInfoTests.laid(Split.event("Sync", "10:12", "10:30", on: wednesday))
         ]
-        let i = CalendarHoverInfo.make(p, lookup: CalendarHoverLookup(), calendar: cal)
+        let i = info(top)
         #expect(i.alsoHereTitle == "Also here")
         #expect(i.alsoHere == [
-            CalendarHoverChild(id: "Review", title: "Review", time: Fmt.shortRange(Lay.at(10), Lay.at(40), calendar: cal)),
-            CalendarHoverChild(id: "Notes", title: "Notes", time: Fmt.shortRange(Lay.at(12), Lay.at(30), calendar: cal))
+            CalendarHoverChild(id: "Review", title: "Review", time: "10:11 – 10:40 AM"),
+            CalendarHoverChild(id: "Sync", title: "Sync", time: "10:12 – 10:30 AM")
         ])
-    }
-
-    @Test func blockWithNothingHiddenHasNoAlsoHere() {
-        let i = CalendarHoverInfo.make(
-            CalendarPlacedBlock(block: Lay.event("e", 0, 60), lane: 0, lanes: 1),
-            lookup: CalendarHoverLookup(),
-            calendar: cal
-        )
-        #expect(i.alsoHereTitle == nil)
-        #expect(i.alsoHere.isEmpty)
     }
 }

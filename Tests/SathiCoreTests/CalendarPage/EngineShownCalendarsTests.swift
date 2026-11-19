@@ -17,7 +17,7 @@ struct EngineShownCalendarsTests {
 
     func titles(_ h: EngineHarness) -> [String] {
         let range = CalendarPageRange.containing(day(2026, 3, 4, 12), kind: .day, calendar: h.engine.calendar)
-        return h.engine.calendarPage(range).blocks.map(\.title).sorted()
+        return h.engine.calendarPageBase(range).blocks.map(\.title).sorted()
     }
 
     @Test func groupsComeFromThePageReadWithNoNewCalendarRead() {
