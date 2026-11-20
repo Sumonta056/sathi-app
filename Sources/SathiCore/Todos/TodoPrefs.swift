@@ -6,6 +6,9 @@ package struct TodoPrefs: Codable, Equatable, Sendable {
     package var askWhenDue: Bool = true
     package var newListAccountID: String?
     package var order: [String: [String]] = [:]
+    package var allView: TodoAllView = .board
+    package var sideHidden: Bool = false
+    package var listOrder: [String] = []
 
     package init(
         isOn: Bool = false,
@@ -20,7 +23,7 @@ package struct TodoPrefs: Codable, Equatable, Sendable {
     }
 
     private enum CodingKeys: String, CodingKey {
-        case isOn, hiddenListIDs, askWhenDue, newListAccountID, order
+        case isOn, hiddenListIDs, askWhenDue, newListAccountID, order, allView, sideHidden, listOrder
     }
 
     package init(from decoder: Decoder) throws {
@@ -31,5 +34,8 @@ package struct TodoPrefs: Codable, Equatable, Sendable {
         askWhenDue = c.lenient(.askWhenDue, or: d.askWhenDue)
         newListAccountID = try? c.decodeIfPresent(String.self, forKey: .newListAccountID)
         order = c.lenient(.order, or: d.order)
+        allView = (try? c.known(.allView, or: d.allView)) ?? d.allView
+        sideHidden = c.lenient(.sideHidden, or: d.sideHidden)
+        listOrder = c.lenient(.listOrder, or: d.listOrder)
     }
 }

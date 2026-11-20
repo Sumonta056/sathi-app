@@ -25,6 +25,13 @@ package func makeTodo(
     )
 }
 
-package func makeTodoList(_ id: String, _ name: String = "List") -> TodoList {
-    TodoList(id: id, name: name, colorHex: "#FF3B30", accountID: "icloud", accountName: "iCloud", canEdit: true)
+package func makeTodoList(_ id: String, _ name: String = "List", account: String = "icloud") -> TodoList {
+    TodoList(
+        id: id,
+        name: name,
+        colorHex: "#FF3B30",
+        accountID: account,
+        accountName: account == "icloud" ? "iCloud" : account,
+        canEdit: true
+    )
 }
