@@ -82,4 +82,25 @@ struct TodoFinishingWrittenTests {
         sut.settle(open: ["b"])
         #expect(sut.phase("a") == nil)
     }
+
+    @Test func aSavedWriteThatLeavesTheTodoOpenBringsTheRowBack() async {
+        let gate = TodoFinishingGate()
+        let sut = await written(gate)
+        sut.resolve("a", failed: false, open: ["a"])
+        #expect(sut.phase("a") == nil)
+    }
+
+    @Test func aSavedWriteThatClosedTheTodoKeepsTheRowFolded() async {
+        let gate = TodoFinishingGate()
+        let sut = await written(gate)
+        sut.resolve("a", failed: false, open: ["b"])
+        #expect(sut.phase("a") == .leaving)
+    }
+
+    @Test func aFailedResultBringsTheRowBack() async {
+        let gate = TodoFinishingGate()
+        let sut = await written(gate)
+        sut.resolve("a", failed: true, open: [])
+        #expect(sut.phase("a") == nil)
+    }
 }

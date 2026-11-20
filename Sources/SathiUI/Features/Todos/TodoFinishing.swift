@@ -77,6 +77,11 @@ final class TodoFinishing: ObservableObject {
         phases[id] = nil
     }
 
+    func resolve(_ id: String, failed: Bool, open: Set<String>) {
+        guard failed || open.contains(id) else { return }
+        fail(id)
+    }
+
     private func commit(_ id: String) {
         tasks[id]?.cancel()
         tasks[id] = nil
