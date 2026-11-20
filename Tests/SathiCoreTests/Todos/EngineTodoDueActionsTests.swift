@@ -59,6 +59,17 @@ struct EngineTodoDueActionsTests {
         #expect(h.running?.todoID == nil)
     }
 
+    @Test func doneReportsAFailedWrite() async {
+        let h = await due()
+        h.todos.nextResult = .failed
+        #expect(!h.engine.doneTodo("a"))
+    }
+
+    @Test func doneReportsASavedWrite() async {
+        let h = await due()
+        #expect(h.engine.doneTodo("a"))
+    }
+
     @Test func doneMarksTheTodoDoneAndClosesThePrompt() async {
         let h = await due()
         h.engine.doneTodo("a")

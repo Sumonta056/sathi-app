@@ -21,6 +21,14 @@ struct TodosPage: View {
             }
         }
         .onAppear { e.refreshTodos() }
+        .todoFinishing { engine, finishing in
+            { id in
+                Task {
+                    let result = await engine.setTodoDone(id, true)
+                    finishing.resolve(id, failed: result == .failed, open: Set(engine.todoSnapshot.open.map(\.id)))
+                }
+            }
+        }
     }
 
     private var shown: TodoSelection {
