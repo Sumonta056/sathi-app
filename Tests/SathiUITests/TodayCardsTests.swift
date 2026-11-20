@@ -116,21 +116,32 @@ struct TodayCardsTests {
         }
     }
 
-    @Test func breatheNowOnlyOnShanti() throws {
-        let t = day(2026, 3, 4, 16, 0)
-        let h = EngineHarness()
-        let sut = try hosted(
-            TodayBuddyGrid(e: h.engine, buddies: HabitID.allCases.map { buddy($0, status: .next(t)) }, calendar: cal), h
-        ).inspect()
-        #expect(sut.findAll(ViewType.Button.self, where: { (try? $0.labelView().find(text: "Breathe now")) != nil }).count == 1)
-        #expect(throws: Never.self) { try card(buddy(.meditation, status: .next(t))).find(text: "Breathe now") }
-        #expect(try Find.lacks(card(buddy(.water, status: .next(t))), text: "Breathe now"))
+    private func card(_ b: TodayBuddy, _ h: EngineHarness) throws -> InspectableView<ViewType.ClassifiedView> {
+        try hosted(TodayBuddyCard(e: h.engine, buddy: b, calendar: cal), h).inspect()
     }
 
-    @Test func breatheNowStartsTheSession() throws {
-        let h = EngineHarness()
+    @Test func eachSessionBuddyHasDoNow() throws {
+        let t = day(2026, 3, 4, 16, 0)
+        let h = Glance.harness()
+        for (id, title) in [(HabitID.reading, "Read now"), (.meditation, "Breathe"), (.gym, "Move")] {
+            let sut = try card(buddy(id, status: .next(t)), h)
+            #expect(throws: Never.self) { try sut.find(viewWithAccessibilityIdentifier: "doNow.\(id.rawValue)") }
+            #expect(throws: Never.self) { try sut.find(text: title) }
+        }
+        #expect(try Find.lacks(card(buddy(.water, status: .next(t)), h), text: "Breathe"))
+        #expect(try Find.lacks(card(buddy(.meditation, status: .next(t)), h), text: "Breathe now"))
+    }
+
+    @Test func doNowStaysAfterTheGoalAndHidesWhenOff() throws {
+        let h = Glance.harness()
+        #expect(throws: Never.self) { try card(buddy(.gym, status: .met), h).find(viewWithAccessibilityIdentifier: "doNow.gym") }
+        #expect(throws: (any Error).self) { try card(buddy(.gym, status: .off), h).find(viewWithAccessibilityIdentifier: "doNow.gym") }
+    }
+
+    @Test func breatheStartsTheSession() throws {
+        let h = Glance.harness()
         let b = buddy(.meditation, status: .next(day(2026, 3, 4, 16, 0)))
-        try hosted(TodayBuddyCard(e: h.engine, buddy: b, calendar: cal), h).inspect().find(button: "Breathe now").tap()
+        try card(b, h).find(viewWithAccessibilityIdentifier: "doNow.meditation").button().tap()
         #expect(h.presenter.calls.contains(.showSession(.meditation)))
     }
 }

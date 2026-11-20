@@ -43,19 +43,41 @@ extension Engine {
         requestTick()
     }
 
+    func logFinishedSession(_ id: HabitID, _ s: Session, at end: Date) {
+        let stop = min(end, calendar.nextDay(after: s.start))
+        guard id != .water, !trackerLogged(id, from: s.start, to: stop) else { return }
+        let category = addedBuddyCategory(id)
+        storeActivity(Activity(kind: .buddy, text: buddyText(id), category: category, start: s.start, end: stop))
+    }
+
+    private func trackerLogged(_ id: HabitID, from start: Date, to end: Date) -> Bool {
+        let name = ActivityCategory.buddy(id).name
+        let r = data.live.tracker.running
+        if r?.kind == .buddy, r?.category == name { return true }
+        return storedActivities(on: start).contains { $0.kind == .buddy && $0.category == name && $0.start < end && $0.end > start }
+    }
+
     private func beginBuddyActivity(_ id: HabitID, at n: Date) {
+        let left = session(id).map { $0.end.timeIntervalSince(max($0.start, n)) } ?? 0
+        let minutes = Int((left / Timing.minute).rounded(.up))
+        let d = ActivityDraft(
+            text: buddyText(id),
+            category: addedBuddyCategory(id),
+            length: minutes > 0 ? .minutes(minutes) : .open
+        )
+        beginActivity(d, kind: .buddy, at: n)
+    }
+
+    private func addedBuddyCategory(_ id: HabitID) -> String {
         let category = ActivityCategory.buddy(id)
         if !activityCategories.contains(where: { $0.name == category.name }) {
             addActivityCategory(category.name, colorHex: category.colorHex)
         }
-        let left = session(id).map { $0.end.timeIntervalSince(max($0.start, n)) } ?? 0
-        let minutes = Int((left / Timing.minute).rounded(.up))
-        let d = ActivityDraft(
-            text: Copywriter.trackerBuddyText(id, detail: buddyDetail(id)),
-            category: category.name,
-            length: minutes > 0 ? .minutes(minutes) : .open
-        )
-        beginActivity(d, kind: .buddy, at: n)
+        return category.name
+    }
+
+    private func buddyText(_ id: HabitID) -> String {
+        Copywriter.trackerBuddyText(id, detail: buddyDetail(id))
     }
 
     private func buddyDetail(_ id: HabitID) -> String? {

@@ -81,9 +81,12 @@ struct QuickPanelTests {
         #expect(h.engine.glassesToday == before + 1)
     }
 
-    @Test func onlyFotaHasAQuickAction() throws {
+    @Test func eachBuddyHasItsQuickAction() throws {
         let sut = try panel(Glance.harness())
         #expect(sut.findAll(where: { (try? $0.text().string()) == "+1 glass" }).count == 1)
+        for id in ["quick.glass", "doNow.reading", "doNow.meditation", "doNow.gym"] {
+            #expect(throws: Never.self) { try sut.find(viewWithAccessibilityIdentifier: id) }
+        }
     }
 
     @Test func openSathiOpensToday() throws {

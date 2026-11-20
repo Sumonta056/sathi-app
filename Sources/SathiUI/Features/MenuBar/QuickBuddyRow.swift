@@ -26,6 +26,7 @@ struct QuickBuddyRow: View {
                 .buttonStyle(GhostButton(accent: Night.water, height: UIMetrics.quickSmallButtonHeight))
                 .accessibilityIdentifier("quick.glass")
             }
+            DoNowButton(e: e, habit: buddy.habit, before: MenuBarWindow.close)
         }
         .padding(UIMetrics.quickBuddyRowPadding)
     }
