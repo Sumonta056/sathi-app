@@ -13,7 +13,9 @@ struct TodosPage: View {
         Group {
             if e.todoAccess == .allowed {
                 HStack(spacing: 0) {
-                    TodoSideColumn(selection: $selection)
+                    if !e.data.prefs.todos.sideHidden {
+                        TodoSideColumn(selection: $selection)
+                    }
                     TodoItemsColumn(selection: shown).id(shown)
                 }
             } else {

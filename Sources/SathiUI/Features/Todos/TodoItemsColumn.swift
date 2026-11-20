@@ -5,6 +5,7 @@ struct TodoItemsColumn: View {
     let selection: TodoSelection
     @State private var showCompleted: Bool
     @State private var editingID: String?
+    @State private var addListID: String?
     @State private var reorder = TodoReorder()
     @State private var frames = TodoRowFrames()
     @Environment(\.mainLayout) private var layout
@@ -19,8 +20,8 @@ struct TodoItemsColumn: View {
         let page = e.todoPage(selection)
         let rows = showCompleted ? page.open + page.completed : page.open
         VStack(alignment: .leading, spacing: UIMetrics.todoItemsSpacing) {
-            header(page)
-            if let target = page.targetListID {
+            TodoItemsHeader(page: page, accent: accent, showCompleted: $showCompleted)
+            if let target = addTarget(page) {
                 TodoAddField(listID: target, due: page.defaultDue).id(target)
             }
             ScrollView(showsIndicators: false) {
@@ -33,6 +34,8 @@ struct TodoItemsColumn: View {
                     }
                     if page.sections.isEmpty {
                         ForEach(rows, id: \.id) { item($0, peers: page.open) }
+                    } else if isBoard {
+                        TodoBoard(sections: page.sections, editingID: $editingID, reorder: $reorder) { addListID = $0 }
                     } else {
                         ForEach(page.sections, id: \.list.id) { section in
                             TodoSectionHeader(list: section.list, count: section.todos.count)
@@ -66,31 +69,14 @@ struct TodoItemsColumn: View {
         }
     }
 
-    private func header(_ page: TodoPageModel) -> some View {
-        HStack(alignment: .firstTextBaseline, spacing: UIMetrics.todoHeaderSpacing) {
-            Text(verbatim: page.title)
-                .font(Typography.tracker(UIMetrics.todoTitleFont, .heavy))
-                .foregroundStyle(accent)
-                .layoutPriority(1)
-            Text(verbatim: Copywriter.todoPageCount(open: page.open.count, lists: selection == .smart(.all) ? page.sections.count : nil))
-                .font(Typography.tracker(UIMetrics.todoHeaderCountFont, .semibold))
-                .foregroundStyle(Night.muted)
-            Spacer(minLength: 0)
-            if !page.completed.isEmpty { toggle(page.completed.count) }
-        }
-        .lineLimit(1)
-        .accessibilityElement(children: .contain)
-        .accessibilityIdentifier("todos.header")
+    private var isBoard: Bool {
+        selection == .smart(.all) && e.data.prefs.todos.allView == .board
     }
 
-    private func toggle(_ count: Int) -> some View {
-        Button { showCompleted.toggle() } label: {
-            Text(verbatim: showCompleted ? Copywriter.todoHideCompleted : Copywriter.todoCompletedToggle(count))
-                .font(Typography.tracker(UIMetrics.todoToggleFont, .medium))
-                .foregroundStyle(Night.muted)
-                .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
+    private func addTarget(_ page: TodoPageModel) -> String? {
+        guard page.targetListID != nil else { return nil }
+        if let addListID, page.sections.contains(where: { $0.list.id == addListID }) { return addListID }
+        return page.targetListID
     }
 
     private var accent: Color {
