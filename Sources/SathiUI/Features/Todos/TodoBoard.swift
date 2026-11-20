@@ -22,6 +22,7 @@ struct TodoBoard: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .topLeading)
+        .opacity(width == nil ? 0 : 1)
         .background(GeometryReader { g in
             Color.clear.preference(key: TodoBoardWidthKey.self, value: Double(g.size.width))
         })

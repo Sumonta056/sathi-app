@@ -16,4 +16,9 @@ struct CopywriterTodoBoardTests {
         #expect(Copywriter.todoViewList == "List")
         #expect(Copywriter.todoViewBoard == "Board")
     }
+
+    @Test func theAddFieldListAndSwitchLabels() {
+        #expect(Copywriter.todoAddInList("Work") == "In Work")
+        #expect(Copywriter.todoViewLabel == "View")
+    }
 }

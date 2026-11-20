@@ -6,6 +6,7 @@ struct TodoItemsColumn: View {
     @State private var showCompleted: Bool
     @State private var editingID: String?
     @State private var addListID: String?
+    @State private var addFocus = 0
     @State private var reorder = TodoReorder()
     @State private var frames = TodoRowFrames()
     @Environment(\.mainLayout) private var layout
@@ -21,8 +22,8 @@ struct TodoItemsColumn: View {
         let rows = showCompleted ? page.open + page.completed : page.open
         VStack(alignment: .leading, spacing: UIMetrics.todoItemsSpacing) {
             TodoItemsHeader(page: page, accent: accent, showCompleted: $showCompleted)
-            if let target = addTarget(page) {
-                TodoAddField(listID: target, due: page.defaultDue).id(target)
+            if let target = Self.addTarget(page, chosen: addListID, board: isBoard) {
+                TodoAddField(listID: target, due: page.defaultDue, listName: chosenName(page, target), focusToken: addFocus)
             }
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 0) {
@@ -35,7 +36,10 @@ struct TodoItemsColumn: View {
                     if page.sections.isEmpty {
                         ForEach(rows, id: \.id) { item($0, peers: page.open) }
                     } else if isBoard {
-                        TodoBoard(sections: page.sections, editingID: $editingID, reorder: $reorder) { addListID = $0 }
+                        TodoBoard(sections: page.sections, editingID: $editingID, reorder: $reorder) { id in
+                            addListID = id
+                            addFocus += 1
+                        }
                     } else {
                         ForEach(page.sections, id: \.list.id) { section in
                             TodoSectionHeader(list: section.list, count: section.todos.count)
@@ -47,6 +51,7 @@ struct TodoItemsColumn: View {
                 .onPreferenceChange(TodoRowFramesKey.self) { frames.all = $0 }
             }
         }
+        .onChange(of: isBoard) { _ in addListID = nil }
         .padding(Self.padding(layout))
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
@@ -73,10 +78,15 @@ struct TodoItemsColumn: View {
         selection == .smart(.all) && e.data.prefs.todos.allView == .board
     }
 
-    private func addTarget(_ page: TodoPageModel) -> String? {
+    static func addTarget(_ page: TodoPageModel, chosen: String?, board: Bool) -> String? {
         guard page.targetListID != nil else { return nil }
-        if let addListID, page.sections.contains(where: { $0.list.id == addListID }) { return addListID }
+        if board, let chosen, page.sections.contains(where: { $0.list.id == chosen && $0.list.canEdit }) { return chosen }
         return page.targetListID
+    }
+
+    private func chosenName(_ page: TodoPageModel, _ target: String) -> String? {
+        guard isBoard, addListID == target else { return nil }
+        return page.sections.first { $0.list.id == target }?.list.name
     }
 
     private var accent: Color {
