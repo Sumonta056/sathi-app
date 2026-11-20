@@ -34,12 +34,30 @@ struct TodoAllSectionsTests {
         #expect((try? sut.find(viewWithAccessibilityIdentifier: "todos.section.inbox")) == nil)
     }
 
-    @Test func theSideColumnListsMatchTheAllSectionsOrder() {
-        let a = TodoList(id: "a", name: "A", colorHex: "#FF3B30", accountID: "i", accountName: "iCloud", canEdit: true)
-        let x = TodoList(id: "x", name: "X", colorHex: "#FF3B30", accountID: "w", accountName: "Work", canEdit: true)
-        let b = TodoList(id: "b", name: "B", colorHex: "#FF3B30", accountID: "i", accountName: "iCloud", canEdit: true)
-        let groups = TodoSideColumn.groups([a, x, b])
-        #expect(groups.map(\.name) == ["iCloud", "Work"])
-        #expect(groups.flatMap(\.lists).map(\.id) == TodoRules.sideOrder([a, x, b]).map(\.id))
+    @Test func theSideColumnKeepsTheOrderItIsGiven() {
+        let a = makeTodoList("a", "A")
+        let x = makeTodoList("x", "X", account: "work")
+        let b = makeTodoList("b", "B")
+        let groups = TodoSideColumn.groups([b, a, x])
+        #expect(groups.map(\.name) == ["iCloud", "work"])
+        #expect(groups.flatMap(\.lists).map(\.id) == ["b", "a", "x"])
+    }
+
+    @Test func theSideColumnListsMatchTheAllSectionsOrder() async {
+        let lists = [makeTodoList("inbox", "Inbox"), makeTodoList("work", "Work"), makeReadOnlyTodoList("ro")]
+        let h = await EngineHarness.todosReady(lists: lists, items: EngineHarness.pageItems) { $0.prefs.todos.listOrder = ["work", "inbox"] }
+        let groups = TodoSideColumn.groups(h.engine.todoSideLists(.smart(.all)))
+        #expect(groups.flatMap(\.lists).map(\.id) == h.engine.todoPage(.smart(.all)).sections.map(\.list.id))
+    }
+}
+
+extension TodoAllSectionsTests {
+    @Test func accountsWithOneNameKeepTheirOwnGroups() {
+        func list(_ id: String, _ account: String) -> TodoList {
+            TodoList(id: id, name: id, colorHex: "#FF3B30", accountID: account, accountName: "Work", canEdit: true)
+        }
+        let groups = TodoSideColumn.groups(TodoListOrder.ordered([list("a", "x"), list("b", "y"), list("c", "x")], order: []))
+        #expect(groups.map(\.id) == ["x", "y"])
+        #expect(groups.map { $0.lists.map(\.id) } == [["a", "c"], ["b"]])
     }
 }

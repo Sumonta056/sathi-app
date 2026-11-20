@@ -25,6 +25,6 @@ extension TodoRules {
 
     package static func sideLists(_ lists: [TodoList], open: [Todo], selected: TodoSelection) -> [TodoList] {
         let used = Set(open.filter { !$0.isDone }.map(\.listID))
-        return sideOrder(lists).filter { used.contains($0.id) || selected == .list($0.id) }
+        return lists.filter { used.contains($0.id) || selected == .list($0.id) }
     }
 }
