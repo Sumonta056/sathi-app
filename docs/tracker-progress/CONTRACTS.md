@@ -148,7 +148,7 @@ PromptKind: `whatNow` (A), `center` (B), `stillOnIt` (C), `welcomeBack` (D), `ev
 - `Activity`: spec item fields. `id`, `kind`, `start`, `end` strict (an item without them fails, so T2 keeps it as raw JSON); the rest lenient; an unknown `awayPlace` loads nil.
 
 ### Constants added
-Limits: activityTextMax 80, activityLengths [15,30,60], askOffsets [0,5,15], recentMax 5, recentInCorner 3, recentInCenter 4, trackerAskChips [10,15,20,30,60], idleChips [10,20,30,60], categoryMax 12, categoryNameMax 24, trackerStartMinutes 540, trackerEndMinutes 1080, trackerAskEveryDefault 15, trackerUsualLengthDefault 30, idleDefault 30, switchStepMinutes 5, switchChipsBeforeGrid 4, monthlyTopTexts 3, spaceKeyCode 49, spaceKeyName "Space".
+Limits: activityTextMax 80, activityLengths [15,30,60], askOffsets [0,5,15], recentMax 5, recentInCorner 3, recentInCenter 4, trackerAskChips [10,15,20,30,60], idleChips [10,20,30,60], categoryMax 16, categoryNameMax 24, trackerStartMinutes 540, trackerEndMinutes 1080, trackerAskEveryDefault 15, trackerUsualLengthDefault 30, idleDefault 30, switchStepMinutes 5, switchChipsBeforeGrid 4, monthlyTopTexts 3, spaceKeyCode 49, spaceKeyName "Space".
 Timing: activityMinimum 60 s, lateAnswer 5 min, eventNoteShow 1 min, endOfDayAnimation 1.5 s.
 StorageKeys: activitiesFolder "activities", exportActivitiesPrefix "Sathi-activities-". SoundName: `trackerPrompt = .tink`.
 

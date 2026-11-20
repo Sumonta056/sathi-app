@@ -19,7 +19,7 @@ struct ActivityCategoryListTests {
 
     @Test func addRefusesWhenTheListIsFull() {
         let full = (1 ... Limits.categoryMax).map { ActivityCategory(name: "C\($0)", colorHex: 0) }
-        #expect(Limits.categoryMax == 12)
+        #expect(Limits.categoryMax == 16)
         #expect(ActivityCategoryList.adding("One more", colorHex: 0, to: full) == nil)
     }
 

@@ -77,4 +77,15 @@ struct ActivityPromptBackFitTests {
         }
         #expect(rowHeight(BackFit.state(picked: "c15")) == rowHeight(one))
     }
+
+    @Test func sixteenLongCategoriesScrollWithNoScrollBarAndShowEveryCategory() throws {
+        var s = BackFit.state()
+        s.categories = BackFit.longCategories
+        #expect(s.categories.count == Limits.categoryMax)
+        let scroll = try #require(BackFit.scrollView(prompt(s)))
+        #expect(BackFit.scrollBarHidden(scroll))
+        let ids = try Prompt.view(s).findAll(where: { (try? $0.accessibilityIdentifier())?.hasPrefix("tracker.category.") == true })
+            .compactMap { try? $0.accessibilityIdentifier() }
+        #expect(Set(ids) == Set(s.categories.map { "tracker.category." + $0.name }))
+    }
 }
