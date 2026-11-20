@@ -9,6 +9,8 @@ package struct TodoPrefs: Codable, Equatable, Sendable {
     package var allView: TodoAllView = .board
     package var sideHidden: Bool = false
     package var listOrder: [String] = []
+    package var boardColumns: TodoBoardColumnChoice = .auto
+    package var boardLayouts: [String: [[String]]] = [:]
 
     package init(
         isOn: Bool = false,
@@ -23,7 +25,7 @@ package struct TodoPrefs: Codable, Equatable, Sendable {
     }
 
     private enum CodingKeys: String, CodingKey {
-        case isOn, hiddenListIDs, askWhenDue, newListAccountID, order, allView, sideHidden, listOrder
+        case isOn, hiddenListIDs, askWhenDue, newListAccountID, order, allView, sideHidden, listOrder, boardColumns, boardLayouts
     }
 
     package init(from decoder: Decoder) throws {
@@ -37,5 +39,7 @@ package struct TodoPrefs: Codable, Equatable, Sendable {
         allView = (try? c.known(.allView, or: d.allView)) ?? d.allView
         sideHidden = c.lenient(.sideHidden, or: d.sideHidden)
         listOrder = c.lenient(.listOrder, or: d.listOrder)
+        boardColumns = (try? c.known(.boardColumns, or: d.boardColumns)) ?? d.boardColumns
+        boardLayouts = c.lenient(.boardLayouts, or: d.boardLayouts)
     }
 }
