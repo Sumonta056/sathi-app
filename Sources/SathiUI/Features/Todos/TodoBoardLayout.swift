@@ -8,11 +8,14 @@ struct TodoBoardKey: LayoutValueKey {
 struct TodoBoardLayout: Layout {
     let columns: Int
     let gap: CGFloat
+    var fixed: TodoBoardFixed?
 
     struct Cache {
         var ids: [String] = []
         var columns = 0
         var assign: [Int] = []
+        var fixedKey: TodoBoardFixedKey?
+        var fixedColumns: [[String]] = []
     }
 
     func makeCache(subviews _: Subviews) -> Cache { Cache() }
@@ -36,7 +39,7 @@ struct TodoBoardLayout: Layout {
         }
     }
 
-    private var count: Int { max(1, columns) }
+    var count: Int { max(1, columns) }
 
     static func isReal(_ width: CGFloat?) -> Bool {
         guard let width else { return false }
@@ -52,7 +55,7 @@ struct TodoBoardLayout: Layout {
         real ? Cache(ids: ids, columns: columns, assign: assign) : cache
     }
 
-    private func columnWidth(_ proposed: CGFloat?) -> CGFloat {
+    func columnWidth(_ proposed: CGFloat?) -> CGFloat {
         guard let proposed, Self.isReal(proposed) else { return UIMetrics.todoBoardMinWidth }
         return max(0, (proposed - gap * CGFloat(count - 1)) / CGFloat(count))
     }
@@ -62,6 +65,7 @@ struct TodoBoardLayout: Layout {
     }
 
     private func arrange(_ width: CGFloat, _ subviews: Subviews, _ cache: inout Cache, real: Bool) -> [CGRect] {
+        if let fixed { return fixedFrames(width, subviews, &cache, real: real, fixed: fixed) }
         let heights = subviews.map { $0.sizeThatFits(ProposedViewSize(width: width, height: nil)).height }
         let ids = subviews.map { $0[TodoBoardKey.self] }
         let assign = TodoBoardColumns.place(
