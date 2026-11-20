@@ -17,6 +17,16 @@ extension Engine {
 
     package func startMeditation() { startSession(.meditation) }
 
+    package func doNow(_ id: HabitID) {
+        guard enabled(id), session(id) == nil else { return }
+        switch id {
+        case .water: return
+        case .reading: startReading()
+        case .meditation: startMeditation()
+        case .gym: startSession(.gym)
+        }
+    }
+
     package func startSession(_ id: HabitID, readingItem: UUID? = nil) {
         guard let minutes = sessionMinutes(id) else { sound.beep(); return }
         let workout = sessionWorkout(id)
@@ -40,6 +50,7 @@ extension Engine {
         record(.done(id, amount, at: n))
         habits[id] = HabitState(nextDue: freshDue(id, lastDone: n))
         sessionFinishing(id)
+        logFinishedSession(id, s, at: n)
         trackerRuntime.sessionTimedOut = timedOut
         close(id)
         trackerRuntime.sessionTimedOut = false

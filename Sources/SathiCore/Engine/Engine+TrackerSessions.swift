@@ -43,19 +43,39 @@ extension Engine {
         requestTick()
     }
 
+    func logFinishedSession(_ id: HabitID, _ s: Session, at end: Date) {
+        guard id != .water, !(trackerPrefs.isOn && trackerHours.isInside(s.start)) else { return }
+        let category = addedBuddyCategory(id)
+        storeActivity(Activity(
+            kind: .buddy,
+            text: buddyText(id),
+            category: category,
+            start: s.start,
+            end: min(end, calendar.nextDay(after: s.start))
+        ))
+    }
+
     private func beginBuddyActivity(_ id: HabitID, at n: Date) {
+        let left = session(id).map { $0.end.timeIntervalSince(max($0.start, n)) } ?? 0
+        let minutes = Int((left / Timing.minute).rounded(.up))
+        let d = ActivityDraft(
+            text: buddyText(id),
+            category: addedBuddyCategory(id),
+            length: minutes > 0 ? .minutes(minutes) : .open
+        )
+        beginActivity(d, kind: .buddy, at: n)
+    }
+
+    private func addedBuddyCategory(_ id: HabitID) -> String {
         let category = ActivityCategory.buddy(id)
         if !activityCategories.contains(where: { $0.name == category.name }) {
             addActivityCategory(category.name, colorHex: category.colorHex)
         }
-        let left = session(id).map { $0.end.timeIntervalSince(max($0.start, n)) } ?? 0
-        let minutes = Int((left / Timing.minute).rounded(.up))
-        let d = ActivityDraft(
-            text: Copywriter.trackerBuddyText(id, detail: buddyDetail(id)),
-            category: category.name,
-            length: minutes > 0 ? .minutes(minutes) : .open
-        )
-        beginActivity(d, kind: .buddy, at: n)
+        return category.name
+    }
+
+    private func buddyText(_ id: HabitID) -> String {
+        Copywriter.trackerBuddyText(id, detail: buddyDetail(id))
     }
 
     private func buddyDetail(_ id: HabitID) -> String? {
