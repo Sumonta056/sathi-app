@@ -88,4 +88,16 @@ struct ActivityPromptBackFitTests {
             .compactMap { try? $0.accessibilityIdentifier() }
         #expect(Set(ids) == Set(s.categories.map { "tracker.category." + $0.name }))
     }
+
+    @Test func theScrollBarStaysHiddenEachTimeThePromptOpensInAWindow() throws {
+        var s = BackFit.state()
+        s.categories = BackFit.longCategories
+        let first = BackFit.window(ActivityPromptView(state: s, model: nil))
+        let second = BackFit.window(ActivityPromptView(state: s, model: nil))
+        for window in [first, second] {
+            let scroll = try #require(window.contentView.flatMap(BackFit.scrollView))
+            #expect(BackFit.scrollBarHidden(scroll))
+            #expect(scroll.verticalScroller.map { $0.isHidden || $0.frame.width == 0 } ?? true)
+        }
+    }
 }

@@ -86,6 +86,16 @@ enum BackFit {
         !s.hasVerticalScroller
     }
 
+    static func window(_ view: some View) -> NSWindow {
+        let window = NSWindow(contentRect: .zero, styleMask: [.titled], backing: .buffered, defer: true)
+        window.isReleasedWhenClosed = false
+        let content = host(view)
+        window.setContentSize(content.frame.size)
+        window.contentView = content
+        content.layoutSubtreeIfNeeded()
+        return window
+    }
+
     static func drawnCalendars(_ host: NSView) -> Set<String> {
         guard let rep = host.bitmapImageRepForCachingDisplay(in: host.bounds) else { return [] }
         host.cacheDisplay(in: host.bounds, to: rep)
