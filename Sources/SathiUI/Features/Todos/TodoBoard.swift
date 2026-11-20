@@ -27,6 +27,9 @@ struct TodoBoard: View {
         .onPreferenceChange(TodoBoardCardFramesKey.self) { frames.cards = $0 }
         .onPreferenceChange(TodoBoardColumnFramesKey.self) { frames.columns = $0 }
         .onChange(of: canDrag) { if !$0 { cancel() } }
+        .onChange(of: sections.map(\.list.id)) { ids in
+            if let id = slot?.id ?? frames.id, !ids.contains(id) { cancel() }
+        }
         .frame(maxWidth: .infinity, alignment: .topLeading)
         .opacity(width == nil ? 0 : 1)
         .background(GeometryReader { g in

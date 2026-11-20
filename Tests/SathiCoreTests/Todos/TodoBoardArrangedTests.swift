@@ -57,8 +57,8 @@ struct TodoBoardArrangedTests {
     }
 
     @Test func aMissingHeightCountsAsZero() {
-        let r = arranged(["a", "n"], [["a"], []], 2, 2, ["a": 100])
-        #expect(r == [["a"], ["n"]])
+        let r = arranged(["a", "n", "m"], [["a"], []], 2, 2, ["a": 10, "m": 10])
+        #expect(r == [["a"], ["n", "m"]])
     }
 
     @Test func autoIsNotInvolvedAndColumnsAreAlwaysPaddedToFit() {

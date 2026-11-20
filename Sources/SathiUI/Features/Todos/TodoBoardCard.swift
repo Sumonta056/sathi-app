@@ -63,7 +63,7 @@ struct TodoBoardCard: View {
                 .padding(UIMetrics.todoBoardCountPadding)
                 .background(Capsule().fill(Night.divider))
         }
-        .modifier(TodoBoardHeaderDrag(id: section.list.id, drag: drag, lift: $lift))
+        .modifier(TodoBoardHeaderDrag(id: section.list.id, label: Copywriter.todoBoardMove(list: section.list.name), drag: drag, lift: $lift))
     }
 
     private func addButton(_ onAdd: @escaping () -> Void) -> some View {

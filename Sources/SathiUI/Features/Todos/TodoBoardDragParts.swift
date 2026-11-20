@@ -48,6 +48,7 @@ struct TodoBoardColumnFramesKey: PreferenceKey {
 
 struct TodoBoardHeaderDrag: ViewModifier {
     let id: String
+    let label: String
     let drag: TodoBoardDrag?
     @Binding var lift: CGSize
 
@@ -57,6 +58,7 @@ struct TodoBoardHeaderDrag: ViewModifier {
                 .contentShape(Rectangle())
                 .gesture(gesture(drag))
                 .accessibilityElement(children: .contain)
+                .accessibilityLabel(label)
                 .accessibilityIdentifier("todos.board.drag." + id)
         } else {
             content
