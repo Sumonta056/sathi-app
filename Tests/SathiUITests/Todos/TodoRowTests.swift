@@ -60,9 +60,10 @@ struct TodoRowTests {
         #expect(gate.writes.isEmpty)
     }
 
-    @Test func tickWithoutAFinishingHostDoesNotCrash() async throws {
+    @Test func tickWithTheDefaultIdleHostStartsNoWrite() async throws {
         let h = await EngineHarness.pageFixture()
         #expect(throws: Never.self) { try Find.button(row(h, makeTodo("a")), label: Copywriter.todoMarkDone).tap() }
+        #expect(h.todos.calls.isEmpty)
     }
 
     @Test func tickOnADoneTodoMarksItNotDone() async throws {

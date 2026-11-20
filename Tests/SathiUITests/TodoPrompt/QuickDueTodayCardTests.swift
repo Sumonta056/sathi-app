@@ -64,6 +64,12 @@ struct QuickDueTodayCardTests {
         #expect(!MenuFind.hasText(sut, containing: "overdue"))
     }
 
+    @Test func theMenuPanelProvidesItsOwnFinishingHost() async throws {
+        let h = await harness(four)
+        let sut = try MenuPanel().environmentObject(h.engine).inspect()
+        #expect(throws: Never.self) { try sut.find(viewWithAccessibilityIdentifier: "quick.todo.b").button() }
+    }
+
     @Test func aTickWritesNothingAtOnce() async throws {
         let h = await harness(four)
         try card(h).find(viewWithAccessibilityIdentifier: "quick.todo.b").button().tap()

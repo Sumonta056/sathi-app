@@ -50,7 +50,7 @@ struct QuickDueTodayCard: View {
             Spacer(minLength: 0)
             time(r, color)
         }
-        .modifier(TodoFold(leaving: finishing.phase(r.todo.id) == .leaving, reduceMotion: reduceMotion))
+        .modifier(TodoFold(phase: finishing.phase(r.todo.id), reduceMotion: reduceMotion))
     }
 
     @ViewBuilder private func time(_ r: QuickTodoRow, _ color: Color) -> some View {

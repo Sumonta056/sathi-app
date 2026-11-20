@@ -8,6 +8,7 @@ enum TodoFinishPhase {
 @MainActor
 final class TodoFinishing: ObservableObject {
     @Published private(set) var phases: [String: TodoFinishPhase] = [:]
+    private var written: Set<String> = []
     private var tasks: [String: Task<Void, Never>] = [:]
     private let wait: (TimeInterval) async -> Void
     private var write: (String) -> Void
@@ -55,19 +56,27 @@ final class TodoFinishing: ObservableObject {
 
     func flush() {
         for id in Array(phases.keys) {
-            commit(id)
+            flush(id)
         }
     }
 
     func flush(_ id: String) {
-        guard phases[id] != nil else { return }
+        guard phases[id] != nil, !written.contains(id) else { return }
         commit(id)
+    }
+
+    func settle() {
+        for id in written {
+            phases[id] = nil
+        }
+        written = []
     }
 
     private func commit(_ id: String) {
         tasks[id]?.cancel()
         tasks[id] = nil
+        written.insert(id)
+        phases[id] = .leaving
         write(id)
-        phases[id] = nil
     }
 }

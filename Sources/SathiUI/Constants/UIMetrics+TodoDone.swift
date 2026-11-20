@@ -17,6 +17,7 @@ extension UIMetrics {
     static let todoStrikeThickness: CGFloat = 1.5
     static let todoStrikeLine: CGFloat = 0.55
     static let todoFillSeconds: TimeInterval = 0.18
+    static let todoRingBleed: CGFloat = 40
     static let todoFadeSeconds: TimeInterval = 0.2
     static let todoCheckStart = CGPoint(x: 0.27, y: 0.53)
     static let todoCheckElbow = CGPoint(x: 0.43, y: 0.68)

@@ -40,7 +40,7 @@ struct TodoRow: View {
         .overlay(alignment: .bottom) {
             Rectangle().fill(Night.todoRowLine).frame(height: UIMetrics.dividerHeight)
         }
-        .modifier(TodoFold(leaving: phase == .leaving, reduceMotion: reduceMotion))
+        .modifier(TodoFold(phase: phase, reduceMotion: reduceMotion))
         .onDisappear { finishing.flush(todo.id) }
     }
 

@@ -11,6 +11,7 @@ struct TodoFinishingHost<Content: View>: View {
         content
             .environmentObject(finishing)
             .onAppear { finishing.bind(write(e)) }
+            .onReceive(e.$todoSnapshot) { _ in finishing.settle() }
             .onDisappear { finishing.flush() }
     }
 }

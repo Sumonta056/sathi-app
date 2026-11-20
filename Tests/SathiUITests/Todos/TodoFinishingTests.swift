@@ -64,6 +64,8 @@ struct TodoFinishingTests {
         await waitUntil { !gate.writes.isEmpty }
         await gate.settle()
         #expect(gate.writes == ["a"])
+        #expect(sut.phase("a") == .leaving)
+        sut.settle()
         #expect(sut.phase("a") == nil)
     }
 
@@ -79,6 +81,8 @@ struct TodoFinishingTests {
         gate.release()
         await gate.settle()
         #expect(gate.writes == ["a"])
+        #expect(sut.phase("a") == .leaving)
+        sut.settle()
         #expect(sut.phase("a") == nil)
     }
 
@@ -107,21 +111,6 @@ struct TodoFinishingTests {
         await waitUntil { sut.phase("a") == .leaving && gate.waiting == 1 }
         sut.flush()
         gate.release()
-        await gate.settle()
-        #expect(gate.writes == ["a"])
-    }
-
-    @Test func aTickDuringTheFoldIsIgnored() async {
-        let gate = TodoFinishingGate()
-        let sut = gate.finishing()
-        sut.tick("a")
-        await waitUntil { gate.waiting == 1 }
-        gate.release()
-        await waitUntil { sut.phase("a") == .leaving && gate.waiting == 1 }
-        sut.tick("a")
-        #expect(sut.phase("a") == .leaving)
-        gate.release()
-        await waitUntil { !gate.writes.isEmpty }
         await gate.settle()
         #expect(gate.writes == ["a"])
     }

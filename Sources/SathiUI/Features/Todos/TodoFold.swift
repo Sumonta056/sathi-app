@@ -8,24 +8,35 @@ private struct TodoFoldHeight: PreferenceKey {
 }
 
 struct TodoFold: ViewModifier {
-    let leaving: Bool
+    let phase: TodoFinishPhase?
     let reduceMotion: Bool
     @State private var height: CGFloat?
 
+    static func fixedHeight(phase: TodoFinishPhase?, reduceMotion: Bool, measured: CGFloat?) -> CGFloat? {
+        guard let phase else { return nil }
+        return phase == .leaving && !reduceMotion ? 0 : measured
+    }
+
+    static func clips(phase: TodoFinishPhase?) -> Bool {
+        phase == .leaving
+    }
+
     func body(content: Content) -> some View {
         content
-            .background(GeometryReader { Color.clear.preference(key: TodoFoldHeight.self, value: $0.size.height) })
-            .onPreferenceChange(TodoFoldHeight.self) { height = $0 }
-            .frame(height: collapsed ? 0 : height, alignment: .top)
-            .clipped()
-            .opacity(leaving ? 0 : 1)
+            .background { if phase != nil { measure } }
+            .frame(height: Self.fixedHeight(phase: phase, reduceMotion: reduceMotion, measured: height), alignment: .top)
+            .mask(Rectangle().padding(.all, Self.clips(phase: phase) ? 0 : -UIMetrics.todoRingBleed))
+            .opacity(phase == .leaving ? 0 : 1)
             .animation(
                 .easeIn(duration: reduceMotion ? UIMetrics.todoFadeSeconds : UIMetrics.todoFoldSeconds),
-                value: leaving
+                value: phase == .leaving
             )
     }
 
-    private var collapsed: Bool { leaving && !reduceMotion }
+    private var measure: some View {
+        GeometryReader { Color.clear.preference(key: TodoFoldHeight.self, value: $0.size.height) }
+            .onPreferenceChange(TodoFoldHeight.self) { height = $0 }
+    }
 }
 
 struct TodoStrike: View {
