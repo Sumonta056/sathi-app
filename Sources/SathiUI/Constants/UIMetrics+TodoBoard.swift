@@ -17,6 +17,9 @@ extension UIMetrics {
     static let todoBoardAddIcon: CGFloat = 14
     static let todoBoardAddRadius: CGFloat = 6
     static let todoBoardRowInset: CGFloat = 10
+    static let todoBoardMetaGap: CGFloat = 4
+    static let todoBoardMetaSpacing: CGFloat = 2
+    static let todoBoardMetaIconSpacing: CGFloat = 3
     static let todoListsButton: CGFloat = 32
     static let todoListsIcon: CGFloat = 15
     static let todoListsRadius: CGFloat = 8

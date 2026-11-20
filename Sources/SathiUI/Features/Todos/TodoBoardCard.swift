@@ -69,7 +69,7 @@ struct TodoBoardCard: View {
         if editingID == todo.id {
             TodoEditCard(todo: todo) { editingID = nil }
         } else {
-            TodoRow(todo: todo, canEdit: section.list.canEdit) { editingID = todo.id }
+            TodoRow(todo: todo, canEdit: section.list.canEdit, metaBelow: true) { editingID = todo.id }
                 .todoReorder(todo.id, peers: section.todos.map(\.id), frames: frames, state: $reorder) { e.moveTodo($0, before: $1) }
         }
     }
