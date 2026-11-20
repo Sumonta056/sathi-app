@@ -3,24 +3,30 @@ import SwiftUI
 
 struct TodoRowMeta: View {
     let todo: Todo
+    var below = false
     @Environment(\.mainLayout) private var layout
     @EnvironmentObject var e: Engine
 
     var body: some View {
-        HStack(spacing: UIMetrics.todoChipSpacing) {
+        HStack(spacing: below ? UIMetrics.todoBoardMetaSpacing : UIMetrics.todoChipSpacing) {
             if todo.repeats {
-                HStack(spacing: UIMetrics.todoMetaIconSpacing) {
+                HStack(spacing: below ? UIMetrics.todoBoardMetaIconSpacing : UIMetrics.todoMetaIconSpacing) {
                     Image(systemName: "repeat")
-                    if Self.showsRepeatsWord(layout) { Text(verbatim: Copywriter.todoRepeats) }
+                    if below || Self.showsRepeatsWord(layout) { Text(verbatim: Copywriter.todoRepeats) }
                 }
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel(Text(verbatim: Copywriter.todoRepeats))
                 .foregroundStyle(Night.muted)
             }
+            if below && todo.repeats && todo.due != nil {
+                Text(verbatim: Copywriter.todoBoardMetaSeparator)
+                    .foregroundStyle(Night.muted)
+                    .accessibilityIdentifier("todos.row.meta.sep.\(todo.id)")
+            }
             if let due = todo.due {
                 Text(verbatim: Copywriter.todoDueText(due, now: e.now, calendar: e.calendar))
                     .foregroundStyle(dueColor)
-                    .frame(minWidth: UIMetrics.todoRowDueMinWidth, alignment: .trailing)
+                    .frame(minWidth: below ? nil : UIMetrics.todoRowDueMinWidth, alignment: below ? .leading : .trailing)
                     .accessibilityIdentifier("todos.row.due.\(todo.id)")
             }
         }
@@ -28,7 +34,7 @@ struct TodoRowMeta: View {
         .lineLimit(1)
         .fixedSize()
         .accessibilityElement(children: .contain)
-        .accessibilityIdentifier("todos.row.meta.\(todo.id)")
+        .accessibilityIdentifier(below ? "todos.row.meta.below.\(todo.id)" : "todos.row.meta.\(todo.id)")
     }
 
     static func showsRepeatsWord(_ layout: MainLayout) -> Bool { !layout.isNarrow }

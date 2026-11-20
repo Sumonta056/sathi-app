@@ -38,5 +38,5 @@ enum Find {
 
 @MainActor
 func hosted(_ view: some View, _ h: EngineHarness) -> some View {
-    view.environmentObject(h.engine)
+    view.environmentObject(h.engine).environmentObject(TodoFinishing.idle())
 }

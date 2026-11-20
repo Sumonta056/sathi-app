@@ -47,11 +47,23 @@ struct TodoRowTests {
         #expect(Find.lacks(plain, text: Copywriter.todoRepeats))
     }
 
-    @Test func tickMarksTheTodoDone() async throws {
+    @Test func tickStartsTheFinishAndWritesNothingYet() async throws {
         let h = await EngineHarness.pageFixture()
-        try Find.button(row(h, makeTodo("a")), label: Copywriter.todoMarkDone).tap()
-        await waitUntil { !h.todos.calls.isEmpty }
-        #expect(h.todos.calls == [.doneSet("a", true)])
+        let gate = TodoFinishingGate()
+        let finishing = gate.finishing()
+        let sut = try hosted(TodoRow(todo: makeTodo("a", "Buy milk"), canEdit: true, onSelect: {}), h)
+            .environmentObject(finishing).inspect()
+        try Find.button(sut, label: Copywriter.todoMarkDone).tap()
+        await waitUntil { gate.waiting == 1 }
+        #expect(finishing.phase("a") == .checked)
+        #expect(h.todos.calls.isEmpty)
+        #expect(gate.writes.isEmpty)
+    }
+
+    @Test func tickWithTheDefaultIdleHostStartsNoWrite() async throws {
+        let h = await EngineHarness.pageFixture()
+        #expect(throws: Never.self) { try Find.button(row(h, makeTodo("a")), label: Copywriter.todoMarkDone).tap() }
+        #expect(h.todos.calls.isEmpty)
     }
 
     @Test func tickOnADoneTodoMarksItNotDone() async throws {
@@ -60,6 +72,19 @@ struct TodoRowTests {
         try Find.button(row(h, done), label: Copywriter.todoMarkNotDone).tap()
         await waitUntil { !h.todos.calls.isEmpty }
         #expect(h.todos.calls == [.doneSet("g", false)])
+    }
+
+    @Test func reversingADoneTodoHasNoHold() async throws {
+        let h = await EngineHarness.pageFixture()
+        let gate = TodoFinishingGate()
+        let finishing = gate.finishing()
+        let done = makeTodo("g", done: true, doneAt: day(2026, 3, 3))
+        let sut = try hosted(TodoRow(todo: done, canEdit: true, onSelect: {}), h).environmentObject(finishing).inspect()
+        try Find.button(sut, label: Copywriter.todoMarkNotDone).tap()
+        await waitUntil { !h.todos.calls.isEmpty }
+        #expect(h.todos.calls == [.doneSet("g", false)])
+        #expect(finishing.phase("g") == nil)
+        #expect(gate.waiting == 0)
     }
 
     @Test func aReadOnlyRowHasADisabledTick() async throws {

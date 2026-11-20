@@ -4,6 +4,8 @@ struct TodoReorderRow: ViewModifier {
     static let space = "todo.items"
 
     let id: String
+    let space: String
+    let highPriority: Bool
     let peers: [String]
     let frames: TodoRowFrames
     @Binding var state: TodoReorder
@@ -13,7 +15,7 @@ struct TodoReorderRow: ViewModifier {
         let lifted = state.id == id
         content
             .background(GeometryReader { g in
-                Color.clear.preference(key: TodoRowFramesKey.self, value: [id: g.frame(in: .named(Self.space))])
+                Color.clear.preference(key: TodoRowFramesKey.self, value: [id: g.frame(in: .named(space))])
             })
             .background {
                 if lifted {
@@ -28,11 +30,11 @@ struct TodoReorderRow: ViewModifier {
             .offset(y: state.offset(id))
             .zIndex(lifted ? 1 : 0)
             .animation(lifted ? nil : .easeOut(duration: UIMetrics.todoReorderAnimation), value: state.to)
-            .gesture(drag)
+            .modifier(DragAttach(gesture: drag, highPriority: highPriority))
     }
 
     private var drag: some Gesture {
-        DragGesture(minimumDistance: UIMetrics.todoDragStart, coordinateSpace: .named(Self.space))
+        DragGesture(minimumDistance: UIMetrics.todoDragStart, coordinateSpace: .named(space))
             .onChanged { v in
                 if state.id == nil { state.start(id: id, peers: peers, frames: frames.all) }
                 guard state.id == id else { return }
@@ -50,14 +52,29 @@ struct TodoReorderRow: ViewModifier {
     }
 }
 
+private struct DragAttach<G: Gesture>: ViewModifier {
+    let gesture: G
+    let highPriority: Bool
+
+    func body(content: Content) -> some View {
+        if highPriority {
+            content.highPriorityGesture(gesture)
+        } else {
+            content.gesture(gesture)
+        }
+    }
+}
+
 extension View {
     func todoReorder(
         _ id: String,
+        space: String = TodoReorderRow.space,
+        highPriority: Bool = false,
         peers: [String],
         frames: TodoRowFrames,
         state: Binding<TodoReorder>,
         move: @escaping (String, String?) -> Void
     ) -> some View {
-        modifier(TodoReorderRow(id: id, peers: peers, frames: frames, state: state, move: move))
+        modifier(TodoReorderRow(id: id, space: space, highPriority: highPriority, peers: peers, frames: frames, state: state, move: move))
     }
 }

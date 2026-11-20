@@ -11,7 +11,18 @@ extension Engine {
     }
 
     package func todoSideLists(_ selection: TodoSelection) -> [TodoList] {
-        TodoRules.sideLists(todoSnapshot.lists, open: todoSnapshot.open, selected: selection)
+        TodoRules.sideLists(todoOrderedLists, open: todoSnapshot.open, selected: selection)
+    }
+
+    package var todoOrderedLists: [TodoList] {
+        TodoListOrder.ordered(todoSnapshot.lists, order: data.prefs.todos.listOrder)
+    }
+
+    package func moveTodoList(_ id: String, before: String?) {
+        guard let next = TodoListOrder.moved(
+            all: todoPageAllLists, order: data.prefs.todos.listOrder, id: id, before: before
+        ) else { return }
+        data.prefs.todos.listOrder = next
     }
 
     func todoShownOpen(_ listID: String) -> [Todo] {

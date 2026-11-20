@@ -5,6 +5,8 @@ struct TodoItemsColumn: View {
     let selection: TodoSelection
     @State private var showCompleted: Bool
     @State private var editingID: String?
+    @State private var addListID: String?
+    @State private var addFocus = 0
     @State private var reorder = TodoReorder()
     @State private var frames = TodoRowFrames()
     @Environment(\.mainLayout) private var layout
@@ -19,9 +21,9 @@ struct TodoItemsColumn: View {
         let page = e.todoPage(selection)
         let rows = showCompleted ? page.open + page.completed : page.open
         VStack(alignment: .leading, spacing: UIMetrics.todoItemsSpacing) {
-            header(page)
-            if let target = page.targetListID {
-                TodoAddField(listID: target, due: page.defaultDue).id(target)
+            TodoItemsHeader(page: page, accent: accent, showCompleted: $showCompleted)
+            if let target = Self.addTarget(page, chosen: addListID, board: isBoard) {
+                TodoAddField(listID: target, due: page.defaultDue, listName: chosenName(page, target), focusToken: addFocus)
             }
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 0) {
@@ -33,6 +35,11 @@ struct TodoItemsColumn: View {
                     }
                     if page.sections.isEmpty {
                         ForEach(rows, id: \.id) { item($0, peers: page.open) }
+                    } else if isBoard {
+                        TodoBoard(sections: page.sections, editingID: $editingID, reorder: $reorder) { id in
+                            addListID = id
+                            addFocus += 1
+                        }
                     } else {
                         ForEach(page.sections, id: \.list.id) { section in
                             TodoSectionHeader(list: section.list, count: section.todos.count)
@@ -44,6 +51,7 @@ struct TodoItemsColumn: View {
                 .onPreferenceChange(TodoRowFramesKey.self) { frames.all = $0 }
             }
         }
+        .onChange(of: isBoard) { _ in addListID = nil }
         .padding(Self.padding(layout))
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
@@ -66,31 +74,19 @@ struct TodoItemsColumn: View {
         }
     }
 
-    private func header(_ page: TodoPageModel) -> some View {
-        HStack(alignment: .firstTextBaseline, spacing: UIMetrics.todoHeaderSpacing) {
-            Text(verbatim: page.title)
-                .font(Typography.tracker(UIMetrics.todoTitleFont, .heavy))
-                .foregroundStyle(accent)
-                .layoutPriority(1)
-            Text(verbatim: Copywriter.todoPageCount(open: page.open.count, lists: selection == .smart(.all) ? page.sections.count : nil))
-                .font(Typography.tracker(UIMetrics.todoHeaderCountFont, .semibold))
-                .foregroundStyle(Night.muted)
-            Spacer(minLength: 0)
-            if !page.completed.isEmpty { toggle(page.completed.count) }
-        }
-        .lineLimit(1)
-        .accessibilityElement(children: .contain)
-        .accessibilityIdentifier("todos.header")
+    private var isBoard: Bool {
+        selection == .smart(.all) && e.data.prefs.todos.allView == .board
     }
 
-    private func toggle(_ count: Int) -> some View {
-        Button { showCompleted.toggle() } label: {
-            Text(verbatim: showCompleted ? Copywriter.todoHideCompleted : Copywriter.todoCompletedToggle(count))
-                .font(Typography.tracker(UIMetrics.todoToggleFont, .medium))
-                .foregroundStyle(Night.muted)
-                .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
+    static func addTarget(_ page: TodoPageModel, chosen: String?, board: Bool) -> String? {
+        guard page.targetListID != nil else { return nil }
+        if board, let chosen, page.sections.contains(where: { $0.list.id == chosen && $0.list.canEdit }) { return chosen }
+        return page.targetListID
+    }
+
+    private func chosenName(_ page: TodoPageModel, _ target: String) -> String? {
+        guard isBoard, addListID == target else { return nil }
+        return page.sections.first { $0.list.id == target }?.list.name
     }
 
     private var accent: Color {

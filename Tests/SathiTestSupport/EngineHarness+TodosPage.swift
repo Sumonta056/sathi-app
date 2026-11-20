@@ -35,9 +35,9 @@ extension EngineHarness {
         return h
     }
 
-    package static func pageFixture() async -> EngineHarness {
+    package static func pageFixture(allView: TodoAllView = .list) async -> EngineHarness {
         let lists = [makeTodoList("inbox", "Inbox"), makeTodoList("work", "Work"), makeReadOnlyTodoList("ro")]
-        return await todosReady(lists: lists, items: pageItems)
+        return await todosReady(lists: lists, items: pageItems) { $0.prefs.todos.allView = allView }
     }
 
     package static var pageItems: [Todo] {

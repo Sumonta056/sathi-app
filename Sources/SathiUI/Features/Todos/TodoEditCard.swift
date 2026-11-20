@@ -66,7 +66,7 @@ struct TodoEditCard: View {
                 TodoEditDue(hasDate: hasDate, date: field(\.date), minutes: field(\.minutes))
                     .disabled(!canEdit)
                 readOnlyFacts
-                TodoEditListChips(lists: e.todoSnapshot.lists.filter(\.canEdit), selection: field(\.listID))
+                TodoEditListChips(lists: e.todoOrderedLists.filter(\.canEdit), selection: field(\.listID))
                     .disabled(!canEdit)
                 if let failure {
                     Text(verbatim: failure)

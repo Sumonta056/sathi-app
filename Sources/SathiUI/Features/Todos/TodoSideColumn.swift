@@ -5,6 +5,8 @@ struct TodoSideColumn: View {
     @Binding var selection: TodoSelection
     @State private var creating = false
     @State private var renamingID: String?
+    @State private var frames = TodoRowFrames()
+    @State private var reorder = TodoReorder()
     @Environment(\.mainLayout) private var layout
     @EnvironmentObject var e: Engine
 
@@ -13,15 +15,17 @@ struct TodoSideColumn: View {
             TodoSmartTiles(selection: $selection)
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: UIMetrics.todoListRowGap) {
-                    ForEach(Self.groups(e.todoSideLists(selection)), id: \.name) { group in
+                    ForEach(Self.groups(e.todoSideLists(selection)), id: \.id) { group in
                         Text(verbatim: group.name.uppercased())
                             .font(Typography.tracker(UIMetrics.todoGroupFont, .bold))
                             .tracking(UIMetrics.todoGroupTracking)
                             .foregroundStyle(Night.label)
                             .padding(UIMetrics.todoGroupPadding)
-                        ForEach(group.lists, id: \.id) { row($0) }
+                        ForEach(group.lists, id: \.id) { row($0, peers: group.lists.map(\.id)) }
                     }
                 }
+                .coordinateSpace(name: Self.space)
+                .onPreferenceChange(TodoRowFramesKey.self) { frames.all = $0 }
             }
             Spacer(minLength: 0)
             newListButton
@@ -34,7 +38,7 @@ struct TodoSideColumn: View {
         }
     }
 
-    private func row(_ list: TodoList) -> some View {
+    private func row(_ list: TodoList, peers: [String]) -> some View {
         TodoListRow(
             list: list,
             count: e.todoCount(.list(list.id)),
@@ -42,6 +46,9 @@ struct TodoSideColumn: View {
             onSelect: { selection = .list(list.id) },
             onRename: { renamingID = list.id }
         )
+        .todoReorder(list.id, space: Self.space, highPriority: true, peers: peers, frames: frames, state: $reorder) {
+            e.moveTodoList($0, before: $1)
+        }
         .popover(isPresented: renaming(list.id), arrowEdge: .trailing) {
             TodoListForm(list: list, name: list.name) { renamingID = nil }
                 .environmentObject(e)
@@ -76,22 +83,25 @@ struct TodoSideColumn: View {
         }
     }
 
+    static let space = "todo.sidelists"
+
     static func width(_ layout: MainLayout) -> CGFloat {
         layout.isNarrow ? UIMetrics.todoSideWidthNarrow : UIMetrics.todoSideWidth
     }
 
     static func groups(_ lists: [TodoList]) -> [TodoListGroup] {
-        TodoRules.sideOrder(lists).reduce(into: []) { out, list in
-            if out.last?.name == list.accountName {
+        lists.reduce(into: []) { out, list in
+            if out.last?.id == list.accountID {
                 out[out.count - 1].lists.append(list)
             } else {
-                out.append(TodoListGroup(name: list.accountName, lists: [list]))
+                out.append(TodoListGroup(id: list.accountID, name: list.accountName, lists: [list]))
             }
         }
     }
 }
 
 struct TodoListGroup {
+    let id: String
     let name: String
     var lists: [TodoList]
 }

@@ -4,15 +4,20 @@ import SwiftUI
 struct TodoAddField: View {
     let listID: String
     let due: TodoDue?
+    let listName: String?
+    let focusToken: Int
     @State private var title: String
     @State private var pick: TodoDue?
     @State private var picking = false
+    @FocusState private var focused: Bool
     @Environment(\.mainLayout) private var layout
     @EnvironmentObject var e: Engine
 
-    init(listID: String, title: String = "", due: TodoDue? = nil) {
+    init(listID: String, title: String = "", due: TodoDue? = nil, listName: String? = nil, focusToken: Int = 0) {
         self.listID = listID
         self.due = due
+        self.listName = listName
+        self.focusToken = focusToken
         _title = State(initialValue: title)
         _pick = State(initialValue: due)
     }
@@ -27,8 +32,10 @@ struct TodoAddField: View {
                     .textFieldStyle(.plain)
                     .font(Typography.tracker(UIMetrics.todoFieldFont, .medium))
                     .foregroundStyle(Night.text)
+                    .focused($focused)
                     .onSubmit(add)
                     .accessibilityIdentifier("todos.add.field")
+                if let listName { listChip(listName) }
                 if Self.chipOnFieldRow(layout) { dueChip }
                 Button(action: add) {
                     Text(verbatim: Copywriter.todoAdd).accessibilityIdentifier("todos.add.button")
@@ -47,6 +54,17 @@ struct TodoAddField: View {
         .padding(UIMetrics.todoAddPadding)
         .background(shape.fill(Night.todoField))
         .overlay(shape.strokeBorder(Night.border, lineWidth: UIMetrics.todoBorder))
+        .onChange(of: focusToken) { _ in focused = true }
+    }
+
+    private func listChip(_ name: String) -> some View {
+        Text(verbatim: Copywriter.todoAddInList(name))
+            .font(Typography.tracker(UIMetrics.todoAddButtonFont, .semibold))
+            .foregroundStyle(Night.chipText)
+            .lineLimit(1)
+            .padding(UIMetrics.todoAddButtonPadding)
+            .background(Capsule().fill(Night.divider))
+            .accessibilityIdentifier("todos.add.list")
     }
 
     private var dueChip: some View {
