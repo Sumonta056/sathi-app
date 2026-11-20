@@ -11,18 +11,15 @@ extension Engine {
     @discardableResult
     package func doneTodo(_ id: String) -> Bool {
         guard data.prefs.todos.isOn else { return false }
-        let result = todos.setDone(id, true)
-        todoRuntime.stale = true
+        let ok = writeTodoDone(id)
         refreshTodos()
-        let ok = result != .failed
-        guard var p = data.live.tracker.prompt, p.kind == .todoDue, p.todoIDs.contains(id) else { return ok }
-        p.todoIDs.removeAll { $0 == id }
-        guard !p.todoIDs.isEmpty else {
-            closeTrackerPrompt()
-            return ok
-        }
-        data.live.tracker.prompt = p
-        reshowTrackerPrompt()
+        return ok
+    }
+
+    package func doneTodoNow(_ id: String) async -> Bool {
+        guard data.prefs.todos.isOn else { return false }
+        let ok = writeTodoDone(id)
+        await refreshTodosNow()
         return ok
     }
 
@@ -35,5 +32,19 @@ extension Engine {
         }
         data.live.tracker.prompt?.todoIDs = []
         reshowTrackerPrompt()
+    }
+
+    private func writeTodoDone(_ id: String) -> Bool {
+        let ok = todos.setDone(id, true) != .failed
+        todoRuntime.stale = true
+        guard var p = data.live.tracker.prompt, p.kind == .todoDue, p.todoIDs.contains(id) else { return ok }
+        p.todoIDs.removeAll { $0 == id }
+        guard !p.todoIDs.isEmpty else {
+            closeTrackerPrompt()
+            return ok
+        }
+        data.live.tracker.prompt = p
+        reshowTrackerPrompt()
+        return ok
     }
 }
