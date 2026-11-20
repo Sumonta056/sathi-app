@@ -51,8 +51,8 @@ struct TodoOrderRulesTests {
         #expect(TodoRules.sideLists(lists, open: [], selected: .smart(smart)).isEmpty)
     }
 
-    @Test func sideListsFollowTheSideOrder() {
-        let lists = [list("a", account: "iCloud"), list("x", account: "Work"), list("b", account: "iCloud")]
+    @Test func sideListsKeepTheGivenOrder() {
+        let lists = TodoListOrder.ordered([list("a", account: "iCloud"), list("x", account: "Work"), list("b", account: "iCloud")], order: [])
         let open = [makeTodo("1", list: "x"), makeTodo("2", list: "b"), makeTodo("3", list: "a")]
         #expect(TodoRules.sideLists(lists, open: open, selected: .smart(.all)).map(\.id) == ["a", "b", "x"])
     }

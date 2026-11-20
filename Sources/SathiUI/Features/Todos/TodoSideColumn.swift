@@ -15,7 +15,7 @@ struct TodoSideColumn: View {
             TodoSmartTiles(selection: $selection)
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: UIMetrics.todoListRowGap) {
-                    ForEach(Self.groups(e.todoSideLists(selection)), id: \.name) { group in
+                    ForEach(Self.groups(e.todoSideLists(selection)), id: \.id) { group in
                         Text(verbatim: group.name.uppercased())
                             .font(Typography.tracker(UIMetrics.todoGroupFont, .bold))
                             .tracking(UIMetrics.todoGroupTracking)
@@ -91,16 +91,17 @@ struct TodoSideColumn: View {
 
     static func groups(_ lists: [TodoList]) -> [TodoListGroup] {
         lists.reduce(into: []) { out, list in
-            if out.last?.name == list.accountName {
+            if out.last?.id == list.accountID {
                 out[out.count - 1].lists.append(list)
             } else {
-                out.append(TodoListGroup(name: list.accountName, lists: [list]))
+                out.append(TodoListGroup(id: list.accountID, name: list.accountName, lists: [list]))
             }
         }
     }
 }
 
 struct TodoListGroup {
+    let id: String
     let name: String
     var lists: [TodoList]
 }

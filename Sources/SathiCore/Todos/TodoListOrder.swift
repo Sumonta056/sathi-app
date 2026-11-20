@@ -2,7 +2,6 @@ import Foundation
 
 package enum TodoListOrder {
     package static func ordered(_ lists: [TodoList], order: [String]) -> [TodoList] {
-        guard !order.isEmpty else { return lists }
         var accounts: [String] = []
         for list in lists where !accounts.contains(list.accountID) {
             accounts.append(list.accountID)

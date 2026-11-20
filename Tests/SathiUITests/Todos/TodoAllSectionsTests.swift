@@ -50,3 +50,14 @@ struct TodoAllSectionsTests {
         #expect(groups.flatMap(\.lists).map(\.id) == h.engine.todoPage(.smart(.all)).sections.map(\.list.id))
     }
 }
+
+extension TodoAllSectionsTests {
+    @Test func accountsWithOneNameKeepTheirOwnGroups() {
+        func list(_ id: String, _ account: String) -> TodoList {
+            TodoList(id: id, name: id, colorHex: "#FF3B30", accountID: account, accountName: "Work", canEdit: true)
+        }
+        let groups = TodoSideColumn.groups(TodoListOrder.ordered([list("a", "x"), list("b", "y"), list("c", "x")], order: []))
+        #expect(groups.map(\.id) == ["x", "y"])
+        #expect(groups.map { $0.lists.map(\.id) } == [["a", "c"], ["b"]])
+    }
+}
