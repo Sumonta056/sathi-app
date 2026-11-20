@@ -65,7 +65,7 @@ struct TodoFinishingTests {
         await gate.settle()
         #expect(gate.writes == ["a"])
         #expect(sut.phase("a") == .leaving)
-        sut.settle()
+        sut.settle(open: [])
         #expect(sut.phase("a") == nil)
     }
 
@@ -82,7 +82,7 @@ struct TodoFinishingTests {
         await gate.settle()
         #expect(gate.writes == ["a"])
         #expect(sut.phase("a") == .leaving)
-        sut.settle()
+        sut.settle(open: [])
         #expect(sut.phase("a") == nil)
     }
 

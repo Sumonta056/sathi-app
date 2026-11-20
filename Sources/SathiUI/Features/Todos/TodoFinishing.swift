@@ -65,11 +65,16 @@ final class TodoFinishing: ObservableObject {
         commit(id)
     }
 
-    func settle() {
-        for id in written {
+    func settle(open: Set<String>) {
+        for id in written where !open.contains(id) {
             phases[id] = nil
+            written.remove(id)
         }
-        written = []
+    }
+
+    func fail(_ id: String) {
+        guard written.remove(id) != nil else { return }
+        phases[id] = nil
     }
 
     private func commit(_ id: String) {

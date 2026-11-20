@@ -8,16 +8,22 @@ extension Engine {
         return true
     }
 
-    package func doneTodo(_ id: String) {
-        guard data.prefs.todos.isOn else { return }
-        _ = todos.setDone(id, true)
+    @discardableResult
+    package func doneTodo(_ id: String) -> Bool {
+        guard data.prefs.todos.isOn else { return false }
+        let result = todos.setDone(id, true)
         todoRuntime.stale = true
         refreshTodos()
-        guard var p = data.live.tracker.prompt, p.kind == .todoDue, p.todoIDs.contains(id) else { return }
+        let ok = result != .failed
+        guard var p = data.live.tracker.prompt, p.kind == .todoDue, p.todoIDs.contains(id) else { return ok }
         p.todoIDs.removeAll { $0 == id }
-        guard !p.todoIDs.isEmpty else { return closeTrackerPrompt() }
+        guard !p.todoIDs.isEmpty else {
+            closeTrackerPrompt()
+            return ok
+        }
         data.live.tracker.prompt = p
         reshowTrackerPrompt()
+        return ok
     }
 
     package func markTodoDone(_ yes: Bool) {

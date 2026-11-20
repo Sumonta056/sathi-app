@@ -21,7 +21,11 @@ struct TodosPage: View {
             }
         }
         .onAppear { e.refreshTodos() }
-        .todoFinishing { engine in { id in Task { await engine.setTodoDone(id, true) } } }
+        .todoFinishing { engine, finishing in
+            { id in
+                Task { if await engine.setTodoDone(id, true) == .failed { finishing.fail(id) } }
+            }
+        }
     }
 
     private var shown: TodoSelection {
