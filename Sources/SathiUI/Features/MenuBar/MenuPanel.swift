@@ -9,7 +9,7 @@ package struct MenuPanel: View {
         VStack(alignment: .leading, spacing: UIMetrics.quickPanelSpacing) {
             QuickHeader()
             QuickNowRow()
-            QuickDueTodayCard()
+            QuickDueTodayCard().todoFinishing { engine in { engine.doneTodo($0) } }
             TimeBlockCard()
             if e.pausedUntil != nil { NapBanner() }
             QuickBuddyList()

@@ -21,6 +21,7 @@ struct TodosPage: View {
             }
         }
         .onAppear { e.refreshTodos() }
+        .todoFinishing { engine in { id in Task { await engine.setTodoDone(id, true) } } }
     }
 
     private var shown: TodoSelection {

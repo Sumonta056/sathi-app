@@ -19,7 +19,7 @@ struct QuickDueTodayCardTests {
     }
 
     private func card(_ h: EngineHarness) throws -> InspectableView<ViewType.ClassifiedView> {
-        try QuickDueTodayCard().environmentObject(h.engine).inspect()
+        try QuickDueTodayCard().environmentObject(h.engine).environmentObject(TodoFinishing.idle()).inspect()
     }
 
     private func has(_ h: EngineHarness) -> Bool {
@@ -64,9 +64,27 @@ struct QuickDueTodayCardTests {
         #expect(!MenuFind.hasText(sut, containing: "overdue"))
     }
 
-    @Test func aTickMarksTheTodoDone() async throws {
+    @Test func aTickWritesNothingAtOnce() async throws {
         let h = await harness(four)
         try card(h).find(viewWithAccessibilityIdentifier: "quick.todo.b").button().tap()
+        await Task.yield()
+        #expect(h.todos.calls.isEmpty)
+    }
+
+    @Test func aTickStartsTheFinishAndTheWriteLandsAfterTheFold() async throws {
+        let h = await harness(four)
+        let gate = TodoFinishingGate()
+        let finishing = TodoFinishing(wait: { [gate] in await gate.wait($0) }, write: { [h] in h.engine.doneTodo($0) })
+        let sut = try QuickDueTodayCard().environmentObject(h.engine).environmentObject(finishing).inspect()
+        try sut.find(viewWithAccessibilityIdentifier: "quick.todo.b").button().tap()
+        await waitUntil { gate.waiting == 1 }
+        #expect(finishing.phase("b") == .checked)
+        #expect(h.todos.calls.isEmpty)
+        gate.release()
+        await waitUntil { finishing.phase("b") == .leaving && gate.waiting == 1 }
+        #expect(h.todos.calls.isEmpty)
+        gate.release()
+        await waitUntil { !h.todos.calls.isEmpty }
         #expect(h.todos.calls == [.doneSet("b", true)])
     }
 

@@ -3,6 +3,8 @@ import SwiftUI
 
 struct QuickDueTodayCard: View {
     @EnvironmentObject var e: Engine
+    @EnvironmentObject var finishing: TodoFinishing
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         if let q = e.quickTodos { card(q) }
@@ -30,22 +32,25 @@ struct QuickDueTodayCard: View {
     private func row(_ r: QuickTodoRow) -> some View {
         let color = r.isOverdue ? Night.todoOverdue : Night.todoDueAccent
         return HStack(spacing: UIMetrics.todoQuickGap) {
-            Button { e.doneTodo(r.todo.id) } label: {
-                Circle()
-                    .strokeBorder(color, lineWidth: UIMetrics.todoTickBorder)
-                    .frame(width: UIMetrics.promptTodoTick, height: UIMetrics.promptTodoTick)
-                    .contentShape(Circle())
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(Text(verbatim: Copywriter.todoMarkDone))
-            .accessibilityIdentifier("quick.todo.\(r.todo.id)")
+            TodoTick(
+                isDone: false,
+                canEdit: true,
+                size: UIMetrics.promptTodoTick,
+                color: color,
+                idleColor: color,
+                reduceMotion: reduceMotion,
+                phase: finishing.phase(r.todo.id)
+            ) { finishing.tick(r.todo.id) }
+                .accessibilityIdentifier("quick.todo.\(r.todo.id)")
             Text(verbatim: r.todo.title)
                 .font(Typography.hint)
-                .foregroundStyle(Night.text)
+                .foregroundStyle(finishing.phase(r.todo.id) == nil ? Night.text : Night.muted)
                 .lineLimit(1)
+                .overlay { if finishing.phase(r.todo.id) != nil { TodoStrike(reduceMotion: reduceMotion) } }
             Spacer(minLength: 0)
             time(r, color)
         }
+        .modifier(TodoFold(leaving: finishing.phase(r.todo.id) == .leaving, reduceMotion: reduceMotion))
     }
 
     @ViewBuilder private func time(_ r: QuickTodoRow, _ color: Color) -> some View {
