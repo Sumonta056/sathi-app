@@ -10,7 +10,6 @@ package struct TrackerPrefs: Codable, Equatable, Sendable {
     package var usualLength: ActivityLength = .minutes(Limits.trackerUsualLengthDefault)
     package var idleMinutes = Limits.idleDefault
     package var categories = ActivityCategory.defaults
-    package var calendarOnByDefault = false
     package var defaultCalendarID: String?
     package var shortcut = KeyShortcut.trackerDefault
     package var endOfDayOn = true
@@ -28,7 +27,7 @@ package struct TrackerPrefs: Codable, Equatable, Sendable {
 
     enum CodingKeys: String, CodingKey {
         case isOn, startMinutes, endMinutes, weekdays, daysOff, askEveryMinutes, usualLength, idleMinutes, categories
-        case calendarOnByDefault, defaultCalendarID, shortcut, endOfDayOn, playsSound, readsEvents, quietByDefault
+        case defaultCalendarID, shortcut, endOfDayOn, playsSound, readsEvents, quietByDefault
         case readCalendarIDs, eventMode, categoryByCalendar, eventCategoryByTitle, awayPlaces, mergedEventRows
     }
 
@@ -52,7 +51,6 @@ extension TrackerPrefs {
         usualLength = ActivityLength.choices.contains(length) ? length : d.usualLength
         idleMinutes = Self.chip(c.lenient(.idleMinutes, or: d.idleMinutes), in: Limits.idleChips, or: d.idleMinutes)
         categories = c.contains(.categories) ? Array((c.lenientArray(.categories) as [ActivityCategory]).prefix(Limits.categoryMax)) : d.categories
-        calendarOnByDefault = c.lenient(.calendarOnByDefault, or: d.calendarOnByDefault)
         defaultCalendarID = c.lenient(.defaultCalendarID, or: d.defaultCalendarID)
         shortcut = Self.validShortcut(c.lenient(.shortcut, or: d.shortcut), or: d.shortcut)
         endOfDayOn = c.lenient(.endOfDayOn, or: d.endOfDayOn)
@@ -78,7 +76,6 @@ extension TrackerPrefs {
         try c.encode(usualLength, forKey: .usualLength)
         try c.encode(idleMinutes, forKey: .idleMinutes)
         try c.encode(categories, forKey: .categories)
-        try c.encode(calendarOnByDefault, forKey: .calendarOnByDefault)
         try c.encodeIfPresent(defaultCalendarID, forKey: .defaultCalendarID)
         try c.encode(shortcut, forKey: .shortcut)
         try c.encode(endOfDayOn, forKey: .endOfDayOn)

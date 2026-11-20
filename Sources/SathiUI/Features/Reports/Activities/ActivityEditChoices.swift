@@ -51,27 +51,43 @@ struct ActivityEditChoices: View {
 
 struct ActivityEditPlaces: View {
     @Binding var draft: ActivityEditDraft
+    var places: [String] = []
 
     var body: some View {
         VStack(alignment: .leading, spacing: UIMetrics.activitiesFieldGap) {
             ActivityFieldLabel(text: Copywriter.activitiesFieldPlace)
             TrackerFlowLayout(spacing: UIMetrics.activitiesChipGap) {
-                ForEach(AwayPlace.allCases, id: \.self) { place in
-                    PromptBox(
-                        label: label(place),
-                        on: draft.awayPlace == place,
-                        id: "report.place." + place.rawValue,
-                        look: .activityEdit(Night.chipText)
-                    ) {
-                        draft.awayPlace = place
-                        draft.awayPlaceName = nil
+                ForEach(builtIns, id: \.self) { place in
+                    chip(Copywriter.trackerAwayPlace(place), on: draft.awayPlace == place && !isUserPlace, id: "report.place." + place.rawValue) {
+                        draft.pickPlace(place)
                     }
+                }
+                ForEach(places, id: \.self) { name in
+                    chip(name, on: draft.awayPlace == .other && draft.awayPlaceName == name, id: "report.place.custom." + name) {
+                        draft.pickPlace(named: name)
+                    }
+                }
+                chip(otherLabel, on: draft.awayPlace == .other && !isUserPlace, id: "report.place.other") {
+                    draft.pickPlace(.other)
                 }
             }
         }
     }
 
-    private func label(_ place: AwayPlace) -> String {
-        place == .other ? draft.awayPlaceName ?? Copywriter.trackerAwayPlace(place) : Copywriter.trackerAwayPlace(place)
+    private var builtIns: [AwayPlace] {
+        let main = AwayPlace.choices.filter { $0 != .other }
+        return draft.awayPlace == .breakTime ? main + [.breakTime] : main
+    }
+
+    private var isUserPlace: Bool {
+        draft.awayPlace == .other && draft.awayPlaceName.map(places.contains) == true
+    }
+
+    private var otherLabel: String {
+        isUserPlace ? Copywriter.trackerAwayPlace(.other) : draft.awayPlaceName ?? Copywriter.trackerAwayPlace(.other)
+    }
+
+    private func chip(_ label: String, on: Bool, id: String, action: @escaping () -> Void) -> some View {
+        PromptBox(label: label, on: on, id: id, look: .activityEdit(Night.chipText), action: action)
     }
 }

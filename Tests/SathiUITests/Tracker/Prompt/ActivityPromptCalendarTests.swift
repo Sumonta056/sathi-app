@@ -50,7 +50,7 @@ struct ActivityPromptCalendarTests {
         #expect(Prompt.hasText(sut, "Sathi adds no event for this activity."))
     }
 
-    @Test func notAskedShowsTheAllowBoxAndAGrantPicksTheDefault() async throws {
+    @Test func notAskedShowsTheAllowBoxAndAGrantLoadsTheCalendarsButPicksNone() async throws {
         let s = Prompt.state(.whatNow) {
             $0.calendars = []
             $0.calendarAccess = .notAsked
@@ -61,8 +61,11 @@ struct ActivityPromptCalendarTests {
         #expect(Prompt.hasText(sut, "Allow calendar access"))
         try Prompt.tap(sut, "prompt.calendar.allow")
         await settle()
-        #expect(model.draft.calendarID == "home")
-        #expect(try Prompt.has(Prompt.view(s, model: model), "prompt.calendar.work"))
+        #expect(model.draft.calendarID == nil)
+        #expect(model.calendars.calendars.map(\.id) == ["work", "home"])
+        let after = try Prompt.view(s, model: model)
+        #expect(Prompt.has(after, "prompt.calendar.work"))
+        #expect(try Prompt.boxIsOn(after, "prompt.calendar.none"))
     }
 
     @Test func aDenialPicksNothing() async throws {

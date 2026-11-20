@@ -8,6 +8,7 @@ struct ActivityEditPanel: View {
     let calendar: Calendar
     let calendars: [CalendarChoice]
     let calendarNames: [String: String]
+    var places: [String] = []
     let actions: ActivityDayActions
     @Binding var editing: ActivityEditTarget?
 
@@ -34,8 +35,8 @@ struct ActivityEditPanel: View {
             return ActivityEditSection(
                 draft: ActivityEditDraft(a, calendar: calendar, writable: calendars.map(\.id)), title: Copywriter.activitiesEditTitle,
                 accent: a.kind == .away ? Night.chipText : ActivityColors.color(a.category, in: categories),
-                categories: categories, calendars: calendars, calendarNames: calendarNames, dayStart: dayStart, calendar: calendar,
-                save: { actions.edit(id, $0) },
+                categories: categories, calendars: calendars, places: places, calendarNames: calendarNames,
+                dayStart: dayStart, calendar: calendar, save: { actions.edit(id, $0) },
                 delete: {
                     guard actions.delete(id) else { return false }
                     editing = nil

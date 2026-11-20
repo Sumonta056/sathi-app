@@ -17,7 +17,7 @@ extension Engine {
         s.doneAt = p.doneAt
         s.recents = recentActivities
         s.categories = activityCategories
-        s.calendars = calendarChoices()
+        s.calendars = defaultFirst(calendarChoices())
         s.defaultCalendarID = trackerDefaultCalendarID
         s.calendarAccess = calendarAccess
         s.calendar = calendar
@@ -56,9 +56,13 @@ extension Engine {
             text: "",
             category: p.defaultCategory,
             length: p.usualLength,
-            calendarID: p.calendarOnByDefault ? trackerDefaultCalendarID : nil,
             quiet: p.quietByDefault && p.usualLength.interval != nil
         )
+    }
+
+    private func defaultFirst(_ calendars: [CalendarChoice]) -> [CalendarChoice] {
+        guard let id = trackerPrefs.defaultCalendarID, let first = calendars.first(where: { $0.id == id }) else { return calendars }
+        return [first] + calendars.filter { $0.id != id }
     }
 
     var trackerDefaultCalendarID: String? {
@@ -72,7 +76,7 @@ extension Engine {
         let allowed = calendarAccess == .allowed
         return TrackerCalendarInfo(
             access: calendarAccess,
-            calendars: allowed ? calendarChoices() : [],
+            calendars: allowed ? defaultFirst(calendarChoices()) : [],
             defaultID: allowed ? trackerDefaultCalendarID : nil
         )
     }

@@ -7,6 +7,7 @@ struct ActivityEditSection: View {
     let accent: Color
     let categories: [ActivityCategory]
     let calendars: [CalendarChoice]
+    var places: [String] = []
     var calendarNames: [String: String] = [:]
     let dayStart: Date
     let calendar: Calendar
@@ -19,8 +20,9 @@ struct ActivityEditSection: View {
         let shape = RoundedRectangle(cornerRadius: UIMetrics.activitiesEditRadius, style: .continuous)
         VStack(alignment: .leading, spacing: UIMetrics.activitiesEditGap) {
             header
+            if draft.canSwitchKind { ActivityEditAwaySwitch(draft: $draft, defaultCategory: categories.first?.name) }
             if draft.isAway {
-                ActivityEditPlaces(draft: $draft)
+                ActivityEditPlaces(draft: $draft, places: places)
             } else {
                 VStack(alignment: .leading, spacing: UIMetrics.activitiesFieldGap) {
                     ActivityFieldLabel(text: Copywriter.activitiesFieldName)
@@ -32,7 +34,7 @@ struct ActivityEditSection: View {
                             .strokeBorder(Night.fieldBorder, lineWidth: UIMetrics.cardBorder))
                 }
             }
-            ActivityEditTimes(draft: $draft, accent: accent)
+            ActivityEditTimes(draft: $draft, accent: shownAccent)
             ActivityEditChoices(draft: $draft, categories: categories, calendars: calendars, calendarNames: calendarNames)
             Divider().overlay(Night.border)
             footer
@@ -43,15 +45,20 @@ struct ActivityEditSection: View {
         .padding(UIMetrics.activitiesEditPadding)
         .frame(maxWidth: .infinity, alignment: .topLeading)
         .background(shape.fill(Night.trackerInset))
-        .overlay(shape.strokeBorder(accent.opacity(UIMetrics.activitiesPencilTint), lineWidth: UIMetrics.cardBorder))
+        .overlay(shape.strokeBorder(shownAccent.opacity(UIMetrics.activitiesPencilTint), lineWidth: UIMetrics.cardBorder))
         .accessibilityElement(children: .contain)
         .accessibilityLabel(Text(verbatim: title))
+    }
+
+    private var shownAccent: Color {
+        guard draft.kindChange != nil else { return accent }
+        return draft.isAway ? Night.chipText : ActivityColors.color(draft.category, in: categories)
     }
 
     private var header: some View {
         HStack(spacing: UIMetrics.activitiesRowDetailGap) {
             RoundedRectangle(cornerRadius: UIMetrics.activitiesEditMark.width / 2)
-                .fill(accent)
+                .fill(shownAccent)
                 .frame(width: UIMetrics.activitiesEditMark.width, height: UIMetrics.activitiesEditMark.height)
             Text(verbatim: title)
                 .font(Typography.tracker(UIMetrics.activitiesTitleFont, .heavy))

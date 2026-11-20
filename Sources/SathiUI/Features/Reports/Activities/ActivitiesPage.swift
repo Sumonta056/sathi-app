@@ -68,7 +68,7 @@ struct ActivitiesPage: View {
             ActivityDayView(
                 day: day, overview: overviewMemo.value(range, range: range, engine: e) { $0.activityDayOverview($1) },
                 categories: e.activityCategories, calendar: calendar, calendars: e.calendarChoices(),
-                calendarNames: e.activityCalendarTitles, actions: dayActions, canUndo: e.mergeUndo != nil, drawerHosted: true
+                calendarNames: e.activityCalendarTitles, places: e.awayPlaces, actions: dayActions, canUndo: e.mergeUndo != nil, drawerHosted: true
             )
         } else if let stats = page.stats {
             ActivityRangeView(

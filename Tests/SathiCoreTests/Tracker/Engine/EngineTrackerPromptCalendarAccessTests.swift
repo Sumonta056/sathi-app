@@ -34,6 +34,15 @@ struct EngineTrackerPromptCalendarAccessTests {
         #expect(info?.calendars.map(\.id) == ["work", "home"])
     }
 
+    @Test func theGrantListsTheTrackerDefaultCalendarFirst() async throws {
+        let h = harness(.notAsked)
+        h.engine.data.prefs.tracker.defaultCalendarID = "home"
+        h.calendarWriter.accessAfterRequest = .allowed
+        let s = try #require(h.engine.trackerPromptState(.whatNow))
+        let info = await s.actions.allowCalendar()
+        #expect(info?.calendars.map(\.id) == ["home", "work"])
+    }
+
     @Test func aFreshPromptStateIsAllowedAfterTheGrant() async throws {
         let h = harness(.notAsked)
         h.calendarWriter.accessAfterRequest = .allowed

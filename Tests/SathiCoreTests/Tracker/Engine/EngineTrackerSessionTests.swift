@@ -111,10 +111,7 @@ struct EngineTrackerSessionTests {
     }
 
     @Test func aBuddyActivityWritesNoCalendarEvent() {
-        let h = EngineHarness.tracker(at: wed(10)) {
-            $0.prefs.tracker.calendarOnByDefault = true
-            $0.prefs.tracker.defaultCalendarID = "work"
-        }
+        let h = EngineHarness.tracker(at: wed(10)) { $0.prefs.tracker.defaultCalendarID = "work" }
         h.engine.startSession(.reading)
         h.clock.advance(minutes: 10)
         h.engine.finishSession(.reading)

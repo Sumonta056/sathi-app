@@ -9,10 +9,6 @@ struct TrackerCalendarCard: View {
         SettingsSection(Copywriter.trackerCalendar) {
             SettingsCard {
                 SettingRow(label: Copywriter.trackerCalendar, showsDivider: false) { TrackerAccessStatus() }
-                SettingRow(label: Copywriter.trackerCalendarByDefault, hint: Copywriter.trackerCalendarByDefaultHint) {
-                    BuddySwitch(isOn: engine.trackerCalendarOnByDefault, accent: Night.tracker, label: Copywriter.trackerCalendarByDefault)
-                        .accessibilityIdentifier("settings.tracker.calendar.default")
-                }
                 TrackerStackedRow(label: Copywriter.trackerDefaultCalendar, hint: Copywriter.trackerDefaultCalendarHint) {
                     if engine.calendarAccess == .allowed {
                         TrackerCalendarList(

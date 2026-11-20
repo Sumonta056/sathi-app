@@ -10,9 +10,4 @@ package struct TrackerCalendarInfo: Equatable {
         self.calendars = calendars
         self.defaultID = defaultID
     }
-
-    package var tickID: String? {
-        guard access == .allowed else { return nil }
-        return calendars.first { $0.id == defaultID }?.id ?? calendars.first?.id
-    }
 }

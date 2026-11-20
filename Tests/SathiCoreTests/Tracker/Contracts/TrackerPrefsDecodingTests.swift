@@ -26,7 +26,6 @@ struct TrackerPrefsDecodingTests {
         #expect(t.usualLength == .minutes(30))
         #expect(t.idleMinutes == 30)
         #expect(t.categories.map(\.name) == ["Coding", "Meeting", "Cefalo Meetings", "Review", "Learning", "Email"])
-        #expect(!t.calendarOnByDefault)
         #expect(t.defaultCalendarID == nil)
         #expect(t.shortcut == KeyShortcut(keyCode: 49, modifiers: [.control, .option, .command], keyName: "Space"))
         #expect(t.endOfDayOn)
@@ -107,5 +106,21 @@ struct TrackerPrefsDecodingTests {
         t.weekdays = [.friday, .monday, .wednesday]
         let text = try #require(String(data: JSONEncoder().encode(t), encoding: .utf8))
         #expect(text.contains(#""weekdays":[2,4,6]"#))
+    }
+
+    @Test func anOldCalendarOnByDefaultKeyIsIgnoredAndTheRestLoads() throws {
+        let json = #"{"calendarOnByDefault":true,"askEveryMinutes":30,"defaultCalendarID":"home","isOn":true}"#
+        let t = try JSONDecoder().decode(TrackerPrefs.self, from: Data(json.utf8))
+        #expect(t.askEveryMinutes == 30)
+        #expect(t.defaultCalendarID == "home")
+        #expect(t.isOn)
+    }
+
+    @Test func theOldCalendarOnByDefaultKeyIsNotWrittenBack() throws {
+        let json = #"{"calendarOnByDefault":true,"defaultCalendarID":"home"}"#
+        let t = try JSONDecoder().decode(TrackerPrefs.self, from: Data(json.utf8))
+        let text = try #require(String(data: JSONEncoder().encode(t), encoding: .utf8))
+        #expect(!text.contains("calendarOnByDefault"))
+        #expect(text.contains("defaultCalendarID"))
     }
 }

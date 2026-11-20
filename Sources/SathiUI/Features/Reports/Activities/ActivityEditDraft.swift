@@ -11,8 +11,9 @@ struct ActivityEditDraft: Equatable {
     var calendarID: String?
     var keepsCalendar = false
     private(set) var unlistedCalendarID: String?
-    let isAway: Bool
-    let showsCalendar: Bool
+    private(set) var isAway: Bool
+    private let calendarAllowed: Bool
+    private var originalKind: ActivityKind?
     private var pickedLength: Int?
     private let originalStart: Date
     private let originalEnd: Date
@@ -26,7 +27,7 @@ struct ActivityEditDraft: Equatable {
         self.text = text
         self.category = category
         self.isAway = isAway
-        self.showsCalendar = showsCalendar ?? !isAway
+        calendarAllowed = showsCalendar ?? !isAway
         self.calendarID = calendarID
         self.awayPlace = awayPlace
         originalStart = start
@@ -41,13 +42,40 @@ struct ActivityEditDraft: Equatable {
         self.init(
             text: activity.text, category: activity.category, start: activity.start, end: activity.end, calendar: calendar,
             isAway: activity.kind == .away, awayPlace: activity.awayPlace,
-            showsCalendar: activity.kind == .work && activity.sourceEventID == nil, calendarID: activity.calendarID
+            showsCalendar: [.work, .away].contains(activity.kind) && activity.sourceEventID == nil, calendarID: activity.calendarID
         )
+        originalKind = activity.kind
+        if activity.kind == .work, activity.sourceEventID != nil { originalKind = nil }
         awayPlaceName = activity.awayPlaceName
         if showsCalendar, let id = activity.calendarID, let writable, !writable.contains(id) {
             unlistedCalendarID = id
             keepsCalendar = true
         }
+    }
+
+    var showsCalendar: Bool { calendarAllowed && !isAway }
+
+    var canSwitchKind: Bool { originalKind == .work || originalKind == .away }
+
+    var kindChange: ActivityKind? {
+        guard canSwitchKind, isAway != (originalKind == .away) else { return nil }
+        return isAway ? .away : .work
+    }
+
+    mutating func setAway(_ on: Bool) {
+        guard canSwitchKind, on != isAway else { return }
+        isAway = on
+        if !on, originalKind == .away { text = "" }
+    }
+
+    mutating func pickPlace(_ place: AwayPlace) {
+        awayPlace = place
+        awayPlaceName = nil
+    }
+
+    mutating func pickPlace(named name: String) {
+        awayPlace = .other
+        awayPlaceName = name
     }
 
     mutating func pickCalendar(_ id: String?) {
@@ -67,7 +95,7 @@ struct ActivityEditDraft: Equatable {
         }
         return ActivityEdit(
             text: text, category: category, start: start, end: end,
-            awayPlace: awayPlace, awayPlaceName: awayPlaceName, calendar: calendarChoice
+            awayPlace: awayPlace, awayPlaceName: awayPlaceName, calendar: calendarChoice, kind: kindChange
         )
     }
 
@@ -105,6 +133,7 @@ struct ActivityEditDraft: Equatable {
         case .tooShort: return Copywriter.trackerEditTooShort
         case .overlap: return Copywriter.trackerEditOverlap
         case .crossesMidnight: return Copywriter.trackerEditCrossesMidnight
+        case .awayUndo: return Copywriter.trackerEditAwayUndo
         case .inFuture: return Copywriter.trackerEditInFuture
         case .calendarFailed: return Copywriter.activitiesCalendarFailed
         case .calendarUnchanged: return Copywriter.activitiesCalendarUnchanged
