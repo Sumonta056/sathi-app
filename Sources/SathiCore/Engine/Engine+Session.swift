@@ -50,7 +50,7 @@ extension Engine {
         record(.done(id, amount, at: n))
         habits[id] = HabitState(nextDue: freshDue(id, lastDone: n))
         sessionFinishing(id)
-        logFinishedSession(id, s, at: n)
+        logFinishedSession(id, s, at: timedOut ? min(n, s.end) : n)
         trackerRuntime.sessionTimedOut = timedOut
         close(id)
         trackerRuntime.sessionTimedOut = false

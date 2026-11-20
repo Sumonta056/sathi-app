@@ -44,15 +44,17 @@ extension Engine {
     }
 
     func logFinishedSession(_ id: HabitID, _ s: Session, at end: Date) {
-        guard id != .water, !(trackerPrefs.isOn && trackerHours.isInside(s.start)) else { return }
+        let stop = min(end, calendar.nextDay(after: s.start))
+        guard id != .water, !trackerLogged(id, from: s.start, to: stop) else { return }
         let category = addedBuddyCategory(id)
-        storeActivity(Activity(
-            kind: .buddy,
-            text: buddyText(id),
-            category: category,
-            start: s.start,
-            end: min(end, calendar.nextDay(after: s.start))
-        ))
+        storeActivity(Activity(kind: .buddy, text: buddyText(id), category: category, start: s.start, end: stop))
+    }
+
+    private func trackerLogged(_ id: HabitID, from start: Date, to end: Date) -> Bool {
+        let name = ActivityCategory.buddy(id).name
+        let r = data.live.tracker.running
+        if r?.kind == .buddy, r?.category == name { return true }
+        return storedActivities(on: start).contains { $0.kind == .buddy && $0.category == name && $0.start < end && $0.end > start }
     }
 
     private func beginBuddyActivity(_ id: HabitID, at n: Date) {
