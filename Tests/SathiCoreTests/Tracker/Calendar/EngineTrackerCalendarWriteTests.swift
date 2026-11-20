@@ -19,7 +19,6 @@ struct EngineTrackerCalendarWriteTests {
     }
 
     @Test func addToCalendarIsOffByDefaultAndTheMenuListsWritableCalendarsByAccount() {
-        #expect(TrackerPrefs().calendarOnByDefault == false)
         let h = EngineHarness.tracker(at: wed(10))
         let s = h.engine.trackerPromptState(.whatNow)
         #expect(s?.draft.calendarID == nil)

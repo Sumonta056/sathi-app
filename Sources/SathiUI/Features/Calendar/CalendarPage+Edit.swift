@@ -62,7 +62,8 @@ extension CalendarPage {
     private func editPanel(_ shown: (target: ActivityEditTarget, day: ActivityDay)) -> some View {
         ActivityEditPanel(
             day: shown.day, target: shown.target, categories: e.activityCategories, calendar: e.rangeCalendar,
-            calendars: e.calendarChoices(), calendarNames: e.activityCalendarTitles, actions: .engine(e), editing: editTarget
+            calendars: e.calendarChoices(), calendarNames: e.activityCalendarTitles, places: e.awayPlaces,
+            actions: .engine(e), editing: editTarget
         )
     }
 

@@ -108,4 +108,11 @@ struct TrackerSettingsPageTests {
         let sut = try hosted(TrackerEventsCard(), h).inspect()
         _ = try sut.find(text: TrackerCalendarList.emptyText)
     }
+
+    @Test func theCalendarCardHasNoAddToCalendarByDefaultRow() throws {
+        let sut = try hosted(TrackerCalendarCard(), on()).inspect()
+        #expect(throws: (any Error).self) { try sut.find(viewWithAccessibilityIdentifier: "settings.tracker.calendar.default") }
+        #expect(throws: (any Error).self) { try sut.find(text: "Tick \"Add to calendar\" by default") }
+        _ = try sut.find(text: Copywriter.trackerDefaultCalendar)
+    }
 }

@@ -101,9 +101,10 @@ struct ActivityReportEditTests {
             calendar: Fix.calendar, save: { _ in .saved(ActivityID()) }, delete: { true }, close: {}
         )
         let v = try sut.inspect()
-        for place in AwayPlace.allCases {
+        for place in AwayPlace.choices {
             #expect(throws: Never.self) { try v.find(text: Copywriter.trackerAwayPlace(place)) }
         }
+        #expect(Find.lacks(v, text: Copywriter.trackerAwayPlace(.breakTime)))
         #expect(Find.lacks(v, text: "CATEGORY"))
         #expect(Find.lacks(v, text: "CALENDAR"))
         #expect(throws: (any Error).self) { try v.find(LazyTextField.self) }

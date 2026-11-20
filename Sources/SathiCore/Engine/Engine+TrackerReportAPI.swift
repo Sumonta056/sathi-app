@@ -29,6 +29,7 @@ extension Engine {
     package func editActivity(_ id: ActivityID, _ edit: ActivityEdit) -> ActivityEditResult {
         clearMergeUndo()
         guard let old = storedActivity(id), old.kind != .timeBlock else { return .notFound }
+        if let kind = edit.kind, kind != old.kind { return switchedKind(old, to: kind, edit: edit.wholeSeconds) }
         let edit = old.kind == .away ? awayEdit(edit.wholeSeconds) : edit.wholeSeconds
         if let problem = ActivityEditCheck.problem(edit, others: busySpans(near: edit, except: id), calendar: calendar) { return problem }
         if edit.end > clock.now { return .inFuture }
@@ -68,6 +69,35 @@ extension Engine {
         }
         storeActivity(item)
         return .saved(item.id)
+    }
+
+    private func switchedKind(_ old: Activity, to kind: ActivityKind, edit: ActivityEdit) -> ActivityEditResult {
+        let canSwitch = (old.kind == .work && old.sourceEventID == nil) || old.kind == .away
+        guard canSwitch, kind == .work || kind == .away else { return .notFound }
+        if rowsInAwayUndo().contains(old.id) { return .awayUndo }
+        let edit = kind == .away ? awayEdit(edit) : edit
+        if let problem = ActivityEditCheck.problem(edit, others: busySpans(near: edit, except: old.id), calendar: calendar) { return problem }
+        if edit.end > clock.now { return .inFuture }
+        if kind == .away, let event = old.eventID, !event.isEmpty, calendarWriter.delete(eventID: event) != .deleted {
+            return .calendarUnchanged(old.id)
+        }
+        var new = old
+        new.kind = kind
+        new.text = ActivityText.clean(edit.text) ?? old.text
+        new.category = edit.category
+        new.start = edit.start
+        new.end = edit.end
+        new.awayPlace = kind == .away ? edit.awayPlace : nil
+        new.awayPlaceName = kind == .away ? edit.awayPlaceName : nil
+        new.calendarID = nil
+        new.eventID = nil
+        if kind == .work, case let .calendar(id) = edit.calendar {
+            new.calendarID = id
+            new = savingToCalendar(new)
+        }
+        removeStoredActivity(old.id)
+        storeActivity(new)
+        return new.calendarID != nil && new.eventID == nil ? .calendarUnchanged(old.id) : .saved(old.id)
     }
 
     private func awayEdit(_ edit: ActivityEdit) -> ActivityEdit {

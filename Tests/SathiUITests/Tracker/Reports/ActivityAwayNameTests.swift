@@ -69,7 +69,7 @@ struct ActivityAwayNameTests {
 
     @Test func theBuiltInChipsKeepTheirLabelsNextToANamedOther() throws {
         let labels = try chips(Self.named).map(\.label)
-        #expect(labels == ["Lunch", "Meeting", "Walk", "Commute", "Doctor", "Break"])
+        #expect(labels == ["Lunch", "Meeting", "Walk", "Commute", "Doctor"])
     }
 
     @Test func saveOfAnUntouchedNamedAwaySendsTheName() throws {

@@ -8,6 +8,7 @@ struct ActivityDayView: View {
     var calendar: Calendar = .current
     var calendars: [CalendarChoice] = []
     var calendarNames: [String: String] = [:]
+    var places: [String] = []
     var actions = ActivityDayActions()
     var canUndo = false
     var drawerHosted = false
@@ -73,7 +74,7 @@ struct ActivityDayView: View {
     private func panel(_ target: ActivityEditTarget) -> some View {
         ActivityEditPanel(
             day: day, target: target, categories: categories, calendar: calendar, calendars: calendars,
-            calendarNames: calendarNames, actions: actions, editing: $editing
+            calendarNames: calendarNames, places: places, actions: actions, editing: $editing
         )
     }
 }

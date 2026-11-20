@@ -20,7 +20,6 @@ extension Engine {
     }
     var trackerIdle: Binding<Int> { trackerBinding(\.idleMinutes) }
     var trackerUsualLength: Binding<ActivityLength> { trackerBinding(\.usualLength) }
-    var trackerCalendarOnByDefault: Binding<Bool> { trackerBinding(\.calendarOnByDefault) }
     var trackerEndOfDay: Binding<Bool> { trackerBinding(\.endOfDayOn) }
     var trackerSound: Binding<Bool> { trackerBinding(\.playsSound) }
     var trackerReadsEvents: Binding<Bool> { trackerBinding(\.readsEvents) }

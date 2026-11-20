@@ -62,32 +62,6 @@ struct EngineTrackerLateAnswerTests {
         #expect(h.running?.askAt == wed(10, 49))
     }
 
-    @Test func theDraftUsesTheTrackerDefaultCalendar() {
-        let h = EngineHarness.tracker(at: wed(10)) {
-            $0.prefs.tracker.calendarOnByDefault = true
-            $0.prefs.tracker.defaultCalendarID = "home"
-        }
-        h.engine.openTrackerPanel()
-        #expect(h.engine.trackerPromptState(.center)?.draft.calendarID == "home")
-        #expect(h.engine.trackerPromptState(.center)?.defaultCalendarID == "home")
-    }
-
-    @Test func withNoTrackerDefaultTheSystemDefaultIsUsed() {
-        let h = EngineHarness.tracker(at: wed(10)) { $0.prefs.tracker.calendarOnByDefault = true }
-        h.calendarWriter.defaultID = "home"
-        h.engine.openTrackerPanel()
-        #expect(h.engine.trackerPromptState(.center)?.draft.calendarID == "home")
-    }
-
-    @Test func withNoDefaultAtAllTheFirstWritableCalendarIsUsed() {
-        let h = EngineHarness.tracker(at: wed(10)) {
-            $0.prefs.tracker.calendarOnByDefault = true
-            $0.prefs.tracker.defaultCalendarID = "gone"
-        }
-        h.engine.openTrackerPanel()
-        #expect(h.engine.trackerPromptState(.center)?.draft.calendarID == "work")
-    }
-
     @Test func calendarOffByDefaultStillTellsTheViewTheDefault() {
         let h = EngineHarness.tracker(at: wed(10)) { $0.prefs.tracker.defaultCalendarID = "home" }
         h.engine.openTrackerPanel()

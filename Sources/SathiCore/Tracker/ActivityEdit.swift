@@ -8,12 +8,15 @@ package struct ActivityEdit: Equatable, Sendable {
     package var awayPlace: AwayPlace?
     package var awayPlaceName: String?
     package var calendar: ActivityCalendarChoice
+    package var kind: ActivityKind?
 
     package init(
         text: String, category: String?, start: Date, end: Date,
-        awayPlace: AwayPlace? = nil, awayPlaceName: String? = nil, calendar: ActivityCalendarChoice = .keep
+        awayPlace: AwayPlace? = nil, awayPlaceName: String? = nil, calendar: ActivityCalendarChoice = .keep,
+        kind: ActivityKind? = nil
     ) {
         self.text = text
+        self.kind = kind
         self.calendar = calendar
         self.category = category
         self.start = start
@@ -45,6 +48,7 @@ package enum ActivityEditResult: Equatable, Sendable {
     case overlap
     case crossesMidnight
     case inFuture
+    case awayUndo
     case notFound
 }
 

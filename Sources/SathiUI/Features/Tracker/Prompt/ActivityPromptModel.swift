@@ -71,7 +71,6 @@ final class ActivityPromptModel: ObservableObject {
             defer { asking = false }
             guard let answer = await ask() else { return }
             calendars = answer
-            if let id = answer.tickID { draft.calendarID = id }
         }
     }
 

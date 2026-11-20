@@ -89,14 +89,11 @@ struct EngineTrackerReportTests {
     }
 
     @Test func aFreshDraftUsesTheDefaults() {
-        let h = EngineHarness.tracker(at: wed(10)) {
-            $0.prefs.tracker.calendarOnByDefault = true
-            $0.prefs.tracker.defaultCalendarID = "work"
-        }
+        let h = EngineHarness.tracker(at: wed(10)) { $0.prefs.tracker.defaultCalendarID = "work" }
         let d = h.engine.trackerPromptState(.whatNow)?.draft
         #expect(d?.category == "Coding")
         #expect(d?.length == .minutes(30))
         #expect(d?.askOffsetMinutes == 0)
-        #expect(d?.calendarID == "work")
+        #expect(d?.calendarID == nil)
     }
 }

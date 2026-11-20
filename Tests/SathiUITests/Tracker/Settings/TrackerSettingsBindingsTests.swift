@@ -43,14 +43,13 @@ struct TrackerSettingsBindingsTests {
     @Test func switchesWritePrefs() {
         let h = EngineHarness()
         let e = h.engine
-        e.trackerCalendarOnByDefault.wrappedValue = true
         e.trackerEndOfDay.wrappedValue = false
         e.trackerSound.wrappedValue = false
         e.trackerReadsEvents.wrappedValue = true
         e.trackerEventMode.wrappedValue = .askFirst
         e.trackerShortcut.wrappedValue = KeyShortcut(keyCode: 40, modifiers: [.control, .shift], keyName: "K")
         let t = h.engine.data.prefs.tracker
-        #expect(t.calendarOnByDefault && !t.endOfDayOn && !t.playsSound && t.readsEvents)
+        #expect(!t.endOfDayOn && !t.playsSound && t.readsEvents)
         #expect(t.eventMode == .askFirst)
         #expect(t.shortcut.keyName == "K")
     }
