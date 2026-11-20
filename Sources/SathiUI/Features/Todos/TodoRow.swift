@@ -4,14 +4,16 @@ import SwiftUI
 struct TodoRow: View {
     let todo: Todo
     let canEdit: Bool
+    let metaBelow: Bool
     let onSelect: () -> Void
     @EnvironmentObject var e: Engine
     @EnvironmentObject var finishing: TodoFinishing
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    init(todo: Todo, canEdit: Bool, onSelect: @escaping () -> Void) {
+    init(todo: Todo, canEdit: Bool, metaBelow: Bool = false, onSelect: @escaping () -> Void) {
         self.todo = todo
         self.canEdit = canEdit
+        self.metaBelow = metaBelow
         self.onSelect = onSelect
     }
 
@@ -19,16 +21,16 @@ struct TodoRow: View {
         HStack(alignment: .center, spacing: UIMetrics.todoRowSpacing) {
             TodoTick(isDone: todo.isDone, canEdit: canEdit, reduceMotion: reduceMotion, phase: phase, action: tick)
                 .overlay { if !canEdit { Color.clear.contentShape(Rectangle()).onTapGesture {} } }
-            Text(Self.attributedTitle(TodoTitlePart.parts(of: todo.title), linked: !todo.isDone))
-                .font(Typography.tracker(UIMetrics.todoRowTitleFont, .medium))
-                .foregroundStyle(todo.isDone || phase != nil ? Night.muted : Night.text)
-                .strikethrough(todo.isDone)
-                .overlay { if phase != nil && !todo.isDone { TodoStrike(reduceMotion: reduceMotion) } }
-                .tint(Night.todoLink)
-                .environment(\.openURL, Self.openAction(e))
+            if metaBelow {
+                VStack(alignment: .leading, spacing: UIMetrics.todoBoardMetaGap) {
+                    title
+                    if todo.repeats || todo.due != nil { TodoRowMeta(todo: todo, below: true) }
+                }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .accessibilityIdentifier("todos.row.title.\(todo.id)")
-            TodoRowMeta(todo: todo)
+            } else {
+                title
+                TodoRowMeta(todo: todo)
+            }
         }
         .padding(UIMetrics.todoRowPadding)
         .contentShape(Rectangle())
@@ -42,6 +44,18 @@ struct TodoRow: View {
         }
         .modifier(TodoFold(phase: phase, reduceMotion: reduceMotion))
         .onDisappear { finishing.flush(todo.id) }
+    }
+
+    private var title: some View {
+        Text(Self.attributedTitle(TodoTitlePart.parts(of: todo.title), linked: !todo.isDone))
+            .font(Typography.tracker(UIMetrics.todoRowTitleFont, .medium))
+            .foregroundStyle(todo.isDone || phase != nil ? Night.muted : Night.text)
+            .strikethrough(todo.isDone)
+            .overlay { if phase != nil && !todo.isDone { TodoStrike(reduceMotion: reduceMotion) } }
+            .tint(Night.todoLink)
+            .environment(\.openURL, Self.openAction(e))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityIdentifier("todos.row.title.\(todo.id)")
     }
 
     private var phase: TodoFinishPhase? { finishing.phase(todo.id) }

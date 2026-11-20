@@ -6,6 +6,7 @@ extension Copywriter {
     package static let todoViewList = "List"
     package static let todoViewBoard = "Board"
     package static let todoViewLabel = "View"
+    package static let todoBoardMetaSeparator = " · "
 
     package static func todoAddInList(_ list: String) -> String { "In \(list)" }
 
