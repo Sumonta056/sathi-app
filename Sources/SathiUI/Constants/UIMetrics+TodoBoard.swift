@@ -26,3 +26,15 @@ extension UIMetrics {
     static let todoSwitchItemPadding = EdgeInsets(top: 6, leading: 14, bottom: 6, trailing: 14)
     static let todoSwitchFont: CGFloat = 13
 }
+
+extension UIMetrics {
+    static let todoPickerIcon: CGFloat = 12
+    static let todoPickerIconPadding = EdgeInsets(top: 6, leading: 8, bottom: 6, trailing: 4)
+    static let todoPickerItemPadding = EdgeInsets(top: 6, leading: 10, bottom: 6, trailing: 10)
+    static let todoBoardLiftBorder: CGFloat = 1.5
+    static let todoBoardLiftTilt: Double = 1.2
+    static let todoBoardSlotBorder: CGFloat = 1.5
+    static let todoBoardSlotDash: CGFloat = 5
+    static let todoBoardSlotFill: Double = 0.06
+    static let todoBoardSlotFont: CGFloat = 12
+}

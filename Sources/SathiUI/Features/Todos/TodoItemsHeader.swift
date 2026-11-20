@@ -20,6 +20,7 @@ struct TodoItemsHeader: View {
                     .foregroundStyle(Night.muted)
             }
             Spacer(minLength: 0)
+            if isBoard { TodoBoardColumnPicker() }
             if isAll { viewSwitch }
             if !isBoard, !page.completed.isEmpty { toggle(page.completed.count) }
         }

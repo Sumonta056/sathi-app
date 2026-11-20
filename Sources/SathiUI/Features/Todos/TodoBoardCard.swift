@@ -6,7 +6,10 @@ struct TodoBoardCard: View {
     @Binding var editingID: String?
     @Binding var reorder: TodoReorder
     let onAdd: (() -> Void)?
+    var drag: TodoBoardDrag?
     @State private var frames = TodoRowFrames()
+    @State private var lift = CGSize.zero
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @EnvironmentObject var e: Engine
 
     var body: some View {
@@ -20,14 +23,29 @@ struct TodoBoardCard: View {
         .coordinateSpace(name: TodoReorderRow.space)
         .onPreferenceChange(TodoRowFramesKey.self) { frames.all = $0 }
         .background(shape.fill(Night.card))
-        .overlay(shape.strokeBorder(Night.border, lineWidth: UIMetrics.todoBorder))
+        .overlay(shape.strokeBorder(lifted ? Night.water : Night.border, lineWidth: lifted ? UIMetrics.todoBoardLiftBorder : UIMetrics.todoBorder))
+        .rotationEffect(.degrees(lifted && !reduceMotion ? UIMetrics.todoBoardLiftTilt : 0))
+        .offset(lift)
+        .onChange(of: lifted) { if !$0 { lift = .zero } }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("todos.board.card." + section.list.id)
     }
 
+    private var lifted: Bool { drag?.lifted ?? false }
+
     private var color: Color { Night.todoList(section.list.colorHex) }
 
     private var header: some View {
+        HStack(spacing: UIMetrics.todoBoardHeadSpacing) {
+            handle
+            if let onAdd { addButton(onAdd) }
+        }
+        .padding(UIMetrics.todoBoardHeadPadding)
+        .frame(minHeight: UIMetrics.todoBoardAdd + UIMetrics.todoBoardHeadPadding.top + UIMetrics.todoBoardHeadPadding.bottom)
+        .background(TodoBoardTop(radius: UIMetrics.todoBoardRadius).fill(color.opacity(UIMetrics.todoBoardTint)))
+    }
+
+    private var handle: some View {
         HStack(spacing: UIMetrics.todoBoardHeadSpacing) {
             Circle()
                 .fill(color)
@@ -44,11 +62,8 @@ struct TodoBoardCard: View {
                 .foregroundStyle(Night.chipText)
                 .padding(UIMetrics.todoBoardCountPadding)
                 .background(Capsule().fill(Night.divider))
-            if let onAdd { addButton(onAdd) }
         }
-        .padding(UIMetrics.todoBoardHeadPadding)
-        .frame(minHeight: UIMetrics.todoBoardAdd + UIMetrics.todoBoardHeadPadding.top + UIMetrics.todoBoardHeadPadding.bottom)
-        .background(TodoBoardTop(radius: UIMetrics.todoBoardRadius).fill(color.opacity(UIMetrics.todoBoardTint)))
+        .modifier(TodoBoardHeaderDrag(id: section.list.id, drag: drag, lift: $lift))
     }
 
     private func addButton(_ onAdd: @escaping () -> Void) -> some View {
