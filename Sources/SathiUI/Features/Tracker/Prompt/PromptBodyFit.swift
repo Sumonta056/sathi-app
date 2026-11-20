@@ -11,7 +11,7 @@ struct PromptBodyFit<Content: View>: View {
         Group {
             if scrolls || overflows {
                 ScrollView(.vertical) { measured }
-                    .scrollIndicators(.hidden)
+                    .scrollIndicators(.never)
             } else {
                 measured
                     .frame(maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
