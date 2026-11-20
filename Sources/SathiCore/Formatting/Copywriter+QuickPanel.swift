@@ -14,6 +14,15 @@ extension Copywriter {
     package static let quickPanelDayOff = "Day off"
     package static let quickPanelPlusGlass = "+1 glass"
 
+    package static func doNowTitle(_ id: HabitID) -> String? {
+        switch id {
+        case .water: return nil
+        case .reading: return "Read now"
+        case .meditation: return "Breathe"
+        case .gym: return "Move"
+        }
+    }
+
     package static func quickPanelClock(_ date: Date, calendar: Calendar) -> String {
         let c = calendar.dateComponents([.weekday, .hour, .minute], from: date)
         let name = weekdayNames[((c.weekday ?? 1) - 1) % weekdayNames.count]

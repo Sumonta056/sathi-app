@@ -81,9 +81,30 @@ struct QuickPanelTests {
         #expect(h.engine.glassesToday == before + 1)
     }
 
-    @Test func onlyFotaHasAQuickAction() throws {
+    @Test func eachBuddyHasItsQuickAction() throws {
         let sut = try panel(Glance.harness())
         #expect(sut.findAll(where: { (try? $0.text().string()) == "+1 glass" }).count == 1)
+        for id in ["quick.glass", "doNow.reading", "doNow.meditation", "doNow.gym"] {
+            #expect(throws: Never.self) { try sut.find(viewWithAccessibilityIdentifier: id) }
+        }
+    }
+
+    @Test func moveStartsGymFromTheMenu() throws {
+        let h = Glance.harness()
+        try panel(h).find(viewWithAccessibilityIdentifier: "doNow.gym").button().tap()
+        #expect(h.presenter.calls.contains(.showSession(.gym)))
+    }
+
+    @Test func noDoNowWhileItsSessionRuns() throws {
+        let h = Glance.harness()
+        h.engine.startSession(.gym)
+        #expect(throws: (any Error).self) { try panel(h).find(viewWithAccessibilityIdentifier: "doNow.gym") }
+        #expect(throws: Never.self) { try panel(h).find(viewWithAccessibilityIdentifier: "doNow.reading") }
+    }
+
+    @Test func offBuddyHasNoDoNow() throws {
+        let h = EngineHarness(at: Quick.now) { $0.prefs.gym.enabled = false }
+        #expect(throws: (any Error).self) { try panel(h).find(viewWithAccessibilityIdentifier: "doNow.gym") }
     }
 
     @Test func openSathiOpensToday() throws {

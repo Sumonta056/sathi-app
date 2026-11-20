@@ -8,7 +8,6 @@ extension Copywriter {
     package static let todayLogActivity = "Log activity"
     package static let todayTurnOn = "Turn on"
     package static let todayGoalMet = "✓ Goal met"
-    package static let todayBreatheNow = "Breathe now"
     package static let todaySoFarTitle = "Today so far"
     package static let todaySoFarOffHint = "Turn on the activity tracker to see your day."
     package static let todayComingUpTitle = "Coming up"

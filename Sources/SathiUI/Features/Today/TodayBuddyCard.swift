@@ -56,16 +56,9 @@ struct TodayBuddyCard: View {
             Text(verbatim: statusText)
                 .font(Typography.tracker(UIMetrics.todayBuddyStatusFont, buddy.status == .met ? .semibold : .regular))
                 .foregroundStyle(buddy.status == .met ? Night.sprout : Night.muted)
-            if buddy.habit == .meditation, buddy.status != .off {
-                Text(verbatim: " · ")
-                    .font(Typography.tracker(UIMetrics.todayBuddyStatusFont, .regular))
-                    .foregroundStyle(Night.muted)
-                Button { e.startMeditation() } label: {
-                    Text(verbatim: Copywriter.todayBreatheNow)
-                        .font(Typography.tracker(UIMetrics.todayBuddyStatusFont, .semibold))
-                        .foregroundStyle(Night.calm)
-                }
-                .buttonStyle(.plain)
+            if buddy.status != .off {
+                Spacer(minLength: 0)
+                DoNowButton(e: e, habit: buddy.habit)
             }
         }
         .lineLimit(1)

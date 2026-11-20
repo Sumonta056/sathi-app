@@ -16,6 +16,13 @@ struct CopywriterQuickPanelTests {
         )
     }
 
+    @Test func doNowTitlesNameTheAction() {
+        #expect(Copywriter.doNowTitle(.reading) == "Read now")
+        #expect(Copywriter.doNowTitle(.meditation) == "Breathe")
+        #expect(Copywriter.doNowTitle(.gym) == "Move")
+        #expect(Copywriter.doNowTitle(.water) == nil)
+    }
+
     @Test func dashboardLinkSaysDashboard() {
         #expect(Copywriter.quickPanelDashboard == "Dashboard")
     }
