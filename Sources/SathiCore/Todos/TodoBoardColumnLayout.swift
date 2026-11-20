@@ -4,9 +4,10 @@ package enum TodoBoardColumnLayout {
     package static func fit(width: Double, count: Int, min: Double, gap: Double) -> Int {
         let most = Swift.max(1, count)
         guard width.isFinite, width > 0, min + gap > 0 else { return 1 }
-        let n = ((width + gap) / (min + gap)).rounded(.down)
-        guard n.isFinite, n >= 1 else { return 1 }
-        return Swift.min(most, Int(n))
+        let raw = ((width + gap) / (min + gap)).rounded(.down)
+        guard !raw.isNaN else { return 1 }
+        let n = Swift.min(Double(most), raw)
+        return n >= 1 ? Int(n) : 1
     }
 
     package static func assign(
@@ -35,7 +36,7 @@ package enum TodoBoardColumnLayout {
         before: String?,
         count: Int
     ) -> [[String]]? {
-        guard shown.indices.contains(column), shown.count == count else { return nil }
+        guard shown.indices.contains(column), shown.count == count, shown.contains(where: { $0.contains(id) }) else { return nil }
         var columns = shown.map { $0.filter { $0 != id } }
         if let before {
             guard let at = columns[column].firstIndex(of: before) else { return nil }

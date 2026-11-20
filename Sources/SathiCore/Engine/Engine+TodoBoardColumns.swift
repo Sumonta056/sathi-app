@@ -11,6 +11,8 @@ extension Engine {
         guard let next = TodoBoardColumnLayout.moved(
             shown: shown, id: id, column: column, before: before, count: count
         ) else { return }
-        data.prefs.todos.boardLayouts[key] = next
+        let saved = data.prefs.todos.boardLayouts[key] ?? []
+        let known = Set(todoPageAllLists.map(\.id))
+        data.prefs.todos.boardLayouts[key] = TodoBoardColumnLayout.kept(next, saved: saved, known: known)
     }
 }
